@@ -13,6 +13,11 @@ export function isMain(metaUrl: string): boolean {
   return !!process.argv[1] && metaUrl === pathToFileURL(resolve(process.argv[1])).href;
 }
 
+// Paths given on the command line are relative to the repo root (CV_ROOT in tests).
+export function cliPath(p: string): string {
+  return resolve(ROOT, p);
+}
+
 export function rootPath(...parts: string[]): string {
   return join(ROOT, ...parts);
 }

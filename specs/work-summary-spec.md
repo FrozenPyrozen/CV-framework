@@ -108,7 +108,8 @@ A section with nothing known yet contains `TODO (needs user input)`. **Never inv
 
 - term: Application Studio Platform
 - term: ASP
-  allow_in: []                     # optional: CV contexts where the term may appear
+  allow_in: []                     # optional: where the term may appear in a CV: job ids (inside that job's
+                                   # title, detail line and bullets) and/or `summary` (the summary paragraph)
 - term: saas-frontend-repo
 - prefix: OR-                      # ticket prefixes
 - url_pattern: "*.syspro.internal"

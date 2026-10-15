@@ -18,7 +18,13 @@ A tailored CV is the master CV adapted to a type of role (a **profile**) or to o
 ## 2. Steps
 
 1. **Tags.** For a profile, take its tags. For a job ad, map its requirements to tags from the config tag list, propose new tags for anything missing, and save `jd-tags.yaml` for the user to adjust. With both, the job ad's tags add to the profile's.
-2. **Selection (script).** `npm run select -- <cv-dir> --profile <id>` (or `--tags jd-tags.yaml`) scores every contribution and fact by its tags, applies limits and overrides, and writes `selection.json`: which bullets each entry gets, in which order. **The agent doesn't change the selection.** If it disagrees, it says so in the gap report, and the user changes the profile or `jd-tags.yaml`.
+   `jd-tags.yaml` format:
+   ```yaml
+   required: [react-native, typescript, testing]     # must-have requirements, weight 3
+   nice_to_have: [graphql, aws]                       # weight 1
+   new_tags_proposed: [kotlin-multiplatform]          # not in the config list yet; need approval
+   ```
+2. **Selection (script).** `npm run select -- <cv-dir> --profile <id>` (or `--tags jd-tags.yaml`) scores every contribution and fact by its tags (2 × emphasize, 1 × summary focus, −2 × de-emphasize, 3 × job-ad required, 1 × job-ad nice-to-have; pinned bullets first, ties keep the summary's order), applies limits and overrides, and writes `selection.json`: which bullets each entry gets, in which order. **The agent doesn't change the selection.** If it disagrees, it says so in the gap report, and the user changes the profile or `jd-tags.yaml`.
 3. **Wording (agent).** For each selected bullet:
    - If the master CV has a bullet with the same source id, start from its wording (including the user's manual edits) and only shorten or re-emphasize it.
    - Otherwise write it fresh from the source, following `cv-spec.md`.
@@ -26,7 +32,7 @@ A tailored CV is the master CV adapted to a type of role (a **profile**) or to o
 4. **Headline and summary.** Use the profile's `headline` (or one fitting the job ad). Rewrite the summary paragraph around `summary_focus`, with a `src` comment on every sentence.
 5. **Skills.** Reordered by `skills_order` through the generated `skills` block (not by hand).
 6. **Only changed entries are rewritten.** On a rebuild, entries whose sources didn't change since the last build (from `cv/.build-state.json`) are copied unchanged, so variants don't change in git without a reason.
-7. **Checks.** `npm run reattach-src`, then `npm run build` on the result. Report failures.
+7. **Checks.** `npm run reattach-src -- <cv.md>` (after saving a snapshot with `--save` before step 3), then `npm run build` on the result. Report failures.
 8. **Gap report** (section 5).
 9. Show a diff. Never commit. For a job-specific CV, remind the user it's git-ignored and can be kept with `git add -f`.
 

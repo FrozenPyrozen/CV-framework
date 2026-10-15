@@ -94,6 +94,19 @@ export function validateRepo(): Issue[] {
     for (const r of s.confidentiality) if (r.term && r.term.length < 3) warn(s.file, `confidentiality term "${r.term}" is very short and may cause false alarms`);
   }
 
+  // --- skills must be supported (plan 4.2b): a tag on a contribution or fact, or listed hands-on in a section 5 ---
+  const usedTags = new Set<string>();
+  for (const s of summaries) for (const c of s.contributions) if (!c.removed) c.tags.forEach((t) => usedTags.add(t));
+  const handsOn = summaries.flatMap((s) => (s.sections.find((x) => x.number === 5)?.text ?? "").split("\n").filter((l) => /hands-on/i.test(l))).join("\n").toLowerCase();
+  const factTags = loadConfirmed(cfg).facts.flatMap((f) => f.tags ?? []);
+  factTags.forEach((t) => usedTags.add(t));
+  for (const c of skills?.categories ?? []) for (const i of c.items ?? []) {
+    if (i.hidden) continue;
+    const base = String(i.name).split(" (")[0].toLowerCase();
+    const supported = (i.tags ?? []).some((t: string) => usedTags.has(t)) || handsOn.includes(base);
+    if (!supported) warn("facts/skills.yaml", `skill "${i.name}" isn't supported by any contribution, fact or hands-on technology`);
+  }
+
   // --- confirmed facts ---
   const confirmed = loadConfirmed(cfg);
   check("confirmed.schema.json", confirmed.raw, "facts/confirmed.yaml");

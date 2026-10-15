@@ -1,0 +1,95 @@
+// npm run select <cv-dir> --profile <id> | --tags <file> [--profile <id> --tags <file>]
+// Deterministic bullet selection for a role variant or a job-specific CV (plan R8, specs/tailoring-spec.md 2).
+// Scores every contribution and fact of each CV entry by its tags, applies the profile's overrides and limits,
+// and writes <cv-dir>/selection.json. The tailor agent words the selected bullets and never changes the choice.
+//
+// Score = 2 x matches with emphasize_tags + 1 x matches with summary_focus - 2 x matches with deemphasize_tags
+//       + 3 x matches with job-ad required tags + 1 x matches with job-ad nice-to-have tags.
+import { existsSync, mkdirSync, writeFileSync } from "node:fs";
+import { join, resolve } from "node:path";
+import { cliPath, isMain, loadConfig, loadConfirmed, loadEntries, loadSummaries, readYaml, rootPath, sortEntries } from "./lib/repo.ts";
+import { parseArgs } from "./refresh.ts";
+
+export interface SelectionInput {
+  profile?: {
+    id: string; emphasize_tags?: string[]; deemphasize_tags?: string[]; summary_focus?: string[];
+    max_bullets_per_entry?: number; min_bullets_per_entry?: number;
+    overrides?: Record<string, { pin?: boolean; drop?: boolean; text?: string }>;
+    skills_order?: string[]; include_sections?: string[];
+  };
+  jdTags?: { required?: string[]; nice_to_have?: string[] };
+}
+
+export interface Selection {
+  generated: string;
+  profile?: string;
+  job_ad?: boolean;
+  skills_order?: string[];
+  entries: { id: string; section: string; bullets: { src: string; title: string; score: number; pinned?: boolean; text?: string }[] }[];
+}
+
+export function select(input: SelectionInput): Selection {
+  const cfg = loadConfig();
+  const summaries = loadSummaries(cfg);
+  const confirmed = loadConfirmed(cfg);
+  const entries = loadEntries(cfg, summaries, confirmed);
+  const p = input.profile ?? { id: "" };
+  const max = p.max_bullets_per_entry ?? 99;
+  const min = Math.min(p.min_bullets_per_entry ?? 1, max);
+  const count = (tags: string[], list?: string[]) => tags.filter((t) => list?.includes(t)).length;
+  const sections = new Set(p.include_sections ?? cfg.cv_sections.map((s) => s.id));
+
+  const out: Selection = { generated: "by npm run select; do not edit", profile: p.id || undefined, job_ad: !!input.jdTags, skills_order: p.skills_order, entries: [] };
+  for (const sec of cfg.cv_sections) {
+    if (sec.source !== "entries" || !sections.has(sec.id)) continue;
+    for (const e of sortEntries(entries.filter((x) => x.section === sec.id))) {
+      const s = summaries.find((x) => x.id === e.id);
+      const candidates = [
+        ...(s?.contributions.filter((c) => !c.removed).map((c) => ({ src: `${e.id}#${c.number}`, title: c.title, tags: c.tags })) ?? []),
+        ...confirmed.facts.filter((f) => f.entry === e.id).map((f) => ({ src: f.id, title: f.fact, tags: f.tags })),
+      ];
+      const scored = candidates
+        .map((c, order) => {
+          const o = p.overrides?.[c.src];
+          const score = 2 * count(c.tags, p.emphasize_tags) + count(c.tags, p.summary_focus) - 2 * count(c.tags, p.deemphasize_tags)
+            + 3 * count(c.tags, input.jdTags?.required) + count(c.tags, input.jdTags?.nice_to_have);
+          return { ...c, score, order, pinned: !!o?.pin, drop: !!o?.drop, text: o?.text };
+        })
+        .filter((c) => !c.drop);
+      const ranked = [...scored].sort((a, b) => Number(b.pinned) - Number(a.pinned) || b.score - a.score || a.order - b.order);
+      const pinned = ranked.filter((c) => c.pinned);
+      const rest = ranked.filter((c) => !c.pinned);
+      const positive = rest.filter((c) => c.score > 0);
+      const take = Math.max(min - pinned.length, Math.min(positive.length, max - pinned.length), 0);
+      const chosen = [...pinned, ...rest.slice(0, take)];
+      out.entries.push({
+        id: e.id,
+        section: e.section,
+        bullets: chosen.map((c) => ({ src: c.src, title: c.title, score: c.score, ...(c.pinned ? { pinned: true } : {}), ...(c.text ? { text: c.text } : {}) })),
+      });
+    }
+  }
+  return out;
+}
+
+if (isMain(import.meta.url)) {
+  const { args, positional } = parseArgs(process.argv.slice(2));
+  if (!positional[0] || (!args.profile && !args.tags)) {
+    console.error("usage: npm run select -- <cv-dir> --profile <id> | --tags <jd-tags.yaml>");
+    process.exit(2);
+  }
+  const cfg = loadConfig();
+  const input: SelectionInput = {};
+  if (args.profile) input.profile = readYaml(rootPath(cfg.paths.profiles, `${args.profile}.yaml`));
+  if (args.tags) {
+    // jd-tags.yaml usually sits in the CV folder: look there first, then relative to the repo root.
+    const inDir = join(cliPath(positional[0]), args.tags as string);
+    input.jdTags = readYaml(existsSync(inDir) ? inDir : cliPath(args.tags as string));
+  }
+  const sel = select(input);
+  const dir = cliPath(positional[0]);
+  mkdirSync(dir, { recursive: true });
+  writeFileSync(join(dir, "selection.json"), JSON.stringify(sel, null, 2) + "\n");
+  const total = sel.entries.reduce((n, e) => n + e.bullets.length, 0);
+  console.log(`select: ${total} bullet(s) across ${sel.entries.length} entries written to ${join(dir, "selection.json").replace(rootPath() + "/", "")}`);
+}

@@ -50,7 +50,8 @@ display:
 # Header line templates (specs/cv-spec.md section 8). {placeholders} come from facts/profile.yaml;
 # a line whose content is empty for the current market is left out.
 header:
-  location: "{city}, {country}{remote_suffix}"            # remote_suffix = " (Remote)" when location.remote
+  location: "{city}, {country}{remote_suffix}"
+  remote_suffix: " (Remote)"         # used when profile location.remote is true
   availability:
     template: "Open to {engagement_list} employment"
     labels: { b2b-contract: B2B contract, full-time: full-time, part-time: part-time }

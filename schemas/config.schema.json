@@ -32,7 +32,7 @@
       },
       "additionalProperties": false
     },
-    "header": { "type": "object", "required": ["location", "availability", "time_zone_overlap", "contact_order", "link_format"] },
+    "header": { "type": "object", "required": ["location", "remote_suffix", "availability", "time_zone_overlap", "contact_order", "link_format"] },
     "checks": {
       "type": "object",
       "required": ["max_pages", "max_words", "forbidden_chars", "export_timeout_s"],

@@ -11,7 +11,14 @@
     "validate": "tsx scripts/validate.ts",
     "digest": "tsx scripts/digest.ts",
     "typecheck": "tsc -p tsconfig.json",
-    "test": "node --import tsx --test tests/*.test.ts"
+    "test": "node --import tsx --test tests/*.test.ts",
+    "refresh": "tsx scripts/refresh.ts",
+    "market": "tsx scripts/market.ts",
+    "lint": "tsx scripts/lint.ts",
+    "trace": "tsx scripts/trace.ts",
+    "reattach-src": "tsx scripts/reattach-src.ts",
+    "select": "tsx scripts/select.ts",
+    "check": "tsx scripts/check.ts"
   },
   "devDependencies": {
     "@types/node": "^22.20.5",
