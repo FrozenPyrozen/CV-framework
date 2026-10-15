@@ -37,8 +37,13 @@ CV/
 ├── README.md                      # for humans: what this is, how to run it
 ├── docs/                          # plan.md (this file), acceptance.md (replay checklist for agents)
 ├── framework.config.yaml          # paths, sections, display formats, output names, checks, exporters, tags
+├── framework.local.yaml           # per-laptop settings: repo paths, backup folder, exporter order (git-ignored)
+├── framework.local.example.yaml   # committed example of the file above
+├── .nvmrc                         # Node version
+├── package-lock.json              # exact dependency versions (committed; install with `npm ci`)
 ├── package.json                   # scripts: build, build:all, render, pdf, pdf-check, preview, lint, trace,
-│                                  #          check, status, validate, index, template-import, test, doctor, refresh
+│                                  #          check, status, validate, index, template-import, test, doctor, refresh,
+│                                  #          backup, restore
 ├── specs/
 │   ├── cv-spec.md                 # CV structure and writing rules (seeded from this chat)
 │   ├── work-summary-spec.md       # summary template + front matter schema
@@ -123,7 +128,7 @@ team_size_led: 0                   # optional; people you led on this job (used 
 counts_as_experience: true         # optional; default true for experience entries, false for consulting (used by 4.2c)
 # --- harvesting ---
 repos:
-  - { name: saas-frontend-repo, path: ~/work/saas-frontend-repo }
+  - { name: saas-frontend-repo, remote: <git remote URL> }   # no local path here; paths are per-laptop in framework.local.yaml
 author_identities: []              # optional; empty = use profile.yaml git_identities
 harvested_at: 2026-09-30           # null for source: cv / user
 # --- how it appears in the CV ---
@@ -405,6 +410,8 @@ Records what each recruiter received, so you can answer "which CV did I send the
   cv: cv/tailored/example-corp-senior-rn/      # or a variant id
   pdf_sha256: 3f1c...                          # exact file sent
   build_commit: 772590a                        # git commit of the sources at build time
+  exporter: pages                              # which PDF exporter built it (PDFs can differ slightly between exporters)
+  sent_copy: cv/sent/2026-10-20-example-corp.pdf   # optional exact copy of the sent PDF (git-ignored, included in backups)
   status: applied                              # applied | interview | offer | rejected | withdrawn
   notes: ""
 ```
@@ -458,7 +465,9 @@ What the main rubrics must produce (taken from the reviews done in this chat):
 | `validate` | checks all inputs against `schemas/`. Every tag (summary contributions, facts, skills, profiles' `emphasize_tags`/`deemphasize_tags`/`summary_focus`) must be in the config tag list, so a typo like `react-nativ` fails instead of silently breaking selection. |
 | `index` | regenerates the lists of agents, rubrics, profiles and outputs in `AGENTS.md` |
 | `test` | runs the script tests in `tests/fixtures/` |
-| `doctor` | checks the environment: Node version (`engines: node >= 20` in `package.json`), installed dependencies, which PDF exporters are available (Pages, Word, LibreOffice), Quick Look, `pdftoppm` (optional), and the one-time macOS permission to control Pages (does a tiny test export). Prints what's missing and how to fix it. |
+| `doctor` | checks the environment: Node version (`engines: node >= 20` in `package.json`), installed dependencies, which PDF exporters are available (Pages, Word, LibreOffice), Quick Look, `pdftoppm` (optional), and the one-time macOS permission to control Pages (does a tiny test export). It also checks that `framework.local.yaml` exists, lists summary repos with no local path on this laptop, checks that every template's fonts are installed, and shows which PDF and preview path is active on this OS. Prints what's missing and how to fix it. |
+| `backup` | packs everything git doesn't carry (tailored CVs with job ads, `applications.yaml`, `framework.local.yaml`, and the PDFs you sent if kept) into one dated `.zip` in the backup folder from `framework.local.yaml`, optionally password-protected |
+| `restore <archive>` | unpacks a backup on another laptop without overwriting newer files, and lists conflicts |
 
 Each built CV folder ends up as:
 
@@ -496,6 +505,7 @@ It extracts the text with `pdfjs-dist` (no system tools needed) and fails when:
 - **Text doesn't match:** after normalizing whitespace and hyphenation, the PDF's words must cover the Markdown's words, ignoring formatting and trace comments. Missing words are listed.
 - **Garbled characters:** the replacement character `�`, private-use glyphs, or broken ligatures.
 - **The contact details aren't on page 1** (email, phone).
+- **Fonts were substituted:** every font listed in the template's `style-map.yaml` must be embedded in the PDF. A substitute (for example, a different serif when Cambria is missing on a Linux laptop) fails the check, with the name of the font to install.
 
 It also fails when the page count exceeds `max_pages` (from the profile, else config), and reports words per page. The results go to `pdf-check.md` next to the PDF.
 
@@ -552,7 +562,7 @@ Each command file in `.claude/commands/` only says "follow `agents/<name>.md`". 
 
 Each step ends with something you can check.
 
-1. **Restructure and preserve.** Create the folders. Move the CV files to `cv/` and the template to `templates/` (committing the template). Move the summaries to `summaries/` with the new names. Add `package.json` (with `engines: node >= 20`) and update `.gitignore` (`node_modules/`, `cv/tailored/`, `facts/applications.yaml`, `cv/**/*.docx`, `cv/**/*.pdf`, `cv/**/pdf-check.md`, `cv/**/preview/`, `cv/.build-state.json`). The currently committed `Kirill_Kohan_CV.docx` is untracked with `git rm --cached` (the file stays on disk and is rebuilt in step 5).
+1. **Restructure and preserve.** Create the folders. Move the CV files to `cv/` and the template to `templates/` (committing the template). Move the summaries to `summaries/` with the new names. Add `package.json` (with `engines: node >= 20`), `package-lock.json`, `.nvmrc` and `framework.local.example.yaml`, and update `.gitignore` (`framework.local.yaml`, `backups/`, `node_modules/`, `cv/tailored/`, `facts/applications.yaml`, `cv/**/*.docx`, `cv/**/*.pdf`, `cv/**/pdf-check.md`, `cv/**/preview/`, `cv/.build-state.json`, `cv/sent/`). The currently committed `Kirill_Kohan_CV.docx` is untracked with `git rm --cached` (the file stays on disk and is rebuilt in step 5).
    *Check:* `git status` shows moves only, no content changes.
 2. **Specs.** Write `cv-spec.md` (the current CV's structure plus every rule from this chat), `work-summary-spec.md`, `tailoring-spec.md`, `templates.md` and the 6 rubrics. The ATS and HR rubrics are based on the reviews done in this chat.
    *Check:* you review the specs. This is the most important review.
@@ -574,7 +584,9 @@ Each step ends with something you can check.
 9. **First full review run.** Run `/review` with all 6 rubrics.
    *Check:* the reports match what we found by hand in this chat. Findings already decided in this chat (no LinkedIn link, keep the length, etc.) are not raised again.
 10. **Replay this chat.** Write the chat-step table in section 12 as `docs/acceptance.md`, a repeatable checklist with inputs and expected results per step, and use it as the acceptance test. Start from the CV at commit `b130643` (your CV before this chat), run each capability once, and compare the result with today's CV (commit `772590a` plus later edits). Differences in wording are fine. Missing content, structure or rules are failures. **Rerun `docs/acceptance.md` whenever a spec, rubric or agent definition changes**, since agents aren't covered by `npm test`.
-11. **README.** Includes a first-run section: `npm install`, `npm run doctor`, granting the Pages permission, then `npm run build`.
+11. **README.** Includes a first-run section and a "new laptop" section (section 9a).
+12. **Second-laptop test.** Clone the repo into a fresh folder (or a second user account), follow the new-laptop steps, and run `npm run build:all`.
+   *Check:* the outputs pass `pdf-check`, the content matches the original laptop, and `doctor` reports nothing missing.
 
 ## 9. Scalability
 
@@ -619,12 +631,49 @@ The framework is designed so new outputs, reviewers and agents are **added as fi
 
 All of these are part of the layout in section 3.
 
+## 9a. Running on another laptop
+
+The framework must work on any laptop with the repo cloned. Everything machine-specific lives outside the committed files.
+
+**What travels and how:**
+| Kind | Examples | How it travels |
+|---|---|---|
+| Sources and rules | summaries, facts, profiles, specs, agents, templates, config, CV Markdown | git (private remote) |
+| Built outputs | `.docx`, `.pdf`, previews, `pdf-check.md`, `.build-state.json` | not moved; `npm run build:all` recreates them |
+| Private, not in git | tailored CVs and job ads, `applications.yaml`, sent PDFs | `npm run backup`, then `restore` on the other laptop |
+| Per-laptop settings | repo paths, backup folder, exporter order | `framework.local.yaml`, created on each laptop from the example file |
+| AI tool memory | my memory on this Mac | not needed: every rule and decision is in the repo (`AGENTS.md`, `CLAUDE.md`, specs, `decisions.yaml`) |
+
+**`framework.local.yaml` (git-ignored):**
+```yaml
+repos:                                   # summary repo name -> local clone path on this laptop
+  saas-frontend-repo: ~/work/saas-frontend-repo
+  orion-mobile: ~/clients/orion-mobile
+backup_dir: ~/Library/Mobile Documents/com~apple~CloudDocs/CV-backups   # e.g. iCloud Drive or a USB stick
+backup_password_env: CV_BACKUP_PASSWORD  # optional; the password is read from this environment variable, never stored
+pdf_exporters: [pages, word, libreoffice]   # optional override of the config order for this laptop
+```
+
+**Other operating systems:** on macOS, PDF export uses Pages or Word and the preview uses Quick Look. On Windows or Linux, LibreOffice (`soffice`) is the supported exporter, and previews come from LibreOffice or `pdftoppm`. `doctor` shows which path is active.
+
+**Fonts:** each template lists its fonts in `style-map.yaml` (for `classic`: Cambria, Arial). `doctor` checks they're installed, and `pdf-check` fails if the PDF used a substitute.
+
+**Reproducibility:** `package-lock.json` plus `npm ci` installs the exact same dependency versions, and `.nvmrc` pins the Node version. PDFs from different exporters can differ slightly in layout. `pdf-check` confirms the content is identical, and `applications.yaml` records the exporter used for every sent PDF.
+
+**New laptop steps (also in the README):**
+1. Install Node (the version in `.nvmrc`), and Pages, Word or LibreOffice.
+2. `git clone <private remote>`, then `npm ci`.
+3. Copy `framework.local.example.yaml` to `framework.local.yaml` and set repo paths and the backup folder.
+4. `npm run restore <latest backup>` (if you have tailored CVs or an application log).
+5. `npm run doctor`, and fix anything it reports (fonts, Pages permission, missing repo paths).
+6. `npm run build:all`.
+
 ## 10. Decisions
 
 | Topic | Decision |
 |---|---|
 | Spelling | US English, enforced by the proofreading rubric and `framework.config.yaml` |
-| Local clone paths | Stored in summary front matter (`repos[].path`), so a summary can be re-harvested later |
+| Local clone paths | **Not** stored in summaries, since they differ per laptop. Summaries store the repo name and remote URL. Each laptop maps names to local paths in the git-ignored `framework.local.yaml` (section 9a). This replaces the earlier decision to store paths in summaries. |
 | Tailored CVs in git | `cv/tailored/` and `facts/applications.yaml` are in `.gitignore` by default. To keep one, run `git add -f`. The tailor agent reminds you of this after each run. |
 | Built files in git | **Only Markdown is committed** (CV `.md` files and `gap-report.md`). Every built output, for the master CV, variants and tailored CVs (`.docx`, `.pdf`, `pdf-check.md`, `preview/`, `cv/.build-state.json`), is git-ignored and recreated by `npm run build` / `build:all`. The exception is `templates/*/template.docx`, which is an input, so it's committed. |
 | Role profiles | First four: `react`, `react-native`, `fullstack-react-node`, `nodejs` (section 4.4) |
@@ -675,3 +724,4 @@ Every step done by hand in the chat, and the capability that repeats it:
 | 24 | Asked to check the plan for gaps | Generated blocks (4.2d), traced summary sentences, facts with `entry`/`tags`, re-harvest merge, `status`, confidentiality denylist, ATS job-ad mode, link handling, CNS rule in `CLAUDE.md`, application log (4.5) |
 | 25 | Second gap check | Consistent optional-field defaults, facts with `entry`/`tags`, harvester rules, secret scan, tag validation, per-variant page limits, pasted job ads, agents never commit, deterministic check after every AI step, `docs/acceptance.md` |
 | 26 | Third gap check | Hand-written bullets warn instead of blocking `build`, `/job-change`, supported Markdown subset, `doctor` and first-run setup, single summary header example |
+| 27 | Asked about running on another laptop | Section 9a: `framework.local.yaml` (repo paths, backup folder), `backup`/`restore`, LibreOffice path for Windows/Linux, font checks, `package-lock.json` + `npm ci` + `.nvmrc`, new-laptop steps, second-laptop test (step 12) |
