@@ -1,4 +1,4 @@
-// npm run build [file] [--template <name>] [--no-pdf]     one CV (default: the master)
+// npm run build [file] [--template <name>] [--market <id>] [--no-pdf]     one CV (default: the master)
 // npm run build:all [--no-pdf]                              the master CV and every role variant
 //
 // The full chain (plan 6): validate -> digest -> refresh -> lint -> trace -> market versions ->
@@ -13,7 +13,7 @@ import { exportPdf } from "./export-pdf.ts";
 import { entryHashes, hashSources, sha, writeRecord } from "./lib/buildstate.ts";
 import { loadContext, profileIdForFile } from "./lib/cvmd.ts";
 import { masterCvPath } from "./lib/paths.ts";
-import { cliPath, isMain, loadConfig, rootPath } from "./lib/repo.ts";
+import { cliPath, isMain, loadConfig, loadMarkets, rootPath } from "./lib/repo.ts";
 import { lintCv, type Finding } from "./lint.ts";
 import { writeMarketVersions } from "./market.ts";
 import { checkPdf, writeReport } from "./pdf-check.ts";
@@ -33,7 +33,7 @@ export function templateApproved(template: string): boolean {
   return existsSync(p) && parseYaml(readFileSync(p, "utf8"))?.approved === true;
 }
 
-export async function buildCv(mdFile: string, opts: { template?: string; noPdf?: boolean; requireApproved?: boolean } = {}): Promise<BuildOutcome> {
+export async function buildCv(mdFile: string, opts: { template?: string; noPdf?: boolean; requireApproved?: boolean; market?: string } = {}): Promise<BuildOutcome> {
   const cfg = loadConfig();
   const out: BuildOutcome = { cv: rel(mdFile), ok: false, steps: [], problems: [], outputs: [] };
   const step = (s: string) => out.steps.push(s);
@@ -64,9 +64,16 @@ export async function buildCv(mdFile: string, opts: { template?: string; noPdf?:
   step(traceErr.length ? `trace: ${traceErr.length} unsourced claim(s) (warning for the master CV)` : "trace: ok");
 
   // market versions
-  const versions: { md: string; market?: string }[] = [{ md: mdFile }];
-  for (const m of writeMarketVersions(mdFile)) versions.push({ md: m, market: m.match(/\/markets\/([\w-]+)\//)![1] });
-  step(`market versions: ${versions.length - 1}`);
+  // Markets: every market by default; one market with --market. A job-specific CV (cv/tailored/) is built for
+  // one market only: --market, else the default market (plan 4.6).
+  const tailored = mdFile.startsWith(rootPath(cfg.output.tailored_dir) + "/");
+  const defaultMarket = loadMarkets(cfg).find((m) => m.market.default)?.market.id;
+  const only = opts.market ?? (tailored ? defaultMarket : undefined);
+  const versions: { md: string; market?: string }[] = [];
+  if (!only || only === defaultMarket) versions.push({ md: mdFile });
+  if (only !== defaultMarket) for (const m of writeMarketVersions(mdFile, only)) versions.push({ md: m, market: m.match(/\/markets\/([\w-]+)\//)![1] });
+  if (!versions.length) return fail(`unknown market "${only}"`);
+  step(`markets: ${versions.map((v) => v.market ?? defaultMarket).join(", ")}`);
 
   for (const v of versions) {
     const label = v.market ?? "default market";
@@ -134,7 +141,7 @@ if (isMain(import.meta.url)) {
   const targets = all ? allTargets() : [positional[0] ? cliPath(positional[0]) : masterCvPath()];
   const results: BuildOutcome[] = [];
   for (const t of targets) {
-    const r = await buildCv(t, { template: args.template as string | undefined, noPdf: !!args["no-pdf"], requireApproved: all });
+    const r = await buildCv(t, { template: args.template as string | undefined, noPdf: !!args["no-pdf"], requireApproved: all, market: args.market as string | undefined });
     print(r);
     results.push(r);
   }

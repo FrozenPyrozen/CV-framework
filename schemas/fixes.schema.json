@@ -1,0 +1,30 @@
+{
+  "$id": "fixes.schema.json",
+  "title": "templates/<name>/fixes.yaml (specs/templates.md 3)",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": ["id", "why", "found", "set"],
+    "properties": {
+      "id": { "$ref": "common.schema.json#/$defs/id" },
+      "why": { "type": "string" },
+      "found": { "type": "string" },
+      "set": {
+        "type": "object",
+        "properties": {
+          "bullet": { "type": "object", "required": ["indent_left", "hanging"], "properties": { "indent_left": { "type": "integer" }, "hanging": { "type": "integer" }, "tab": { "type": "object" } }, "additionalProperties": false },
+          "keep_with_next": { "type": "array", "items": { "type": "string" } },
+          "date_tab": { "type": "object", "required": ["align", "pos"], "properties": { "align": { "enum": ["left", "right"] }, "pos": { "type": "integer" } }, "additionalProperties": false },
+          "keep_first_bullets_together": { "type": "integer", "minimum": 2 },
+          "keep_last_bullets_together": { "type": "integer", "minimum": 2 },
+          "paragraphs": { "type": "object", "additionalProperties": { "type": "object", "properties": { "indent_left": { "type": "integer" }, "first_line": { "type": "integer" }, "before": { "type": "integer" }, "after": { "type": "integer" }, "line": { "type": "integer" } }, "additionalProperties": false } },
+          "first_after_section_heading": { "type": "object", "required": ["before"], "properties": { "before": { "type": "integer" } }, "additionalProperties": false },
+          "letter_spacing": { "type": "integer" }
+        },
+        "additionalProperties": false,
+        "minProperties": 1
+      }
+    },
+    "additionalProperties": false
+  }
+}

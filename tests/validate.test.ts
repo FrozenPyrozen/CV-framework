@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { existsSync } from "node:fs";
+import { existsSync, mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { edit, run, tempRepo } from "./helpers.ts";
 import { parseSummary } from "../scripts/lib/repo.ts";
@@ -90,4 +90,17 @@ test("validate checks the config against its schema", () => {
   const r = run("validate.ts", dir);
   assert.equal(r.code, 1);
   assert.match(r.out, /framework\.config\.yaml: \/spelling must be equal to one of the allowed values/);
+});
+
+test("validate checks templates (style map, fixes) and role profile tags", () => {
+  const dir = tempRepo();
+  edit(dir, "templates/classic/fixes.yaml", "keep_with_next: [section_heading,", "keep_with_next: [no_such_type, section_heading,");
+  edit(dir, "templates/classic/style-map.yaml", "approved: true", "approved: maybe");
+  mkdirSync(join(dir, "profiles"), { recursive: true });
+  writeFileSync(join(dir, "profiles/rn.yaml"), "id: rn\nemphasize_tags: [react-nativ]\n");
+  const r = run("validate.ts", dir);
+  assert.equal(r.code, 1);
+  assert.match(r.out, /paragraph type "no_such_type" isn't in the template's style map/);
+  assert.match(r.out, /templates\/classic\/style-map\.yaml: \/approved must be boolean/);
+  assert.match(r.out, /profiles\/rn\.yaml: emphasize_tags: tag "react-nativ" is not in the config tag list/);
 });

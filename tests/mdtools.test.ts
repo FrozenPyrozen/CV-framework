@@ -74,10 +74,12 @@ test("market writes the Ukraine version: no phone, availability, time zones or c
 
 test("lint passes on the refreshed CV and fails on the unrefreshed one", () => {
   assert.equal(run("lint.ts", refreshed(), [CV]).code, 0);
-  const raw = run("lint.ts", tempRepo(), [CV]);
+  const dir = refreshed();
+  edit(dir, CV, "December 2025 - Present", "12/2025 \u2013 Present"); // the old, hand-typed date format
+  const raw = run("lint.ts", dir, [CV]);
   assert.equal(raw.code, 1);
   assert.match(raw.out, /generated parts are out of date/);
-  assert.match(raw.out, /forbidden character "–"/);
+  assert.match(raw.out, /forbidden character "\u2013"/);
 });
 
 const lintCases: [string, (dir: string) => void, RegExp][] = [
@@ -320,4 +322,14 @@ test("validate warns about a skill nothing supports", () => {
   edit(dir, "framework.config.yaml", "  - typescript\n", "  - typescript\n  - testing-unused-xyz\n");
   const r = run("validate.ts", dir);
   assert.match(r.out, /skill "Haskell" isn't supported/);
+});
+
+test("lint uses the role profile's max_words", () => {
+  const dir = refreshed();
+  mkdirSync(join(dir, "profiles"), { recursive: true });
+  writeFileSync(join(dir, "profiles/short.yaml"), "id: short\nmax_words: 500\n");
+  mkdirSync(join(dir, "cv/variants/short"), { recursive: true });
+  writeFileSync(join(dir, "cv/variants/short/cv.md"), readFileSync(join(dir, CV), "utf8"));
+  run("refresh.ts", dir, ["cv/variants/short/cv.md"]);
+  assert.match(run("lint.ts", dir, ["cv/variants/short/cv.md"]).out, /\d+ words \(max 500\)/);
 });

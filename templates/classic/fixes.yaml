@@ -1,4 +1,4 @@
-# Renderer fixes for the classic template (specs/templates.md 3). Applied after filling, in order.
+# Renderer fixes for the classic template (specs/templates.md 3). Applied in order, to the samples or the filled document (see specs/templates.md 5).
 - id: bullet-indent-pages
   why: "The original bullet indent (163/105 twips, tab at 162) renders with the text pushed about 0.6 inch right in Pages."
   found: "2026-10-15"

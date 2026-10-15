@@ -15,7 +15,7 @@ repos:
   - { name: saas-frontend-repo, remote: git@ssh.dev.azure.com:v3/SYSPRO-Product/Engineering/saas-frontend-repo }
   - { name: saas-arch-repo, remote: git@ssh.dev.azure.com:v3/SYSPRO-Product/Engineering/saas-arch-repo }
   - { name: saas-application-mapping-repo, remote: git@ssh.dev.azure.com:v3/SYSPRO-Product/Engineering/saas-application-mapping-repo }
-  - { name: saas-frontend-architecture-repo, remote: git@ssh.dev.azure.com:v3/SYSPRO-Product/Engineering/saas-frontend-architecture-repo }   # solution architecture specs for the host shell
+  - { name: saas-frontend-architecture-repo, remote: git@ssh.dev.azure.com:v3/SYSPRO-Product/Engineering/saas-frontend-architecture-repo }   # no commits under your identities; kept for relevance (solution architecture work, confirmed 2026-10-15)
 author_identities: []
 harvested_at: "2026-10-15"
 # --- how it appears in the CV ---
@@ -45,7 +45,7 @@ The frontend is split into three independently deployable applications under a z
 - an identity app, the only part of the system that ever sees credentials,
 - an administration app for operator and role management.
 
-Evidence comes from git history across 4 repositories from January 2026 to September 2026 (ongoing): 270+ non-merge commits in the frontend monorepo, plus activity in the architecture and application-mapping repositories.
+Evidence comes from git history across 4 repositories from January 2026 to September 2026 (ongoing): 184 of your non-merge commits in the frontend monorepo (from git-digest on 2026-10-15; an earlier count said 270+), plus activity in the architecture and application-mapping repositories.
 
 Team and organization context: TODO (needs user input) in this summary; program size is recorded as fact `syspro-team-size`.
 
@@ -317,7 +317,7 @@ Tags: code-review, code-quality, sdd
 | Number | Meaning | Source | Confidence |
 |---|---|---|---|
 | 1,891 | Distinct ERP menu items exposed by one mock backend instance, each resolvable to a rendered screen (CV rounds to 1,800+) | git | exact |
-| 270+ | Non-merge commits in the frontend monorepo | git | approximate |
+| 184 | Your non-merge commits in the frontend monorepo, 2026-01-27 to 2026-09-18 (git-digest, 2026-10-15) | git | exact |
 | ~17 | Component specifications authored or maintained | git | approximate |
 | 4 | Repositories with activity and traceability chain | git | exact |
 | 3 | Independently deployable apps (host, identity, admin) | git | exact |

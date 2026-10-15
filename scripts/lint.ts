@@ -108,7 +108,8 @@ export function lintCv(file: string, ctx: Context, summaries = loadSummaries(ctx
 
   // Length.
   const words = stripComments(text).replace(/[#*]/g, " ").split(/\s+/).filter(Boolean).length;
-  if (words > cfg.checks.max_words) add("error", `${words} words (max ${cfg.checks.max_words})`);
+  const maxWords = (ctx.roleProfile?.max_words as number | undefined) ?? cfg.checks.max_words;
+  if (words > maxWords) add("error", `${words} words (max ${maxWords})`);
 
   // Calculated values in the summary paragraph.
   const summary = sections.find((s) => s.heading.toUpperCase() === "SUMMARY");

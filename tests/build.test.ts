@@ -10,6 +10,7 @@ const pagesAvailable = process.platform === "darwin" && existsSync("/Application
 
 test("build --no-pdf: refresh, lint, trace warning, both markets rendered, build record; status follows changes", () => {
   const dir = tempRepo();
+  edit(dir, "cv/Kirill_Kohan_CV.md", "December 2025 - Present", "12/2025 - Present"); // a stale job line refresh must fix
   const r = run("build.ts", dir, ["--no-pdf"]);
   assert.equal(r.code, 0, r.out);
   assert.match(r.out, /refresh: generated parts updated/);
@@ -69,10 +70,12 @@ test("lint warns when a built variant was edited by hand", () => {
 test("status warns once about a sent CV that changed, until acknowledged", () => {
   const dir = tempRepo();
   run("build.ts", dir, ["--no-pdf"]);
-  writeFileSync(join(dir, "facts/applications.yaml"), "- company: Acme\n  role: Senior RN\n  date: 2026-10-20\n  pdf: cv/Kirill_Kohan_CV.docx\n  pdf_sha256: 0000000000000000\n  status: applied\n");
+  writeFileSync(join(dir, "facts/applications.yaml"), '- company: Acme\n  role: Senior RN\n  date: 2026-10-20\n  pdf: cv/Kirill_Kohan_CV.docx\n  pdf_sha256: "0000000000000000"\n  status: applied\n- company: Beta\n  pdf: cv/Kirill_Kohan_CV.docx\n  pdf_sha256: 0000000000000000\n');
   assert.match(run("status.ts", dir).out, /SENT\s+Acme \(Senior RN\) received an older version/);
   run("status.ts", dir, ["--ack", "Acme"]);
-  assert.doesNotMatch(run("status.ts", dir).out, /SENT/);
+  const after = run("status.ts", dir).out;
+  assert.doesNotMatch(after, /SENT\s+Acme/);
+  assert.match(after, /SENT\s+Beta: quote pdf_sha256/);
 });
 
 test("full build with Pages: PDFs, pdf-check and previews for both markets", { skip: !pagesAvailable && "needs Pages (macOS)", timeout: 300_000 }, () => {
@@ -95,4 +98,22 @@ test("build records per-entry hashes; status names only the entries that changed
   assert.match(st, /entries to rewrite in variants: various-clients$/m);
   edit(dir, "facts/decisions.yaml", "decision: Keep the current length", "decision: Keep the present length");
   assert.doesNotMatch(run("status.ts", dir).out, /decisions\.yaml/);
+});
+
+test("build --market builds one market; a tailored CV gets only the default market", () => {
+  const dir = tempRepo();
+  const ua = run("build.ts", dir, ["--no-pdf", "--market", "ukraine"]);
+  assert.equal(ua.code, 0, ua.out);
+  assert.match(ua.out, /markets: ukraine/);
+  assert.doesNotMatch(ua.out, /render \(default market\)/);
+  mkdirSync(join(dir, "cv/tailored/acme"), { recursive: true });
+  run("refresh.ts", dir);
+  // Tailored CVs must be fully sourced: give every claim a placeholder source so the build reaches the markets step.
+  const sourced = readFileSync(join(dir, "cv/Kirill_Kohan_CV.md"), "utf8").split("\n")
+    .map((l) => (/^\* /.test(l) || /^Senior software engineer/.test(l) ? `${l} <!-- src: profile -->` : l)).join("\n");
+  writeFileSync(join(dir, "cv/tailored/acme/cv.md"), sourced);
+  const t = run("build.ts", dir, ["cv/tailored/acme/cv.md", "--no-pdf"]);
+  assert.equal(t.code, 0, t.out);
+  assert.match(t.out, /markets: worldwide/);
+  assert.ok(!existsSync(join(dir, "cv/tailored/acme/markets")), "no Ukraine version for a tailored CV unless asked");
 });

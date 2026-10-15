@@ -57,7 +57,7 @@ cv_max_bullets: 8
 | `team_size_led` | no | people you led on this job; default 0 |
 | `counts_as_experience` | no | default true for `cv_section: experience`, false otherwise |
 | `repos[].name` / `repos[].remote` | for `source: git` | repo name and remote URL. **No local paths**: those are per laptop in `framework.local.yaml`. |
-| `author_identities` | no | overrides `profile.yaml` `git_identities` for this summary only |
+| `author_identities` | no | extra git identities for this summary's repos, added to `profile.yaml` `git_identities` |
 | `harvested_at` | for `source: git` | date of the last harvest; `null` otherwise |
 | `show_in_cv` | no | default true; false keeps the summary as a source (e.g. for the portfolio) but never shows it in a CV |
 | `cv_section` | yes | a section id from `cv_sections` in config (`experience`, `consulting` …) |

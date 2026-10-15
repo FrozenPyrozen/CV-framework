@@ -64,7 +64,7 @@ Each entry is a list of `*` bullets (one level, no nesting).
 - **Numbers:** use them whenever a source provides one (`1,800+`, `12x`, `95%`, `25+ person program`). Never invent or round up a number. "~" is allowed when the source says "about".
 - **Bold:** bold the technologies and key terms a screener searches for (`**React Native**`, `**OpenID Connect (OIDC)**`), and important numbers or outcomes when they're the point of the bullet. Don't bold whole sentences.
 - **Acronyms:** spell out once with the acronym in brackets where screeners may search either form: `**specification-driven development (SDD)**`, `**OpenID Connect (OIDC)**`.
-- **Stack line:** an entry may end with `* Stack: **A, B, C**` listing the main technologies (for the current job, required).
+- **Stack line:** an entry may end with `* Stack: **A, B, C**` listing the main technologies (expected for the current job; `lint` warns when it's missing).
 - **Length:** a bullet should fit in about 2 lines of the rendered CV (roughly 45 words at most).
 - **Limits:** `cv_max_bullets` in the summary caps an entry in the master CV. Profiles set their own limits (see the tailoring spec).
 - **Source:** every bullet ends with a source comment (section 6).

@@ -18,7 +18,7 @@ interface Fix { id: string; set: { bullet?: { indent_left: number; hanging: numb
 
 export interface RenderResult { paragraphs: number; links: number; warnings: string[] }
 
-const URL_OR_EMAIL = /(https?:\/\/[^\s)]+|[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,})/g;
+const MD_LINK_OR_URL = /\[([^\]]+)\]\((https?:\/\/[^)\s]+|mailto:[^)\s]+)\)|https?:\/\/[^\s)]+|[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/g;
 const DATE_FIELD = /\b(19|20)\d{2}\b/;
 
 export function loadTemplate(name: string, cfg: Config = loadConfig()) {
@@ -118,8 +118,15 @@ export async function renderDocx(markdown: string, outPath: string, templateName
     parts.forEach((part, i) => {
       const bold = i % 2 === 1;
       let last = 0;
-      for (const m of part.matchAll(URL_OR_EMAIL)) {
+      // [text](url) links first, then bare URLs and emails.
+      for (const m of part.matchAll(MD_LINK_OR_URL)) {
         let before = part.slice(last, m.index);
+        if (m[1] !== undefined) {
+          plain(before, bold);
+          link(m[1], m[2]);
+          last = m.index! + m[0].length;
+          continue;
+        }
         const isEmail = !m[0].startsWith("http");
         let label = m[0];
         if (opts.contact && !isEmail) {

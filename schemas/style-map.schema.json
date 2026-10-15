@@ -1,0 +1,26 @@
+{
+  "$id": "style-map.schema.json",
+  "title": "templates/<name>/style-map.yaml (specs/templates.md 2)",
+  "type": "object",
+  "required": ["schema_version", "name", "approved", "fonts", "links", "paragraphs"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "name": { "$ref": "common.schema.json#/$defs/id" },
+    "approved": { "type": "boolean" },
+    "approved_at": { "type": "string" },
+    "page": { "type": "object" },
+    "fonts": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+    "links": { "type": "object", "properties": { "color": { "type": "string" }, "underline": { "type": "boolean" } }, "additionalProperties": false },
+    "paragraphs": {
+      "type": "object",
+      "required": ["name", "contact_line", "section_heading", "entry_title", "entry_details", "bullet", "body"],
+      "propertyNames": { "enum": ["name", "headline", "contact_line", "header_rule", "section_heading", "section_rule", "entry_title", "entry_details", "bullet", "body", "section_intro", "education_line", "skills_line"] },
+      "additionalProperties": {
+        "type": "object", "required": ["sample"],
+        "properties": { "sample": { "type": "integer", "minimum": 0 }, "keep": { "type": "boolean" }, "bold": { "type": "boolean" }, "date_tab": { "type": "boolean" } },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

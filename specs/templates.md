@@ -14,7 +14,7 @@ templates/<name>/
 ├── style-map.yaml        # how each Markdown element maps to the template
 ├── fixes.yaml            # renderer fixes for this template
 ├── reference-preview.png # the approved look of page 1, used by the layout reviewer
-└── import-report.md      # findings from the import
+└── import-report.md      # findings from the import (written by the template-importer agent; classic predates it)
 ```
 
 `<name>` is lowercase-kebab (e.g. `classic`, `modern-two-tone`).
@@ -113,5 +113,5 @@ Pages: N · pdf-check: pass/fail · Preview: preview/page-1.png …
 - Hyperlinks are created as new link entries from the URLs in the Markdown (and `profile.yaml`), never by reusing the template's own link ids.
 - Bold Markdown becomes bold text in the same font, size and color as the sample.
 - Dates in entry detail lines go after the sample's tab stop.
-- `fixes.yaml` is applied last.
+- `fixes.yaml`: fixes that change sample paragraphs or the list definition (bullets, tabs, spacing, keep-with-next) are applied to the samples before filling; fixes that depend on the filled document (bullet groups, the first item under a section line, letter spacing) are applied after filling.
 - The current template, `classic`, is imported from `templates/classic/source.docx` (your previous CV) with `templates/classic/import-map.yaml`. Its look was then adjusted with the user on 2026-10-15 through `fixes.yaml` (aligned left edge, tighter spacing, right-aligned dates, headings and bullet groups kept together) and approved from all-page previews.

@@ -93,10 +93,11 @@ export async function checkPdf(pdf: string, mdFile: string): Promise<CheckResult
   // 6. Contact details: email (and the phone where the market shows it) on page 1; hidden ones absent.
   const p1 = normalizeText(pages[0] ?? "");
   const digits = (s: string) => s.replace(/\D/g, "");
-  if (!p1.includes(ctx.profile.contacts.email)) failures.push("email is not on page 1");
+  const onP1 = cfg.checks.contacts_on_page_1 !== false;
+  if (onP1 && !p1.includes(ctx.profile.contacts.email)) failures.push("email is not on page 1");
   const phone = ctx.profile.contacts.phone;
   if (phone) {
-    if (ctx.market.header.show_phone && !digits(p1).includes(digits(phone))) failures.push("phone is not on page 1");
+    if (onP1 && ctx.market.header.show_phone && !digits(p1).includes(digits(phone))) failures.push("phone is not on page 1");
     if (!ctx.market.header.show_phone && digits(all).includes(digits(phone))) failures.push(`phone number appears although market "${ctx.market.id}" hides it`);
   }
 

@@ -12,8 +12,8 @@ team_size_led: 0
 counts_as_experience: false
 # --- harvesting ---
 repos:
-  - { name: orion-mobile, remote: TODO (needs user input) }
-  - { name: MPM_HealthBook_Android, remote: TODO (needs user input) }
+  - { name: orion-mobile, remote: git@bitbucket.org:clinicalink_orion/orion-mobile.git }
+  - { name: MPM_HealthBook_Android, remote: https://github.com/ClinicalInk-Centros/MPM_HealthBook_Android.git }
 author_identities: []
 harvested_at: "2026-10-15"
 # --- how it appears in the CV ---
@@ -224,6 +224,8 @@ TODO (needs user input)
 
 ## 9. Confidentiality notes
 
+- url_pattern: "*clinicalink*"
+- url_pattern: "*ClinicalInk*"
 - term: Clinical Ink
 - term: Clinicalink
 - term: Orion

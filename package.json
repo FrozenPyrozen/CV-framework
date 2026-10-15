@@ -26,7 +26,12 @@
     "pdf-check": "tsx scripts/pdf-check.ts",
     "build": "tsx scripts/build.ts",
     "build:all": "tsx scripts/build.ts --all",
-    "status": "tsx scripts/status.ts"
+    "status": "tsx scripts/status.ts",
+    "doctor": "tsx scripts/doctor.ts",
+    "backup": "tsx scripts/backup.ts",
+    "restore": "tsx scripts/backup.ts --restore",
+    "git-digest": "tsx scripts/git-digest.ts",
+    "index": "tsx scripts/index.ts"
   },
   "devDependencies": {
     "@types/node": "^22.20.5",

@@ -4,10 +4,10 @@ import AjvModule from "ajv/dist/2020.js";
 
 // ajv ships CommonJS; under ES modules the class may sit on .default.
 const Ajv2020: typeof AjvModule.default = (AjvModule as any).default ?? AjvModule;
-import { readFileSync, readdirSync } from "node:fs";
-import { basename } from "node:path";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
+import { basename, join } from "node:path";
 import {
-  isMain, SUMMARY_SECTIONS, loadConfig, loadConfirmed, loadDecisions, loadMarkets, loadProfile, loadSkills, loadSummaries, rootPath,
+  isMain, SUMMARY_SECTIONS, loadConfig, loadConfirmed, loadDecisions, loadMarkets, loadProfile, loadSkills, loadSummaries, readYaml, rootPath,
 } from "./lib/repo.ts";
 import { writeDigests } from "./digest.ts";
 
@@ -141,6 +141,35 @@ export function validateRepo(): Issue[] {
   if (markets.length && defaults.length !== 1) err("markets/", `exactly one market must have default: true (found ${defaults.length})`);
   const suffixes = markets.map((m) => m.market.file_suffix);
   if (new Set(suffixes).size !== suffixes.length) err("markets/", "file_suffix values must be unique");
+
+  // --- templates (specs/templates.md 2-3) ---
+  const tdir = rootPath(cfg.paths.templates);
+  if (existsSync(tdir)) for (const t of readdirSync(tdir)) {
+    const sm = join(tdir, t, "style-map.yaml"), fx = join(tdir, t, "fixes.yaml");
+    if (!existsSync(sm)) continue;
+    const smData = readYaml(sm);
+    check("style-map.schema.json", smData, `templates/${t}/style-map.yaml`);
+    if (smData?.name !== t) err(`templates/${t}/style-map.yaml`, `name "${smData?.name}" doesn't match the folder name`);
+    if (existsSync(fx)) {
+      const fxData = readYaml(fx) ?? [];
+      check("fixes.schema.json", fxData, `templates/${t}/fixes.yaml`);
+      const types = new Set(Object.keys(smData?.paragraphs ?? {}));
+      for (const f of Array.isArray(fxData) ? fxData : []) {
+        for (const k of [...(f.set?.keep_with_next ?? []), ...Object.keys(f.set?.paragraphs ?? {})]) {
+          if (!types.has(k)) err(`templates/${t}/fixes.yaml`, `${f.id}: paragraph type "${k}" isn't in the template's style map`);
+        }
+      }
+    }
+  }
+
+  // --- role profiles: tags (the full profile schema comes with step 8) ---
+  const pdir = rootPath(cfg.paths.profiles);
+  if (existsSync(pdir)) for (const f of readdirSync(pdir).filter((x) => x.endsWith(".yaml"))) {
+    const p = readYaml(join(pdir, f)) ?? {};
+    const file = `${cfg.paths.profiles}/${f}`;
+    if (p.id !== basename(f, ".yaml")) err(file, `id "${p.id}" doesn't match the file name`);
+    for (const key of ["emphasize_tags", "deemphasize_tags", "summary_focus"]) unknownTags(p[key] ?? [], file, key);
+  }
 
   return issues;
 }

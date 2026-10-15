@@ -100,3 +100,16 @@ test("render: consistent left edge and spacing, lead-in lines stay with their bu
   const master = d.paragraphs.find((p) => paragraphText(p).includes("| 2020 - 2022"))!;
   assert.match(pPr(master), /<w:keepNext w:val="1"\/>/, "education line keeps with its Honors bullet");
 });
+
+test("render turns [text](url) into a real link with that text", async () => {
+  const dir = tempRepo();
+  run("refresh.ts", dir);
+  edit(dir, CV, "* Delivered the core mobile app", "* See [my site](https://example.com/x) and delivered the core mobile app");
+  run("render.ts", dir);
+  const out = join(dir, "cv/Kirill_Kohan_CV.docx");
+  const d = await openDocx(out);
+  const p = d.paragraphs.find((x) => paragraphText(x).startsWith("See my site and delivered"));
+  assert.ok(p, "link rendered as its text, no brackets");
+  const rels = await (await JSZip.loadAsync(readFileSync(out))).file("word/_rels/document.xml.rels")!.async("string");
+  assert.match(rels, /Target="https:\/\/example\.com\/x"/);
+});

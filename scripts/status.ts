@@ -56,15 +56,17 @@ export function applicationWarnings(ack?: string): string[] {
   const out: string[] = [];
   let changed = false;
   for (const a of apps) {
-    // Hashes made only of digits are read by YAML as numbers: always compare them as text.
-    if (a.pdf_sha256 != null) a.pdf_sha256 = String(a.pdf_sha256);
-    if (a.acknowledged_sha256 != null) a.acknowledged_sha256 = String(a.acknowledged_sha256);
+    // An unquoted all-digit hash is read by YAML as a number, losing leading zeros: it can't be compared.
+    if (typeof (a as any).pdf_sha256 === "number" || typeof (a as any).acknowledged_sha256 === "number") {
+      out.push(`${a.company}: quote pdf_sha256 and acknowledged_sha256 in applications.yaml (e.g. pdf_sha256: "0123…"); skipped`);
+      continue;
+    }
     if (!a.pdf || !a.pdf_sha256 || ["rejected", "withdrawn"].includes(a.status ?? "")) continue;
     const abs = rootPath(a.pdf);
     const current = existsSync(abs) ? sha(abs) : undefined;
-    if (!current || current.startsWith(a.pdf_sha256) || a.pdf_sha256.startsWith(current)) continue;
+    if (!current || current === a.pdf_sha256) continue;
     if (ack && a.company.toLowerCase() === ack.toLowerCase()) { a.acknowledged_sha256 = current; changed = true; continue; }
-    if (a.acknowledged_sha256 && current.startsWith(a.acknowledged_sha256)) continue;
+    if (a.acknowledged_sha256 === current) continue;
     out.push(`${a.company}${a.role ? ` (${a.role})` : ""} received an older version of ${a.pdf} on ${a.date ?? "?"}; acknowledge with npm run status -- --ack "${a.company}"`);
   }
   if (changed) writeFileSync(p, stringify(Array.isArray(doc) ? apps : { ...doc, applications: apps }));
