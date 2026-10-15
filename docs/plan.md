@@ -43,7 +43,7 @@ CV/
 ├── package-lock.json              # exact dependency versions (committed; install with `npm ci`)
 ├── package.json                   # scripts: build, build:all, render, pdf, pdf-check, preview, lint, trace,
 │                                  #          check, status, validate, index, template-import, test, doctor, refresh,
-│                                  #          backup, restore
+│                                  #          backup, restore, digest, git-digest, select, reattach-src
 ├── specs/
 │   ├── cv-spec.md                 # CV structure and writing rules (seeded from this chat)
 │   ├── work-summary-spec.md       # summary template + front matter schema
@@ -71,13 +71,15 @@ CV/
 │   ├── decisions.yaml             # choices you made about the CV (e.g. "no LinkedIn"), so reviewers stop re-raising them
 │   └── applications.yaml          # optional log: which CV/PDF went to which company and when (4.5)
 ├── summaries/                     # one file per job/project, all following work-summary-spec
-│   └── .digests/                  # generated short digests (contributions + tags) read by composer/tailor (R10; git-ignored)
+│   └── .digests/                  # generated short digests (contributions + tags) read by composer/tailor (R10; git-ignored,
+│                                  # recreated by `npm run digest`)
 ├── profiles/                      # role profiles: react.yaml, react-native.yaml, fullstack-react-node.yaml, nodejs.yaml
 ├── cv/
 │   ├── <name>_CV.md               # master CV (generated, hand-editable); file name from config
 │   ├── <name>_CV.docx / .pdf / pdf-check.md / preview/   # built outputs, git-ignored
 │   ├── variants/<profile-id>/     # role-based CVs (generated, not hand-edited): cv.md + gap-report.md committed; built files git-ignored
-│   ├── tailored/<company-role>/   # per job ad (git-ignored): cv.md, .docx, .pdf, job-description.md, gap-report.md
+│   ├── tailored/<company-role>/   # per job ad (git-ignored): cv.md, .docx, .pdf, job-description.md, jd-tags.yaml, gap-report.md
+│   ├── sent/                      # optional exact copies of PDFs you sent (git-ignored, included in backups; 4.5)
 │   └── .build-state.json          # source/output hashes used by `status` (local, git-ignored)
 ├── templates/
 │   └── <name>/                    # one folder per template; "classic" = current Kirill_Kohan_CV_prev.docx
@@ -88,11 +90,13 @@ CV/
 │       ├── reference-preview.png  # approved look, used by the layout reviewer
 │       └── import-report.md       # ATS warnings + preview from the import
 ├── reports/<YYYY-MM-DD-HHmm>/     # reviewer reports for one run: ats.md, hr.md, proofreading.md, ...
+├── .cv-runs/<run-id>/             # per-run working files: state.json (resume), git-digest.md (git-ignored)
 ├── schemas/                       # summary, facts, profile, skills, profile-role, report, style-map JSON Schemas
 ├── scripts/                       # Node/TypeScript CLIs
 │   ├── lib/                       # shared engine: md parsing, front matter, trace resolution, config, hashing,
 │   │                              # text normalization (R4), export lock (R1)
 │   ├── git-digest.ts              # condenses a repo's history into a compact digest for the harvester (R9, R11)
+│   ├── digest.ts                  # writes summaries/.digests/ from summaries + facts (R10)
 │   ├── select-bullets.ts          # deterministic bullet selection/ordering by profile tags (R8)
 │   ├── reattach-src.ts            # re-attaches source comments after an agent edit (R7)
 │   ├── build.ts                   # md -> docx -> pdf -> pdf-check -> preview
@@ -404,6 +408,8 @@ Rules for the tailor agent with a profile:
 - All jobs stay listed (no hidden gaps in the timeline), but less relevant jobs shrink to `min_bullets_per_entry`.
 - It writes a `gap-report.md`: the profile's emphasis areas that have little supporting evidence. It also suggests which summaries could be enriched, or what you could add as a confirmed fact if it's true.
 
+**Job ads become tags.** For `--jd`, the tailor agent first maps the job ad's requirements to tags from the config list, and proposes new tags for anything missing. The map is saved as `cv/tailored/<company-role>/jd-tags.yaml` for you to adjust. Then `npm run select -- --tags jd-tags.yaml` makes the deterministic selection, exactly as for profiles.
+
 Profiles and job descriptions can be combined: `--profile react --jd job.md` starts from the profile, then tailors to the job. New profiles, such as `frontend-architect` or `tech-lead`, are added as new files with no code changes.
 
 ### 4.5 Application log (`facts/applications.yaml`, optional)
@@ -472,6 +478,10 @@ What the main rubrics must produce (taken from the reviews done in this chat):
 | `validate` | checks all inputs against `schemas/`. Every tag (summary contributions, facts, skills, profiles' `emphasize_tags`/`deemphasize_tags`/`summary_focus`) must be in the config tag list, so a typo like `react-nativ` fails instead of silently breaking selection. **New** tags enter the list only through an approved proposal (from `/harvest` or `/add-experience`), so new technologies are added deliberately, never blocked. |
 | `index` | regenerates the lists of agents, rubrics, profiles and outputs in `AGENTS.md` |
 | `test` | runs the script tests in `tests/fixtures/` |
+| `digest` | regenerates `summaries/.digests/` from summaries and facts (R10). Runs automatically at the start of `validate`, `refresh`, `build` and every agent flow, so digests are never stale and a fresh laptop needs no extra step. |
+| `git-digest <repo-name> [--since --until]` | writes a compact history digest for the harvester to `.cv-runs/<run-id>/git-digest.md`, including co-authored and squash-merged commits and a "possibly yours" list (R9, R11) |
+| `select <cv-dir> --profile <id> \| --tags <file>` | deterministic bullet selection and ordering by tags, limits and overrides. Writes `selection.json` next to the CV, which the tailor agent then words (R8). |
+| `reattach-src <file>` | restores source comments an agent dropped, by matching each bullet to its previous version, and lists the bullets it couldn't match (R7) |
 | `doctor` | checks the environment: Node version (`engines: node >= 20` in `package.json`), installed dependencies, which PDF exporters are available (Pages, Word, LibreOffice), Quick Look, `pdftoppm` (optional), and the one-time macOS permission to control Pages (does a tiny test export). It also reports which AI agent tools it finds (e.g. the `claude` CLI), checks that `framework.local.yaml` exists, lists summary repos with no local path on this laptop, checks that every template's fonts are installed, and shows which PDF and preview path is active on this OS. Prints what's missing and how to fix it. |
 | `backup` | packs everything git doesn't carry (tailored CVs with job ads, `applications.yaml`, `framework.local.yaml`, and the PDFs you sent if kept) into one dated `.zip` in the backup folder from `framework.local.yaml`, optionally password-protected (AES-256 via `archiver-zip-encrypted`, password from the environment variable named in `framework.local.yaml`) |
 | `restore <archive>` | unpacks a backup on another laptop without overwriting newer files, and lists conflicts |
@@ -548,7 +558,7 @@ Dependencies: TypeScript run with `tsx`, `jszip` for reading and writing `.docx`
 | Command | Steps |
 |---|---|
 | `/harvest <repo-path \| repo-name> [<id>]` | 1. **Locate the repo.** Given a path, it reads the remote URL, stores the repo name and remote in the summary, and adds `name: path` to `framework.local.yaml`. Given a name, it looks up the path there. If the path is missing on this laptop, it asks for it or offers to clone from the stored remote. 2. **Find your commits.** It lists the repo's commit authors, highlights likely matches with your `git_identities` (similar names, your email domains), and asks before adding new ones to `profile.yaml`. The report shows how many of your commits were found, and zero matches stops the harvest. 3. **New or existing job?** It asks whether the repo is a new job or project, or part of an existing summary, listing likely matches by period, domain and remote host. It then creates a new summary or **merges** into the chosen one, adding the repo to its `repos` list. 4. **Job details (new summaries only).** The advisor asks for company, role, dates, engagement type, CV section, client label and emphasis, suggesting answers from the repo (first and last commit dates, README, remote host). Nothing is guessed silently. 5. **Write or merge the summary.** 6. **New tags and skills.** It proposes new tags for the config list and new `skills.yaml` entries for technologies you used hands-on, which you approve. 7. **`validate`**, then you review the diff. |
-| `/add-repo <repo-path \| repo-name>` | **The whole new-repo flow in one command:** `/harvest` (all 7 steps above), **pause for your approval of the summary**, then `/compose`, **pause for your approval of the CV diff**, then `/variants`, `build:all` and `/review`. It ends with the `/status` summary and the review verdicts. Each stage can be resumed if you stop in the middle: progress is saved in a git-ignored `.cv-runs/<run-id>.json` (stage, repo, summary id, pending approvals), and `/add-repo --resume` continues the latest run. |
+| `/add-repo <repo-path \| repo-name>` | **The whole new-repo flow in one command:** `/harvest` (all 7 steps above), **pause for your approval of the summary**, then `/compose`, **pause for your approval of the CV diff**, then `/variants`, `build:all` and `/review`. It ends with the `/status` summary and the review verdicts. Each stage can be resumed if you stop in the middle: progress is saved in a git-ignored `.cv-runs/<run-id>/state.json` (stage, repo, summary id, pending approvals), and `/add-repo --resume` continues the latest run. |
 | `/compose` | Composer updates the master CV, then `npm run check` |
 | `/tailor --profile <id>` | Tailor builds `cv/variants/<id>/cv.md` from the profile, then `npm run build` on it |
 | `/tailor --jd <file \| pasted text> [--profile <id>]` | Tailor builds `cv/tailored/<company-role>/` for one job, optionally starting from a profile, then `npm run build`. Pasted job ad text is saved as `job-description.md` in that folder. |
@@ -561,7 +571,7 @@ Dependencies: TypeScript run with `tsx`, `jszip` for reading and writing `.docx`
 | `/import-template <file> <name>` | Template import (6.4), followed by a test build and preview for your approval |
 | `/build [cv-file]` | `npm run build`, then reports the pdf-check result and shows the page previews |
 | `/doctor` | `npm run doctor`, then explains how to fix anything missing |
-| `/status` | `npm run status`, then suggests the commands that bring stale CVs up to date |
+| `/status [--ack <application>]` | `npm run status`, then suggests the commands that bring stale CVs up to date |
 | `/log-application` | Records a sent CV in `applications.yaml` (4.5) |
 
 Each command file in `.claude/commands/` only says "follow `agents/<name>.md`". The same instructions are listed in `AGENTS.md` for other tools.
@@ -570,7 +580,7 @@ Each command file in `.claude/commands/` only says "follow `agents/<name>.md`". 
 
 Each step ends with something you can check.
 
-1. **Restructure and preserve.** Create the folders. Move the CV files to `cv/` and the template to `templates/` (committing the template). Move the summaries to `summaries/` with the new names. Add `package.json` (with `engines: node >= 20`), `package-lock.json`, `.nvmrc` and `framework.local.example.yaml`, and update `.gitignore` (`summaries/.digests/`, `.cv-runs/`, `framework.local.yaml`, `backups/`, `node_modules/`, `cv/tailored/`, `facts/applications.yaml`, `cv/**/*.docx`, `cv/**/*.pdf`, `cv/**/pdf-check.md`, `cv/**/preview/`, `cv/.build-state.json`, `cv/sent/`). The currently committed `Kirill_Kohan_CV.docx` is untracked with `git rm --cached` (the file stays on disk and is rebuilt in step 5).
+1. **Restructure and preserve.** Create the folders. Move the CV files to `cv/` and the template to `templates/` (committing the template). Move the summaries to `summaries/` with the new names. Add `package.json` (with `engines: node >= 20`), `package-lock.json`, `.nvmrc` and `framework.local.example.yaml`, and update `.gitignore` (`summaries/.digests/`, `.cv-runs/`, `framework.local.yaml`, `backups/`, `node_modules/`, `cv/tailored/`, `facts/applications.yaml`, `cv/**/*.docx`, `cv/**/*.pdf`, `cv/**/pdf-check.md`, `cv/**/preview/`, `cv/**/selection.json`, `cv/.build-state.json`, `cv/sent/`). The currently committed `Kirill_Kohan_CV.docx` is untracked with `git rm --cached` (the file stays on disk and is rebuilt in step 5).
    *Check:* `git status` shows moves only, no content changes.
 2. **Specs.** Write `cv-spec.md` (the current CV's structure plus every rule from this chat), `work-summary-spec.md`, `tailoring-spec.md`, `templates.md` and the 6 rubrics. The ATS and HR rubrics are based on the reviews done in this chat.
    *Check:* you review the specs. This is the most important review.
@@ -628,6 +638,9 @@ The framework is designed so new outputs, reviewers and agents are **added as fi
     max_words: 2200
     contacts_on_page_1: true
     forbidden_chars: ["→", "·", "•", "—"]
+    export_timeout_s: 60            # per-file PDF export timeout (R1)
+  secret_scan:
+    allow: []                       # approved values that look like secrets (profile links are always allowed, R5)
   ```
 
 - **What stays in code:** only mechanics, such as how Markdown is parsed, how a Word file is written, how Pages is controlled and how checks run. Every value they use comes from config, a template, a spec, or the facts and summaries.
@@ -717,7 +730,7 @@ Problems expected when the flows actually run, found by simulating every flow ag
 | Spelling | US English, enforced by the proofreading rubric and `framework.config.yaml` |
 | Local clone paths | **Not** stored in summaries, since they differ per laptop. Summaries store the repo name and remote URL. Each laptop maps names to local paths in the git-ignored `framework.local.yaml` (section 9a). This replaces the earlier decision to store paths in summaries. |
 | Tailored CVs in git | `cv/tailored/` and `facts/applications.yaml` are in `.gitignore` by default. To keep one, run `git add -f`. The tailor agent reminds you of this after each run. |
-| Built files in git | **Only Markdown is committed** (CV `.md` files and `gap-report.md`). Every built output, for the master CV, variants and tailored CVs (`.docx`, `.pdf`, `pdf-check.md`, `preview/`, `cv/.build-state.json`), is git-ignored and recreated by `npm run build` / `build:all`. The exception is `templates/*/template.docx`, which is an input, so it's committed. |
+| Built files in git | **Only Markdown is committed** (CV `.md` files and `gap-report.md`). Every built output, for the master CV, variants and tailored CVs (`.docx`, `.pdf`, `pdf-check.md`, `preview/`, `selection.json`, `cv/.build-state.json`), is git-ignored and recreated by `npm run build` / `build:all`. The exception is `templates/*/template.docx`, which is an input, so it's committed. |
 | Role profiles | First four: `react`, `react-native`, `fullstack-react-node`, `nodejs` (section 4.4) |
 | Decisions already made in this chat | Recorded in `facts/decisions.yaml` so reviewers don't raise them again: no LinkedIn/GitHub links (the old CV had them, so they can come back), keep the current length, keep the Drive portfolio link, keep the job title step from GM to SYSPRO |
 | Variants vs manual edits | Variants are generated. The master CV's wording is reused by source id, and lasting variant tweaks go in profile `overrides` |
@@ -770,3 +783,4 @@ Every step done by hand in the chat, and the capability that repeats it:
 | 28 | Gap check after portability | `/harvest` accepts a repo name or path and keeps `framework.local.yaml` updated; cross-platform encrypted backups (`archiver-zip-encrypted`) |
 | 29 | Validated "any laptop + any new repo" end to end | AI tool in new-laptop steps and `doctor`, identity detection, new-or-existing-job choice, job details interview, approved growth of tags and skills, `/add-repo` for the whole flow, acceptance scenario (step 13) |
 | 30 | Simulated running every flow | Section 9b: export queue and timeouts, sample-paragraph style maps, font check from embedded PDF fonts, text normalization, scan exceptions, script-based bullet selection, git digests, summary digests, source-comment reattachment, all-page previews, one-time stale warnings |
+| 31 | Gap check after the risks section | New scripts exposed as `npm run digest`, `git-digest`, `select`, `reattach-src`; digests auto-regenerated; `/status --ack`; new config keys; job ad mapped to tags (`jd-tags.yaml`) |
