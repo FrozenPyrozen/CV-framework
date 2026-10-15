@@ -1,0 +1,15 @@
+# Per-laptop settings. Copy to framework.local.yaml (git-ignored) and adjust for this laptop.
+# See docs/plan.md, section 9a.
+
+# Summary repo name -> local clone path on this laptop. /harvest fills this in when given a path.
+repos:
+  # saas-frontend-repo: ~/work/saas-frontend-repo
+
+# Where `npm run backup` writes archives (e.g. iCloud Drive or a USB stick).
+backup_dir: ~/Library/Mobile Documents/com~apple~CloudDocs/CV-backups
+
+# Optional: name of the environment variable holding the backup password. The password itself is never stored.
+backup_password_env: CV_BACKUP_PASSWORD
+
+# Optional: PDF exporter order for this laptop (overrides framework.config.yaml).
+# pdf_exporters: [pages, word, libreoffice]

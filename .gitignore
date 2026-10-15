@@ -7,3 +7,25 @@
 
 # Claude Code local settings
 .claude/*.local.*
+
+# Node
+node_modules/
+
+# Per-laptop settings and working files
+framework.local.yaml
+backups/
+.cv-runs/
+
+# Generated (recreated by npm run digest / build / build:all)
+summaries/.digests/
+cv/**/*.docx
+cv/**/*.pdf
+cv/**/pdf-check.md
+cv/**/preview/
+cv/**/selection.json
+cv/.build-state.json
+
+# Private, not in git (moved between laptops with npm run backup / restore)
+cv/tailored/
+cv/sent/
+facts/applications.yaml
