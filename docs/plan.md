@@ -106,7 +106,7 @@ CV/
 └── .claude/
     ├── agents/                    # thin wrappers -> agents/*.md
     └── commands/                  # /harvest /compose /tailor /variants /review /improve /add-experience
-                                   # /profile /job-change /import-template /build /status /log-application /doctor
+                                   # /profile /job-change /add-repo /import-template /build /status /log-application /doctor
 ```
 
 ## 4. Data formats
@@ -426,7 +426,7 @@ Records what each recruiter received, so you can answer "which CV did I send the
 | **Composer** | all summaries, `confirmed.yaml`, `profile.yaml`, `skills.yaml`, `decisions.yaml`, `framework.config.yaml`, current CV | the updated master CV (path and name from config) with trace comments + short change log in the reply | cv-spec |
 | **Tailor** | a profile and/or a job description file, master CV, summaries, facts | `cv/variants/<profile>/` or `cv/tailored/<company-role>/`: `cv.md` + `gap-report.md` | tailoring-spec + the profile (may reorder, re-emphasize, drop; may not add unsourced claims) |
 | **Reviewer** (run per rubric) | CV file, rubric, `decisions.yaml` (findings already decided are listed as "decided", not raised again), `profile.yaml` (HR), summaries/facts (fact-check only), preview images (layout only), job ad (ATS job-ad mode) | `reports/<date-time>/<rubric>.md` with verdict, score, findings (line, issue, suggestion, severity, `needs_user_input: yes/no`) | rubrics/* |
-| **Advisor** | a report (or several), the CV, facts | asks you questions one topic at a time with suggested answers. It writes your answers to `facts/confirmed.yaml` (or to a summary's `cv_emphasis`), hands the change list to the composer, and shows the diff. | cv-spec + the report's rubric |
+| **Advisor** | a report (or several), the CV, facts; also used by `/harvest` (job details), `/job-change`, `/profile` and `/add-experience` for their questions | asks you questions one topic at a time with suggested answers. It writes your answers to `facts/confirmed.yaml` (or to a summary's `cv_emphasis`), hands the change list to the composer, and shows the diff. | cv-spec + the report's rubric |
 | **Template importer** | a Word or PDF CV | `templates/<name>/` (section 6.4) | template-import rules in `specs/templates.md` |
 
 Reviewer set: **ATS**, **HR**, **proofreading**, **fact-check**, **confidentiality**, **layout**. They run in parallel when the tool supports it, otherwise one after another.
@@ -462,10 +462,10 @@ What the main rubrics must produce (taken from the reviews done in this chat):
 | `check` | lint + trace for the master CV, all variants and all tailored CVs |
 | `refresh [file]` | rewrites generated blocks (4.2d) from their sources, without rendering |
 | `status` | compares hashes of sources (summaries, facts, profile, skills, profiles, templates, config) with `cv/.build-state.json` and lists which CVs are stale and why, e.g. "react-native: summaries/syspro-saas-erp.md changed" |
-| `validate` | checks all inputs against `schemas/`. Every tag (summary contributions, facts, skills, profiles' `emphasize_tags`/`deemphasize_tags`/`summary_focus`) must be in the config tag list, so a typo like `react-nativ` fails instead of silently breaking selection. |
+| `validate` | checks all inputs against `schemas/`. Every tag (summary contributions, facts, skills, profiles' `emphasize_tags`/`deemphasize_tags`/`summary_focus`) must be in the config tag list, so a typo like `react-nativ` fails instead of silently breaking selection. **New** tags enter the list only through an approved proposal (from `/harvest` or `/add-experience`), so new technologies are added deliberately, never blocked. |
 | `index` | regenerates the lists of agents, rubrics, profiles and outputs in `AGENTS.md` |
 | `test` | runs the script tests in `tests/fixtures/` |
-| `doctor` | checks the environment: Node version (`engines: node >= 20` in `package.json`), installed dependencies, which PDF exporters are available (Pages, Word, LibreOffice), Quick Look, `pdftoppm` (optional), and the one-time macOS permission to control Pages (does a tiny test export). It also checks that `framework.local.yaml` exists, lists summary repos with no local path on this laptop, checks that every template's fonts are installed, and shows which PDF and preview path is active on this OS. Prints what's missing and how to fix it. |
+| `doctor` | checks the environment: Node version (`engines: node >= 20` in `package.json`), installed dependencies, which PDF exporters are available (Pages, Word, LibreOffice), Quick Look, `pdftoppm` (optional), and the one-time macOS permission to control Pages (does a tiny test export). It also reports which AI agent tools it finds (e.g. the `claude` CLI), checks that `framework.local.yaml` exists, lists summary repos with no local path on this laptop, checks that every template's fonts are installed, and shows which PDF and preview path is active on this OS. Prints what's missing and how to fix it. |
 | `backup` | packs everything git doesn't carry (tailored CVs with job ads, `applications.yaml`, `framework.local.yaml`, and the PDFs you sent if kept) into one dated `.zip` in the backup folder from `framework.local.yaml`, optionally password-protected (AES-256 via `archiver-zip-encrypted`, password from the environment variable named in `framework.local.yaml`) |
 | `restore <archive>` | unpacks a backup on another laptop without overwriting newer files, and lists conflicts |
 
@@ -540,7 +540,8 @@ Dependencies: TypeScript run with `tsx`, `jszip` for reading and writing `.docx`
 
 | Command | Steps |
 |---|---|
-| `/harvest <repo-path \| repo-name> <id>` | **Given a path:** reads the repo's remote URL, stores the repo name and remote in the summary, and adds `name: path` to `framework.local.yaml`. **Given a name:** looks up the path in `framework.local.yaml`. If it's missing on this laptop, it asks for the path or offers to clone from the stored remote. Then the Harvester writes or merges the summary, and you review it. |
+| `/harvest <repo-path \| repo-name> [<id>]` | 1. **Locate the repo.** Given a path, it reads the remote URL, stores the repo name and remote in the summary, and adds `name: path` to `framework.local.yaml`. Given a name, it looks up the path there. If the path is missing on this laptop, it asks for it or offers to clone from the stored remote. 2. **Find your commits.** It lists the repo's commit authors, highlights likely matches with your `git_identities` (similar names, your email domains), and asks before adding new ones to `profile.yaml`. The report shows how many of your commits were found, and zero matches stops the harvest. 3. **New or existing job?** It asks whether the repo is a new job or project, or part of an existing summary, listing likely matches by period, domain and remote host. It then creates a new summary or **merges** into the chosen one, adding the repo to its `repos` list. 4. **Job details (new summaries only).** The advisor asks for company, role, dates, engagement type, CV section, client label and emphasis, suggesting answers from the repo (first and last commit dates, README, remote host). Nothing is guessed silently. 5. **Write or merge the summary.** 6. **New tags and skills.** It proposes new tags for the config list and new `skills.yaml` entries for technologies you used hands-on, which you approve. 7. **`validate`**, then you review the diff. |
+| `/add-repo <repo-path \| repo-name>` | **The whole new-repo flow in one command:** `/harvest` (all 7 steps above), **pause for your approval of the summary**, then `/compose`, **pause for your approval of the CV diff**, then `/variants`, `build:all` and `/review`. It ends with the `/status` summary and the review verdicts. Each stage can be resumed if you stop in the middle. |
 | `/compose` | Composer updates the master CV, then `npm run check` |
 | `/tailor --profile <id>` | Tailor builds `cv/variants/<id>/cv.md` from the profile, then `npm run build` on it |
 | `/tailor --jd <file \| pasted text> [--profile <id>]` | Tailor builds `cv/tailored/<company-role>/` for one job, optionally starting from a profile, then `npm run build`. Pasted job ad text is saved as `job-description.md` in that folder. |
@@ -587,6 +588,8 @@ Each step ends with something you can check.
 11. **README.** Includes a first-run section and a "new laptop" section (section 9a).
 12. **Second-laptop test.** Clone the repo into a fresh folder (or a second user account), follow the new-laptop steps, and run `npm run build:all`.
    *Check:* the outputs pass `pdf-check`, the content matches the original laptop, and `doctor` reports nothing missing.
+13. **New laptop + new repo test.** On the second-laptop setup, run `/add-repo` on a small repo the framework has never seen (e.g. one of your own GitHub repos). Added to `docs/acceptance.md` as a permanent scenario.
+   *Check:* identities are detected and confirmed, you're asked "new or existing job" and for the job details, new tags and skills are proposed, `validate` passes, the CV and every variant gain the new entry or bullets with sources, `build:all` passes `pdf-check`, and `/review` runs.
 
 ## 9. Scalability
 
@@ -661,7 +664,7 @@ pdf_exporters: [pages, word, libreoffice]   # optional override of the config or
 **Reproducibility:** `package-lock.json` plus `npm ci` installs the exact same dependency versions, and `.nvmrc` pins the Node version. PDFs from different exporters can differ slightly in layout. `pdf-check` confirms the content is identical, and `applications.yaml` records the exporter used for every sent PDF.
 
 **New laptop steps (also in the README):**
-1. Install Node (the version in `.nvmrc`), and Pages, Word or LibreOffice.
+1. Install Node (the version in `.nvmrc`), and Pages, Word or LibreOffice. Install and sign in to an AI agent tool that reads `AGENTS.md` (Claude Code, or Codex, Cursor, Gemini CLI …). The scripts run without one, but `/harvest`, `/compose` and the other agents need it.
 2. `git clone <private remote>`, then `npm ci`.
 3. Copy `framework.local.example.yaml` to `framework.local.yaml` and set repo paths and the backup folder.
 4. `npm run restore <latest backup>` (if you have tailored CVs or an application log).
@@ -726,3 +729,4 @@ Every step done by hand in the chat, and the capability that repeats it:
 | 26 | Third gap check | Hand-written bullets warn instead of blocking `build`, `/job-change`, supported Markdown subset, `doctor` and first-run setup, single summary header example |
 | 27 | Asked about running on another laptop | Section 9a: `framework.local.yaml` (repo paths, backup folder), `backup`/`restore`, LibreOffice path for Windows/Linux, font checks, `package-lock.json` + `npm ci` + `.nvmrc`, new-laptop steps, second-laptop test (step 12) |
 | 28 | Gap check after portability | `/harvest` accepts a repo name or path and keeps `framework.local.yaml` updated; cross-platform encrypted backups (`archiver-zip-encrypted`) |
+| 29 | Validated "any laptop + any new repo" end to end | AI tool in new-laptop steps and `doctor`, identity detection, new-or-existing-job choice, job details interview, approved growth of tags and skills, `/add-repo` for the whole flow, acceptance scenario (step 13) |
