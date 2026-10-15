@@ -70,7 +70,7 @@ CV/
 ├── cv/
 │   ├── <name>_CV.md               # master CV (generated, hand-editable); file name from config
 │   ├── <name>_CV.docx / .pdf / pdf-check.md / preview/
-│   ├── variants/<profile-id>/     # role-based CVs (generated, not hand-edited): cv.md, .docx, .pdf, gap-report.md
+│   ├── variants/<profile-id>/     # role-based CVs (generated, not hand-edited): cv.md + gap-report.md committed; .docx/.pdf git-ignored
 │   ├── tailored/<company-role>/   # per job ad (git-ignored): cv.md, .docx, .pdf, job-description.md, gap-report.md
 │   └── .build-state.json          # source/output hashes used by `status`
 ├── templates/
@@ -552,7 +552,7 @@ Each command file in `.claude/commands/` only says "follow `agents/<name>.md`". 
 
 Each step ends with something you can check.
 
-1. **Restructure and preserve.** Create the folders. Move the CV files to `cv/` and the template to `templates/` (committing the template). Move the summaries to `summaries/` with the new names. Add `package.json` (with `engines: node >= 20`) and update `.gitignore` (`node_modules/`, `cv/tailored/`, `facts/applications.yaml`, `cv/**/preview/`).
+1. **Restructure and preserve.** Create the folders. Move the CV files to `cv/` and the template to `templates/` (committing the template). Move the summaries to `summaries/` with the new names. Add `package.json` (with `engines: node >= 20`) and update `.gitignore` (`node_modules/`, `cv/tailored/`, `facts/applications.yaml`, `cv/**/preview/`, `cv/variants/**/*.docx`, `cv/variants/**/*.pdf`, `cv/variants/**/pdf-check.md`).
    *Check:* `git status` shows moves only, no content changes.
 2. **Specs.** Write `cv-spec.md` (the current CV's structure plus every rule from this chat), `work-summary-spec.md`, `tailoring-spec.md`, `templates.md` and the 6 rubrics. The ATS and HR rubrics are based on the reviews done in this chat.
    *Check:* you review the specs. This is the most important review.
@@ -626,7 +626,7 @@ All of these are part of the layout in section 3.
 | Spelling | US English, enforced by the proofreading rubric and `framework.config.yaml` |
 | Local clone paths | Stored in summary front matter (`repos[].path`), so a summary can be re-harvested later |
 | Tailored CVs in git | `cv/tailored/` and `facts/applications.yaml` are in `.gitignore` by default. To keep one, run `git add -f`. The tailor agent reminds you of this after each run. |
-| Role variants in git | `cv/variants/` is committed, since it has no confidential job descriptions |
+| Role variants in git | Only `cv/variants/*/cv.md` and `gap-report.md` are committed. Built files (`.docx`, `.pdf`, `pdf-check.md`, `preview/`) are git-ignored, because `npm run build:all` recreates them from the committed sources. |
 | Role profiles | First four: `react`, `react-native`, `fullstack-react-node`, `nodejs` (section 4.4) |
 | Decisions already made in this chat | Recorded in `facts/decisions.yaml` so reviewers don't raise them again: no LinkedIn/GitHub links (the old CV had them, so they can come back), keep the current length, keep the Drive portfolio link, keep the job title step from GM to SYSPRO |
 | Variants vs manual edits | Variants are generated. The master CV's wording is reused by source id, and lasting variant tweaks go in profile `overrides` |
