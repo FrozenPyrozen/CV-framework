@@ -21,7 +21,10 @@ Every step done by hand in the 2026-10-15 chat maps to a framework capability (s
 - **Every claim needs a source.** Each CV bullet must trace to a work summary or a confirmed fact. Unsourced bullets are flagged, not silently allowed.
 - **Tool-neutral.** `AGENTS.md` is the entry point, and agent definitions are plain Markdown in `agents/`. Claude Code files in `.claude/` are thin wrappers that point to them. Codex, Cursor, Gemini CLI or anything else can run the same agents by reading `AGENTS.md`.
 - **Deterministic work is done by scripts, not AI:** rendering (Markdown to Word to PDF), PDF checks, previews, linting and trace checking. Any agent, or you, runs them with `npm run …`.
-- **Private by default.** Summaries may contain internal names. Only the CV and its tailored versions are scrubbed, following confidentiality rules in the facts file.
+- **Private by default.** Summaries may contain internal names. Only the CV outputs are scrubbed, using each summary's *Confidentiality notes* (enforced by the lint blocklist and the confidentiality reviewer).
+- **Employer confidentiality.** The repo stays local or on a *private* remote only. Summaries describe your work in your own words: no source code, no copied internal document text, no internal URLs, no secrets. The harvester spec and lint enforce this.
+- **Agents never commit.** Every agent leaves its changes uncommitted and shows a diff. You review and commit, and git history is the undo.
+- **Every AI step ends with a deterministic check.** Agents finish by running `validate` (after changing summaries, facts or profiles) or `check`/`build` (after changing a CV), and report failures instead of hiding them.
 - **Reviewers only write reports.** You decide what to change.
 - **Your manual edits are kept.** You can edit any CV Markdown by hand at any time. Agents always start from the file as it is on disk, show a diff of their changes, and never revert your edits silently.
 
@@ -32,6 +35,7 @@ CV/
 ├── AGENTS.md                      # entry point for any AI tool: layout, workflows, rules, commands
 ├── CLAUDE.md                      # "Read AGENTS.md" + "do not use cns:* skills in this repo"
 ├── README.md                      # for humans: what this is, how to run it
+├── docs/                          # plan.md (this file), acceptance.md (replay checklist for agents)
 ├── framework.config.yaml          # paths, sections, display formats, output names, checks, exporters, tags
 ├── package.json                   # scripts: build, build:all, render, pdf, pdf-check, preview, lint, trace,
 │                                  #          check, status, validate, index, template-import, test
@@ -112,7 +116,7 @@ cv_client_label: SYSPRO            # what the CV may show; e.g. "Clinical Trials
 role: Senior Software Engineer
 engagement: full-time              # full-time | contract | freelance
 period: { start: 2025-12, end: present }
-show_dates_in_cv: true             # false for freelance entries
+show_dates_in_cv: true             # optional; if missing, the cv_section's show_dates default applies
 repos:
   - { name: saas-frontend-repo, path: ~/work/saas-frontend-repo }
 author_identities: []                # empty = use profile.yaml git_identities; list here only to override
@@ -128,12 +132,17 @@ show_in_cv: true                   # false = kept as a source, never used in CV/
 cv_section: experience             # which CV section the entry goes into: experience | consulting (ids from framework.config.yaml)
 cv_order: 1                        # optional; default is newest-first inside the section
 domain: [ERP, SaaS]                # industry tags, used by tailoring and later the portfolio
-cv_title_suffix: ""                # e.g. " (Contract)"; set automatically when engagement is contract, can be overridden
+cv_title_suffix: " (Contract)"     # optional; if missing, derived from engagement (contract -> display.contract_suffix)
 cv_emphasis:                       # what this entry must make clear; the composer puts it in the first bullets
   - Architecture-governed specification-driven development (SDD), not ad-hoc AI code generation
   - Owned the frontend technology stack, worked with the lead architect
 cv_max_bullets: 8                  # optional length limit for this entry in the master CV
+counts_as_experience: true         # optional; default true for experience entries, false for consulting (used by 4.2c)
+team_size_led: 0                   # optional; people you led on this job (used by 4.2c), e.g. 8 for GM
+source: git                        # git (harvested) | cv (built from old CV text, step 4) | user (from /add-experience)
 ```
+
+**Optional fields follow one rule:** if a field is missing, the default applies (from config, the section or `engagement`); if it's set, it wins.
 
 **CV placement.** Each summary decides which CV section its entry goes in, so any job can appear under **EXPERIENCE** or under **CONSULTING AND FREELANCE PROJECTS**, and you can move it by changing one field:
 
@@ -192,15 +201,18 @@ Seeded from this chat:
 - id: syspro-speed
   fact: Schema-driven runtime cut time to bring an ERP screen to web from days to hours
   source: user, 2026-10-15
+  entry: syspro-saas-erp
+  tags: [schema-driven-ui, delivery-speed, react]
 - id: syspro-review-cycles
   fact: SDD process reduced PR review cycles (no exact number)
   source: user, 2026-10-15
+  entry: syspro-saas-erp
+  tags: [sdd, code-review, quality]
 - id: syspro-architecture-scope
   fact: Reviewed and co-authored platform/solution architecture docs with the lead architect, resolved open architecture questions, helped define the SDD process (spec templates, validation routine, AI agent rules)
   source: user, 2026-10-15
-- id: availability
-  fact: Open to B2B contract or full-time employment
-  source: user, 2026-10-15
+  entry: syspro-saas-erp
+  tags: [architecture, sdd, tech-stack, ai-agents, leadership]
 - id: consulting-presales
   fact: Technical interviews (React, React Native, JS, TS), legacy React Native audits with estimations, presales technical expertise
   source: user, 2026-10-15
@@ -216,7 +228,7 @@ Seeded from this chat:
   source: user + previous CV
 ```
 
-Every fact has `entry` (which job it belongs to) and `tags` (from the shared tag list), so the composer knows where to place it and role profiles can select it just like summary contributions. Contract status is **not** a fact. It lives only in each summary's `engagement` field.
+Every fact has `entry` (which job it belongs to) and `tags` (from the shared tag list), so the composer knows where to place it and role profiles can select it just like summary contributions. Contract status and availability are **not** facts. They live only in each summary's `engagement` field and in `profile.yaml` (`work.engagement_types`).
 
 Rules that came out of this chat (SDD emphasis, freelance entries without dates, hidden client names, no `→`/`·`/`•`/`—`, "SYSPRO" spelling) go into `specs/cv-spec.md`, not the facts file.
 
@@ -362,6 +374,8 @@ overrides: {}                      # lasting tweaks for this variant, by source 
 max_bullets_per_entry: 6           # lower-relevance bullets are dropped first
 min_bullets_per_entry: 2
 include_sections: [summary, experience, consulting, education, skills, languages]
+max_pages: 3                       # optional; overrides checks.max_pages for this variant (used by pdf-check)
+max_words: 1600                    # optional; overrides checks.max_words (used by lint)
 ```
 
 Rules for the tailor agent with a profile:
@@ -401,10 +415,10 @@ Records what each recruiter received, so you can answer "which CV did I send the
 
 | Agent | Input | Output | Spec / rubric |
 |---|---|---|---|
-| **Harvester** | repo path(s), project id, author identities (default from profile), optional date range | new `summaries/<id>.md`, or for an existing summary a **merge**: contributions are updated from git; sections you edited, filled TODOs, `cv_*` fields and numbering of existing contributions are kept (new items get new numbers, so CV `src` ids never break); a diff is shown for approval | work-summary-spec |
-| **Composer** | all summaries, facts, current CV | the updated master CV (path and name from config) with trace comments + short change log in the reply | cv-spec |
+| **Harvester** | repo path(s), project id, author identities (default from profile), optional date range. Reads `git log` filtered by author and dates, commit messages, diff statistics per folder, and the repo's README and docs. Large repos are summarized per area (folder or package). It **never copies source code, internal document text, URLs or secrets**, only describes the work in its own words. | new `summaries/<id>.md`, or for an existing summary a **merge**: contributions are updated from git; sections you edited, filled TODOs, `cv_*` fields and numbering of existing contributions are kept (new items get new numbers, so CV `src` ids never break); a diff is shown for approval | work-summary-spec |
+| **Composer** | all summaries, `confirmed.yaml`, `profile.yaml`, `skills.yaml`, `decisions.yaml`, `framework.config.yaml`, current CV | the updated master CV (path and name from config) with trace comments + short change log in the reply | cv-spec |
 | **Tailor** | a profile and/or a job description file, master CV, summaries, facts | `cv/variants/<profile>/` or `cv/tailored/<company-role>/`: `cv.md` + `gap-report.md` | tailoring-spec + the profile (may reorder, re-emphasize, drop; may not add unsourced claims) |
-| **Reviewer** (run per rubric) | CV file, rubric, summaries/facts (fact-check only), preview images (layout only) | `reports/<date-time>/<rubric>.md` with verdict, score, findings (line, issue, suggestion, severity, `needs_user_input: yes/no`) | rubrics/* |
+| **Reviewer** (run per rubric) | CV file, rubric, `decisions.yaml` (findings already decided are listed as "decided", not raised again), `profile.yaml` (HR), summaries/facts (fact-check only), preview images (layout only), job ad (ATS job-ad mode) | `reports/<date-time>/<rubric>.md` with verdict, score, findings (line, issue, suggestion, severity, `needs_user_input: yes/no`) | rubrics/* |
 | **Advisor** | a report (or several), the CV, facts | asks you questions one topic at a time with suggested answers. It writes your answers to `facts/confirmed.yaml` (or to a summary's `cv_emphasis`), hands the change list to the composer, and shows the diff. | cv-spec + the report's rubric |
 | **Template importer** | a Word or PDF CV | `templates/<name>/` (section 6.4) | template-import rules in `specs/templates.md` |
 
@@ -436,12 +450,12 @@ What the main rubrics must produce (taken from the reviews done in this chat):
 | `pdf [file]` | `.docx` to `.pdf` with the first available exporter from `pdf_exporters` in `framework.config.yaml` (see 6.1) |
 | `pdf-check [file]` | Checks that the PDF is ATS-readable (6.2) |
 | `preview [file]` | Page images of the PDF into `preview/` (6.3) |
-| `lint [file]` | Deterministic checks: forbidden characters, date format, duplicate skills, word count, heading structure, bold balance, **generated blocks match their sources**, calculated values match, phone in international format, variant edited by hand since last build, and the **confidentiality denylist**: every term listed in any summary's *Confidentiality notes* section (internal project names, repo names, ticket prefixes like `OR-`, `ENGAGE-`, `VEL-`) plus `client` names whose `cv_client_label` differs, must not appear in any CV output |
+| `lint [file]` | Deterministic checks: forbidden characters, date format, duplicate skills, word count, heading structure, bold balance, **generated blocks match their sources**, calculated values match, phone in international format, variant edited by hand since last build, and the **confidentiality denylist**: every term listed in any summary's *Confidentiality notes* section (internal project names, repo names, ticket prefixes like `OR-`, `ENGAGE-`, `VEL-`) plus `client` names whose `cv_client_label` differs, must not appear in any CV output. Also a **secret scan** of summaries and CVs: tokens and keys (common patterns, high-entropy strings), internal URLs and hostnames (patterns in config), and email addresses other than yours |
 | `trace [file]` | Claim-to-source check (section 4.3) |
 | `check` | lint + trace for the master CV, all variants and all tailored CVs |
 | `refresh [file]` | rewrites generated blocks (4.2d) from their sources, without rendering |
 | `status` | compares hashes of sources (summaries, facts, profile, skills, profiles, templates, config) with `cv/.build-state.json` and lists which CVs are stale and why, e.g. "react-native: summaries/syspro-saas-erp.md changed" |
-| `validate` | checks all inputs against `schemas/` |
+| `validate` | checks all inputs against `schemas/`. Every tag (summary contributions, facts, skills, profiles' `emphasize_tags`/`deemphasize_tags`/`summary_focus`) must be in the config tag list, so a typo like `react-nativ` fails instead of silently breaking selection. |
 | `index` | regenerates the lists of agents, rubrics, profiles and outputs in `AGENTS.md` |
 | `test` | runs the script tests in `tests/fixtures/` |
 
@@ -482,7 +496,7 @@ It extracts the text with `pdfjs-dist` (no system tools needed) and fails when:
 - **Garbled characters:** the replacement character `�`, private-use glyphs, or broken ligatures.
 - **The contact details aren't on page 1** (email, phone).
 
-It also reports the page count and words per page. The results go to `pdf-check.md` next to the PDF.
+It also fails when the page count exceeds `max_pages` (from the profile, else config), and reports words per page. The results go to `pdf-check.md` next to the PDF.
 
 ### 6.3 Preview
 
@@ -518,7 +532,7 @@ Dependencies: TypeScript run with `tsx`, `jszip` for reading and writing `.docx`
 | `/harvest <repo-path> <id>` | Harvester writes the summary, then you review it |
 | `/compose` | Composer updates the master CV, then `npm run check` |
 | `/tailor --profile <id>` | Tailor builds `cv/variants/<id>/cv.md` from the profile, then `npm run build` on it |
-| `/tailor --jd <file> [--profile <id>]` | Tailor builds `cv/tailored/<company-role>/` for one job, optionally starting from a profile, then `npm run build` |
+| `/tailor --jd <file \| pasted text> [--profile <id>]` | Tailor builds `cv/tailored/<company-role>/` for one job, optionally starting from a profile, then `npm run build`. Pasted job ad text is saved as `job-description.md` in that folder. |
 | `/variants` | Rebuilds every profile variant (after summaries or the master CV change), then `npm run build:all` |
 | `/review [cv-file] [rubric…] [--jd <file>]` | Runs the reviewers (default all 6) and writes `reports/<date-time>/`. With `--jd`, the ATS reviewer also scores the CV against that job ad. "Would this CV pass an AI ATS?" is `/review --rubric ats`, and "…and then HR?" is `--rubric hr`. |
 | `/improve [report…]` | Advisor goes through the findings one topic at a time. It asks you questions with suggested answers, records them as facts, has the composer apply them, and shows the diff. Findings you decline are recorded as decisions (e.g. "no LinkedIn link", "keep length"), so later reviews don't raise them again. |
@@ -539,7 +553,7 @@ Each step ends with something you can check.
    *Check:* `git status` shows moves only, no content changes.
 2. **Specs.** Write `cv-spec.md` (the current CV's structure plus every rule from this chat), `work-summary-spec.md`, `tailoring-spec.md`, `templates.md` and the 6 rubrics. The ATS and HR rubrics are based on the reviews done in this chat.
    *Check:* you review the specs. This is the most important review.
-3. **Facts.** Write `profile.yaml` (section 4.2a), `skills.yaml` (4.2b, seeded from the current SKILLS section), `confirmed.yaml` (section 4.2) and `decisions.yaml` (section 10). Replace the typed header in the master CV with the generated one.
+3. **Facts.** Write `profile.yaml` (section 4.2a), `skills.yaml` (4.2b, seeded from the current SKILLS section), `confirmed.yaml` (section 4.2) and `decisions.yaml` (section 10).
    *Check:* you confirm every entry is true.
 4. **Migrate summaries.** Add front matter and restructure the body into the 9 sections from section 4.1, numbering the contributions. Existing content is kept. Sections the old summaries don't cover (for example, *Main features* for the Jira plugin, *Portfolio material*) are filled only from what the summary already says, or marked `TODO (needs user input)`. Nothing is invented.
    **Older jobs without summaries:** GM, Velas, OMO Systems, Thermo Fisher Scientific, Itjet and The Admasters exist only as CV text. Each gets a summary built from that text (`source: cv`, `harvested_at: null`), with its bullets as numbered contributions and every other section marked `TODO (needs user input)`. You can enrich them later with `/harvest` (if you still have the repos) or `/add-experience`.
@@ -550,13 +564,13 @@ Each step ends with something you can check.
    - `templates/classic/` is created by importing `Kirill_Kohan_CV_prev.docx`.
    - `npm run build` through it produces a `.docx` matching the current one, a PDF that passes `pdf-check`, and a page-1 preview showing correct bullets.
 6. **Agents and wrappers.** `agents/*.md` (harvester, composer, tailor, reviewer, advisor, template-importer), `.claude/agents/*`, `.claude/commands/*`, `AGENTS.md`, `CLAUDE.md`. `CLAUDE.md` also states "do not use `cns:*` skills in this repo", and `cns` skills are listed as disabled in `.claude/cns-preferences.local.md`, so every session (and any tool reading `AGENTS.md`) knows the rule.
-7. **Trace the current CV.** Run the composer once in "annotate only" mode to add `src` comments to the existing CV without changing its text. Then run `npm run check`.
-   *Check:* every bullet resolves, or the gaps are listed for you.
+7. **Convert and trace the current CV.** Run `npm run refresh` to replace the typed header, education, skills and languages with generated blocks (4.2d). Then run the composer once in "annotate only" mode to add `src` comments to bullets and summary sentences without changing their text. Then run `npm run check`.
+   *Check:* the CV text is unchanged except for markers and comments, and every bullet and summary sentence resolves, or the gaps are listed for you.
 8. **Role profiles and variants.** Write the 4 profiles, tag the contributions in the migrated summaries, and build the 4 variants plus their gap reports.
    *Check:* you review the variants and gap reports. `npm run check` passes on all of them.
 9. **First full review run.** Run `/review` with all 6 rubrics.
    *Check:* the reports match what we found by hand in this chat. Findings already decided in this chat (no LinkedIn link, keep the length, etc.) are not raised again.
-10. **Replay this chat.** Use the chat-step table in section 12 as an acceptance test. Start from the CV at commit `b130643` (your CV before this chat), run each capability once, and compare the result with today's CV (commit `772590a` plus later edits). Differences in wording are fine. Missing content, structure or rules are failures.
+10. **Replay this chat.** Write the chat-step table in section 12 as `docs/acceptance.md`, a repeatable checklist with inputs and expected results per step, and use it as the acceptance test. Start from the CV at commit `b130643` (your CV before this chat), run each capability once, and compare the result with today's CV (commit `772590a` plus later edits). Differences in wording are fine. Missing content, structure or rules are failures. **Rerun `docs/acceptance.md` whenever a spec, rubric or agent definition changes**, since agents aren't covered by `npm test`.
 11. **README.**
 
 ## 9. Scalability
@@ -597,7 +611,7 @@ The framework is designed so new outputs, reviewers and agents are **added as fi
   - JSON Schemas in `schemas/` are checked by `npm run validate`.
   - When a format changes, a migration script moves old files forward, so old summaries never silently break.
 - **Shared engine.** Markdown parsing, front matter and trace resolution live in one `scripts/lib/` module used by every script, so a new renderer or check is a small file.
-- **Tests with fixtures.** Each script has fixture inputs and expected outputs, so changes are safe as the framework grows.
+- **Tests with fixtures.** Each script has fixture inputs and expected outputs, so changes are safe as the framework grows. Agents are covered by the acceptance checklist (`docs/acceptance.md`), rerun after any spec or agent change.
 - **Tool-neutral contracts.** Agent definitions only use files and `npm run` commands, never tool-specific features. The Claude Code wrappers, and later Codex, Cursor or Agent SDK wrappers, stay replaceable.
 
 All of these are part of the layout in section 3.
@@ -614,6 +628,8 @@ All of these are part of the layout in section 3.
 | Decisions already made in this chat | Recorded in `facts/decisions.yaml` so reviewers don't raise them again: no LinkedIn/GitHub links (the old CV had them, so they can come back), keep the current length, keep the Drive portfolio link, keep the job title step from GM to SYSPRO |
 | Variants vs manual edits | Variants are generated. The master CV's wording is reused by source id, and lasting variant tweaks go in profile `overrides` |
 | Application log | Optional `facts/applications.yaml`, git-ignored by default |
+| Employer confidentiality | Repo is local or on a private remote only. Summaries are written in your own words with no code, copied internal text, URLs or secrets. |
+| Commits | Agents never commit. You review the diff and commit. |
 | Projects hidden from the CV | Supported with `show_in_cv: false`. Composer and tailor skip them, but they stay available for the portfolio and can be switched on later. |
 
 ## 11. Out of scope for now
@@ -654,3 +670,4 @@ Every step done by hand in the chat, and the capability that repeats it:
 | 22 | Asked what happens if you move country or change your phone | `profile.yaml` + generated header + lint header check + `/profile` |
 | 23 | Asked whether anything is hard-coded | All sections, skills, calculated values, output names and display formats come from files (4.2b, 4.2c, section 9). Older jobs get summaries (step 4). |
 | 24 | Asked to check the plan for gaps | Generated blocks (4.2d), traced summary sentences, facts with `entry`/`tags`, re-harvest merge, `status`, confidentiality denylist, ATS job-ad mode, link handling, CNS rule in `CLAUDE.md`, application log (4.5) |
+| 25 | Second gap check | Consistent optional-field defaults, facts with `entry`/`tags`, harvester rules, secret scan, tag validation, per-variant page limits, pasted job ads, agents never commit, deterministic check after every AI step, `docs/acceptance.md` |
