@@ -83,3 +83,23 @@ test("withLock clears a lock left by a process that no longer runs", async () =>
   await withLock(lock, () => undefined, { waitMs: 5_000 });
   assert.ok(Date.now() - started < 2_000, "didn't wait for the stale lock");
 });
+
+test("preview renders every page of a PDF without Pages", async () => {
+  const { mkdtempSync } = await import("node:fs");
+  const { tmpdir } = await import("node:os");
+  const { renderPreviews } = await import("../scripts/preview.ts");
+  // A minimal two-page PDF with a correct cross-reference table.
+  const objs = ["<< /Type /Catalog /Pages 2 0 R >>", "<< /Type /Pages /Kids [3 0 R 4 0 R] /Count 2 >>",
+    "<< /Type /Page /Parent 2 0 R /MediaBox [0 0 200 200] >>", "<< /Type /Page /Parent 2 0 R /MediaBox [0 0 200 200] >>"];
+  let pdf = "%PDF-1.4\n";
+  const offsets: number[] = [];
+  objs.forEach((o, i) => { offsets.push(pdf.length); pdf += `${i + 1} 0 obj\n${o}\nendobj\n`; });
+  const xref = pdf.length;
+  pdf += `xref\n0 ${objs.length + 1}\n0000000000 65535 f \n${offsets.map((o) => `${String(o).padStart(10, "0")} 00000 n \n`).join("")}`;
+  pdf += `trailer\n<< /Size ${objs.length + 1} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF\n`;
+  const dir = mkdtempSync(join(tmpdir(), "cv-preview-"));
+  writeFileSync(join(dir, "two.pdf"), pdf);
+  const files = await renderPreviews(join(dir, "two.pdf"));
+  assert.deepEqual(files.map((f) => f.slice(dir.length)), ["/preview/page-1.png", "/preview/page-2.png"]);
+  assert.ok(files.every((f) => existsSync(f) && readFileSync(f).subarray(1, 4).toString() === "PNG"));
+});

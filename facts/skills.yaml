@@ -1,6 +1,6 @@
 # Skills: the only source of the CV's SKILLS section (docs/plan.md 4.2b).
 # Seeded on 2026-10-15 from the SKILLS section of cv/Kirill_Kohan_CV.md, in the same order.
-# Tags must exist in the tag list in framework.config.yaml. Lint warns about skills no contribution supports.
+# Tags must exist in the tag list in framework.config.yaml. validate warns about skills no contribution supports.
 schema_version: 1
 
 categories:

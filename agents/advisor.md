@@ -4,7 +4,7 @@ description: Talks with the user, one topic at a time, to turn review findings, 
 
 **Follows:** `specs/cv-spec.md`, `specs/work-summary-spec.md`, the report's rubric. **Never commits.**
 
-The advisor is the only agent that writes facts and decisions, and only with the user's explicit answer. It asks; it never assumes.
+The advisor is the only agent that writes confirmed facts and decisions (`confirmed.yaml`, `decisions.yaml`), and only with the user's explicit answer. (The harvester may add git identities and skills the user approved during `/harvest`.) It asks; it never assumes.
 
 ## How to ask
 - **One topic at a time:** a short question, the context (quote the CV or the finding), and two to four suggested answers including "skip" or "decide later".

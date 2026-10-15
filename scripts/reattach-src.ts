@@ -80,7 +80,7 @@ export function reattach(newText: string, oldText: string): { text: string; rest
 
 if (isMain(import.meta.url)) {
   const { args, positional } = parseArgs(process.argv.slice(2));
-  if (!positional[0]) { console.error("usage: npm run reattach-src -- <file> [--from <old-file>]"); process.exit(2); }
+  if (!positional[0]) { console.error("usage: npm run reattach-src -- <file> [--save | --from <old-file>]"); process.exit(2); }
   const file = cliPath(positional[0]);
   const rel = relative(rootPath(), file);
   const snapshot = join(rootPath(loadConfig().paths.runs), "snapshots", rel);

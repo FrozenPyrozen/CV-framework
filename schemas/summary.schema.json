@@ -19,7 +19,7 @@
       "items": {
         "type": "object",
         "required": ["name"],
-        "properties": { "name": { "type": "string" } },
+        "properties": { "name": { "type": "string", "minLength": 1, "not": { "pattern": "[/\\\\:@]" }, "description": "repo name only: no remote URL or local path" } },
         "additionalProperties": false
       }
     },

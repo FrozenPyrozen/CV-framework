@@ -20,7 +20,7 @@
               "properties": {
                 "name": { "type": "string" },
                 "tags": { "$ref": "common.schema.json#/$defs/tags" },
-                "calculated": { "enum": ["team_size_led", "years_experience"] },
+                "calculated": { "enum": ["team_size_led"] },
                 "hidden": { "type": "boolean" }
               },
               "additionalProperties": false

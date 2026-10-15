@@ -112,3 +112,13 @@ test("summaries store repo names only: a remote URL is rejected", () => {
   assert.equal(r.code, 1);
   assert.match(r.out, /\/repos\/0 must NOT have additional properties \(remote\)/);
 });
+
+test("summaries store repo names only: a URL or local path as the name is rejected", () => {
+  for (const name of ["git@example.com:org/repo.git", "~/Desktop/Work/saas-frontend-repo"]) {
+    const dir = tempRepo();
+    edit(dir, "summaries/syspro-saas-erp.md", "  - { name: saas-frontend-repo }", `  - { name: "${name}" }`);
+    const r = run("validate.ts", dir);
+    assert.equal(r.code, 1, name);
+    assert.match(r.out, /\/repos\/0\/name must NOT be valid/);
+  }
+});

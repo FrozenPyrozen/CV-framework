@@ -34,4 +34,3 @@ facts/applications.yaml
 cv/**/markets/
 
 # Local test runs (scratch copies, not part of the framework)
-cv/test/

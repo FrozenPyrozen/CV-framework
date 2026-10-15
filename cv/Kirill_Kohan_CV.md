@@ -19,11 +19,11 @@ Senior software engineer and tech lead with 7+ years of experience building Reac
 
 ### **SYSPRO | Remote | December 2025 - Present**
 
-* Built core modules of a schema-driven **React 19 / TypeScript** runtime for SYSPRO's **ERP SaaS** modernization platform (25+ person program) that renders **1,800+ ERP programs** from data-model definitions, cutting screen delivery from days to hours, with no per-screen frontend code. <!-- src: syspro-saas-erp#4.1, syspro-team-size, syspro-speed -->
-
 * Delivered the frontend through an architecture-governed **specification-driven development (SDD)** process, not ad-hoc AI code generation, and helped define it: specification templates, the validation routine and rules for **AI coding agents**. Every subsystem was traced from architecture through component specification to implementation across 4 repositories. <!-- src: syspro-saas-erp#4.2, syspro-architecture-scope -->
 
 * Worked with the lead architect on the **platform and solution architecture**: reviewed and co-authored architecture documents, drove open architecture questions and blockers to decisions, and authored the **frontend technology-stack decision record** (choice of OIDC libraries, move from React Testing Library to **Vitest Browser Mode**). <!-- src: syspro-saas-erp#4.3, syspro-architecture-scope -->
+
+* Built core modules of a schema-driven **React 19 / TypeScript** runtime for SYSPRO's **ERP SaaS** modernization platform (25+ person program) that renders **1,800+ ERP programs** from data-model definitions, cutting screen delivery from days to hours, with no per-screen frontend code. <!-- src: syspro-saas-erp#4.1, syspro-team-size, syspro-speed -->
 
 * Authored ~17 component specifications (view orchestration, navigation, runtime configuration) and validated each against the architecture before and after implementation, with AI agents as reviewers flagging constraint violations and spec-to-code drift for human decision, which reduced PR review cycles. Deferred issues went to a **technical-debt register**. <!-- src: syspro-saas-erp#4.2, syspro-saas-erp#4.12, syspro-review-cycles -->
 
@@ -67,7 +67,7 @@ Senior software engineer and tech lead with 7+ years of experience building Reac
 
 * Developed the Velas **blockchain** wallet for web, mobile and desktop using **React, React Native, Node.js, TypeScript, MobX and Web3.js**. <!-- src: velas-wallet#4.1 -->
 
-* **Performance optimization:** made the staking list load 12x faster and use 5x less mobile battery by moving filtering to the server and adding a Node RPC fallback. <!-- src: velas-wallet#4.2 -->
+* Made the staking list load 12x faster and use 5x less mobile battery by moving filtering to the server and adding a Node RPC fallback. <!-- src: velas-wallet#4.2 -->
 
 * Added automatic **Web3 provider** failover for testnet and mainnet tokens, switching when the active provider was slow or unreachable. <!-- src: velas-wallet#4.3 -->
 

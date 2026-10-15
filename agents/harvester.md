@@ -42,6 +42,7 @@ description: Writes or merges a work summary (summaries/<id>.md) from a local gi
 8. **New tags and skills.** For technologies used hands-on that have no tag or skill yet, propose additions to `tags` in `framework.config.yaml` and to `facts/skills.yaml`. Add them only after the user approves.
 9. **Check.** Run `npm run validate` and `npm run lint` (which secret-scans summary bodies). Fix what you wrote; report what you can't fix.
 10. **Report** to the user:
+    - how many of the user's commits were matched (from the digest)
     - the diff
     - the contributions you wrote (number and title)
     - the TODOs left

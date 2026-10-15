@@ -178,7 +178,7 @@ export function lintCv(file: string, ctx: Context, summaries = loadSummaries(ctx
   return f;
 }
 
-// ---------- summaries (secret scan of bodies; front matter may hold repo remotes) ----------
+// ---------- summaries (secret scan of bodies; front matter repo entries are names only, checked by the schema) ----------
 
 export function lintSummaries(ctx: Context, summaries = loadSummaries(ctx.cfg)): Finding[] {
   const f: Finding[] = [];

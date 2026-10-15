@@ -38,6 +38,14 @@ description: Updates the master CV from the summaries and confirmed facts, one e
    - Fix every lint error and every unsourced or unresolved claim you introduced. Report anything you can't fix (for example a claim the user asked for that has no source: suggest `/add-experience`).
 7. **Report** a short change log per entry (added, updated, removed bullets and why), the diff, remaining warnings, and the next step: `npm run build`, `/variants` for role versions, `/review`.
 
+## Annotate-only mode
+
+Used to add sources to a CV that has none yet (build step 7, or a CV written by hand).
+1. `npm run reattach-src -- <cv> --save`, then `npm run refresh -- <cv>`.
+2. For each entry, map every bullet to the summary contributions (`<id>#4.N`), section 5 (`<id>#5` for the Stack line) or confirmed facts that support it, and append the `src` comment. Do the same for each summary sentence (`calc:` and `profile` pseudo-sources included). **Change no text.**
+3. Verify: the CV with all `<!-- src: … -->` comments stripped is identical to the version before, then `npm run reattach-src -- <cv>` and `npm run check`.
+4. A claim with no source is reported, not removed (suggest `/add-experience`). Wording that `check` warns about (e.g. bullets over `max_bullet_words`) is proposed to the user as a separate change, applied only after approval.
+
 ## Never
 - Change generated blocks, entry title or detail lines, or `<!-- entry -->` markers by hand.
 - Add a claim without a source, inflate scope ("led" for "contributed"), or describe AI agents as authors of code.

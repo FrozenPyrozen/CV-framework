@@ -73,7 +73,7 @@ cv_max_bullets: 8
 
 ## 3. Body sections
 
-The body always has these nine `##` sections, in this order and with these numbers, so source ids like `#4.2` stay meaningful:
+The body may start with one optional `# Title` line, then always has these nine `##` sections, in this order and with these numbers, so source ids like `#4.2` stay meaningful:
 
 ```markdown
 ## 1. Project overview
@@ -95,7 +95,7 @@ The body always has these nine `##` sections, in this order and with these numbe
 | 4. My contributions | Numbered items (section 4 below). The CV cites these. |
 | 5. Technologies and frameworks | Grouped by category (language, UI, state, data, testing, CI/CD, cloud, AI and agents …), versions where known, each marked **hands-on** or **used by the project**. |
 | 6. Skills demonstrated | Each skill with the contribution numbers that prove it, e.g. `OpenID Connect (OIDC): 4.2, 4.3`. |
-| 7. Metrics and outcomes | Every number with its source (`git`, `user`, `dashboard`, `cv`) and confidence (`exact`, `approximate`). |
+| 7. Metrics and outcomes | Every number with its source (`git`, `user`, `dashboard`, `cv`; `cv` may be written "previous CV", optionally "confirmed by user <date>") and confidence (`exact`, `approximate`). |
 | 8. Portfolio material | Links, screenshots, demo notes, and what is safe to show publicly. May be `TODO (needs user input)`. |
 | 9. Confidentiality notes | Internal names, repo names, ticket prefixes and internal URL patterns (e.g. the repo host, `*dev.azure.com*<org>*`) that must never appear in a CV. `lint` reads this section to build its blocklist. Exceptions use `allow_in`. The host patterns stay even though no remote URLs are stored. |
 

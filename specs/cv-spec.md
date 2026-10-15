@@ -35,7 +35,7 @@ Sections appear in the order of `cv_sections` in `framework.config.yaml`, using 
 | Level | Used for | Format |
 |---|---|---|
 | `#` | Name (in the header) and section headings | `# **SECTION HEADING**`, uppercase, bold |
-| `##` | Entry title line: the role | `## **Role**` or `## **Role (Contract)**` |
+| `##` | Entry title line: the role; in the generated education block, the degree | `## **Role**` or `## **Role (Contract)**` |
 | `###` | Entry detail line | `### **Company \| Location \| Dates**` |
 
 ### 2.2 Entry detail line
@@ -100,7 +100,7 @@ Typed numbers that change over time are calculated, never guessed:
 | Value | Rule |
 |---|---|
 | Years of experience | from the earliest `period.start` of entries with `counts_as_experience: true`, rounded down, written as `N+ years` |
-| Largest team led | highest `team_size_led` across summaries and facts, written as `up to N engineers` |
+| Largest team led | highest `team_size_led` across summaries and facts, written as `up to N engineers` or `a team of N <people>` (e.g. `led a team of 8 developers`) |
 | Present | `period.end: present` renders as `display.present_label` |
 
 Agents write the calculated value as plain text in the summary paragraph. `lint` fails if a typed value there differs from the calculated one.
@@ -115,7 +115,7 @@ These parts are produced by `npm run refresh` (and every `build`) and kept in th
 <!-- /generated:header -->
 ```
 
-Blocks: `header`, `education`, `skills`, `languages`. Agents never edit inside them. A change goes into the source file (`profile.yaml`, `skills.yaml`, config), followed by `npm run refresh`.
+Blocks: `header`, `education`, `skills`, `languages`. `refresh` also writes, outside these markers, the section headings (from `cv_sections`), each section's intro line, the `<!-- entry: <id> -->` markers and every entry's title and detail lines; `lint` fails when they differ from their sources. Agents never edit inside the blocks or these lines. A change goes into the source file (`profile.yaml`, `skills.yaml`, config), followed by `npm run refresh`.
 
 ## 9. Supported Markdown
 
@@ -140,7 +140,8 @@ Not allowed (lint fails): italics, tables, nested lists, numbered lists, images,
 
 ## 11. Confidentiality
 
-- Terms listed in a summary's *Confidentiality notes* (internal project names, repo names, ticket ids such as `OR-`, `ENGAGE-`, `VEL-`, internal URLs) never appear in a CV.
+- Terms listed in a summary's *Confidentiality notes* (internal project names, repo names, ticket ids such as `OR-`, `ENGAGE-`, `VEL-`, internal URLs) never appear in a CV's **rendered text** (what reaches Word, PDF and the reader).
+- HTML comments (`<!-- entry: … -->`, `<!-- src: … -->`, generated markers) are never rendered, so summary ids and source ids in them may contain such terms (e.g. `orion-mobile-clinical-ink`). The CV Markdown stays in the private repo; only the built files are sent.
 - When `cv_client_label` differs from `client`, the real client name never appears in the CV.
 - `lint` enforces this with a blocklist and secret scan. The confidentiality reviewer checks the meaning ("could a reader identify the client from this description?").
 

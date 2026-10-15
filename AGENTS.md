@@ -33,7 +33,7 @@ Commands are available as Claude Code slash commands (`.claude/commands/`). Any 
 
 | Command | What happens | Follow |
 |---|---|---|
-| `/add-repo <path or name>` | Whole new-repo flow: harvest, approve the summary, compose, approve the CV diff, variants, build, review | `agents/harvester.md`, then `agents/composer.md`, `agents/tailor.md`, `agents/reviewer.md` |
+| `/add-repo <path or name> [--resume]` | Whole new-repo flow: harvest, approve the summary, compose, approve the CV diff, variants, build, review | `agents/harvester.md`, then `agents/composer.md`, `agents/tailor.md`, `agents/reviewer.md` |
 | `/harvest <path or name> [id]` | Write or merge a work summary from a repo | `agents/harvester.md` |
 | `/compose` | Update the master CV from summaries and facts | `agents/composer.md` |
 | `/tailor --profile <id>` / `--jd <file or text> [--profile <id>] [--market <id>]` | Build a role variant or a job-specific CV, with a gap report | `agents/tailor.md` |
@@ -55,17 +55,18 @@ Commands are available as Claude Code slash commands (`.claude/commands/`). Any 
 |---|---|
 | `validate` | check every input against `schemas/` and the cross-file rules; writes digests |
 | `digest` | short summary digests in `summaries/.digests/` (read these before full summaries) |
-| `git-digest <repo> [--since --until --identity --run]` | read-only history digest of a repo for the harvester |
-| `refresh [cv]` | regenerate the script-owned parts of a CV (header, entry lines, education, skills, languages) |
-| `market [cv]` | write the other market versions of a CV |
-| `lint [cv]`, `trace [cv]`, `check` | CV rules, claim sources, both for every CV |
+| `git-digest <repo> [--path --since --until --identity --run]` | read-only history digest of a repo for the harvester |
+| `refresh [cv] [--market --profile --out --check]` | regenerate the script-owned parts of a CV (header, entry lines, education, skills, languages) |
+| `market [cv] [--market <id>]` | write the other market versions of a CV |
+| `lint [cv] [--market --profile]`, `trace [cv] [--warn-only]`, `check` | CV rules, claim sources, both for every CV |
 | `select <cv-dir> --profile <id> \| --tags <file>` | deterministic bullet selection for variants and job ads |
 | `reattach-src <cv> [--save \| --from <old>]` | snapshot before editing; restore dropped source comments after |
 | `render`, `pdf`, `pdf-check`, `preview` | Word, PDF, PDF checks, page images |
-| `build [cv] [--market] [--no-pdf]`, `build:all` | the full chain for one CV or all of them |
+| `build [cv] [--market <id>] [--no-pdf] [--template <name>]`, `build:all` | the full chain for one CV or all of them |
 | `status [--ack <company>]` | what is stale and why; sent-CV warnings |
 | `template-import <file.docx> <name> [--map <map>]` | list a Word file's paragraphs, or build a template from labels |
-| `doctor`, `backup`, `restore <archive>`, `index` | environment check, moving files between laptops, this registry |
+| `doctor [--no-export]`, `backup [--out <file>] [--no-password]`, `restore <archive> [--force]`, `index [--check]` | environment check, moving files between laptops, this registry |
+| `log-application --company <name> --pdf <file> [--role --status --notes --keep-copy]` | record a sent CV in `facts/applications.yaml` |
 | `test`, `typecheck` | the framework's own tests |
 
 ## Where things are
