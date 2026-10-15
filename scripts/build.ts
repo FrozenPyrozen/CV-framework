@@ -36,6 +36,7 @@ export function templateApproved(template: string): boolean {
 export async function buildCv(mdFile: string, opts: { template?: string; noPdf?: boolean; requireApproved?: boolean; market?: string } = {}): Promise<BuildOutcome> {
   const cfg = loadConfig();
   const out: BuildOutcome = { cv: rel(mdFile), ok: false, steps: [], problems: [], outputs: [] };
+  const exporters: Record<string, string> = {};
   const step = (s: string) => out.steps.push(s);
   const fail = (s: string) => { out.problems.push(s); return out; };
   const isMaster = mdFile === masterCvPath();
@@ -91,6 +92,7 @@ export async function buildCv(mdFile: string, opts: { template?: string; noPdf?:
     try {
       const e = await exportPdf(docx);
       pdf = e.pdf;
+      exporters[rel(pdf)] = e.exporter;
       step(`pdf (${label}): ${rel(pdf)} via ${e.exporter}`);
     } catch (e) {
       return fail(`pdf (${label}): ${(e as Error).message}`);
@@ -111,6 +113,7 @@ export async function buildCv(mdFile: string, opts: { template?: string; noPdf?:
     sources: hashSources(template, profileId),
     outputs: Object.fromEntries(out.outputs.map((o) => [rel(o), sha(o)])),
     entries: entryHashes(),
+    exporters,
   });
   out.ok = true;
   void cfg;

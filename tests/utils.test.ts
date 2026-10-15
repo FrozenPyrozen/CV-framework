@@ -100,3 +100,26 @@ test("index creates and updates the registry block in AGENTS.md", () => {
   run("index.ts", dir);
   assert.match(readFileSync(join(dir, "AGENTS.md"), "utf8"), /\[rn\.yaml\]\(profiles\/rn\.yaml\): Senior React Native Engineer/);
 });
+
+test("log-application records a sent CV with a quoted hash, market and optional exact copy", () => {
+  const dir = tempRepo();
+  mkdirSync(join(dir, "cv/markets/ukraine"), { recursive: true });
+  writeFileSync(join(dir, "cv/markets/ukraine/Kirill_Kohan_CV_UA.pdf"), "%PDF-1.4 fake");
+  const r = run("log-application.ts", dir, ["--company", "Acme Corp", "--role", "Senior RN", "--pdf", "cv/markets/ukraine/Kirill_Kohan_CV_UA.pdf", "--keep-copy"]);
+  assert.equal(r.code, 0, r.out);
+  const y = readFileSync(join(dir, "facts/applications.yaml"), "utf8");
+  assert.match(y, /company: Acme Corp/);
+  assert.match(y, /market: ukraine/);
+  assert.match(y, /pdf_sha256: "?[0-9a-f]{16}"?/);
+  assert.ok(existsSync(join(dir, `cv/sent/${new Date().toISOString().slice(0, 10)}-acme-corp.pdf`)));
+  assert.match(run("status.ts", dir).out, /status:/); // the log parses and status reads it
+});
+
+test("doctor: a summary repo without a local path is info, not a warning", () => {
+  const dir = tempRepo();
+  writeFileSync(join(dir, "package.json"), readFileSync(join(import.meta.dirname, "..", "package.json")));
+  writeFileSync(join(dir, "framework.local.yaml"), "repos: {}\nbackup_dir: backups\n");
+  const r = run("doctor.ts", dir, ["--no-export"]);
+  assert.match(r.out, /info\s+repos with no local path on this laptop: .*normal once a job has ended/);
+  assert.doesNotMatch(r.out, /warn\s+repos with no local path/);
+});

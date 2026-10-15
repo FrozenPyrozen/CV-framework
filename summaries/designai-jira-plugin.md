@@ -12,7 +12,7 @@ team_size_led: 0
 counts_as_experience: false
 # --- harvesting ---
 repos:
-  - { name: designai, remote: https://dev.azure.com/gl-velocityai/UIaaS/_git/designai }
+  - { name: designai }
 author_identities: []
 harvested_at: "2026-10-15"
 # --- how it appears in the CV ---

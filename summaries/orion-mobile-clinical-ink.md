@@ -12,8 +12,8 @@ team_size_led: 0
 counts_as_experience: false
 # --- harvesting ---
 repos:
-  - { name: orion-mobile, remote: git@bitbucket.org:clinicalink_orion/orion-mobile.git }
-  - { name: MPM_HealthBook_Android, remote: https://github.com/ClinicalInk-Centros/MPM_HealthBook_Android.git }
+  - { name: orion-mobile }
+  - { name: MPM_HealthBook_Android }
 author_identities: []
 harvested_at: "2026-10-15"
 # --- how it appears in the CV ---

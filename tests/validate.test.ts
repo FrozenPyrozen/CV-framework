@@ -104,3 +104,11 @@ test("validate checks templates (style map, fixes) and role profile tags", () =>
   assert.match(r.out, /templates\/classic\/style-map\.yaml: \/approved must be boolean/);
   assert.match(r.out, /profiles\/rn\.yaml: emphasize_tags: tag "react-nativ" is not in the config tag list/);
 });
+
+test("summaries store repo names only: a remote URL is rejected", () => {
+  const dir = tempRepo();
+  edit(dir, "summaries/syspro-saas-erp.md", "  - { name: saas-frontend-repo }", "  - { name: saas-frontend-repo, remote: git@example.com:org/repo.git }");
+  const r = run("validate.ts", dir);
+  assert.equal(r.code, 1);
+  assert.match(r.out, /\/repos\/0 must NOT have additional properties \(remote\)/);
+});

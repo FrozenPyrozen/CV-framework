@@ -4,7 +4,8 @@ import AjvModule from "ajv/dist/2020.js";
 
 // ajv ships CommonJS; under ES modules the class may sit on .default.
 const Ajv2020: typeof AjvModule.default = (AjvModule as any).default ?? AjvModule;
-import { existsSync, readFileSync, readdirSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
+import { parse as parseYaml } from "yaml";
 import { basename, join } from "node:path";
 import {
   isMain, SUMMARY_SECTIONS, loadConfig, loadConfirmed, loadDecisions, loadMarkets, loadProfile, loadSkills, loadSummaries, readYaml, rootPath,
@@ -81,7 +82,6 @@ export function validateRepo(): Issue[] {
     if (fm.source === "git") {
       if (!fm.harvested_at) err(s.file, "source: git needs harvested_at");
       if (!fm.repos?.length) err(s.file, "source: git needs at least one repo");
-      for (const r of fm.repos ?? []) if (!r.remote || /TODO/.test(r.remote)) warn(s.file, `repo "${r.name}" has no remote URL yet (needed to clone it on another laptop)`);
     } else if (fm.harvested_at != null) {
       err(s.file, `harvested_at must be null for source: ${fm.source}`);
     }
@@ -159,6 +159,22 @@ export function validateRepo(): Issue[] {
           if (!types.has(k)) err(`templates/${t}/fixes.yaml`, `${f.id}: paragraph type "${k}" isn't in the template's style map`);
         }
       }
+    }
+  }
+
+  // --- reviewer reports: front matter (specs/review-report-spec.md) ---
+  const rdir = rootPath(cfg.paths.reports);
+  if (existsSync(rdir)) for (const run of readdirSync(rdir)) {
+    const d = join(rdir, run);
+    if (!existsSync(d) || !statSync(d).isDirectory()) continue;
+    for (const f of readdirSync(d).filter((x) => x.endsWith(".md"))) {
+      const text = readFileSync(join(d, f), "utf8");
+      const fm = text.match(/^---\n([\s\S]*?)\n---/);
+      const file = `${cfg.paths.reports}/${run}/${f}`;
+      if (!fm) { err(file, "missing front matter"); continue; }
+      const data = parseYaml(fm[1]);
+      check("report.schema.json", data, file);
+      if (data?.rubric && !existsSync(rootPath("specs/rubrics", `${data.rubric}.md`))) err(file, `rubric "${data.rubric}" has no specs/rubrics/${data.rubric}.md`);
     }
   }
 

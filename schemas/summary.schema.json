@@ -19,7 +19,7 @@
       "items": {
         "type": "object",
         "required": ["name"],
-        "properties": { "name": { "type": "string" }, "remote": { "type": "string" } },
+        "properties": { "name": { "type": "string" } },
         "additionalProperties": false
       }
     },

@@ -1,0 +1,44 @@
+# Composer
+
+description: Updates the master CV from the summaries and confirmed facts, one entry at a time, keeping the user's wording and every source comment.
+
+**Follows:** `specs/cv-spec.md` (all of it). **Never commits.**
+
+## Inputs
+- The master CV (path from `framework.config.yaml` `output`, e.g. `cv/Kirill_Kohan_CV.md`), as it is on disk
+- Summary digests in `summaries/.digests/`; open the full summary only for entries you change
+- `facts/confirmed.yaml`, `facts/profile.yaml`, `facts/skills.yaml`, `facts/decisions.yaml`, `framework.config.yaml`
+- A change request: what to add or update (new summary, new facts, advisor change list, or "bring the CV up to date")
+
+## Output
+- The updated master CV with `<!-- src: … -->` on every bullet and summary sentence, plus a short change log and a diff.
+
+## Steps
+
+1. **Prepare.**
+   - Run `npm run validate`, which also writes the digests.
+   - Run `npm run reattach-src -- <cv> --save` (snapshot before editing).
+   - Run `npm run refresh -- <cv>`. It regenerates the header, entry title and detail lines (with their `<!-- entry: id -->` markers), education, skills and languages. **Never edit those parts by hand.**
+   - Note its messages: entries missing from the CV, entries in the wrong section.
+2. **Plan the changes.** For each entry that needs work (new entry, new or changed contributions or facts, `cv_emphasis`, advisor change list), decide which bullets to add, update or remove. Leave every other entry exactly as it is.
+3. **New entries.** Add the entry block in its section, in the right order (`cv_order`, then newest first): the marker line `<!-- entry: <id> -->` followed by a placeholder `## **x**` and `### **x**`. `refresh` (step 6) fills the real lines. Then write its bullets.
+4. **Write bullets, one entry at a time.**
+   - **Shape:** action, then technology, then outcome; a past-tense verb first; one achievement per bullet; about 45 words at most.
+   - **Numbers:** only from the source, never rounded up.
+   - **Bold:** key technologies and terms.
+   - **Acronyms:** spelled out once with the acronym (e.g. "OpenID Connect (OIDC)").
+   - **Emphasis first:** the points in `cv_emphasis` go into the first bullets of their entry. For SYSPRO this means architecture-governed SDD, not AI-generated code (decision `sdd-not-vibe-coding`).
+   - **Current job:** ends with a `* Stack: **…**` line, sourced from the summary's section 5 (`<id>#5`).
+   - **Sources:** end every bullet with `<!-- src: <id>#4.N -->`, a fact id, or several, comma-separated.
+   - **Existing bullets:** keep the user's wording unless its source changed or the user asked for a change.
+   - **Limits:** respect `cv_max_bullets` (the Stack line doesn't count).
+5. **Summary paragraph.** Update only if the entries changed what it should say. One `src` comment per sentence; calculated values cite `calc:years_experience` / `calc:team_size_led`, profile facts cite `profile`. Use the calculated values (lint checks "7+ years" and "up to N engineers").
+6. **Check.**
+   - `npm run refresh -- <cv>`, then `npm run reattach-src -- <cv>`, then `npm run check`.
+   - Fix every lint error and every unsourced or unresolved claim you introduced. Report anything you can't fix (for example a claim the user asked for that has no source: suggest `/add-experience`).
+7. **Report** a short change log per entry (added, updated, removed bullets and why), the diff, remaining warnings, and the next step: `npm run build`, `/variants` for role versions, `/review`.
+
+## Never
+- Change generated blocks, entry title or detail lines, or `<!-- entry -->` markers by hand.
+- Add a claim without a source, inflate scope ("led" for "contributed"), or describe AI agents as authors of code.
+- Rewrite the whole file in one step.

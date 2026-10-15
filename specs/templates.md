@@ -85,7 +85,7 @@ Supported fix types (each fix has `id`, `why`, `found`, `set`):
 1. **Only formatting is kept.** Someone else's name, contacts and text are never saved, and their file is never copied into the repo. (Your own old CV may be kept as `source.docx`.)
 2. **ATS warnings** in `import-report.md`: multi-column layouts, text boxes, layout tables, contact details only in header or footer, icons instead of words, image-only text, unusual fonts. When any apply, a one-column variant is offered.
 3. **Fonts** are listed in `style-map.yaml`. `doctor` checks them by exporting a test PDF and reading which fonts are embedded.
-4. **Test build:** the master CV is built with the new template and previewed (all pages). The user approves, then `approved: true` is set and `reference-preview.png` saved.
+4. **Test build:** the master CV (and its other market versions) is rendered with the new template into `.cv-runs/template-test-<name>/`, exported, checked with `pdf-check` and previewed (all pages), without touching the real CV's outputs or build record. The user approves, then `approved: true` is set and `reference-preview.png` saved from that test build.
 5. An unapproved template can be built with `--template <name>`, but `build:all` refuses it.
 
 ### `import-report.md` format

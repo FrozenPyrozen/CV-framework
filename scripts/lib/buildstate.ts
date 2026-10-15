@@ -13,6 +13,7 @@ export interface BuildRecord {
   sources: Record<string, string>; // repo-relative path -> sha256
   outputs: Record<string, string>; // repo-relative path -> sha256 (docx, pdf, per market)
   entries?: Record<string, string>; // CV entry id -> hash of everything that entry is built from (R8, tailoring-spec 2.6)
+  exporters?: Record<string, string>; // repo-relative PDF path -> exporter that built it
 }
 export type BuildState = Record<string, BuildRecord>; // key: repo-relative CV Markdown path
 

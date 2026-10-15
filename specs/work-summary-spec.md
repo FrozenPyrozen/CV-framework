@@ -2,7 +2,7 @@
 
 Status: v1 · Applies to: `summaries/*.md`, written by the harvester, `/add-experience`, `/job-change` and by hand
 
-A work summary is the **single source of truth for one job or project**. The CV, role variants and tailored CVs are built from it now, and the portfolio will be later. It is richer than any one output needs.
+A work summary is the **single source of truth for one job or project**, and the **lasting record** of it: access to the repos usually ends with the job, so everything worth keeping must be in the summary before you leave (see the final harvest in section 6). The CV, role variants and tailored CVs are built from it now, and the portfolio will be later. It is richer than any one output needs.
 
 ## 1. File
 
@@ -27,7 +27,7 @@ team_size_led: 0
 counts_as_experience: true
 # --- harvesting ---
 repos:
-  - { name: saas-frontend-repo, remote: <git remote URL> }
+  - { name: saas-frontend-repo }
 author_identities: []
 harvested_at: 2026-09-30
 # --- how it appears in the CV ---
@@ -56,7 +56,7 @@ cv_max_bullets: 8
 | `domain` | no | industry tags (ERP, automotive, healthcare …) |
 | `team_size_led` | no | people you led on this job; default 0 |
 | `counts_as_experience` | no | default true for `cv_section: experience`, false otherwise |
-| `repos[].name` / `repos[].remote` | for `source: git` | repo name and remote URL. **No local paths**: those are per laptop in `framework.local.yaml`. |
+| `repos[].name` | for `source: git` | the repo's name, as a label of where the work happened. **No remote URLs** (access ends with the job, and they'd keep the employer's internal addresses) and **no local paths** (per laptop, in `framework.local.yaml`). |
 | `author_identities` | no | extra git identities for this summary's repos, added to `profile.yaml` `git_identities` |
 | `harvested_at` | for `source: git` | date of the last harvest; `null` otherwise |
 | `show_in_cv` | no | default true; false keeps the summary as a source (e.g. for the portfolio) but never shows it in a CV |
@@ -97,7 +97,7 @@ The body always has these nine `##` sections, in this order and with these numbe
 | 6. Skills demonstrated | Each skill with the contribution numbers that prove it, e.g. `OpenID Connect (OIDC): 4.2, 4.3`. |
 | 7. Metrics and outcomes | Every number with its source (`git`, `user`, `dashboard`, `cv`) and confidence (`exact`, `approximate`). |
 | 8. Portfolio material | Links, screenshots, demo notes, and what is safe to show publicly. May be `TODO (needs user input)`. |
-| 9. Confidentiality notes | Internal names, repo names, ticket prefixes and internal URLs that must never appear in a CV. `lint` reads this section to build its blocklist. Exceptions use `allow_in`. |
+| 9. Confidentiality notes | Internal names, repo names, ticket prefixes and internal URL patterns (e.g. the repo host, `*dev.azure.com*<org>*`) that must never appear in a CV. `lint` reads this section to build its blocklist. Exceptions use `allow_in`. The host patterns stay even though no remote URLs are stored. |
 
 A section with nothing known yet contains `TODO (needs user input)`. **Never invent content to fill a section.**
 
@@ -149,6 +149,7 @@ These apply to the harvester (`/harvest`, `/add-repo`):
 4. **Job details** (`client`, `role`, `engagement`, `period`, `cv_*` fields) come from the user, with suggestions from the repo. They are never guessed silently.
 5. **New tags and skills** for technologies used hands-on are proposed for approval.
 6. Finish with `npm run validate` and show a diff. Never commit.
+7. **Before leaving a job** (`/job-change`): harvest every repo of that job one last time while access lasts and fill the TODOs you can. Afterwards the summary is the only record, and the local clones and their paths in `framework.local.yaml` can be removed.
 
 ## 7. Merging into an existing summary (re-harvest)
 

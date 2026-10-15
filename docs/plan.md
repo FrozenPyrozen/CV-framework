@@ -23,6 +23,7 @@ Every step done by hand in the 2026-10-15 chat maps to a framework capability (s
 - **Deterministic work is done by scripts, not AI:** rendering (Markdown to Word to PDF), PDF checks, previews, linting and trace checking. Any agent, or you, runs them with `npm run …`.
 - **Private by default.** Summaries may contain internal names. Only the CV outputs are scrubbed, using each summary's *Confidentiality notes* (enforced by the lint blocklist and the confidentiality reviewer).
 - **Employer confidentiality.** The repo stays local or on a *private* remote only. Summaries describe your work in your own words: no source code, no copied internal document text, no internal URLs, no secrets. The harvester spec and lint enforce this.
+- **Summaries are the lasting record.** Access to employer and client repos ends with the job, so a summary must stand on its own: it names the repos it came from but stores no remote URLs, and the last harvest happens before you leave (`/job-change`).
 - **Agents never commit.** Every agent leaves its changes uncommitted and shows a diff. You review and commit, and git history is the undo.
 - **Every AI step ends with a deterministic check.** Agents finish by running `validate` (after changing summaries, facts or profiles) or `check`/`build` (after changing a CV), and report failures instead of hiding them.
 - **Reviewers only write reports.** You decide what to change.
@@ -43,7 +44,8 @@ CV/
 ├── package-lock.json              # exact dependency versions (committed; install with `npm ci`)
 ├── package.json                   # scripts: build, build:all, render, pdf, pdf-check, preview, lint, trace,
 │                                  #          check, status, validate, index, template-import, test, doctor, refresh, market,
-│                                  #          backup, restore, digest, git-digest, select, reattach-src, typecheck
+│                                  #          backup, restore, digest, git-digest, select, reattach-src, typecheck,
+│                                  #          log-application
 ├── tsconfig.json                  # TypeScript settings (type check only; scripts run with tsx)
 ├── specs/
 │   ├── cv-spec.md                 # CV structure and writing rules (seeded from this chat)
@@ -101,7 +103,7 @@ CV/
 ├── reports/<YYYY-MM-DD-HHmm>/     # reviewer reports for one run: ats.md, hr.md, proofreading.md, ...
 ├── .cv-runs/<run-id>/             # per-run working files: state.json (resume), git-digest.md (git-ignored)
 ├── schemas/                       # common, config, summary, confirmed, decisions, profile, skills, market, style-map,
-│                                  # fixes; report (agents, step 6), profile-role (step 8)
+│                                  # fixes, report; profile-role (step 8)
 ├── scripts/                       # Node/TypeScript CLIs
 │   ├── lib/repo.ts                # shared loader: config, summaries, facts, profile, skills, markets, entries, CLI paths
 │   ├── lib/cvmd.ts                # CV Markdown model: generated parts (header, entry lines, blocks) per market and role profile
@@ -129,6 +131,7 @@ CV/
 │   ├── status.ts                  # which CVs are stale and why; sent-CV warnings
 │   ├── doctor.ts                  # environment check with a tiny real export (R3, R12)
 │   ├── backup.ts                  # backup and restore (npm run restore = backup.ts --restore)
+│   ├── log-application.ts         # records a sent CV in facts/applications.yaml (4.5)
 │   ├── lib/buildstate.ts          # build records: source/output hashes
 │   ├── validate.ts                # JSON Schema validation of all inputs
 │   ├── index.ts                   # regenerates the agents/rubrics/profiles/outputs list in AGENTS.md
@@ -162,7 +165,7 @@ team_size_led: 0                   # optional; people you led on this job (used 
 counts_as_experience: true         # optional; default true for experience entries, false for consulting (used by 4.2c)
 # --- harvesting ---
 repos:
-  - { name: saas-frontend-repo, remote: <git remote URL> }   # no local path here; paths are per-laptop in framework.local.yaml
+  - { name: saas-frontend-repo }   # name only: no remote URL (access ends with the job) and no local path (per laptop, in framework.local.yaml)
 author_identities: []              # optional; empty = use profile.yaml git_identities
 harvested_at: 2026-09-30           # null for source: cv / user
 # --- how it appears in the CV ---
@@ -536,15 +539,16 @@ What the main rubrics must produce (taken from the reviews done in this chat):
 | `check` | lint + trace for the master CV, all variants and all tailored CVs |
 | `refresh [file] [--market <id>] [--profile <id>] [--out <file>] [--check]` | rewrites the script-owned parts (4.2d): header, section headings and intro lines, entry title and detail lines with `<!-- entry: id -->` markers, education, skills and languages. Runs `validate` first and refuses invalid sources, then writes digests. Reports any hand-written text it replaces. The role profile comes from `--profile` or the `cv/variants/<id>/` path. `--check` exits 1 if the file isn't up to date. |
 | `status [--ack <company>]` | Compares `cv/.build-state.json` with the current sources (config, summaries, profile, confirmed facts, skills, markets, the template's files, the role profile; not `decisions.yaml`, which only affects reviewers) and per-entry hashes, the CV Markdown and the outputs, and lists each CV as up to date, stale (with every reason, e.g. "summaries/velas-wallet.md changed") or never built. Also warns once per application when the PDF you sent has changed since (R14); `--ack <company>` records that you know. |
-| `validate` | checks all inputs against `schemas/`, including each template's `style-map.yaml` and `fixes.yaml` (fix paragraph types must exist in the style map) and the tags and ids of role profiles. Every tag (summary contributions, facts, skills, profiles' `emphasize_tags`/`deemphasize_tags`/`summary_focus`) must be in the config tag list, so a typo like `react-nativ` fails instead of silently breaking selection. **New** tags enter the list only through an approved proposal (from `/harvest` or `/add-experience`), so new technologies are added deliberately, never blocked. |
+| `validate` | checks all inputs against `schemas/` (summaries' `repos` hold names only; a `remote` field is rejected), including each template's `style-map.yaml` and `fixes.yaml` (fix paragraph types must exist in the style map) the tags and ids of role profiles, and the front matter of reviewer reports in `reports/`. Every tag (summary contributions, facts, skills, profiles' `emphasize_tags`/`deemphasize_tags`/`summary_focus`) must be in the config tag list, so a typo like `react-nativ` fails instead of silently breaking selection. **New** tags enter the list only through an approved proposal (from `/harvest` or `/add-experience`), so new technologies are added deliberately, never blocked. |
 | `index [--check]` | regenerates the registry lists in `AGENTS.md` (agents, reviewer rubrics, role profiles, markets, templates with approval state, output specs, commands) between `<!-- generated:index -->` markers; `--check` exits 1 if `AGENTS.md` is out of date. Before step 6 (no `AGENTS.md` yet) it prints the registry. |
+| `log-application --company <name> --pdf <file.pdf> [--role] [--status] [--notes] [--keep-copy]` | records a sent CV in `facts/applications.yaml` (4.5): date, company, role, the PDF and its quoted hash, CV folder, market, git commit, exporter (from the build record), status; `--keep-copy` saves the exact PDF to `cv/sent/` |
 | `test` | runs every `tests/*.test.ts` file with Node's test runner; most tests break a temporary copy of the real repo |
 | `typecheck` | TypeScript type check of `scripts/` and `tests/` |
 | `digest` | regenerates `summaries/.digests/` from summaries and facts (R10). Runs automatically after a successful `validate`, and `refresh`, `build` and every agent flow validate before writing digests (so broken summaries never produce digests), so digests are never stale and a fresh laptop needs no extra step. |
 | `git-digest <repo-name> [--path <dir>] [--since] [--until] [--identity <name>] [--run <id>]` | read-only digest of a repo's history for the harvester (R9, R11), written to `.cv-runs/<run-id>/git-digest.md`: every commit author with matches to your identities marked, your commits by area (folder or package: counts, dates, lines, key commit messages), commits by others that credit you (`Co-authored-by`), and "possibly yours" commits and merges mentioning your names. Repo path from `--path` or `framework.local.yaml`; identities from `profile.yaml`, the summaries listing the repo, and `--identity`. |
 | `select <cv-dir> --profile <id> \| --tags <file>` | deterministic bullet selection and ordering by tags, limits and overrides (scoring in `specs/tailoring-spec.md` 2). `--tags` is looked up in `<cv-dir>` first. Writes `selection.json` into `<cv-dir>`, which the tailor agent then words (R8). |
 | `reattach-src <file> [--save \| --from <old-file>]` | `--save` before editing stores a snapshot in `.cv-runs/snapshots/`. After editing, restores dropped source comments by matching each bullet (same entry) or summary sentence to the previous version: `--from`, else the snapshot, else git HEAD; fails with a clear message when none exists. Lists what it couldn't match (R7). |
-| `doctor [--no-export]` | checks the environment and says how to fix each problem: Node version (`engines` in `package.json`), installed dependencies, the preview renderer, AI agent tools on the PATH, `framework.local.yaml`, repo paths for every summary repo, the backup folder, and the PDF exporters (unavailable fallbacks are only *info*). Unless `--no-export`, it renders and exports a tiny test document with the active exporter: this triggers the one-time macOS permission prompt while you're at the keyboard (R12) and checks that the template's fonts are embedded (R3). |
+| `doctor [--no-export]` | checks the environment and says how to fix each problem: Node version (`engines` in `package.json`), installed dependencies, the preview renderer, AI agent tools on the PATH, `framework.local.yaml`, repo paths (a repo with no local path is *info*: after a job ends that's normal; a path that doesn't exist is a warning), the backup folder, and the PDF exporters (unavailable fallbacks are only *info*). Unless `--no-export`, it renders and exports a tiny test document with the active exporter: this triggers the one-time macOS permission prompt while you're at the keyboard (R12) and checks that the template's fonts are embedded (R3). |
 | `backup [--out <dir>] [--no-password]` | packs everything git doesn't carry (`cv/tailored/` with job ads, `cv/sent/`, `facts/applications.yaml`, `framework.local.yaml`) into one dated zip in `backup_dir` from `framework.local.yaml`. If the environment variable named by `backup_password_env` is set, the whole zip is encrypted with AES-256-GCM (key derived from the password with scrypt, Node's built-in `crypto`) and saved as `.zip.enc`; the password is never stored. |
 | `restore <archive> [--force]` | unpacks a backup (decrypting `.zip.enc` with the same environment variable) without overwriting newer local files, which are listed as conflicts (`--force` overwrites them). Only backup paths can be written, so a damaged or foreign archive can't touch other files. |
 
@@ -619,7 +623,7 @@ Dependencies: TypeScript (`typescript`, `@types/node`) run with `tsx`, `ajv` for
 
 | Command | Steps |
 |---|---|
-| `/harvest <repo-path \| repo-name> [<id>]` | 1. **Locate the repo.** Given a path, it reads the remote URL, stores the repo name and remote in the summary, and adds `name: path` to `framework.local.yaml`. Given a name, it looks up the path there. If the path is missing on this laptop, it asks for it or offers to clone from the stored remote. 2. **Find your commits.** It lists the repo's commit authors, highlights likely matches with your `git_identities` (similar names, your email domains), and asks before adding new ones to `profile.yaml`. The report shows how many of your commits were found, and zero matches stops the harvest. 3. **New or existing job?** It asks whether the repo is a new job or project, or part of an existing summary, listing likely matches by period, domain and remote host. It then creates a new summary or **merges** into the chosen one, adding the repo to its `repos` list. 4. **Job details (new summaries only).** The advisor asks for company, role, dates, engagement type, CV section, client label and emphasis, suggesting answers from the repo (first and last commit dates, README, remote host). Nothing is guessed silently. 5. **Write or merge the summary.** 6. **New tags and skills.** It proposes new tags for the config list and new `skills.yaml` entries for technologies you used hands-on, which you approve. 7. **`validate`**, then you review the diff. |
+| `/harvest <repo-path \| repo-name> [<id>]` | 1. **Locate the repo.** Given a path, it stores the repo name in the summary and adds `name: path` to `framework.local.yaml`. Given a name, it looks up the path there; if it's missing on this laptop, it asks for the path (no remote URLs are stored, since access ends with the job). 2. **Find your commits.** It lists the repo's commit authors, highlights likely matches with your `git_identities` (similar names, your email domains), and asks before adding new ones to `profile.yaml`. The report shows how many of your commits were found, and zero matches stops the harvest. 3. **New or existing job?** It asks whether the repo is a new job or project, or part of an existing summary, listing likely matches by period and domain. It then creates a new summary or **merges** into the chosen one, adding the repo to its `repos` list. 4. **Job details (new summaries only).** The advisor asks for company, role, dates, engagement type, CV section, client label and emphasis, suggesting answers from the repo (first and last commit dates, README, the remote host read from the clone). Nothing is guessed silently. 5. **Write or merge the summary.** 6. **New tags and skills.** It proposes new tags for the config list and new `skills.yaml` entries for technologies you used hands-on, which you approve. 7. **`validate`**, then you review the diff. |
 | `/add-repo <repo-path \| repo-name>` | **The whole new-repo flow in one command:** `/harvest` (all 7 steps above), **pause for your approval of the summary**, then `/compose`, **pause for your approval of the CV diff**, then `/variants`, `build:all` and `/review`. It ends with the `/status` summary and the review verdicts. Each stage can be resumed if you stop in the middle: progress is saved in a git-ignored `.cv-runs/<run-id>/state.json` (stage, repo, summary id, pending approvals), and `/add-repo --resume` continues the latest run. |
 | `/compose` | Composer updates the master CV, then `npm run check` |
 | `/tailor --profile <id>` | Tailor builds `cv/variants/<id>/cv.md` from the profile, then `npm run build` on it |
@@ -629,14 +633,14 @@ Dependencies: TypeScript (`typescript`, `@types/node`) run with `tsx`, `ajv` for
 | `/improve [report…]` | Advisor goes through the findings one topic at a time. It asks you questions with suggested answers, records them as facts, has the composer apply them, and shows the diff. Findings you decline are recorded as decisions (e.g. "no LinkedIn link", "keep length"), so later reviews don't raise them again. |
 | `/profile` | You describe a change ("moved to Poland, new phone +48…"). The advisor asks the follow-up questions (work permit? still B2B? new time zone? relocation?), updates `profile.yaml`, runs `/variants` and `build:all`, and lists tailored CVs and already-sent PDFs that still have the old details. |
 | `/add-experience` | You describe experience in your own words (e.g. "technical interviewing, legacy React Native audits, presales"). The advisor asks follow-up questions, writes a `confirmed.yaml` entry (or a `cv_entry` for a new job), and the composer adds the bullets. |
-| `/job-change` | Starting or leaving a job. **Leaving:** sets `period.end` on the current job, asks for final results and metrics while you still remember them (saved as facts), and asks whether the job stays in Experience. **Starting:** creates the new job as a `source: user` summary (role, company, dates, engagement, what you'll own), so it can appear in the CV before any code exists. You run `/harvest` on it later. Then runs `/variants` and `/status` and lists sent CVs that are now outdated. |
+| `/job-change` | Starting or leaving a job. **Leaving:** first, a **final harvest** of every repo of the job while you still have access (`/harvest` for each, filling the TODOs you can), because afterwards the summary is the only record; then sets `period.end` on the current job, asks for final results and metrics while you still remember them (saved as facts), and asks whether the job stays in Experience. **Starting:** creates the new job as a `source: user` summary (role, company, dates, engagement, what you'll own), so it can appear in the CV before any code exists. You run `/harvest` on it later. Then runs `/variants` and `/status` and lists sent CVs that are now outdated. |
 | `/import-template <file> <name>` | Template import (6.4), followed by a test build and preview for your approval |
 | `/build [cv-file]` | `npm run build`, then reports the pdf-check result and shows the page previews |
 | `/doctor` | `npm run doctor`, then explains how to fix anything missing |
 | `/status [--ack <company>]` | `npm run status`, then suggests the commands that bring stale CVs up to date |
 | `/log-application` | Records a sent CV in `applications.yaml` (4.5) |
 
-Each command file in `.claude/commands/` only says "follow `agents/<name>.md`". The same instructions are listed in `AGENTS.md` for other tools.
+Each command file in `.claude/commands/` points to an agent definition (or one of its sections) or runs scripts (`/build`, `/status`, `/doctor`, `/log-application`), and never holds rules of its own. The same instructions are listed in `AGENTS.md` for other tools.
 
 ## 8. Build steps
 
@@ -795,7 +799,7 @@ Problems expected when the flows actually run, found by simulating every flow ag
 | Topic | Decision |
 |---|---|
 | Spelling | US English, enforced by the proofreading rubric and `framework.config.yaml` |
-| Local clone paths | **Not** stored in summaries, since they differ per laptop. Summaries store the repo name and remote URL. Each laptop maps names to local paths in the git-ignored `framework.local.yaml` (section 9a). This replaces the earlier decision to store paths in summaries. |
+| Local clone paths and remotes | **Neither** is stored in summaries. Summaries store only the repo name, as a label of where the work happened. Local paths are per laptop in the git-ignored `framework.local.yaml` (section 9a) and can be removed once a job ends. Remote URLs aren't stored at all: access ends with the job, and they would keep the employer's internal addresses in your personal repo. (Replaces the earlier decisions to store paths, then remotes, in summaries.) |
 | Tailored CVs in git | `cv/tailored/` and `facts/applications.yaml` are in `.gitignore` by default. To keep one, run `git add -f`. The tailor agent reminds you of this after each run. |
 | Built files in git | **Only Markdown is committed** (CV `.md` files and `gap-report.md`). Every built output, for the master CV, variants and tailored CVs (`.docx`, `.pdf`, `pdf-check.md`, `preview/`, `selection.json`, `cv/.build-state.json`), is git-ignored and recreated by `npm run build` / `build:all`. The exception is `templates/*/template.docx`, which is an input, so it's committed. |
 | Role profiles | First four: `react`, `react-native`, `fullstack-react-node`, `nodejs` (section 4.4) |
@@ -812,7 +816,7 @@ Problems expected when the flows actually run, found by simulating every flow ag
 
 - **Portfolio output:** the summaries already collect what it needs (section 4.1). The portfolio spec, agent and renderer come once you share your portfolio format.
 - Cover-letter agent (the format leaves room to add it later).
-- Pulling history from remote GitHub or Azure DevOps (local clones only).
+- Pulling history from remote GitHub or Azure DevOps (local clones only, while you have access).
 - A fully code-driven pipeline (Agent SDK CLI). It can wrap the same `agents/*.md` later.
 - Translating the CV into other languages. If a local market ever needs a Ukrainian CV, it fits as a market setting (`language: uk`) with an agent translation that you review.
 
@@ -864,3 +868,6 @@ Every step done by hand in the chat, and the capability that repeats it:
 | 40 | Built step 5 part 3c (build, build:all, status) | One command for the whole chain per CV and market, build records, staleness with reasons, sent-CV warnings with acknowledgment, hand-edited-variant warning in lint |
 | 41 | Built step 5 part 4 (doctor, backup/restore, git-digest, index) | `archiver-zip-encrypted` dropped: its partner `unzipper` can't decrypt AES, so backups are zipped with `jszip` and encrypted with Node's AES-256-GCM; `doctor` does a real test export (permission prompt, fonts); `git-digest` found 0 of your commits in `saas-frontend-architecture-repo` and 184 (not 270+) in `saas-frontend-repo` |
 | 42 | Validated all of steps 1 to 5 against plan and specs | `[text](url)` links rendered as real links, `build --market` (tailored CVs build one market), role profile `max_words` in lint, `contacts_on_page_1` honored, style-map and fixes schemas and role-profile tag checks in `validate`, wording fixes in plan and specs |
+| 43 | Built step 6 (agents) | `AGENTS.md` (rules, workflows, scripts, generated registry), `CLAUDE.md`, six tool-neutral agent definitions, Claude Code wrappers and 15 commands, `log-application` script, report schema, consistency tests between agent docs and code; template test builds go to `.cv-runs/` so they never overwrite the real CV |
+| 44 | Checked step 6 against plan and specs | Reviewer no longer builds a stale CV (reviewers never edit; it asks for `/build` and skips layout), command files described as pointing to agents or scripts, template test builds documented as separate, acceptance checklist marked step 10 |
+| 45 | Asked whether summaries need repo remotes, given that access ends with the job | No: summaries store only repo names; no remote URLs (useless after leaving, and they keep internal addresses); local paths stay per laptop and can be dropped after a job; `/job-change` starts with a final harvest; the summary is the lasting record |

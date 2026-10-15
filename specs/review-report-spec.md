@@ -12,6 +12,7 @@ schema_version: 1
 rubric: ats                         # file name of the rubric
 cv: cv/Kirill_Kohan_CV.md           # the file reviewed
 job_ad: null                        # path when run with --jd
+market: worldwide                   # the market version reviewed
 reviewed_at: 2026-10-20T14:05
 verdict: pass                       # pass | pass-with-issues | fail
 score: 8.5                          # 0-10, rubric-specific meaning

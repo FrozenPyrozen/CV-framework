@@ -52,7 +52,7 @@ export async function runDoctor(opts: { export?: boolean } = {}): Promise<Check[
     const paths = local.repos ?? {};
     const noPath = [...repos].filter((r) => !paths[r]);
     const badPath = Object.entries(paths).filter(([, p]) => !existsSync(String(p).replace(/^~/, process.env.HOME ?? "~")));
-    if (noPath.length) add("warn", `repos with no local path on this laptop: ${noPath.join(", ")}`, "add them to framework.local.yaml (or clone them; /harvest asks when needed)");
+    if (noPath.length) add("info", `repos with no local path on this laptop: ${noPath.join(", ")} (normal once a job has ended; add a path only if you still have access and want to harvest)`);
     if (badPath.length) add("warn", `repo paths that don't exist: ${badPath.map(([n]) => n).join(", ")}`, "fix the paths in framework.local.yaml");
     if (!noPath.length && !badPath.length && repos.size) add("ok", `all ${repos.size} summary repos have a local path`);
     const bdir = local.backup_dir ? resolveBackupDir(String(local.backup_dir)) : undefined;

@@ -1,0 +1,17 @@
+{
+  "$id": "report.schema.json",
+  "title": "Reviewer report front matter (specs/review-report-spec.md)",
+  "type": "object",
+  "required": ["schema_version", "rubric", "cv", "reviewed_at", "verdict", "score"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "rubric": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+    "cv": { "type": "string" },
+    "job_ad": { "type": ["string", "null"] },
+    "market": { "type": ["string", "null"] },
+    "reviewed_at": { "type": "string" },
+    "verdict": { "enum": ["pass", "pass-with-issues", "fail"] },
+    "score": { "type": "number", "minimum": 0, "maximum": 10 }
+  },
+  "additionalProperties": false
+}

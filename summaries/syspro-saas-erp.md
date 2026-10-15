@@ -12,10 +12,10 @@ team_size_led: 0
 counts_as_experience: true
 # --- harvesting ---
 repos:
-  - { name: saas-frontend-repo, remote: git@ssh.dev.azure.com:v3/SYSPRO-Product/Engineering/saas-frontend-repo }
-  - { name: saas-arch-repo, remote: git@ssh.dev.azure.com:v3/SYSPRO-Product/Engineering/saas-arch-repo }
-  - { name: saas-application-mapping-repo, remote: git@ssh.dev.azure.com:v3/SYSPRO-Product/Engineering/saas-application-mapping-repo }
-  - { name: saas-frontend-architecture-repo, remote: git@ssh.dev.azure.com:v3/SYSPRO-Product/Engineering/saas-frontend-architecture-repo }   # no commits under your identities; kept for relevance (solution architecture work, confirmed 2026-10-15)
+  - { name: saas-frontend-repo }
+  - { name: saas-arch-repo }
+  - { name: saas-application-mapping-repo }
+  - { name: saas-frontend-architecture-repo }   # no commits under your identities; kept for relevance (solution architecture work, confirmed 2026-10-15)
 author_identities: []
 harvested_at: "2026-10-15"
 # --- how it appears in the CV ---
