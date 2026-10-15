@@ -1,3 +1,4 @@
+<!-- generated:header -->
 # **Kirill Kohan**
 
 **Senior Software Engineer / Tech Lead (Frontend & Mobile)**
@@ -5,6 +6,7 @@
 Kyiv, Ukraine (Remote) | Open to B2B contract or full-time employment | Working hours overlap with EU, UK and US time zones
 
 +380 97 891 9783 | kiril.kohan@gmail.com | Portfolio: https://drive.google.com/file/d/1-BtpQknjSQ9bxTFAKm6v-r3DQR7IOX6s/view?usp=sharing
+<!-- /generated:header -->
 
 # **SUMMARY**
 
@@ -12,9 +14,10 @@ Senior software engineer and tech lead with 7+ years of experience building Reac
 
 # **EXPERIENCE**
 
+<!-- entry: syspro-saas-erp -->
 ## **Senior Software Engineer**
 
-### **SYSPRO | Remote | 12/2025 – Present**
+### **SYSPRO | Remote | December 2025 - Present**
 
 * Built core modules of a schema-driven **React 19 / TypeScript** runtime for SYSPRO's **ERP SaaS** modernization platform (25+ person program) that renders **1,800+ ERP programs** from declarative data-model definitions, cutting the time to bring an ERP screen to the web from days to hours with no per-screen frontend code.
 
@@ -34,9 +37,10 @@ Senior software engineer and tech lead with 7+ years of experience building Reac
 
 * Stack: **React 19, TypeScript, KendoReact, Zustand, XState, TanStack Router, TanStack Query, Vite, SCSS / CSS Modules, OpenTelemetry, Vitest, Playwright, Storybook, Docker, Azure DevOps**.
 
+<!-- entry: general-motors-navigation -->
 ## **Team Leader**
 
-### **General Motors | Remote | 07/2023 – 11/2025**
+### **General Motors | Remote | July 2023 - November 2025**
 
 * Led a team of 8 developers delivering an automotive **React Native** app, working with stakeholders on scope and planning. After release, user engagement rose 20% and app crashes fell 15%.
 
@@ -56,9 +60,10 @@ Senior software engineer and tech lead with 7+ years of experience building Reac
 
 * Stack: **React Native, TypeScript, Node.js, Redux Saga, RxJS, Storybook, Detox** (E2E), **Fastlane, Bitrise** (CI/CD), **Bugsnag, Kibana** (monitoring), **Figma**.
 
+<!-- entry: velas-wallet -->
 ## **Technical Leader**
 
-### **Velas | Remote | 12/2021 – 07/2023**
+### **Velas | Remote | December 2021 - July 2023**
 
 * Developed the Velas **blockchain** wallet for web, mobile and desktop using **React, React Native, Node.js, TypeScript, MobX and Web3.js**.
 
@@ -78,9 +83,10 @@ Senior software engineer and tech lead with 7+ years of experience building Reac
 
 * Made the first interaction with the Android wallet 3x faster by caching and optimizing wallet and account creation.
 
+<!-- entry: omo-systems-smart-home -->
 ## **Team Leader**
 
-### **OMO Systems | Remote | 04/2021 – 12/2021**
+### **OMO Systems | Remote | April 2021 - December 2021**
 
 * Delivered the core mobile app for controlling smart-home **IoT** devices in the R&D department.
 
@@ -92,9 +98,10 @@ Senior software engineer and tech lead with 7+ years of experience building Reac
 
 * Led and mentored the development team: ran **code reviews**, set coding standards and onboarded new developers.
 
+<!-- entry: thermo-fisher-dosimeter -->
 ## **Software Engineer**
 
-### **Thermo Fisher Scientific | Remote | 11/2020 – 04/2021**
+### **Thermo Fisher Scientific | Remote | November 2020 - April 2021**
 
 * Architected an **IoT healthcare** app from scratch using **React Native, TypeScript, Redux** and an offline-first **Realm** database, communicating with radiation dosimeters over Bluetooth.
 
@@ -108,9 +115,10 @@ Senior software engineer and tech lead with 7+ years of experience building Reac
 
 * Optimized rendering and offline data access in **Realm** as part of a team-wide **performance** effort that made the app 20% faster.
 
+<!-- entry: itjet-fintech -->
 ## **Full-Stack Engineer**
 
-### **Itjet | Kyiv, Ukraine (Hybrid) | 08/2019 – 11/2020**
+### **Itjet | Kyiv, Ukraine (Hybrid) | August 2019 - November 2020**
 
 * Built a reusable **React Native Web** signup flow shared by the native mobile and web apps of a fintech product (Forbes top 10), which made building new flows 3x faster.
 
@@ -126,9 +134,10 @@ Senior software engineer and tech lead with 7+ years of experience building Reac
 
 * Built web features with **Next.js** (server-side rendering) and **GraphQL**, and containerized services with **Docker**.
 
+<!-- entry: admasters-ecommerce -->
 ## **Full-Stack Engineer and Team Leader**
 
-### **The Admasters | Kyiv, Ukraine (Hybrid) | 04/2019 – 08/2019**
+### **The Admasters | Kyiv, Ukraine (Hybrid) | April 2019 - August 2019**
 
 * Integrated **A/B testing** into e-commerce products to raise conversion rates.
 
@@ -142,6 +151,7 @@ Senior software engineer and tech lead with 7+ years of experience building Reac
 
 Part-time contract and consulting work, alongside full-time roles
 
+<!-- entry: orion-mobile-clinical-ink -->
 ## **Senior React Native Engineer (Contract)**
 
 ### **Clinical Trials Patient App | Remote**
@@ -158,6 +168,7 @@ Part-time contract and consulting work, alongside full-time roles
 
 * Resolved production crashes and patient-facing bugs by bisecting dependency versions and adding targeted logging, including login, PIN, task scheduling and document loading issues.
 
+<!-- entry: designai-jira-plugin -->
 ## **Frontend Engineer (Contract)**
 
 ### **Generative AI Jira Plugin | Remote**
@@ -170,6 +181,7 @@ Part-time contract and consulting work, alongside full-time roles
 
 * Set up project tooling and quality gates: ESLint, pre-commit hooks, **SonarQube** and Atlassian design tokens.
 
+<!-- entry: various-clients -->
 ## **Software Engineering Consultant**
 
 ### **Various Clients | Remote**
@@ -188,22 +200,25 @@ Part-time contract and consulting work, alongside full-time roles
 
 # **EDUCATION**
 
+<!-- generated:education -->
 ## **PhD Candidate, Computer Science (in progress)**
 
-National University of Life and Environmental Sciences • Ukraine • 2023 – 2027 (expected)
+National University of Life and Environmental Sciences | Ukraine | 2023 - 2027 (expected)
 
 ## **Master of Computer Science**
 
-National University of Life and Environmental Sciences • Ukraine • 2020 – 2022
+National University of Life and Environmental Sciences | Ukraine | 2020 - 2022
 
 * Honors Diploma (top 10% of graduates).
 
 ## **Bachelor of Computer Science**
 
-National Aviation University • Ukraine • 2016 – 2020
+National Aviation University | Ukraine | 2016 - 2020
+<!-- /generated:education -->
 
 # **SKILLS**
 
+<!-- generated:skills -->
 **Languages:** JavaScript (ES6+), TypeScript, HTML5, CSS3, SCSS
 
 **Frontend:** React 19, React.js, Next.js, Server-side rendering (SSR), Micro-frontends, Schema-driven UI, Design systems, Web accessibility (WCAG), Web performance optimization, KendoReact, Storybook, CSS Modules, Styled Components, Atomic Design, Vite, Monorepo (npm workspaces)
@@ -225,7 +240,10 @@ National Aviation University • Ukraine • 2016 – 2020
 **Domain and SDKs:** ERP, Clinical trials (eCOA), HERE SDK (HNav, HNod, HERE API), IoT, Bluetooth Low Energy (BLE), MQTT, Blockchain, Web3.js, Atlassian Jira Forge
 
 **Leadership and Methodologies:** Team leadership (up to 8 engineers), Mentoring, Code review, System design, Software architecture, Architecture decision records (ADR), Technology stack selection, Technical interviewing, Technical audits, Effort estimation, Presales, Agile, Specification-driven development (SDD), Figma, Jira
+<!-- /generated:skills -->
 
 # **LANGUAGES**
 
-English — C1 (Advanced) · Ukrainian — Native
+<!-- generated:languages -->
+English: C1 (Advanced) | Ukrainian: Native
+<!-- /generated:languages -->
