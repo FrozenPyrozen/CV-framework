@@ -1,0 +1,20 @@
+# Paragraph labels for importing templates/classic/source.docx (your previous CV) with
+# npm run template-import -- templates/classic/source.docx classic --map templates/classic/import-map.yaml
+# Indexes come from the listing (npm run template-import -- templates/classic/source.docx classic).
+# These are the same paragraph choices used to build the Word CV approved on 2026-10-15.
+fonts: [Cambria, Arial]
+links: { color: "1155cc", underline: true }
+paragraphs:
+  name:            { from: 0 }                                  # Title
+  headline:        { from: 1, jc: center, size: 17, bold: true } # contact-line formatting, centered, larger, bold
+  contact_line:    { from: 1, jc: center, size: 13 }            # centered small text
+  # header_rule is not used: paragraph 2 rendered only as a stray dot and added a large gap above SUMMARY (2026-10-15)
+  section_heading: { from: 3 }                                  # Heading1, e.g. SUMMARY
+  section_rule:    { from: 4, keep: true }                      # line under each section heading (drawing)
+  entry_title:     { from: 8 }                                  # Heading2, e.g. Team Leader
+  entry_details:   { from: 9, date_tab: true }                  # Heading3, company, then a tab, then dates
+  bullet:          { from: 10 }                                 # list paragraph
+  body:            { from: 5 }                                  # summary paragraph
+  section_intro:   { from: 5 }
+  education_line:  { from: 71 }                                 # "Computer Science • National University ..."
+  skills_line:     { from: 5 }                                  # same formatting as the summary paragraph (as in the approved CV)

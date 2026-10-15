@@ -13,12 +13,13 @@ This rubric looks at the **page images** in `preview/`, which an AI model with i
 | Area | What to check |
 |---|---|
 | Bullets | bullet glyph and text aligned, wrapped lines aligned with the first line, consistent spacing |
-| Indentation | same left edge for body text, headings and bullets as in the reference |
-| Dates | entry dates aligned at the same position on every entry |
-| Page breaks | no entry title or detail line alone at the bottom of a page, no section heading without content after it |
+| Indentation | one shared left edge: section headings, job titles, job details, body, education and skills lines and bullet symbols all start at the margin (as in the reference) |
+| Spacing | the same gap for the same kind of paragraph everywhere (above every job title, under every section line, between bullets); section gap > job gap > bullet gap; no unusually large gap (e.g. between the header and the first section) |
+| Dates | entry dates end at the same right edge (the right margin) on every entry |
+| Page breaks | no section heading, job title or detail line alone at the bottom of a page; a heading is followed by at least two bullets on the same page; no single bullet alone at the top of a page; a lead-in line (e.g. a degree's institution) stays with its bullet |
 | Header | name, headline, location and contacts centered and readable, links visible |
 | Fonts | look matches the reference (no substituted font) |
-| Density | no overcrowded or near-empty pages, last page not mostly empty |
+| Density | no overcrowded pages; a short last page is a *low* note (suggest tightening only if a few lines would bring it onto the previous page), never a high finding |
 
 ## Required sections in the report
 1. **Per page:** page number, *ok / issues*, one line.

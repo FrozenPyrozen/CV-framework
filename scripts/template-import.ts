@@ -1,0 +1,107 @@
+// npm run template-import <file.docx> <name>                  list paragraphs for labeling (step 1)
+// npm run template-import <file.docx> <name> --map <map.yaml>  build templates/<name>/ from the labels (step 2)
+//
+// Word import (specs/templates.md 4). The template-importer agent labels each paragraph type in a map
+// (paragraph index -> type, plus small overrides). This script then writes:
+//   templates/<name>/template.docx   one sample paragraph per type, text replaced by {{type}}, all CV content removed
+//   templates/<name>/style-map.yaml  type -> sample position, fonts, page setup
+// The source file is not copied (except for your own CV, which you may keep as templates/<name>/source.docx).
+// PDF import is not implemented yet (planned after build works end to end).
+import { mkdirSync, writeFileSync } from "node:fs";
+import { extname } from "node:path";
+import { stringify } from "yaml";
+import {
+  escapeXml, firstRunRPr, hasDrawing, openDocx, pOpen, pPr, pPrJustify, paragraphText, rPrBold, rPrSize, saveDocx,
+} from "./lib/docx.ts";
+import { cliPath, isMain, loadConfig, readYaml, rootPath } from "./lib/repo.ts";
+import { parseArgs } from "./refresh.ts";
+
+export const PARAGRAPH_TYPES = [
+  "name", "headline", "contact_line", "header_rule", "section_heading", "section_rule",
+  "entry_title", "entry_details", "bullet", "body", "section_intro", "education_line", "skills_line",
+] as const;
+export type ParagraphType = (typeof PARAGRAPH_TYPES)[number];
+const REQUIRED: ParagraphType[] = ["name", "contact_line", "section_heading", "entry_title", "entry_details", "bullet", "body"];
+
+export interface ImportMap {
+  fonts: string[];
+  links?: { color?: string; underline?: boolean };
+  paragraphs: Partial<Record<ParagraphType, {
+    from: number; // paragraph index in the source (from the listing)
+    keep?: boolean; // keep the paragraph as is (e.g. a drawn line), no text
+    jc?: "left" | "center" | "right";
+    size?: number; // half-points
+    bold?: boolean;
+    date_tab?: boolean;
+  }>>;
+}
+
+export async function listParagraphs(file: string): Promise<string> {
+  const d = await openDocx(file);
+  return d.paragraphs.map((p, i) => {
+    const style = p.match(/<w:pStyle w:val="([^"]+)"/)?.[1] ?? "-";
+    const flags = [p.includes("<w:numPr>") ? "list" : "", hasDrawing(p) ? "drawing" : "", p.includes("<w:tab/>") ? "tab" : ""].filter(Boolean).join(",");
+    return `${String(i).padStart(3)}  ${style.padEnd(10)} ${flags.padEnd(13)} ${paragraphText(p).slice(0, 70)}`;
+  }).join("\n");
+}
+
+export async function importTemplate(file: string, name: string, map: ImportMap): Promise<{ dir: string; types: string[] }> {
+  const missing = REQUIRED.filter((t) => !map.paragraphs[t]);
+  if (missing.length) throw new Error(`the map lacks required paragraph types: ${missing.join(", ")}`);
+  const d = await openDocx(file);
+  const samples: string[] = [];
+  const styleParagraphs: Record<string, any> = {};
+  for (const type of PARAGRAPH_TYPES) {
+    const m = map.paragraphs[type];
+    if (!m) continue;
+    const src = d.paragraphs[m.from];
+    if (!src) throw new Error(`${type}: paragraph ${m.from} doesn't exist (the file has ${d.paragraphs.length})`);
+    let sample: string;
+    if (m.keep) {
+      sample = src.replace(/ w14:paraId="[^"]*"/g, "").replace(/ w14:textId="[^"]*"/g, "");
+      if (paragraphText(sample).trim()) throw new Error(`${type}: "keep" paragraphs must not contain text (paragraph ${m.from} has "${paragraphText(sample).slice(0, 30)}")`);
+    } else {
+      let ppr = pPr(src);
+      if (m.jc) ppr = pPrJustify(ppr, m.jc);
+      let rpr = firstRunRPr(src);
+      if (m.size) rpr = rPrSize(rpr, m.size);
+      rpr = rPrBold(rpr, !!m.bold);
+      const tab = m.date_tab ? "<w:tab/>" : "";
+      sample = `${pOpen(src)}${ppr}<w:r>${rpr}<w:t xml:space="preserve">{{${type}}}</w:t>${tab}</w:r></w:p>`;
+    }
+    styleParagraphs[type] = { sample: samples.length, ...(m.date_tab ? { date_tab: true } : {}), ...(m.keep ? { keep: true } : {}), ...(m.bold ? { bold: true } : {}) };
+    samples.push(sample);
+  }
+  const cfg = loadConfig();
+  const dir = rootPath(cfg.paths.templates, name);
+  mkdirSync(dir, { recursive: true });
+  await saveDocx(d, samples.join(""), `${dir}/template.docx`);
+  const pg = d.tail.match(/<w:pgSz w:h="(\d+)" w:w="(\d+)"/);
+  const mar = d.tail.match(/<w:pgMar ([^>]*)\/>/)?.[1] ?? "";
+  const marg = Object.fromEntries([...mar.matchAll(/w:(\w+)="(\d+)"/g)].map((x) => [x[1], Number(x[2])]));
+  const styleMap = {
+    schema_version: 1,
+    name,
+    approved: false, // set to true only after the user confirms a test build (specs/templates.md 4)
+    page: pg ? { width_twips: Number(pg[2]), height_twips: Number(pg[1]), margins_twips: marg } : undefined,
+    fonts: map.fonts,
+    links: { color: map.links?.color ?? "1155cc", underline: map.links?.underline ?? true },
+    paragraphs: styleParagraphs,
+  };
+  writeFileSync(`${dir}/style-map.yaml`, `# Generated by npm run template-import; see specs/templates.md.\n${stringify(styleMap)}`);
+  return { dir, types: Object.keys(styleParagraphs) };
+}
+
+if (isMain(import.meta.url)) {
+  const { args, positional } = parseArgs(process.argv.slice(2));
+  const [file, name] = positional;
+  if (!file || !name) { console.error("usage: npm run template-import -- <file.docx> <name> [--map <map.yaml>]"); process.exit(2); }
+  if (extname(file).toLowerCase() !== ".docx") { console.error("template-import: only .docx is supported so far (PDF import comes later)"); process.exit(2); }
+  if (!args.map) {
+    console.log(await listParagraphs(cliPath(file)));
+    console.log(`\nLabel the paragraphs in a map file (types: ${PARAGRAPH_TYPES.join(", ")}), then run with --map.`);
+  } else {
+    const r = await importTemplate(cliPath(file), name, readYaml<ImportMap>(cliPath(args.map as string)));
+    console.log(`template-import: ${r.types.length} paragraph types written to ${r.dir.replace(rootPath() + "/", "")}/ (approved: false until you confirm a test build)`);
+  }
+}

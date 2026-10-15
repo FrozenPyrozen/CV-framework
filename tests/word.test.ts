@@ -1,0 +1,102 @@
+// Tests for template import and the Word renderer (step 5, part 3a).
+import { test } from "node:test";
+import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
+import JSZip from "jszip";
+import { edit, run, tempRepo } from "./helpers.ts";
+import { openDocx, pPr, paragraphText } from "../scripts/lib/docx.ts";
+
+const CV = "cv/Kirill_Kohan_CV.md";
+
+test("template-import lists paragraphs, then builds a template with no CV text left", async () => {
+  const dir = tempRepo();
+  const list = run("template-import.ts", dir, ["templates/classic/source.docx", "copy"]);
+  assert.match(list.out, /^\s+0\s+Title\s+Kirill Kohan/m);
+  const r = run("template-import.ts", dir, ["templates/classic/source.docx", "copy", "--map", "templates/classic/import-map.yaml"]);
+  assert.equal(r.code, 0, r.out);
+  const t = await openDocx(join(dir, "templates/copy/template.docx"));
+  const texts = t.paragraphs.map(paragraphText).filter(Boolean);
+  assert.ok(texts.every((x) => /^\{\{[a-z_]+\}\}$/.test(x)), `leftover text: ${texts.filter((x) => !x.startsWith("{{"))}`);
+  assert.match(readFileSync(join(dir, "templates/copy/style-map.yaml"), "utf8"), /approved: false/);
+});
+
+test("template-import rejects a map missing required types", () => {
+  const dir = tempRepo();
+  edit(dir, "templates/classic/import-map.yaml", /^  bullet: .*$/m, "");
+  const r = run("template-import.ts", dir, ["templates/classic/source.docx", "copy", "--map", "templates/classic/import-map.yaml"]);
+  assert.notEqual(r.code, 0);
+  assert.match(r.out, /lacks required paragraph types: bullet/);
+});
+
+test("render produces the approved layout: same formatting per paragraph type, real links, bullet fix", async () => {
+  const dir = tempRepo();
+  run("refresh.ts", dir);
+  const r = run("render.ts", dir);
+  assert.equal(r.code, 0, r.out);
+  const out = join(dir, "cv/Kirill_Kohan_CV.docx");
+  const d = await openDocx(out);
+  const texts = d.paragraphs.map(paragraphText);
+  assert.equal(texts[0], "Kirill Kohan");
+  assert.equal(texts[1], "Senior Software Engineer / Tech Lead (Frontend & Mobile)");
+  assert.equal(texts[3], "+380 97 891 9783 | kiril.kohan@gmail.com | Portfolio");
+  assert.ok(texts.includes("SYSPRO | RemoteDecember 2025 - Present"), "entry details with tab before dates");
+  assert.ok(!texts.some((t) => /Team Leader \(Contract\)/.test(t)));
+  const zip = await JSZip.loadAsync(readFileSync(out));
+  const rels = await zip.file("word/_rels/document.xml.rels")!.async("string");
+  assert.match(rels, /Target="mailto:kiril\.kohan@gmail\.com"/);
+  assert.match(rels, /Target="https:\/\/drive\.google\.com\/file\/d\/1-BtpQknjSQ9bxTFAKm6v-r3DQR7IOX6s\/view\?usp=sharing"/);
+  const bullet = d.paragraphs.find((p) => p.includes("<w:numPr>"))!;
+  assert.match(pPr(bullet), /<w:ind w:left="226" w:right="0" w:hanging="226"\/>/);
+  const numbering = await zip.file("word/numbering.xml")!.async("string");
+  assert.match(numbering, /<w:tabs><w:tab w:val="num" w:pos="226"\/><\/w:tabs><w:ind w:left="226" w:hanging="226"\/>/);
+  const ids = [...(await zip.file("word/document.xml")!.async("string")).matchAll(/<wp:docPr id="(\d+)"/g)].map((m) => m[1]);
+  assert.equal(new Set(ids).size, ids.length, "drawing ids are unique");
+});
+
+test("render of the Ukraine version has no phone and no contract labels", async () => {
+  const dir = tempRepo();
+  run("refresh.ts", dir);
+  run("market.ts", dir);
+  run("render.ts", dir, ["cv/markets/ukraine/Kirill_Kohan_CV_UA.md"]);
+  const d = await openDocx(join(dir, "cv/markets/ukraine/Kirill_Kohan_CV_UA.docx"));
+  const all = d.paragraphs.map(paragraphText).join("\n");
+  assert.doesNotMatch(all, /\+380|\(Contract\)|Open to/);
+  assert.match(all, /kiril\.kohan@gmail\.com \| Portfolio/);
+});
+
+test("render applies the classic fixes: right-aligned dates, headings and bullet groups kept together", async () => {
+  const dir = tempRepo();
+  run("refresh.ts", dir);
+  run("render.ts", dir);
+  const d = await openDocx(join(dir, "cv/Kirill_Kohan_CV.docx"));
+  const details = d.paragraphs.find((p) => paragraphText(p).startsWith("SYSPRO | Remote"))!;
+  assert.match(pPr(details), /<w:tab w:val="right" w:leader="none" w:pos="10720"\/>/);
+  assert.match(pPr(details), /<w:keepNext w:val="1"\/>/);
+  const isBullet = (p: string) => p.includes("<w:numPr>");
+  const keeps = (p: string) => /<w:keepNext w:val="1"\/>/.test(pPr(p));
+  // In every run of bullets: the first and the second-to-last bullet keep with the next one; the last doesn't.
+  for (let i = 0; i < d.paragraphs.length; i++) {
+    if (!isBullet(d.paragraphs[i])) continue;
+    const first = !isBullet(d.paragraphs[i - 1] ?? ""), last = !isBullet(d.paragraphs[i + 1] ?? "");
+    const secondLast = !last && !isBullet(d.paragraphs[i + 2] ?? "");
+    if (last) assert.ok(!keeps(d.paragraphs[i]), `last bullet at ${i} must not keep with next`);
+    else if (first || secondLast) assert.ok(keeps(d.paragraphs[i]), `bullet at ${i} should keep with next`);
+  }
+  assert.ok(!d.paragraphs.map(paragraphText).some((t) => t === "."), "no header rule paragraph");
+});
+
+test("render: consistent left edge and spacing, lead-in lines stay with their bullets", async () => {
+  const dir = tempRepo();
+  run("refresh.ts", dir);
+  run("render.ts", dir);
+  const d = await openDocx(join(dir, "cv/Kirill_Kohan_CV.docx"));
+  const byText = (t: string) => d.paragraphs.find((p) => paragraphText(p) === t || paragraphText(p).startsWith(t + " |"))!;
+  for (const t of ["EXPERIENCE", "Senior Software Engineer", "SYSPRO", "National Aviation University"]) {
+    assert.match(pPr(byText(t)), /<w:ind w:left="0"[^>]*w:firstLine="0"\/>/, `${t} starts at the margin`);
+  }
+  assert.match(pPr(byText("Senior Software Engineer")), /w:before="20"/, "first item under a section line gets the small gap");
+  assert.match(pPr(byText("Team Leader")), /w:before="80"/, "later job titles get the regular gap");
+  const master = d.paragraphs.find((p) => paragraphText(p).includes("| 2020 - 2022"))!;
+  assert.match(pPr(master), /<w:keepNext w:val="1"\/>/, "education line keeps with its Honors bullet");
+});

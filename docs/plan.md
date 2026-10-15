@@ -90,6 +90,7 @@ CV/
 ├── templates/
 │   └── <name>/                    # one folder per template; "classic" = your previous CV
 │       ├── source.docx            # the original file the template was imported from (own CVs only)
+│       ├── import-map.yaml        # the agent's paragraph labels for template-import
 │       ├── template.docx          # styles only, sample content removed (an input, so committed)
 │       ├── style-map.yaml         # per paragraph type (title, h1, h2, h3+date, bullet, body, skills line): a sample paragraph
 │                                  # with its full formatting, not just a style name (R2); also lists the template's fonts
@@ -110,12 +111,14 @@ CV/
 │   ├── select.ts                  # deterministic bullet selection/ordering by profile or job-ad tags (R8)
 │   ├── reattach-src.ts            # re-attaches source comments after an agent edit (R7)
 │   ├── build.ts                   # md -> docx -> pdf -> pdf-check -> preview
+│   ├── render.ts                  # npm run render: Markdown -> .docx (picks the template and output name)
 │   ├── renderers/docx.ts          # template-driven Word renderer
+│   ├── lib/docx.ts                # .docx zip and XML helpers
 │   ├── exporters/                 # pages.ts, word.ts, libreoffice.ts
 │   ├── export-pdf.ts              # runs exporters in config order
 │   ├── pdf-check.ts
 │   ├── preview.ts
-│   ├── template-import.ts         # Word/PDF sample -> templates/<name>/
+│   ├── template-import.ts         # Word sample -> templates/<name>/ (PDF later)
 │   ├── refresh.ts                 # regenerates the script-owned parts of a CV (4.2d)
 │   ├── market.ts                  # writes market versions (4.6)
 │   ├── lint.ts
@@ -516,8 +519,8 @@ What the main rubrics must produce (taken from the reviews done in this chat):
 | `build [file]` | **The full chain:** `refresh`, `lint` and `trace`, then Markdown to Word, Word to PDF, `pdf-check` and the preview. Stops at the first failing step. Defaults to the master CV. **Exception:** for the master CV, a bullet or summary sentence without a source is a *warning* in `build` (so a quick hand-written bullet doesn't block your PDF). It stays an error in `check` and for variants and tailored CVs, which are built only from sourced content. The warning suggests `/add-experience` to turn the bullet into a confirmed fact with a source. |
 | `build:all` | `build` for the master CV and every role variant, **for every market** in `markets/` (tailored CVs only when named) |
 | `market [cv-file] [--market <id>]` | writes the market versions of a CV (default: the master) by script: header and entry title lines per market file, using the variant's role profile when the file is in `cv/variants/<id>/` (4.6). Called by `build`. |
-| `render [file] [--template <name>]` | Markdown to `.docx`, filling the chosen template through its `style-map.yaml`, plus the template's `fixes.yaml` (the Pages bullet-indent fix for `classic`). Links (email, portfolio, any `show: true` link in the profile) are created as proper hyperlink entries in the Word file, never by reusing the template's own link ids. The default template comes from config, or from the profile's `template:` field. |
-| `template-import <file.docx\|file.pdf> <name>` | Script part of the template import (6.4) |
+| `render [file] [--template <name>] [--out <file.docx>]` | Markdown to `.docx`, filling the chosen template through its `style-map.yaml`, then applying the template's `fixes.yaml` (for `classic`: Pages bullet indent, headings kept with what follows, right-aligned dates, first and last two bullets kept together, consistent left edge and spacing). Links (email, portfolio, any `show: true` link in the profile) are created as proper hyperlink entries, never by reusing the template's own link ids. Template: `--template`, else the role profile's `template:`, else config. Output sits next to the Markdown (`cv.md` in a variant folder becomes `<Name>_CV_<Profile>.docx`). |
+| `template-import <file.docx> <name> [--map <map.yaml>]` | Template import, script part (6.4): without `--map` lists paragraphs for the template-importer agent; with `--map` builds `template.docx` and `style-map.yaml`. PDF input comes after `build` works end to end. |
 | `pdf [file]` | `.docx` to `.pdf` with the first available exporter from `pdf_exporters` in `framework.config.yaml` (see 6.1) |
 | `pdf-check [file]` | Checks that the PDF is ATS-readable (6.2) |
 | `preview [file]` | Page images of the PDF into `preview/` (6.3) |
@@ -593,7 +596,7 @@ To make your CV look like an existing Word or PDF CV, run `/import-template <fil
 | Input | How |
 |---|---|
 | **Word** | Precise. The script reads the file's styles, numbering and paragraph properties. The template-importer agent labels each paragraph type (name, contact line, section heading and its rule, job title, company and dates, bullet, body text, skills line, education line) using the text and a preview. The result is the original styles with all sample content removed, plus `style-map.yaml`. |
-| **PDF** | Approximate. The script extracts fonts, sizes, colors, positions, margins and line spacing with `pdfjs-dist`. The agent compares them with the page preview and the template is *rebuilt* as a new Word file (with the `docx` npm package) that copies the look. `import-report.md` lists what couldn't be copied exactly. |
+| **PDF** (after `build` works end to end) | Approximate. The script extracts fonts, sizes, colors, positions, margins and line spacing with `pdfjs-dist`. The agent compares them with the page preview and the template is *rebuilt* as a new Word file (with the `docx` npm package) that copies the look. `import-report.md` lists what couldn't be copied exactly. |
 
 **Rules:**
 - **Only the styling is kept.** The other person's text, name and contacts are never saved. Their file stays wherever you keep it and is not copied into the repo.
@@ -645,7 +648,7 @@ Each step ends with something you can check.
    *Check:*
    - `npm test` passes, and `npm run validate` passes on all summaries and facts.
    - `templates/classic/template.docx` is created by importing `templates/classic/source.docx` (your previous CV).
-   - `npm run build` through it produces a `.docx` matching the current one, a PDF that passes `pdf-check`, and a page-1 preview showing correct bullets.
+   - `npm run build` through it produces a `.docx` with the look you approved (all-page previews reviewed on 2026-10-15), a PDF that passes `pdf-check`, and previews of every page.
 6. **Agents and wrappers.** `agents/*.md` (harvester, composer, tailor, reviewer, advisor, template-importer), `.claude/agents/*`, `.claude/commands/*`, `AGENTS.md`, `CLAUDE.md`. `CLAUDE.md` also states "do not use `cns:*` skills in this repo", and `cns` skills are listed as disabled in `.claude/cns-preferences.local.md`, so every session (and any tool reading `AGENTS.md`) knows the rule.
 7. **Convert and trace the current CV.** Run `npm run refresh` to replace the typed header, education, skills and languages with generated blocks (4.2d), and to rewrite every job's title and detail lines from the summary fields (this changes `12/2025 – Present` to `December 2025 - Present` and removes the "(Contract)" labels from the full-time jobs). Then run the composer once in "annotate only" mode to add `src` comments to bullets and summary sentences without changing their text. Then run `npm run check`.
    *Check:* the CV text is unchanged except for generated blocks, job title and detail lines, markers and comments, and every bullet and summary sentence resolves, or the gaps are listed for you.
@@ -733,7 +736,7 @@ backup_password_env: CV_BACKUP_PASSWORD  # optional; the password is read from t
 pdf_exporters: [pages, word, libreoffice]   # optional override of the config order for this laptop
 ```
 
-**Other operating systems:** on macOS, PDF export uses Pages or Word and the preview uses Quick Look. On Windows or Linux, LibreOffice (`soffice`) is the supported exporter, and previews come from LibreOffice or `pdftoppm`. `doctor` shows which path is active.
+**Other operating systems:** on macOS, PDF export uses Pages or Word. On Windows or Linux, LibreOffice (`soffice`) is the supported exporter. Previews use the same Node renderer (`pdfjs-dist` + `@napi-rs/canvas`, text drawn from the PDF's embedded fonts) on every OS; macOS Quick Look is only a page-1 fallback. `doctor` shows which path is active.
 
 **Fonts:** each template lists its fonts in `style-map.yaml` (for `classic`: Cambria, Arial). `doctor` checks they're installed, and `pdf-check` fails if the PDF used a substitute.
 
@@ -761,7 +764,7 @@ Problems expected when the flows actually run, found by simulating every flow ag
 | R5 | The secret scan flags your own portfolio link (a Drive file ID looks like a random token) | Links in `profile.yaml` are exempt, and `framework.config.yaml` has a `secret_scan.allow` list for other approved values | 5 |
 | R6 | The confidentiality blocklist raises false alarms on ordinary words ("Orion", "Studio Shell") | Whole-word, case-sensitive matching, plus a per-term `allow_in` list in the summary's confidentiality notes (e.g. allow "Orion" in a generic sentence) | 5 |
 | R12 | The one-time macOS permission prompt for controlling Pages can hang an unattended agent session | `doctor` triggers the prompt while you're at the keyboard. Exports check permission first and fail fast if it's missing. | 5 |
-| R13 | Only page 1 can be previewed on this Mac (no `pdftoppm`), so layout issues on later pages are missed | Render all pages with `pdfjs-dist` and a Node canvas package (section 6.3) | 5 |
+| R13 | Only page 1 can be previewed on this Mac (no `pdftoppm`), so layout issues on later pages are missed | Render all pages with `pdfjs-dist` and a Node canvas package (section 6.3). Built in part 3a; text is drawn as shapes from the embedded fonts (`disableFontFace`), because Node can't load PDF fonts directly. | 5 |
 
 ### AI agent behavior
 | # | Risk | Mitigation | Step |
@@ -788,6 +791,7 @@ Problems expected when the flows actually run, found by simulating every flow ag
 | Tailored CVs in git | `cv/tailored/` and `facts/applications.yaml` are in `.gitignore` by default. To keep one, run `git add -f`. The tailor agent reminds you of this after each run. |
 | Built files in git | **Only Markdown is committed** (CV `.md` files and `gap-report.md`). Every built output, for the master CV, variants and tailored CVs (`.docx`, `.pdf`, `pdf-check.md`, `preview/`, `selection.json`, `cv/.build-state.json`), is git-ignored and recreated by `npm run build` / `build:all`. The exception is `templates/*/template.docx`, which is an input, so it's committed. |
 | Role profiles | First four: `react`, `react-native`, `fullstack-react-node`, `nodejs` (section 4.4) |
+| `classic` template look | Chosen with the user from all-page previews on 2026-10-15: one left edge for everything, tight spacing (section 7 pt, job 4 pt, bullet 1 pt), right-aligned dates, no header rule, headings and bullet groups never split across pages. Recorded in `templates/classic/fixes.yaml`. |
 | Markets | `worldwide` (default: phone shown, B2B or full-time, time-zone line, contract labels for entries that really were contracts) and `ukraine` (no phone, no availability line, no time-zone line, no contract labels). Every CV is built for both (4.6). |
 | Decisions already made in this chat | Recorded in `facts/decisions.yaml` so reviewers don't raise them again: no LinkedIn/GitHub links (the old CV had them, so they can come back), keep the current length, keep the Drive portfolio link, keep the job title step from GM to SYSPRO |
 | Variants vs manual edits | Variants are generated. The master CV's wording is reused by source id, and lasting variant tweaks go in profile `overrides` |
@@ -846,3 +850,5 @@ Every step done by hand in the chat, and the capability that repeats it:
 | 34 | Asked to validate all work against plan and specs | Independent audit; contract wording, date format, template name, examples and dependency list brought in line; job title and detail lines generated by `refresh` |
 | 35 | Validated step 5 part 2 against the plan | Pseudo-sources for calculated values, tailored CVs in `check`, entry order and Stack-line checks, `allow_in` contexts documented |
 | 36 | Checked plan and code against each other | `reattach-src --save` snapshots, role-profile-aware refresh/market/lint, `select --tags` in the CV folder, refresh reports replaced text and validates first, new lint rules (heading levels, section order, bullet limits, team size, internal addresses), unsupported-skill check, plan layout, flags and wording updated |
+| 37 | Built step 5 part 3a (template import, Word renderer) | `classic` imported from `source.docx` via `import-map.yaml`; rendering matches the approved Word file (identical formatting in all 123 paragraphs; only intended text changes) |
+| 38 | Reviewed every page of the rendered CV and asked for layout changes | `fixes.yaml` fix types (keep-with-next, date tab, bullet groups, per-type spacing, first item under a section line), header rule removed, all-page previews with `npm run preview`, layout rubric checks spacing and page breaks |

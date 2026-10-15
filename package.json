@@ -18,7 +18,10 @@
     "trace": "tsx scripts/trace.ts",
     "reattach-src": "tsx scripts/reattach-src.ts",
     "select": "tsx scripts/select.ts",
-    "check": "tsx scripts/check.ts"
+    "check": "tsx scripts/check.ts",
+    "render": "tsx scripts/render.ts",
+    "template-import": "tsx scripts/template-import.ts",
+    "preview": "tsx scripts/preview.ts"
   },
   "devDependencies": {
     "@types/node": "^22.20.5",
@@ -26,8 +29,10 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
+    "@napi-rs/canvas": "^0.1.100",
     "ajv": "^8.20.0",
     "jszip": "^3.10.2",
+    "pdfjs-dist": "^4.10.38",
     "yaml": "^2.9.1"
   }
 }

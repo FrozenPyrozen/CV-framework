@@ -8,7 +8,7 @@ export const REPO = resolve(import.meta.dirname, "..");
 
 export function tempRepo(): string {
   const dir = mkdtempSync(join(tmpdir(), "cv-test-"));
-  for (const p of ["framework.config.yaml", "facts", "summaries", "schemas", "markets", "specs", "cv"]) {
+  for (const p of ["framework.config.yaml", "facts", "summaries", "schemas", "markets", "specs", "cv", "templates"]) {
     cpSync(join(REPO, p), join(dir, p), { recursive: true });
   }
   return dir;

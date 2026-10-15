@@ -1,0 +1,40 @@
+# Renderer fixes for the classic template (specs/templates.md 3). Applied after filling, in order.
+- id: bullet-indent-pages
+  why: "The original bullet indent (163/105 twips, tab at 162) renders with the text pushed about 0.6 inch right in Pages."
+  found: "2026-10-15"
+  set:
+    bullet: { indent_left: 226, hanging: 226, tab: { type: num, pos: 226 } }   # bullet glyph at the margin, text at 226 (aligned scheme, see consistent-spacing)
+- id: keep-headings-with-next
+  why: "A job title was left alone at the bottom of page 1 while its details and bullets started on page 2."
+  found: "2026-10-15"
+  set:
+    keep_with_next: [section_heading, section_rule, entry_title, entry_details]   # section_rule added after EDUCATION was left alone at a page bottom
+- id: dates-right-aligned
+  why: "Dates started at a fixed left tab stop, so their right edges didn't line up; right-aligned dates end at the margin."
+  found: "2026-10-15"
+  set:
+    date_tab: { align: right, pos: 10720 }   # text width is 10800 twips; heading indent is 73
+- id: keep-last-bullets-together
+  why: "The last bullet of an entry could be pushed alone to the top of the next page."
+  found: "2026-10-15"
+  set:
+    keep_last_bullets_together: 2
+- id: keep-first-bullets-with-heading
+  why: "An entry's title and details could end a page with only one bullet under them; the Honors Diploma bullet was cut off from its degree. The line before a run of bullets also stays with the first bullet."
+  found: "2026-10-15"
+  set:
+    keep_first_bullets_together: 2
+- id: consistent-spacing
+  why: "Headings were indented 146 twips, body text 73 and bullets 58, so nothing shared a left edge; spacing above job titles was tight while other gaps were large. Spacing tightened on 2026-10-15 at the user's request."
+  found: "2026-10-15"
+  set:
+    paragraphs:   # twips: 20 = 1 pt; line 240 = single spacing
+      section_heading: { indent_left: 0, first_line: 0, before: 140, after: 20 }
+      entry_title:     { indent_left: 0, first_line: 0, before: 80, after: 0 }
+      entry_details:   { indent_left: 0, first_line: 0, before: 0, after: 30 }
+      bullet:          { before: 20, after: 0, line: 240 }
+      body:            { indent_left: 0, first_line: 0, before: 20, after: 0, line: 252 }
+      section_intro:   { indent_left: 0, first_line: 0, before: 20, after: 20, line: 240 }
+      education_line:  { indent_left: 0, first_line: 0, before: 0, after: 30, line: 240 }
+      skills_line:     { indent_left: 0, first_line: 0, before: 20, after: 0, line: 240 }
+    first_after_section_heading: { before: 20 }   # same small gap under every section line, whatever comes first
