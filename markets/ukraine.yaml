@@ -1,0 +1,11 @@
+# Local Ukrainian market: no phone, no availability line, no time-zone line, no contract labels.
+schema_version: 1
+id: ukraine
+default: false
+file_suffix: _UA
+header:
+  show_phone: false
+  show_availability: false
+  show_time_zone_overlap: false
+entries:
+  show_contract_suffix: false

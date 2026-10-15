@@ -1,0 +1,56 @@
+{
+  "$id": "config.schema.json",
+  "title": "framework.config.yaml (docs/plan.md section 9)",
+  "type": "object",
+  "required": ["schema_version", "spelling", "paths", "output", "default_template", "pdf_exporters", "cv_sections", "display", "header", "checks", "secret_scan", "tags"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "spelling": { "enum": ["en-US", "en-GB"] },
+    "paths": { "type": "object", "required": ["summaries", "digests", "facts", "profiles", "markets", "templates", "reports", "runs"], "additionalProperties": { "type": "string" } },
+    "output": { "type": "object", "required": ["master_dir", "variants_dir", "tailored_dir", "markets_subdir", "file_name"], "additionalProperties": { "type": "string" } },
+    "default_template": { "type": "string" },
+    "pdf_exporters": { "type": "array", "items": { "enum": ["pages", "word", "libreoffice"] }, "minItems": 1 },
+    "cv_sections": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object", "required": ["id", "heading", "enabled", "source"],
+        "properties": {
+          "id": { "$ref": "common.schema.json#/$defs/id" }, "heading": { "type": "string" }, "enabled": { "type": "boolean" },
+          "source": { "enum": ["composer", "entries", "profile.education", "profile.languages", "skills"] },
+          "intro": { "type": "string" }, "show_dates": { "type": "boolean" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "display": {
+      "type": "object",
+      "required": ["date_format", "date_range_separator", "present_label", "contract_suffix", "field_separator"],
+      "properties": {
+        "date_format": { "type": "string" }, "date_range_separator": { "type": "string" }, "present_label": { "type": "string" },
+        "contract_suffix": { "type": "string" }, "field_separator": { "type": "string" }, "expected_suffix": { "type": "string" },
+        "bullet_bold_keywords": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+    "header": { "type": "object", "required": ["location", "availability", "time_zone_overlap", "contact_order", "link_format"] },
+    "checks": {
+      "type": "object",
+      "required": ["max_pages", "max_words", "forbidden_chars", "export_timeout_s"],
+      "properties": {
+        "max_pages": { "type": "integer", "minimum": 1 }, "max_words": { "type": "integer", "minimum": 100 },
+        "max_bullet_words": { "type": "integer", "minimum": 5 }, "contacts_on_page_1": { "type": "boolean" },
+        "export_timeout_s": { "type": "integer", "minimum": 5 },
+        "forbidden_chars": { "type": "array", "items": { "type": "string" } },
+        "filler_words": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": false
+    },
+    "secret_scan": {
+      "type": "object", "required": ["allow", "internal_url_patterns"],
+      "properties": { "allow": { "type": "array", "items": { "type": "string" } }, "internal_url_patterns": { "type": "array", "items": { "type": "string" } } },
+      "additionalProperties": false
+    },
+    "tags": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/tag" }, "minItems": 1 }
+  },
+  "additionalProperties": false
+}

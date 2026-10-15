@@ -229,6 +229,7 @@ Tags: code-review, code-quality, sdd
 | OpenTelemetry (custom exporter implementation) | Host telemetry module | **hands-on** |
 | Custom OTLP receiver script (Node.js) | Local telemetry development | **hands-on** |
 | Microsoft SignalR client | Real-time transport in the host runtime | **used by the project** |
+| WebSockets | Real-time communication in the host runtime (confirmed by user 2026-10-15) | **hands-on** |
 | @noble/hashes | Hashing utility (telemetry, redaction or trace-context support) | **used by the project** |
 
 ### Testing

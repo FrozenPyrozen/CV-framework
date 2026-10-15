@@ -37,7 +37,7 @@ cv_order: 1
 cv_client_label: SYSPRO
 cv_location: Remote
 show_dates_in_cv: true
-cv_title_suffix: " (Contract)"
+# cv_title_suffix: " (Contract)"   # optional; only when engagement is contract
 cv_emphasis:
   - Architecture-governed specification-driven development (SDD), not ad-hoc AI code generation
 cv_max_bullets: 8
@@ -161,6 +161,6 @@ These apply to the harvester (`/harvest`, `/add-repo`):
 For jobs that exist only as CV text (General Motors, Velas, OMO Systems, Thermo Fisher Scientific, Itjet, The Admasters):
 
 - Each CV bullet becomes one contribution, in CV order, with its tags.
-- Front matter comes from the CV entry (role, client, location, dates, contract suffix).
+- Front matter comes from the CV entry (role, client, location, dates). The employment type (`engagement`) is confirmed with the user, never inferred from a "(Contract)" label.
 - Numbers in bullets go to section 7 with source `cv`.
 - Every other section is `TODO (needs user input)`, to be enriched later with `/harvest` or `/add-experience`.

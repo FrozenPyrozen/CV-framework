@@ -1,0 +1,73 @@
+{
+  "$id": "profile.schema.json",
+  "type": "object",
+  "required": ["schema_version", "name", "headline_default", "contacts", "location", "work", "education", "languages"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "name": { "type": "string" },
+    "legal_name": { "type": "string" },
+    "show_legal_name": { "type": "boolean" },
+    "git_identities": { "type": "array", "items": { "type": "string" } },
+    "headline_default": { "type": "string" },
+    "contacts": {
+      "type": "object",
+      "required": ["email"],
+      "properties": {
+        "phone": { "type": "string", "pattern": "^\\+[0-9][0-9 ]{6,}$" },
+        "email": { "type": "string", "pattern": "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$" },
+        "links": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["label", "url", "show"],
+            "properties": { "label": { "type": "string" }, "url": { "type": "string", "pattern": "^https?://" }, "show": { "type": "boolean" } },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "location": {
+      "type": "object",
+      "required": ["city", "country", "remote"],
+      "properties": {
+        "city": { "type": "string" }, "country": { "type": "string" }, "remote": { "type": "boolean" },
+        "time_zone": { "type": "string" }, "overlaps": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": false
+    },
+    "work": {
+      "type": "object",
+      "required": ["engagement_types"],
+      "properties": {
+        "engagement_types": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/engagementType" } },
+        "work_authorization": { "type": "array", "items": { "type": "string" } },
+        "open_to_relocation": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+    "education": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["degree", "institution", "country", "start", "end"],
+        "properties": {
+          "degree": { "type": "string" }, "status": { "enum": ["in-progress", "completed"] },
+          "institution": { "type": "string" }, "country": { "type": "string" },
+          "start": { "type": "integer" }, "end": { "type": "integer" }, "end_expected": { "type": "boolean" },
+          "honors": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "languages": {
+      "type": "array",
+      "items": {
+        "type": "object", "required": ["language", "level"],
+        "properties": { "language": { "type": "string" }, "level": { "type": "string" } },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

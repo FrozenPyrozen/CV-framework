@@ -71,7 +71,7 @@ Tags: architecture, react-native
 
 Defined the unit-testing strategy for the app and introduced an Agile delivery process.
 
-Result: unit-test coverage reached 95%, and production bugs went down.
+Result: unit-test coverage reached 95%, and production bugs fell by 50%.
 Tags: testing, agile, leadership
 
 ### 4.6 In-car navigation features
@@ -124,7 +124,6 @@ Tags: automotive, react-native
 - User engagement rose 20% after release (4.1). Source: cv. Confidence: exact.
 - App crashes fell 15% after release (4.1). Source: cv. Confidence: exact.
 - Unit-test coverage reached 95% (4.5). Source: cv. Confidence: exact.
-- Production bugs reduced (4.5), no number in the current CV. Source: cv. Confidence: approximate.
 - Production bugs reduced by 50% after the testing strategy and Agile process (4.5). Source: previous CV, confirmed by user 2026-10-15. Confidence: exact.
 - Navigation features also used HERE "service packages" (4.6). Source: previous CV, confirmed by user 2026-10-15. Confidence: exact.
 

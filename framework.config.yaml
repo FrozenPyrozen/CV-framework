@@ -1,0 +1,169 @@
+# Framework configuration: every value scripts and agents use instead of hard-coding (docs/plan.md section 9).
+# Per-laptop settings go in framework.local.yaml (git-ignored).
+schema_version: 1
+
+spelling: en-US
+
+paths:
+  summaries: summaries
+  digests: summaries/.digests
+  facts: facts
+  profiles: profiles
+  markets: markets
+  templates: templates
+  reports: reports
+  runs: .cv-runs
+
+output:
+  master_dir: cv
+  variants_dir: cv/variants
+  tailored_dir: cv/tailored
+  markets_subdir: markets            # cv/markets/<id>/, cv/variants/<profile>/markets/<id>/
+  file_name: "{name_underscored}_CV{profile_suffix}{market_suffix}"   # Kirill_Kohan_CV, Kirill_Kohan_CV_React_Native_UA
+
+default_template: classic
+pdf_exporters: [pages, word, libreoffice]   # framework.local.yaml may override per laptop
+
+# CV sections in order (specs/cv-spec.md section 2)
+cv_sections:
+  - { id: summary,    heading: SUMMARY,    enabled: true, source: composer }
+  - { id: experience, heading: EXPERIENCE, enabled: true, source: entries, show_dates: true }
+  - id: consulting
+    heading: CONSULTING AND FREELANCE PROJECTS
+    enabled: true
+    source: entries
+    intro: Part-time contract and consulting work, alongside full-time roles
+    show_dates: false
+  - { id: education,  heading: EDUCATION,  enabled: true, source: profile.education }
+  - { id: skills,     heading: SKILLS,     enabled: true, source: skills }
+  - { id: languages,  heading: LANGUAGES,  enabled: true, source: profile.languages }
+
+display:
+  date_format: "MMMM YYYY"           # December 2025
+  date_range_separator: " - "
+  present_label: Present
+  contract_suffix: " (Contract)"
+  field_separator: " | "
+  expected_suffix: " (expected)"     # education end year still to come
+  bullet_bold_keywords: true         # bold technologies and key terms in bullets (specs/cv-spec.md section 3)
+
+# Header line templates (specs/cv-spec.md section 8). {placeholders} come from facts/profile.yaml;
+# a line whose content is empty for the current market is left out.
+header:
+  location: "{city}, {country}{remote_suffix}"            # remote_suffix = " (Remote)" when location.remote
+  availability:
+    template: "Open to {engagement_list} employment"
+    labels: { b2b-contract: B2B contract, full-time: full-time, part-time: part-time }
+    joiner: " or "
+  time_zone_overlap: "Working hours overlap with {overlap_list} time zones"
+  contact_order: [phone, email, links]
+  link_format: "{label}: {url}"
+
+checks:
+  max_pages: 4
+  max_words: 2200
+  max_bullet_words: 45
+  contacts_on_page_1: true
+  export_timeout_s: 60
+  forbidden_chars: ["→", "·", "•", "—", "–"]
+  filler_words: [passionate, results-driven, highly accomplished, leveraged, leverage, synergy, cutting-edge, rockstar, ninja, guru]
+
+secret_scan:
+  allow: []                          # approved values that look like secrets (profile links are always allowed)
+  internal_url_patterns: []          # extra patterns besides each summary's url_pattern entries
+
+# Official tag list. New tags are added only through an approved proposal (/harvest, /add-experience).
+tags:
+  # languages and web
+  - javascript
+  - typescript
+  - html-css
+  # frontend
+  - react
+  - nextjs
+  - ssr
+  - micro-frontends
+  - schema-driven-ui
+  - design-systems
+  - accessibility
+  - storybook
+  - kendo
+  - build-tooling
+  - monorepo
+  # mobile
+  - react-native
+  - react-native-web
+  - expo
+  - android
+  - ios
+  - native-modules
+  - realm
+  - offline-first
+  - mobile-ci
+  - app-distribution
+  - background-jobs
+  # state and data
+  - redux
+  - mobx
+  - zustand
+  - state-machines
+  - tanstack
+  - rxjs
+  - rest-api
+  - graphql
+  - websockets
+  # backend and cloud
+  - node
+  - postgres
+  - aws
+  - azure
+  - docker
+  - payments
+  # auth and security
+  - oauth
+  - oidc
+  - security
+  # quality, testing, delivery
+  - testing
+  - e2e
+  - code-quality
+  - code-review
+  - ci-cd
+  - git
+  - observability
+  - debugging
+  - performance
+  - legacy-migration
+  - quality
+  - delivery-speed
+  - ab-testing
+  # AI
+  - generative-ai
+  - mcp
+  - ai-agents
+  - voice-ai
+  # domain
+  - erp
+  - healthcare
+  - automotive
+  - here-sdk
+  - iot
+  - ble
+  - mqtt
+  - blockchain
+  - jira-forge
+  - ecommerce
+  - enterprise
+  - scale
+  # architecture, leadership, process
+  - architecture
+  - tech-stack
+  - sdd
+  - leadership
+  - mentoring
+  - interviewing
+  - audits
+  - estimation
+  - presales
+  - agile
+  - design-tools

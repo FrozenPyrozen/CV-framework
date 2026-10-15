@@ -1,0 +1,50 @@
+{
+  "$id": "confirmed.schema.json",
+  "title": "facts/confirmed.yaml (docs/plan.md 4.2)",
+  "type": "object",
+  "required": ["schema_version", "facts"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "facts": {
+      "type": "array",
+      "items": {
+        "if": { "required": ["type"], "properties": { "type": { "const": "cv_entry" } } },
+        "then": {
+          "type": "object",
+          "required": ["id", "type", "role", "client", "cv_client_label", "cv_location", "engagement", "period", "cv_section", "source"],
+          "properties": {
+            "id": { "$ref": "common.schema.json#/$defs/id" },
+            "type": { "const": "cv_entry" },
+            "role": { "type": "string" },
+            "client": { "type": "string" },
+            "cv_client_label": { "type": "string" },
+            "cv_location": { "type": "string" },
+            "engagement": { "$ref": "common.schema.json#/$defs/engagement" },
+            "period": { "$ref": "common.schema.json#/$defs/period" },
+            "cv_section": { "$ref": "common.schema.json#/$defs/id" },
+            "show_dates_in_cv": { "type": "boolean" },
+            "counts_as_experience": { "type": "boolean" },
+            "team_size_led": { "type": "integer", "minimum": 0 },
+            "cv_order": { "type": "integer", "minimum": 1 },
+            "source": { "type": "string" }
+          },
+          "additionalProperties": false
+        },
+        "else": {
+          "type": "object",
+          "required": ["id", "fact", "source", "entry", "tags"],
+          "properties": {
+            "id": { "$ref": "common.schema.json#/$defs/id" },
+            "fact": { "type": "string", "minLength": 1 },
+            "source": { "type": "string" },
+            "entry": { "$ref": "common.schema.json#/$defs/id" },
+            "tags": { "$ref": "common.schema.json#/$defs/tags" },
+            "team_size_led": { "type": "integer", "minimum": 0 }
+          },
+          "additionalProperties": false
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

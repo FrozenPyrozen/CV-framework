@@ -1,0 +1,28 @@
+{
+  "$id": "market.schema.json",
+  "type": "object",
+  "required": ["schema_version", "id", "default", "file_suffix", "header", "entries"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "id": { "$ref": "common.schema.json#/$defs/id" },
+    "default": { "type": "boolean" },
+    "file_suffix": { "type": "string", "pattern": "^(_[A-Za-z0-9]+)?$" },
+    "header": {
+      "type": "object",
+      "required": ["show_phone", "show_availability", "show_time_zone_overlap"],
+      "properties": {
+        "show_phone": { "type": "boolean" },
+        "show_availability": { "type": "boolean" },
+        "engagement_types": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/engagementType" } },
+        "show_time_zone_overlap": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+    "entries": {
+      "type": "object", "required": ["show_contract_suffix"],
+      "properties": { "show_contract_suffix": { "type": "boolean" } },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

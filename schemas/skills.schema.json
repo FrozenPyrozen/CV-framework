@@ -1,0 +1,35 @@
+{
+  "$id": "skills.schema.json",
+  "type": "object",
+  "required": ["schema_version", "categories"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "categories": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "label", "items"],
+        "properties": {
+          "id": { "$ref": "common.schema.json#/$defs/id" },
+          "label": { "type": "string" },
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["name", "tags"],
+              "properties": {
+                "name": { "type": "string" },
+                "tags": { "$ref": "common.schema.json#/$defs/tags" },
+                "calculated": { "enum": ["team_size_led", "years_experience"] },
+                "hidden": { "type": "boolean" }
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

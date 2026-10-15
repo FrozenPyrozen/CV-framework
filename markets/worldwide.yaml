@@ -1,0 +1,12 @@
+# Worldwide remote market (default). The committed CV Markdown is written for this market.
+schema_version: 1
+id: worldwide
+default: true
+file_suffix: ""
+header:
+  show_phone: true
+  show_availability: true
+  engagement_types: [b2b-contract, full-time]   # must be a subset of profile.yaml work.engagement_types
+  show_time_zone_overlap: true
+entries:
+  show_contract_suffix: true                    # "(Contract)" only on entries whose engagement is contract

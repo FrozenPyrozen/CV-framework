@@ -5,7 +5,22 @@
   "description": "Local, specification-driven framework that keeps a CV current, traceable and ready to send. See AGENTS.md and docs/plan.md.",
   "type": "module",
   "engines": {
-    "node": ">=20"
+    "node": ">=20.11"
   },
-  "scripts": {}
+  "scripts": {
+    "validate": "tsx scripts/validate.ts",
+    "digest": "tsx scripts/digest.ts",
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "node --import tsx --test tests/*.test.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.5",
+    "tsx": "^4.23.15",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "ajv": "^8.20.0",
+    "jszip": "^3.10.2",
+    "yaml": "^2.9.1"
+  }
 }

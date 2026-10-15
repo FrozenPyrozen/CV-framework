@@ -47,7 +47,7 @@ Lasting changes for one variant go in the profile, by source id. Variant files a
 ```yaml
 overrides:
   syspro-saas-erp#4.1: { text: "Built core modules of a schema-driven React 19 runtime ...", pin: true }   # exact wording, always included
-  velas#4.5: { drop: true }                                                                               # never include
+  velas-wallet#4.5: { drop: true }                                                                               # never include
 ```
 
 `lint` warns when a variant file was edited after its last build.

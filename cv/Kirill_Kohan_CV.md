@@ -78,7 +78,7 @@ Senior software engineer and tech lead with 7+ years of experience building Reac
 
 * Made the first interaction with the Android wallet 3x faster by caching and optimizing wallet and account creation.
 
-## **Team Leader (Contract)**
+## **Team Leader**
 
 ### **OMO Systems | Remote | 04/2021 – 12/2021**
 
@@ -92,7 +92,7 @@ Senior software engineer and tech lead with 7+ years of experience building Reac
 
 * Led and mentored the development team: ran **code reviews**, set coding standards and onboarded new developers.
 
-## **Software Engineer (Contract)**
+## **Software Engineer**
 
 ### **Thermo Fisher Scientific | Remote | 11/2020 – 04/2021**
 
@@ -126,7 +126,7 @@ Senior software engineer and tech lead with 7+ years of experience building Reac
 
 * Built web features with **Next.js** (server-side rendering) and **GraphQL**, and containerized services with **Docker**.
 
-## **Full-Stack Engineer and Team Leader (Contract)**
+## **Full-Stack Engineer and Team Leader**
 
 ### **The Admasters | Kyiv, Ukraine (Hybrid) | 04/2019 – 08/2019**
 
