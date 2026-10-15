@@ -55,14 +55,15 @@ CV/
 ├── facts/
 │   ├── profile.yaml               # the only place for personal details; the CV header is generated from it (4.2a)
 │   ├── confirmed.yaml             # facts you confirmed, each with id + source
+│   ├── skills.yaml                # the SKILLS section's only source (4.2b)
 │   └── decisions.yaml             # choices you made about the CV (e.g. "no LinkedIn"), so reviewers stop re-raising them
 ├── summaries/                     # one file per project, all following work-summary-spec
 │   ├── syspro-saas-erp.md
 │   ├── orion-mobile-clinical-ink.md
 │   └── designai-jira-plugin.md
 ├── cv/
-│   ├── Kirill_Kohan_CV.md         # master CV (generated, hand-editable)
-│   ├── Kirill_Kohan_CV.docx
+│   ├── <name>_CV.md               # master CV (generated, hand-editable); file name from config
+│   ├── <name>_CV.docx / .pdf
 │   ├── variants/<profile-id>/     # role-based CVs: cv.md, cv.docx, gap-report.md
 │   └── tailored/<company-role>/   # cv.md, cv.docx, job-description.md, gap-report.md
 ├── profiles/                      # role profiles: react.yaml, react-native.yaml, fullstack-react-node.yaml, nodejs.yaml
@@ -103,7 +104,7 @@ period: { start: 2025-12, end: present }
 show_dates_in_cv: true             # false for freelance entries
 repos:
   - { name: saas-frontend-repo, path: ~/work/saas-frontend-repo }
-author_identities: [Kyrylo Kohan, Kyrylo Kokhan, FrozenPyrozen]
+author_identities: []                # empty = use profile.yaml git_identities; list here only to override
 harvested_at: 2026-09-30
 ---
 ```
@@ -131,17 +132,21 @@ cv_max_bullets: 8                  # optional length limit for this entry in the
 | `show_dates_in_cv` | `true` (MM/YYYY ranges) | `false` by default, can be set to `true` |
 | `cv_client_label` | real company name | can hide the client, e.g. "Clinical Trials Patient App" |
 
-The sections themselves are listed in `framework.config.yaml`, which sets each section's heading text, order, intro line and whether dates are shown by default:
+**All** CV sections are listed in `framework.config.yaml`, in the order they appear. Each has a heading text, an on/off switch, an optional intro line and a source. Profiles can override `enabled` and the order through `include_sections`:
 
 ```yaml
 cv_sections:
-  - id: experience
-    heading: EXPERIENCE
-    show_dates: true
+  - { id: summary,    heading: SUMMARY,    enabled: true, source: composer }
+  - { id: experience, heading: EXPERIENCE, enabled: true, source: entries, show_dates: true }
   - id: consulting
     heading: CONSULTING AND FREELANCE PROJECTS
+    enabled: true
+    source: entries
     intro: Part-time contract and consulting work, alongside full-time roles
     show_dates: false
+  - { id: education,  heading: EDUCATION,  enabled: true, source: profile.education }
+  - { id: skills,     heading: SKILLS,     enabled: true, source: skills.yaml }
+  - { id: languages,  heading: LANGUAGES,  enabled: true, source: profile.languages }
 ```
 
 Entries that don't come from a single repo, such as **Software Engineering Consultant / Various Clients**, are defined in `facts/confirmed.yaml` with the same fields (`cv_section: consulting`), so they're placed the same way. A new section (for example *OPEN SOURCE* or *PUBLICATIONS*) is added in config only. Lint fails if a summary uses an unknown `cv_section`.
@@ -210,6 +215,7 @@ schema_version: 1
 name: Kirill Kohan
 legal_name: Kyrylo Kokhan              # optional; shown as "Kirill (Kyrylo) Kohan" if show_legal_name is true
 show_legal_name: false
+git_identities: [Kyrylo Kohan, Kyrylo Kokhan, Kyrylo_Kokhan, FrozenPyrozen]   # default author names for /harvest
 headline_default: Senior Software Engineer / Tech Lead (Frontend & Mobile)   # profiles can override
 contacts:
   phone: "+380 97 891 9783"            # international format, checked by lint
@@ -236,6 +242,42 @@ Rules:
 - The header lines (name, headline, location, availability, time zones, contacts) are generated from these fields with templates set in `framework.config.yaml`. Changing `country` changes every line that depends on it.
 - `lint` fails if any CV, role version or tailored CV has a header that doesn't match the generated one (for example, an old phone number left in one file).
 - The HR rubric reads `location` and `work` to choose its questions: hiring setup from Ukraine, a work permit in a new country, relocation, time-zone overlap.
+
+### 4.2b Skills (`facts/skills.yaml`)
+
+The SKILLS section is generated from this file. Nothing is typed into the CV.
+
+```yaml
+schema_version: 1
+categories:
+  - id: languages
+    label: Languages
+    items:
+      - { name: TypeScript, tags: [typescript] }
+      - { name: JavaScript (ES6+), tags: [javascript] }
+  - id: mobile
+    label: Mobile
+    items:
+      - { name: React Native, tags: [react-native] }
+      - { name: Android (Java, Kotlin, Gradle), tags: [android] }
+  # frontend, state-and-data, backend-and-cloud, auth-and-security, testing, devops, ai, domain, leadership ...
+```
+
+- Role profiles reorder categories with `skills_order` (category ids) and can hide categories or items.
+- Lint warns when a skill's tags match no contribution in any summary (an unsupported skill), and when the same skill appears twice.
+- Seeded in step 3 from the current CV's SKILLS section.
+
+### 4.2c Calculated values
+
+Values that change over time are calculated, never typed:
+
+| Value | Calculated from |
+|---|---|
+| Years of experience ("7+") | earliest `period.start` among entries with `counts_as_experience: true` (default true for experience entries), rounded down |
+| Team size led ("up to 8 engineers") | highest `team_size_led` across summaries and facts |
+| "Present" end dates | `period.end: present` |
+
+The composer writes the summary using these values through placeholders like `{years_experience}+ years`. Lint flags any typed number that differs from the calculated value.
 
 ### 4.3 Trace references in the CV
 
@@ -286,7 +328,7 @@ Profiles and job descriptions can be combined: `--profile react --jd job.md` sta
 | Agent | Input | Output | Spec / rubric |
 |---|---|---|---|
 | **Harvester** | repo path(s), project id, author identities | `summaries/<id>.md` | work-summary-spec |
-| **Composer** | all summaries, facts, current CV | updated `cv/Kirill_Kohan_CV.md` with trace comments + short change log in the reply | cv-spec |
+| **Composer** | all summaries, facts, current CV | the updated master CV (path and name from config) with trace comments + short change log in the reply | cv-spec |
 | **Tailor** | a profile and/or a job description file, master CV, summaries, facts | `cv/variants/<profile>/` or `cv/tailored/<company-role>/`: `cv.md` + `gap-report.md` | tailoring-spec + the profile (may reorder, re-emphasize, drop; may not add unsourced claims) |
 | **Reviewer** (run per rubric) | CV file, rubric, summaries/facts (fact-check only), preview images (layout only) | `reports/<date>/<rubric>.md` with verdict, score, findings (line, issue, suggestion, severity, `needs_user_input: yes/no`) | rubrics/* |
 | **Advisor** | a report (or several), the CV, facts | asks you questions one topic at a time with suggested answers. It writes your answers to `facts/confirmed.yaml` (or to a summary's `cv_emphasis`), hands the change list to the composer, and shows the diff. | cv-spec + the report's rubric |
@@ -415,10 +457,11 @@ Each step ends with something you can check.
    *Check:* `git status` shows moves only, no content changes.
 2. **Specs.** Write `cv-spec.md` (the current CV's structure plus every rule from this chat), `work-summary-spec.md`, `tailoring-spec.md`, `templates.md` and the 6 rubrics. The ATS and HR rubrics are based on the reviews done in this chat.
    *Check:* you review the specs. This is the most important review.
-3. **Facts.** Write `profile.yaml` (section 4.2a), `confirmed.yaml` (section 4.2) and `decisions.yaml` (section 10). Replace the typed header in the master CV with the generated one.
+3. **Facts.** Write `profile.yaml` (section 4.2a), `skills.yaml` (4.2b, seeded from the current SKILLS section), `confirmed.yaml` (section 4.2) and `decisions.yaml` (section 10). Replace the typed header in the master CV with the generated one.
    *Check:* you confirm every entry is true.
 4. **Migrate summaries.** Add front matter and restructure the body into the 9 sections from section 4.1, numbering the contributions. Existing content is kept. Sections the old summaries don't cover (for example, *Main features* for the Jira plugin, *Portfolio material*) are filled only from what the summary already says, or marked `TODO (needs user input)`. Nothing is invented.
-   *Check:* you review the 3 migrated summaries and fill in the TODOs.
+   **Older jobs without summaries:** GM, Velas, OMO Systems, Thermo Fisher Scientific, Itjet and The Admasters exist only as CV text. Each gets a summary built from that text (`source: cv`, `harvested_at: null`), with its bullets as numbered contributions and every other section marked `TODO (needs user input)`. You can enrich them later with `/harvest` (if you still have the repos) or `/add-experience`.
+   *Check:* you review the 3 migrated summaries and the 6 new ones, and fill in the TODOs you can. After this step, every job in the CV has a summary.
 5. **Scripts and config.** `framework.config.yaml`, `schemas/`, `scripts/lib/`, the template-driven docx renderer, `template-import` (Word input first, then PDF), the PDF exporters (Pages, Word, LibreOffice), `pdf-check`, `preview`, `build`/`build:all`, `lint`, `trace`, `validate`, `index` and `check`, each with fixture tests.
    *Check:*
    - `npm test` passes, and `npm run validate` passes on all summaries and facts.
@@ -444,7 +487,29 @@ The framework is designed so new outputs, reviewers and agents are **added as fi
   - Any file in `profiles/` is a CV variant. `/variants` builds them all.
   - Any file in `agents/` is listed in `AGENTS.md` by the `index` script, so new agents are discovered automatically.
   - Any renderer in `scripts/renderers/` (docx now, later HTML or JSON) is chosen by file type or output type. Any exporter in `scripts/exporters/` (Pages, Word, LibreOffice) can be added to `pdf_exporters` in config.
-- **One config file.** `framework.config.yaml` sets paths, default rubrics, the default renderer, the template, the CV owner and the spelling variant (US). Scripts and agents read it instead of hard-coding values.
+- **One config file.** `framework.config.yaml` sets paths, default rubrics, the default renderer, the template, the spelling variant (US), CV sections, display formats, output names, header line templates, the tag list and check limits. Scripts and agents read it instead of hard-coding values. Example of the parts that remove remaining hard-coded values:
+
+  ```yaml
+  output:
+    master_dir: cv
+    variants_dir: cv/variants
+    tailored_dir: cv/tailored
+    file_name: "{name_underscored}_CV{profile_suffix}"   # Kirill_Kohan_CV, Kirill_Kohan_CV_React_Native
+  display:
+    date_format: "MMMM YYYY"          # December 2025
+    date_range_separator: " - "
+    present_label: Present
+    contract_suffix: " (Contract)"
+    field_separator: " | "
+    bullet_bold_keywords: true
+  checks:
+    max_pages: 4
+    max_words: 2200
+    contacts_on_page_1: true
+    forbidden_chars: ["→", "·", "•", "—"]
+  ```
+
+- **What stays in code:** only mechanics, such as how Markdown is parsed, how a Word file is written, how Pages is controlled and how checks run. Every value they use comes from config, a template, a spec, or the facts and summaries.
 - **Versioned, validated formats:**
   - Summaries, facts and reports carry `schema_version`.
   - JSON Schemas in `schemas/` are checked by `npm run validate`.
@@ -515,3 +580,4 @@ Every step done by hand in the chat, and the capability that repeats it:
 | 20 | Kept your manual edits made between steps | Principle "your manual edits are kept" + diffs |
 | 21 | Saved preferences and decisions for future sessions | specs, `confirmed.yaml`, `decisions.yaml` (in the repo, so any tool sees them) |
 | 22 | Asked what happens if you move country or change your phone | `profile.yaml` + generated header + lint header check + `/profile` |
+| 23 | Asked whether anything is hard-coded | All sections, skills, calculated values, output names and display formats come from files (4.2b, 4.2c, section 9). Older jobs get summaries (step 4). |
