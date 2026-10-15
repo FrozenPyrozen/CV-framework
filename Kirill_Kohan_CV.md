@@ -2,7 +2,7 @@
 
 **Senior Software Engineer / Tech Lead (Frontend & Mobile)**
 
-Kyiv, Ukraine (Remote) · Working hours overlap with EU, UK and US time zones
+Kyiv, Ukraine (Remote) | Open to B2B contract or full-time employment | Working hours overlap with EU, UK and US time zones
 
 +380 97 891 9783 | kiril.kohan@gmail.com | Portfolio: https://drive.google.com/file/d/1-BtpQknjSQ9bxTFAKm6v-r3DQR7IOX6s/view?usp=sharing
 
@@ -144,7 +144,7 @@ Part-time contract and consulting work, alongside full-time roles
 
 ## **Senior React Native Engineer (Contract)**
 
-### **Clinical Ink — Clinical Trials Patient App | Remote**
+### **Clinical Trials Patient App | Remote**
 
 * Developed and maintained a patient-facing **clinical trial (eCOA)** mobile app built with **React Native, Expo and TypeScript**, and its native **Android (Java / Kotlin)** counterpart.
 
@@ -160,7 +160,7 @@ Part-time contract and consulting work, alongside full-time roles
 
 ## **Frontend Engineer (Contract)**
 
-### **Velocity AI — Generative AI Jira Plugin | Remote**
+### **Generative AI Jira Plugin | Remote**
 
 * Built an **Atlassian Jira Forge** app from scratch with **React, TypeScript** and **Node.js** resolvers that starts **generative AI** design generation from a Jira issue and creates a Jira subtask for the result.
 
@@ -176,9 +176,15 @@ Part-time contract and consulting work, alongside full-time roles
 
 * Led scaling and optimization engagements for client teams, reducing operational costs by up to 50% by refactoring core apps, adding caching and adding unit tests.
 
-* Acted as a JavaScript subject-matter expert for large enterprise clients: technical consulting, estimations, senior-level interviews and educational webinars.
+* Conducted senior-level **technical interviews** for **React, React Native, JavaScript and TypeScript** roles for enterprise clients, assessing candidates' coding, architecture and problem-solving skills.
+
+* Audited legacy **React Native** codebases to identify the critical parts that needed updating (outdated framework versions, deprecated native libraries, platform requirements) and prepared prioritized upgrade plans with **effort estimations**.
 
 * Led **React Native** version upgrades and legacy library migrations for client mobile apps.
+
+* Provided technical expertise for **presales**: solution proposals, effort estimations and answering technical questions in client calls.
+
+* Acted as a JavaScript subject-matter expert for large enterprise clients: technical consulting and educational webinars.
 
 # **EDUCATION**
 
@@ -218,7 +224,7 @@ National Aviation University • Ukraine • 2016 – 2020
 
 **Domain and SDKs:** ERP, Clinical trials (eCOA), HERE SDK (HNav, HNod, HERE API), IoT, Bluetooth Low Energy (BLE), MQTT, Blockchain, Web3.js, Atlassian Jira Forge
 
-**Leadership and Methodologies:** Team leadership (up to 8 engineers), Mentoring, Code review, System design, Software architecture, Architecture decision records (ADR), Technology stack selection, Technical interviewing, Agile, Specification-driven development (SDD), Figma, Jira
+**Leadership and Methodologies:** Team leadership (up to 8 engineers), Mentoring, Code review, System design, Software architecture, Architecture decision records (ADR), Technology stack selection, Technical interviewing, Technical audits, Effort estimation, Presales, Agile, Specification-driven development (SDD), Figma, Jira
 
 # **LANGUAGES**
 
