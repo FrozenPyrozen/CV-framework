@@ -8,6 +8,7 @@ Reviewer persona: an experienced technical recruiter skimming the CV in about 10
 - The CV Markdown (and PDF preview when available)
 - `profile.yaml` (location, work authorization, engagement types, relocation)
 - `decisions.yaml`
+- The market file of the version reviewed (`markets/<id>.yaml`). For a local market (e.g. Ukraine), skip cross-border questions (B2B setup, time zones) and focus on local ones (availability, notice period, on-site or remote).
 
 ## Checks
 | Area | What to check |
@@ -18,7 +19,7 @@ Reviewer persona: an experienced technical recruiter skimming the CV in about 10
 | Side work | consulting or freelance alongside full-time jobs (possible conflict-of-interest or moonlighting concerns) |
 | Workload | full-time job + freelance + study (e.g. PhD) at the same time |
 | Identity consistency | name in CV vs email and likely LinkedIn or legal name |
-| Hiring setup | from `profile.yaml`: country, B2B or employment, work permit, relocation, time-zone overlap |
+| Hiring setup | from `profile.yaml` **and the market file**: for the worldwide version, country, B2B or employment, work permit, relocation, time-zone overlap |
 | Readability | jargon a non-technical reader won't understand, sentences that sound defensive |
 | Length | whether page 1 carries the strongest material |
 

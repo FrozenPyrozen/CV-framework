@@ -45,8 +45,8 @@ decisions:
     why: User's explicit priority; also a rule in specs/cv-spec.md section 5.
     matches: [AI-generated code, vibe coding, defensive wording about AI]
 
-  - id: contract-labels
-    decision: OMO Systems, Thermo Fisher Scientific and The Admasters are labeled "(Contract)".
+  - id: all-full-time
+    decision: All jobs, including OMO Systems, Thermo Fisher Scientific and The Admasters, are recorded as full-time, so no entry carries a "(Contract)" label. Short tenures are explained in interviews, not with labels.
     date: "2026-10-15"
-    why: They were direct contracts; the label explains short tenures.
-    matches: [short tenure, job hopping]
+    why: User confirmed the employment type ("leave it as full-time for now"); a contract label is only allowed when true. Revisit if any of these was in fact a contract.
+    matches: [short tenure, job hopping, contract label]

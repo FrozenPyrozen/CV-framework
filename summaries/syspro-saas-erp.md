@@ -1,276 +1,366 @@
-# Full Work Summary — Application Studio Platform (ASP) Frontend
-
-_Derived from git history across 4 repositories, Jan 2026 – Sep 2026 (ongoing). 270+ non-merge commits in `saas-frontend-repo`, plus activity in `saas-arch-repo` and `saas-application-mapping-repo`._
-
+---
+schema_version: 1
+id: syspro-saas-erp
+source: git
+# --- the job ---
+client: SYSPRO
+role: Senior Software Engineer
+engagement: full-time
+period: { start: 2025-12, end: present }
+domain: [ERP, SaaS]
+team_size_led: 0
+counts_as_experience: true
+# --- harvesting ---
+repos:
+  - { name: saas-frontend-repo, remote: git@ssh.dev.azure.com:v3/SYSPRO-Product/Engineering/saas-frontend-repo }
+  - { name: saas-arch-repo, remote: git@ssh.dev.azure.com:v3/SYSPRO-Product/Engineering/saas-arch-repo }
+  - { name: saas-application-mapping-repo, remote: git@ssh.dev.azure.com:v3/SYSPRO-Product/Engineering/saas-application-mapping-repo }
+  - { name: saas-frontend-architecture-repo, remote: git@ssh.dev.azure.com:v3/SYSPRO-Product/Engineering/saas-frontend-architecture-repo }   # solution architecture specs for the host shell
+author_identities: []
+harvested_at: "2026-10-15"
+# --- how it appears in the CV ---
+show_in_cv: true
+cv_section: experience
+cv_order: 1
+cv_client_label: SYSPRO
+cv_location: Remote
+cv_emphasis:
+  - Architecture-governed specification-driven development (SDD), not ad-hoc AI code generation
+  - Helped define the SDD process and worked with the lead architect on platform and solution architecture
+  - Owned the frontend technology stack (tech-stack decision record)
+cv_max_bullets: 8
 ---
 
-## 0. What this project is
+## 1. Project overview
 
-**Application Studio Platform (ASP)** is SYSPRO's web-based modernization layer for its ERP product: rather than hand-building a web page per ERP screen, the platform stores each ERP program's form, grid, and toolbar as a declarative **Federated Data Model (FDM)** definition, and a single frontend runtime renders whatever definition it is given at the moment a user opens that program. This repository (`saas-frontend-repo`) is the frontend monorepo implementing that runtime, plus the supporting identity and administration applications around it.
+SYSPRO is modernizing its ERP product for the web. Instead of hand-building a web page for each ERP screen, the platform (internally called Application Studio Platform, ASP) stores each ERP program's form, grid and toolbar as a declarative definition in a Federated Data Model (FDM). A single frontend runtime renders whatever definition it receives at the moment a user opens that program.
 
-**What it does:**
+The main repository is a frontend monorepo that implements this runtime plus the identity and administration applications around it. Work also touched the platform architecture repository and the ERP application-mapping repository (which holds the mock backend and per-program view configuration).
 
-- Serves as the web client an ERP operator uses to open and work with SYSPRO business programs (e.g., Bill of Materials maintenance, Accounts Payable, Inventory, Purchase Orders) — in real local testing, a single mock backend instance exposed **1,891 distinct ERP menu items** this way, each resolvable to a live, rendered screen without any program-specific frontend code.
-- Authenticates operators through a shared identity flow (OIDC) before any ERP data is reachable.
-- Separates concerns across three independently deployable applications (per the repository's **Zero-Trust / no-cross-app-import** architecture): a **host runtime** that renders ERP screens, a **identity app** that only ever sees credentials, and an **administration app** for operator/role management — each able to be split into its own repository without touching the others.
+Users are ERP operators who open and work with SYSPRO business programs (for example Bill of Materials maintenance, Accounts Payable, Inventory and Purchase Orders) in the browser, and administrators who manage operators and roles.
 
-**Main features:**
+The frontend is split into three independently deployable applications under a zero-trust, no-cross-app-import architecture, so each can be moved into its own repository without touching the others:
 
-1. **Dynamic, schema-driven screen rendering** (`apps/studio-shell`) — given an FDM view definition for any ERP program, the runtime renders it live using KendoReact: forms, search grids with filtering/sorting/column rendering, date fields, smart-tag lookup fields, and predictive search — with no per-program code written on the frontend.
-2. **Shell View Coordinator / Bridge / Manager** — the orchestration layer that creates and tracks a view's session lifecycle, mediates communication with backend services, and manages which view is active.
-3. **Correlated Menu** — contextual navigation surfaced directly from a record's smart-tag fields, letting an operator jump to a related ERP program for the item they're looking at (e.g., from a Bill of Materials line to the related stock code program).
-4. **Overlay Chrome** — modal/dialog-style UI chrome for nested views, with lifecycle management including a "soft teardown" that closes an overlay without discarding the underlying view's state.
-5. **Navigation Manager** — the main application menu, built from the full ERP program menu tree.
-6. **OIDC/IDAM authentication** (`apps/login`, shared by `apps/studio-shell` and `apps/admin-portal`) — a dedicated, minimal identity application that is the only part of the system ever exposed to a user's password, hosted separately on the identity domain, with the other apps acting purely as OIDC clients.
-7. **Admin Portal** (`apps/admin-portal`) — a separate application for SYSPRO operator and role administration, reaching backend data only through APIs, never a direct database connection.
-8. **Browser telemetry module** — an OpenTelemetry-based observability layer built into the host runtime, with event taxonomy, payload contracts, and a redaction stage that scrubs sensitive data before any trace or log leaves the browser.
-9. **A full local mock-backend stack** for frontend development without a live ERP or identity provider — a mock shell-view/service backend, a mock mediation/business-object backend, and a mock-auth mode, all independently toggleable via runtime configuration.
-10. **Specification-Driven Development (SDD) process** underpinning all of the above — every subsystem above is backed by a realization specification that states its required behavior and the architecture constraints it inherits, validated and implemented with the assistance of a configured AI coding agent before being considered done (see Section 4).
+- a host runtime that renders ERP screens,
+- an identity app, the only part of the system that ever sees credentials,
+- an administration app for operator and role management.
 
----
+Evidence comes from git history across 4 repositories from January 2026 to September 2026 (ongoing): 270+ non-merge commits in the frontend monorepo, plus activity in the architecture and application-mapping repositories.
 
-## 1. Detailed description of work
+Team and organization context: TODO (needs user input) in this summary; program size is recorded as fact `syspro-team-size`.
 
-### 1.1 Login micro-frontend (`apps/login`) — built from scratch
+## 2. Main features
 
-- Initialized the `@asp/login` workspace (Vite + React 19 + TypeScript) and its full page/component/hook structure.
-- Built `LoginPage`, `ForgotPasswordPage`, `CheckEmailPage`, `ResetPasswordPage`, with routing (`@tanstack/react-router`) and `routePaths`.
-- Built reusable UI primitives: `AuthLayout`, `TextInput`, `PasswordInput`, `DropdownInput`, `Divider`, `ErrorBanner`, `Logo`, social-login buttons, icon set.
-- Implemented `useLogin` and `usePasswordReset` hooks, an `authService`, and form validation schemas (`loginSchema`, `passwordSchema`, `signupSchema`) — validation layer under `@validation`.
-- Migrated plain `.scss` files to `.module.scss` (CSS Modules) across the app for component-scoped styling; removed `!important` usage; fixed heading line-height and typography to follow WCAG 1.4.4 (`rem`/Kendo font tokens instead of `px`).
-- Replaced a manual error banner with the KendoReact notification component.
-- Configured path aliases (`@/*`, `@hooks`, `@services`, `@utils`, `@validation`, `@ui`, `@pages`).
-- Set up Storybook stories for the component library and wrote unit tests (Vitest) plus browser tests (Vitest Browser Mode + Playwright provider).
-- Iterated the flow based on PR review feedback across several review cycles.
+1. **Schema-driven screen rendering.** Given a view definition for any ERP program, the runtime renders it live with KendoReact: forms, search grids with filtering, sorting and column rendering, date fields, smart-tag lookup fields and predictive search, with no program-specific frontend code. In local testing, one mock backend instance exposed 1,891 distinct ERP menu items, each resolvable to a live, rendered screen.
+2. **View orchestration.** A coordinator, bridge and manager create and track each view's session lifecycle, mediate communication with backend services, and manage which view is active.
+3. **Related-program navigation (correlated menu).** Contextual navigation from a record's smart-tag fields lets an operator jump to a related ERP program for the item in front of them (for example, from a Bill of Materials line to the related stock code program).
+4. **Overlays for nested views.** Modal, dialog-style chrome for nested views, with a "soft teardown" that closes an overlay without discarding the underlying view's state.
+5. **Main navigation menu.** Built from the full ERP program menu tree.
+6. **Single sign-on through OpenID Connect.** A dedicated, minimal identity application, hosted separately on the identity domain, is the only part of the system exposed to a user's password; the host and admin apps act purely as OIDC clients.
+7. **Administration portal.** A separate app for operator and role administration that reaches backend data only through APIs, never through a direct database connection.
+8. **Browser telemetry.** An OpenTelemetry-based observability layer in the host runtime with an event taxonomy, payload contracts and a redaction stage that scrubs sensitive data before any trace or log leaves the browser.
+9. **Local mock-backend stack.** Frontend development without a live ERP or identity provider: a mock view/service backend, a mock mediation/business-object backend and a mock-auth mode, each toggled independently through runtime configuration.
+10. **Specification-driven development.** Every subsystem is backed by a specification that states its required behavior and the architecture constraints it inherits, validated and implemented with a configured AI coding agent before it counts as done.
 
-### 1.2 Studio Shell host application (`apps/studio-shell`) — primary focus
+## 3. My role and responsibilities
 
-**Authentication**
+- **Title:** Senior Software Engineer.
+- **Main focus:** the host runtime (schema-driven rendering, view orchestration, navigation, overlays, global store, runtime configuration, telemetry), plus the Login micro-frontend built from scratch.
+- **Specifications and process:** authored and maintained about 17 component specifications, validated each against the governing platform and solution architecture before and after implementation, and worked with a configured AI coding agent acting as a "steward" to keep code traceable to its architectural source of truth.
+- **Architecture and tech stack:** contributed to the frontend technology-stack decision record in the platform architecture repository (identity libraries, component-testing direction). Broader architecture responsibilities with the lead architect are recorded as fact `syspro-architecture-scope`.
+- **Quality and process:** resolved PR review findings on nearly every feature branch, kept the technical-debt and backlog registers, and wrote structured session changelogs for multi-session features.
+- **Cross-functional:** maintained the Node.js mock backend and edited ERP application-mapping configuration so frontend features could be built and tested ahead of the real backend.
+- **Leadership:** no direct reports (team_size_led: 0).
+- **Key collaborators:** TODO (needs user input).
 
-- Set up OIDC/IDAM authentication for the host shell using `oidc-client-ts` and `react-oidc-context`, including session/config wiring under `src/auth`.
+## 4. My contributions
 
-**Shell View Runtime** (`src/shell-view-runtime/`) — the dynamic, FDM-driven view rendering pipeline
+### 4.1 Schema-driven runtime for ERP screens
 
-- **Shell View Coordinator**: authored the realization specification and implemented the component end to end — the piece that orchestrates view lifecycle/state across the runtime. Iterated through several specification revisions aligned to upstream solution-architecture changes, open-question resolution (`OQ-5`), and validation passes.
-- **Shell View Bridge**: implemented against its realization specification (inter-service/host communication layer).
-- **Shell View Manager**: implemented against its realization specification.
-- **Shell View Renderer**: the largest body of work, covering the KendoReact rendering handlers that turn FDM view definitions into live UI:
-  - `kendo-react-form` and `kendo-react-date-field` handlers — fixed a default-date rendering defect (was rendering `1/1/2000` instead of the correct value).
-  - `kendo-react-search-grid`, `kendo-react-search-grid-filter`, and `kendo-react-search-grid-results` handlers — implemented render-readiness gating, filter-panel visibility behavior, per-descriptor filter-state persistence via renderer-state writes, and typed filter controls rendered from category metadata; fixed row-click search-value computation and column rendering.
-  - `smart-tag-field` handler — implemented and integrated with backend-driven correlated-menu data (see below), including BE integration for ERP smart-tag fixtures (`bomprt`).
-  - `predictive-search` handler — implemented against its realization specification.
-- **Correlated Menu** (present both under `shell-view-runtime/correlated-menu` and `studio-shell-runtime/correlated-menu-manager`): implemented the menu correlation behavior tying smart-tag fields to contextual navigation options, with its own realization specification.
+Built core modules of the React 19 and TypeScript host runtime that turns declarative, backend-authored view definitions into live ERP screens. Instead of one hand-built page per ERP program, the runtime reads a program's form, grid and toolbar definition when the user opens it and renders it through a pipeline of rendering handlers, view orchestration, navigation and overlays (detailed in 4.4 and 4.5). The runtime sits inside a three-app, zero-trust micro-frontend setup (host, identity, admin) where apps never import from each other.
 
-**Studio Shell Runtime** (`src/studio-shell-runtime/`)
+Result: in local testing, one mock backend instance exposed 1,891 distinct ERP menu items, each resolvable to a rendered screen without program-specific frontend code.
+Tags: react, typescript, schema-driven-ui, erp, micro-frontends, architecture
 
-- Implemented runtime-level orchestration (its own realization spec) alongside the correlated-menu-manager above.
+### 4.2 Specification-driven development process and component specifications
 
-**Overlay Chrome** (`src/overlay-chrome/`)
+Delivered the frontend through specification-driven development. Each component or subsystem had a machine-readable specification stating what it must do and which constraints it inherits from the platform and solution architecture, written before any code. Authored and maintained about 17 such specifications (view coordinator, bridge and manager, rendering handlers, related-program navigation, runtime orchestration, overlays, global store, trace context, runtime configuration, navigation, telemetry with its exporter and redaction parts). Revised specifications several times as the upstream solution architecture changed, as open questions were resolved, and after validation passes.
 
-- Implemented handler-instantiated overlay chrome lifecycle management: portal-based rendering and "soft teardown" behavior (tearing down an overlay without destroying underlying state), governed by its realization specification.
+Ran the repository's specification-validation routine before and after implementation to check structure, compliance with the SDD authoring constraints, internal consistency and architecture alignment. A configured AI coding agent, set up with the repository's conventions and acting as a steward, validated specifications, implemented and reviewed code against them, and surfaced constraint violations, technical debt and open questions for human decision instead of resolving them silently. Also worked on the steward's own audit specification.
 
-**Global Store** (`src/global-store/`)
+Result: a traceable chain from platform architecture to solution architecture, component specification and implementation across 4 repositories; specification validation became a routine part of the engineering cycle rather than a one-off audit.
+Tags: sdd, architecture, ai-agents, code-review, typescript
 
-- Implemented global state-store behavior and a `trace-context` subsystem (each with its own realization specification) used to correlate state/telemetry across the runtime.
-- Worked with the `service-invocation`/`provisional-contracts` mocked-integration layer (session-invalidity and ended-session predicates) while keeping the documented mock behavior intact.
+### 4.3 Frontend technology-stack decision record
 
-**Runtime Config** (`src/config/`)
+Contributed to the frontend technology-stack decision record in the platform architecture repository. Added oidc-client-ts and react-oidc-context as the identity-management libraries, and recommended replacing React Testing Library with Vitest Browser Mode for component testing.
 
-- Implemented configuration loading/validation against its realization specification.
+Tags: tech-stack, architecture, oidc, testing
 
-**Navigation Manager** (`src/navigation-manager/`)
+### 4.4 KendoReact rendering handlers
 
-- Authored the realization specification and implemented the navigation-management behavior for the shell.
+Built the rendering handlers that map view definitions onto live KendoReact components, the largest body of work in the runtime:
 
-**Telemetry module** (`src/telemetry/`) — built from scratch
+- Form and date-field handlers; fixed a defect where date fields showed a fixed placeholder date (1/1/2000) instead of the correct default value.
+- Search grid, search-grid filter and search-grid results handlers: render-readiness gating, filter-panel visibility, per-descriptor filter state persisted through renderer-state writes, and typed filter controls generated from category metadata; fixed the row-click search-value computation and column rendering.
+- Smart-tag field handler, integrated with backend-driven related-program navigation data, including backend integration for ERP smart-tag fixtures.
+- Predictive search handler, implemented against its specification.
 
-- Designed and implemented a full browser telemetry module: `TelemetryManager`, `TelemetryEventBus`, event taxonomy, payload contracts, shell-view scoping, a self-diagnostic mode, and a dev handle for local inspection.
-- Implemented an **OpenTelemetry (OTel)** sink (`telemetry/otel/`) and a redaction layer (`telemetry/redaction/`) for scrubbing sensitive data before export, each with its own realization specification; added an `ambient` telemetry concern area.
-- Wrote and iterated the `telemetry-realization-spec.md` across several rounds of architecture-blocker resolution (including an ERP `_producer` field issue tracked as `TM-16`) and technical-debt follow-up.
-- Documented how to run telemetry locally with a browser (`README`-level how-to), and stood up a local OTLP receiver script (`scripts/otlp-receiver.mjs`) for inspecting exported spans/traces during development.
+All behavior is driven by descriptor and category metadata rather than hardcoded markup.
 
-**Cross-cutting**
+Tags: kendo, schema-driven-ui, react, typescript, erp
 
-- Authored/maintained ~17 realization specifications in total across the above subsystems, each validated against governing solution/platform architecture documents using the repository's `validate-realization-spec` routine.
-- Opened and maintained numerous `TECHNICAL-DEBT.md` register entries (`technical-debt/SFR-TD-*`) for deferred issues surfaced during implementation and review.
-- Authored structured session changelogs (`changelogs/feature-*/CHANGELOG-session*.md`) documenting multi-session feature work (e.g., the telemetry module build-out across 5 sessions).
-- Worked on the repository's own steward/audit tooling (`meta/saas-frontend-agent/`), including shell scripts that check schema-mirror freshness (`check-schema-mirrors.sh`, `checks/schema.sh`) and the steward's own audit realization specification.
-- Set up and maintained CI pipeline realization material under `.azure-pipelines/realization/`.
+### 4.5 View orchestration, navigation, overlays and global store
 
-### 1.3 Admin Portal (`apps/admin-portal`)
+Implemented the orchestration layer around the rendering handlers, each part against its own specification:
 
-- Touched as part of shared package integration (minor, package-level changes shared via `@asp/theme`).
+- **View coordinator:** authored the specification and implemented it end to end; it orchestrates view lifecycle and state across the runtime.
+- **View bridge** (communication between the host and backend services) and **view manager** (which view is active).
+- **Related-program navigation (correlated menu):** ties smart-tag fields to contextual navigation options, in both the view runtime and the runtime-level menu manager.
+- **Runtime-level orchestration** alongside the related-program menu manager.
+- **Navigation manager:** authored the specification and implemented the main navigation behavior.
+- **Overlays:** lifecycle management for handler-created overlays, with portal-based rendering and a soft teardown that removes an overlay without destroying the underlying state.
+- **Global store** (Zustand) and a **trace-context** subsystem that correlates state and telemetry across the runtime. Worked with the mocked service-invocation and provisional-contract layer (session-invalid and ended-session checks) while keeping its documented mock behavior intact.
+- **Runtime configuration:** loading and validation of configuration.
 
-### 1.4 Shared packages
+State machines with XState and state management with Zustand underpin the lifecycle work.
 
-- `@asp/theme`, `@asp/ui`: consumed and extended as the shared component/styling layer behind Login, Studio Shell, and Admin Portal.
-- Dependency and config maintenance across the monorepo: `package.json` upgrades, ESLint import-ordering rule setup, Prettier formatting rules, `tsconfig` project-reference wiring (`tsconfig.json` / `tsconfig.app.json` / `tsconfig.node.json`), Vite/Vitest config files (unit and browser test configs) for `studio-shell`.
+Tags: react, typescript, state-machines, zustand, schema-driven-ui, architecture
 
-### 1.5 Backend-mock and application-mapping work (`saas-application-mapping-repo`)
+### 4.6 Login micro-frontend
 
-- Maintained and used the `studio-shell-mock-server` (its usage docs and `.env` example) to develop the frontend without the real backend.
-- Edited ERP application-mapping output (`shell-view-configuration/*.yaml` — form and toolbar definitions for specific ERP programs) to support frontend feature testing.
-- Added mock-server support for ERP smart-tag handling (`bomprt` fixtures), touching `backend-mock/fixtures/menu-detail-canonical.yaml`, `backend-mock/fixtures/service-registry.json`, and `backend-mock/src/routes/shell-view-management.ts`.
-- Corrected a mock-server field mismatch (`searchKey` vs `keyFieldCode`) and an ERP location-input-field mapping issue.
+Built the login app from scratch with Vite, React 19 and TypeScript: the workspace, page, component and hook structure; sign-in, forgot-password, check-email and reset-password pages with TanStack Router routing; reusable UI primitives (auth layout, text, password and dropdown inputs, divider, error banner, logo, social-login buttons, icon set); login and password-reset hooks with an auth service; and schema-based validation for login, password and sign-up forms. Configured path aliases for the app's layers.
 
-### 1.6 Platform architecture repo (`saas-arch-repo`)
+Moved styling from plain SCSS to CSS Modules for component-scoped styles, removed `!important` usage, and fixed heading line height and typography to meet WCAG 1.4.4 (rem and Kendo font tokens instead of px). Replaced a hand-made error banner with the KendoReact notification component. Set up Storybook stories for the component library, wrote unit and browser tests (see 4.9), and iterated the flow through several PR review cycles.
 
-- Contributed to the frontend technology-stack decision record (`reference/tech-stack/fe-tech-stack/`): added `oidc-client-ts` and `react-oidc-context` as the identity-management libraries, and recommended replacing React Testing Library with Vitest Browser Mode for component testing.
+Result: one shared identity app that is the only part of the system ever exposed to a user's password.
+Tags: react, typescript, micro-frontends, accessibility, storybook, tanstack, kendo, html-css, testing
 
-### 1.7 Recurring process work (all repos)
+### 4.7 OpenID Connect authentication
 
-- Ran the repository's `validate-realization-spec` routine repeatedly across the project to check specs for structural compliance, SDD authoring-constraint compliance, and architecture alignment before/after implementation.
-- Resolved PR review findings as a standing, recurring task across nearly every feature branch.
-- Maintained the `TECHNICAL-DEBT.md` and backlog registers as issues were discovered during implementation and review.
+Set up OIDC authentication for the host runtime with oidc-client-ts and react-oidc-context, including session and configuration wiring. The identity app is hosted separately on the identity domain, and the host and admin apps act purely as OIDC clients.
 
----
+Tags: oidc, security, micro-frontends, react, typescript
 
-## 2. Full technology stack / libraries / frameworks touched
+### 4.8 Browser telemetry module
+
+Designed and built a browser telemetry module from scratch: a telemetry manager and event bus, an event taxonomy, payload contracts, scoping per view, a self-diagnostic mode, and a developer handle for local inspection. Implemented an OpenTelemetry exporter and a redaction stage that scrubs sensitive data (PII) before export, each with its own specification, and added an ambient telemetry area.
+
+Wrote and iterated the telemetry specification over several rounds of architecture-blocker resolution (including an ERP producer-field issue) and technical-debt follow-up. Documented how to run telemetry locally in a browser and wrote a local OTLP receiver script in Node.js for inspecting exported spans and traces. The build-out ran over 5 documented sessions.
+
+Tags: observability, security, typescript, node
+
+### 4.9 Testing
+
+Wrote unit tests with Vitest and browser-level component tests with Vitest Browser Mode using the Playwright provider, with coverage reporting for the login app. Set up Vite and Vitest configuration (unit and browser test configs) for the host runtime. Used specification test scenarios as acceptance criteria.
+
+Tags: testing, react, typescript
+
+### 4.10 Monorepo tooling, shared packages and CI
+
+Maintained the npm workspaces monorepo: dependency upgrades, an ESLint import-ordering rule, Prettier formatting rules, TypeScript project references (composite builds) and Vite/Vitest config files. Consumed and extended the shared theme and UI packages behind the login, host and admin apps, including minor package-level changes in the admin app. Worked on the repository's steward audit tooling, including shell scripts that check whether mirrored schemas are up to date, and set up and maintained the CI pipeline specification material for Azure Pipelines. Consumed the schema-to-TypeScript code generation pipeline.
+
+Tags: monorepo, build-tooling, code-quality, ci-cd, azure, typescript
+
+### 4.11 Mock backend and ERP application mapping
+
+Maintained and used the Node.js mock server (its usage docs and example environment file) to build the frontend without the real backend. Added mock-server support for ERP smart-tag handling (menu-detail and service-registry fixtures, view-management routes). Fixed a mock-server field mismatch between the search key and key field code, and an ERP location input field mapping issue. Edited ERP application-mapping output (form and toolbar YAML definitions for specific ERP programs) to support frontend feature testing.
+
+Tags: node, erp, testing
+
+### 4.12 PR review remediation and technical-debt register
+
+Resolved PR review findings as a standing task on nearly every feature branch. Opened and maintained entries in the technical-debt and backlog registers for deferred issues found during implementation and review, treating them as reviewable artifacts rather than ad hoc TODOs. Wrote structured session changelogs for multi-session feature work.
+
+Tags: code-review, code-quality, sdd
+
+## 5. Technologies and frameworks
 
 ### Core framework and language
 
-| Technology     | Version             | Where used                                |
-| -------------- | ------------------- | ----------------------------------------- |
-| React          | 19.x                | All apps                                  |
-| TypeScript     | 5.9.x (strict mode) | All apps/packages                         |
-| Vite           | 7.x                 | Build tool/dev server, all apps           |
-| npm workspaces | —                   | Monorepo structure (`saas-frontend-repo`) |
+| Technology | Version | Where used | Use |
+|---|---|---|---|
+| React | 19.x | All apps | **hands-on** |
+| TypeScript | 5.9.x (strict mode, project references) | All apps and packages | **hands-on** |
+| Vite | 7.x | Build tool and dev server, all apps | **hands-on** |
+| npm workspaces | — | Monorepo structure | **hands-on** |
 
 ### Routing, state, data
 
-| Technology                              | Where used                                                      |
-| --------------------------------------- | --------------------------------------------------------------- |
-| `@tanstack/react-router` (+ devtools)   | Login, Studio Shell, Admin Portal routing                       |
-| `@tanstack/react-query`                 | Studio Shell server-state management                            |
-| `zustand`                               | Studio Shell global store                                       |
-| `xstate` (v5)                           | Studio Shell state-machine logic (shell view lifecycle)         |
-| `eventemitter3`                         | Studio Shell internal event bus (telemetry, shell-view runtime) |
-| `axios` (+ `axios-mock-adapter` in dev) | HTTP client and test mocking                                    |
-| `@jmespath-community/jmespath`          | FDM/view-definition data querying                               |
+| Technology | Where used | Use |
+|---|---|---|
+| TanStack Router (+ devtools) | Login, host and admin routing | **hands-on** (login) |
+| TanStack Query | Host server-state management | **used by the project** |
+| Zustand | Host global store | **hands-on** |
+| XState (v5) | Host state machines (view lifecycle) | **hands-on** |
+| eventemitter3 | Host internal event bus (telemetry, view runtime) | **hands-on** (telemetry) |
+| axios (+ axios-mock-adapter in dev) | HTTP client and test mocking | **used by the project** |
+| JMESPath (community) | Querying view-definition data | **used by the project** |
 
-### Authentication / identity
+### Authentication and identity
 
-| Technology           | Where used                                          |
-| -------------------- | --------------------------------------------------- |
-| `oidc-client-ts`     | OIDC protocol client, Studio Shell & Admin Portal   |
-| `react-oidc-context` | React OIDC integration, Studio Shell & Admin Portal |
+| Technology | Where used | Use |
+|---|---|---|
+| oidc-client-ts | OIDC protocol client, host and admin apps | **hands-on** |
+| react-oidc-context | React OIDC integration, host and admin apps | **hands-on** |
 
-### UI component library
+### UI components
 
-| Technology                                                                                                                                                                                                                                          | Where used                                                            |
-| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
-| KendoReact 14.4.x (`@progress/kendo-react-*`: buttons, common, dateinputs, dialogs, dropdowns, form, grid, labels, notification, layout, popup, animation, charts, conversational-ui, data-tools, indicators, intl, progressbars, treeview, upload) | Login, Studio Shell, Admin Portal                                     |
-| `@progress/kendo-theme-default`                                                                                                                                                                                                                     | Theming, via `@asp/theme`                                             |
-| `@progress/kendo-svg-icons`                                                                                                                                                                                                                         | Iconography                                                           |
-| `@progress/kendo-data-query`, `kendo-date-math`, `kendo-intl`, `kendo-drawing`, `kendo-popup-common`, `kendo-inputs-common`, `kendo-dateinputs-common`                                                                                              | Supporting Kendo data/formatting utilities in the Shell View Renderer |
-| `@progress/kendo-licensing`                                                                                                                                                                                                                         | License activation tooling                                            |
+| Technology | Where used | Use |
+|---|---|---|
+| KendoReact 14.4.x (buttons, common, dateinputs, dialogs, dropdowns, form, grid, labels, notification, layout, popup, animation, charts, conversational-ui, data-tools, indicators, intl, progressbars, treeview, upload) | Login, host, admin | **hands-on** |
+| Kendo default theme | Theming through the shared theme package | **used by the project** |
+| Kendo SVG icons | Iconography | **used by the project** |
+| Kendo supporting utilities (data query, date math, intl, drawing, popup/inputs/dateinputs common) | Rendering handlers | **used by the project** |
+| Kendo licensing | License activation tooling | **used by the project** |
 
 ### Styling
 
-| Technology                                        | Where used                         |
-| ------------------------------------------------- | ---------------------------------- |
-| Sass/SCSS with CSS Modules (`.module.scss`)       | All apps, component-scoped styling |
-| `@fontsource/inter`, `@fontsource/material-icons` | Typography/iconography             |
-| `clsx`                                            | Conditional class composition      |
+| Technology | Where used | Use |
+|---|---|---|
+| Sass/SCSS with CSS Modules | All apps, component-scoped styling | **hands-on** |
+| Fontsource Inter and Material Icons | Typography and iconography | **used by the project** |
+| clsx | Conditional class composition | **used by the project** |
 
-### Telemetry / observability
+### Telemetry and observability
 
-| Technology                                               | Where used                                                     |
-| -------------------------------------------------------- | -------------------------------------------------------------- |
-| OpenTelemetry concepts (custom OTel sink implementation) | Studio Shell telemetry module                                  |
-| `@microsoft/signalr`                                     | Real-time transport (Studio Shell runtime)                     |
-| `@noble/hashes`                                          | Hashing utility (telemetry/redaction or trace-context support) |
-| Custom OTLP receiver script (Node)                       | Local telemetry development                                    |
+| Technology | Where used | Use |
+|---|---|---|
+| OpenTelemetry (custom exporter implementation) | Host telemetry module | **hands-on** |
+| Custom OTLP receiver script (Node.js) | Local telemetry development | **hands-on** |
+| Microsoft SignalR client | Real-time transport in the host runtime | **used by the project** |
+| @noble/hashes | Hashing utility (telemetry, redaction or trace-context support) | **used by the project** |
 
 ### Testing
 
-| Technology                                                      | Where used                                                         |
-| --------------------------------------------------------------- | ------------------------------------------------------------------ |
-| Vitest 4.x                                                      | Unit tests, all apps                                               |
-| Vitest Browser Mode (`@vitest/browser`, `vitest-browser-react`) | Browser-level component tests                                      |
-| Playwright 1.58.x                                               | Browser test provider                                              |
-| `@vitest/coverage-v8`                                           | Coverage reporting (Login)                                         |
-| `jsdom`                                                         | DOM environment for unit tests (Studio Shell, Admin Portal)        |
-| Jest, `ts-jest`                                                 | Unit/integration tests for the `fdm-to-typescript` codegen package |
+| Technology | Where used | Use |
+|---|---|---|
+| Vitest 4.x | Unit tests, all apps | **hands-on** |
+| Vitest Browser Mode (@vitest/browser, vitest-browser-react) | Browser-level component tests | **hands-on** |
+| Playwright 1.58.x | Browser test provider | **hands-on** |
+| @vitest/coverage-v8 | Coverage reporting (login) | **hands-on** |
+| jsdom | DOM environment for unit tests (host, admin) | **used by the project** |
+| Jest, ts-jest | Tests for the schema-to-TypeScript code generation package | **used by the project** |
 
-### Component development / documentation
+### Component development and documentation
 
-| Technology                                                                                                                      | Where used              |
-| ------------------------------------------------------------------------------------------------------------------------------- | ----------------------- |
-| Storybook 10.x (`@storybook/react-vite`, `addon-a11y`, `addon-docs`, `addon-vitest`, `addon-onboarding`, Chromatic integration) | Login component library |
+| Technology | Where used | Use |
+|---|---|---|
+| Storybook 10.x (react-vite, a11y, docs, vitest and onboarding addons, Chromatic integration) | Login component library | **hands-on** |
 
-### Code quality / tooling
+### Code quality and tooling
 
-| Technology                                                                                                                                                    | Where used                               |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------- |
-| ESLint 9.x (flat config), `typescript-eslint`, `eslint-config-sheriff`, `eslint-plugin-react-hooks`, `eslint-plugin-react-refresh`, `eslint-plugin-storybook` | All workspaces                           |
-| Prettier 3.x, `@ianvs/prettier-plugin-sort-imports`                                                                                                           | Formatting and import ordering           |
-| Husky 9.x                                                                                                                                                     | Git pre-commit hook enforcement          |
-| `npm-run-all`                                                                                                                                                 | Script orchestration across the monorepo |
+| Technology | Where used | Use |
+|---|---|---|
+| ESLint 9.x (flat config), typescript-eslint, eslint-config-sheriff, react-hooks, react-refresh and storybook plugins | All workspaces | **hands-on** |
+| Prettier 3.x with an import-sorting plugin | Formatting and import ordering | **hands-on** |
+| Husky 9.x | Pre-commit hooks | **hands-on** |
+| npm-run-all | Script orchestration across the monorepo | **used by the project** |
 
-### Code generation / schemas
+### CI/CD
 
-| Technology                                                                             | Where used                                                                               |
-| -------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
-| `@asp/fdm-codegen` (internal pipeline, `@hey-api/openapi-ts`, `zod`, `yaml`, `semver`) | FDM schema-to-TypeScript generation feeding `apps/studio-shell/src/types/fdm-generated/` |
-| YAML (ERP application-mapping output, shell-view configuration)                        | `saas-application-mapping-repo`                                                          |
+| Technology | Where used | Use |
+|---|---|---|
+| Azure Pipelines | CI pipeline specification material | **hands-on** |
+| Azure DevOps | repos, pull requests and pipelines (confirmed by user 2026-10-15) | **hands-on** |
+| Docker | local development and services (confirmed by user 2026-10-15) | **hands-on** |
 
-### Backend-mock / supporting services touched
+### Code generation and schemas
 
-| Technology                                                             | Where used                                   |
-| ---------------------------------------------------------------------- | -------------------------------------------- |
-| Node.js mock server (`studio-shell-mock-server`, Express-style routes) | `saas-application-mapping-repo/backend-mock` |
+| Technology | Where used | Use |
+|---|---|---|
+| Internal schema-to-TypeScript code generation pipeline (hey-api openapi-ts, zod, yaml, semver) | Generates host types from the data-model schema | **used by the project** |
+| YAML (ERP application-mapping output, view configuration) | Application-mapping repository | **hands-on** |
 
----
+### Backend mock and supporting services
 
-## 3. Skills demonstrated
+| Technology | Where used | Use |
+|---|---|---|
+| Node.js mock server (Express-style routes, YAML/JSON fixtures) | Application-mapping repository | **hands-on** |
 
-**Frontend engineering**
+### AI and agents
 
-- React 19 component architecture (functional components, hooks, `memo`/`displayName` discipline, named prop interfaces with JSDoc)
-- TypeScript in strict mode across a large codebase with project references (composite builds)
-- Micro-frontend / host-shell architecture: building an independent identity app (Login) and a dynamic, schema-driven host runtime (Studio Shell) that renders UI from a Federated Data Model
-- State management with Zustand and state machines with XState
-- Form handling and schema-based validation
-- CSS Modules/Sass component-scoped styling, accessibility-aware typography (WCAG 1.4.4)
-- OpenID Connect authentication integration end to end (client setup, session handling, route protection)
+| Technology | Where used | Use |
+|---|---|---|
+| Configured AI coding agent in a steward role | Specification validation, implementation and review | **hands-on** |
 
-**Dynamic/schema-driven rendering**
+## 6. Skills demonstrated
 
-- Building renderer "handlers" that map a declarative, backend-authored view definition (FDM) onto live KendoReact components (forms, grids, filters, date fields, smart tags, predictive search)
-- Implementing stateful UI behaviors driven by descriptor/category metadata rather than hardcoded markup
+- React 19 component architecture (functional components, hooks, memo and displayName discipline, named prop interfaces with JSDoc): 4.1, 4.4, 4.5, 4.6
+- TypeScript in strict mode with project references: 4.1, 4.10
+- Micro-frontends and zero-trust host/identity/admin split: 4.1, 4.6, 4.7
+- Schema-driven UI (rendering live components from backend-authored view definitions): 4.1, 4.4, 4.5
+- KendoReact: 4.4, 4.6
+- State machines (XState) and state management (Zustand): 4.5
+- TanStack Router: 4.6
+- Form handling and schema-based validation: 4.6
+- CSS Modules / SCSS and accessible typography (WCAG 1.4.4): 4.6
+- Storybook: 4.6
+- OpenID Connect (OIDC): 4.3, 4.6, 4.7
+- Observability with OpenTelemetry (event taxonomy, payload contracts, exporter, local OTLP tooling): 4.8
+- PII and sensitive-data redaction: 4.8
+- Unit and browser component testing (Vitest, Vitest Browser Mode, Playwright, coverage): 4.6, 4.9
+- Specification-driven development (SDD), specification authoring and validation: 4.2, 4.12
+- AI coding agents in a governed steward role: 4.2
+- Software architecture and multi-repo traceability: 4.1, 4.2, 4.3
+- Technology stack selection: 4.3
+- Monorepo management (npm workspaces), build tooling (Vite, TypeScript project references): 4.10
+- Code quality tooling (ESLint, Prettier, Husky) and schema-mirror auditing: 4.10
+- CI pipelines (Azure Pipelines): 4.10
+- Node.js mock backend and fixture data (YAML/JSON): 4.8, 4.11
+- ERP domain (application-mapping configuration, smart tags): 4.4, 4.11
+- Code review remediation and technical-debt register discipline: 4.12
 
-**Observability**
+## 7. Metrics and outcomes
 
-- Designing a telemetry module from requirements through implementation: event taxonomy design, payload-contract definition, OTel-compatible exporting, PII/sensitive-data redaction, and local developer tooling (OTLP receiver) for verifying traces
+| Number | Meaning | Source | Confidence |
+|---|---|---|---|
+| 1,891 | Distinct ERP menu items exposed by one mock backend instance, each resolvable to a rendered screen (CV rounds to 1,800+) | git | exact |
+| 270+ | Non-merge commits in the frontend monorepo | git | approximate |
+| ~17 | Component specifications authored or maintained | git | approximate |
+| 4 | Repositories with activity and traceability chain | git | exact |
+| 3 | Independently deployable apps (host, identity, admin) | git | exact |
+| 5 | Documented sessions for the telemetry module build-out | git | exact |
+| Jan 2026 – Sep 2026 | Date range of the harvested git history (ongoing) | git | exact |
 
-**Testing**
+Program size, delivery speed and review-cycle outcomes are confirmed facts, not harvested metrics: see `syspro-team-size`, `syspro-speed` and `syspro-review-cycles` in facts/confirmed.yaml.
 
-- Unit testing with Vitest, browser-level component testing with Vitest Browser Mode and Playwright, coverage reporting
-- Writing and maintaining realization-spec-driven test scenarios used as acceptance criteria
+## 8. Portfolio material
 
-**Tooling and DevEx**
+TODO (needs user input)
 
-- Monorepo management with npm workspaces across apps and shared packages
-- Build/config maintenance: Vite, TypeScript project references, ESLint flat config, Prettier, Husky hooks
-- CI pipeline specification work (`.azure-pipelines/realization/`)
-- Code-generation pipeline consumption (FDM-to-TypeScript codegen) and schema-mirror freshness auditing
+## 9. Confidentiality notes
 
-**Specification-Driven Development (SDD) and AI-assisted engineering**
-
-- Authoring and validating realization specifications against platform and solution architecture documents (multi-repo traceability: platform architecture, solution architecture, application-mapping, frontend implementation)
-- Running structured specification-validation routines (structural compliance, architecture alignment, internal consistency) before and after implementation
-- Working with a configured AI coding agent in a "steward" role to keep code traceable to its architectural source of truth, catch constraint violations early, and reduce spec-to-code drift
-- Technical-debt and backlog register discipline: identifying, classifying, and tracking deferred issues as first-class, reviewable artifacts rather than ad hoc TODOs
-
-**Cross-functional / backend-adjacent**
-
-- Maintaining a Node.js mock backend and its fixture data (YAML/JSON) to unblock frontend development ahead of real backend availability
-- Editing ERP application-mapping configuration (form/toolbar YAML definitions) to align mock data with frontend feature needs
-- Contributing to platform-level technology-stack decisions (authentication library selection, test-tooling direction) in the architecture repository
-
----
-
-## 4. Specification-Driven Development (SDD) — how it was used here
-
-Work was organized around machine-readable "realization specifications" — one per component or subsystem (e.g., Shell View Coordinator, Telemetry module, Overlay Chrome) — that stated what the component must do and which constraints it inherited from the platform and solution architecture before any code was written. An AI coding agent, configured with the repository's own conventions and acting as a steward, was used throughout to: validate each specification's structure and its alignment with upstream architecture documents, implement and review code against the specification, and surface constraint violations, technical debt, and open questions for human decision rather than resolving them silently. This created a traceable chain from platform architecture → solution architecture → component specification → implementation across four separate repositories, and made specification-validation and PR-review remediation a routine, recurring part of the engineering cycle rather than a one-off audit.
+- term: Application Studio Platform
+- term: ASP
+- term: Studio Shell
+- term: Studio Shell Runtime
+- term: Shell View
+- term: Shell View Runtime
+- term: Shell View Coordinator
+- term: Shell View Bridge
+- term: Shell View Manager
+- term: Shell View Renderer
+- term: Federated Data Model
+- term: FDM
+- term: "@asp/"
+- term: fdm-codegen
+- term: fdm-to-typescript
+- term: studio-shell
+- term: studio-shell-mock-server
+- term: admin-portal
+- term: Overlay Chrome
+- term: Correlated Menu
+- term: realization specification
+- term: validate-realization-spec
+- term: saas-frontend-agent
+- term: bomprt
+- term: saas-frontend-repo
+- term: saas-arch-repo
+- url_pattern: "*dev.azure.com*SYSPRO-Product*"
+- term: SYSPRO-Product
+- term: saas-frontend-architecture-repo
+- term: saas-application-mapping-repo
+- prefix: OQ-
+- prefix: TM-
+- prefix: SFR-TD-

@@ -10,7 +10,7 @@ A CV contains nothing that doesn't come from one of these files:
 
 | CV part | Source |
 |---|---|
-| Header (name, headline, location, availability, contacts) | `facts/profile.yaml` + header templates in `framework.config.yaml` (+ a role profile's `headline`) |
+| Header (name, headline, location, availability, contacts) | `facts/profile.yaml` + header templates in `framework.config.yaml` (+ a role profile's `headline`), filtered by the market (`markets/<id>.yaml`, section 14) |
 | Summary paragraph | summaries, `facts/confirmed.yaml`, calculated values (section 7) |
 | Entries (jobs and projects) | `summaries/*.md` with `show_in_cv: true`, and `cv_entry` items in `facts/confirmed.yaml` |
 | Bullets | summary contributions (section 4 of a summary) and confirmed facts |
@@ -46,7 +46,8 @@ Sections appear in the order of `cv_sections` in `framework.config.yaml`, using 
 - `cv_location` comes from the summary, e.g. "Remote" or "Kyiv, Ukraine (Hybrid)".
 - `dates` appears only when the entry's `show_dates_in_cv` (or its section's `show_dates` default) is true. Format: `display.date_format` + `display.date_range_separator` + end date or `display.present_label`, e.g. `December 2025 - Present`.
 - Parts are joined with `display.field_separator` (` | `).
-- The role line gets `cv_title_suffix` if set, or `display.contract_suffix` (" (Contract)") when `engagement` is `contract`.
+- The role line gets `cv_title_suffix` if set, or `display.contract_suffix` (" (Contract)") when `engagement` is `contract`, but only in markets with `show_contract_suffix: true` (see section 14).
+- The suffix may only state what's true: `engagement: contract` must reflect the real employment type.
 
 The composer writes the title and detail lines from these fields. `lint` checks that they match the fields, so a changed date or label in a summary can't leave a stale line in the CV.
 
@@ -160,3 +161,18 @@ The current decisions live in `facts/decisions.yaml`. At the time of writing:
 - Keep the Google Drive portfolio link.
 - Keep the job title step from Team Leader (General Motors) to Senior Software Engineer (SYSPRO).
 - The consulting section shows no dates, and the Clinical Ink and Velocity AI clients are hidden behind their labels.
+
+## 14. Markets
+
+A CV is written once, for the default market (`markets/*.yaml` with `default: true`, currently `worldwide`), and converted to other markets by `npm run market`, a script that changes only:
+
+- the generated header (phone shown or hidden, time-zone line, availability wording from the market's `engagement_types`), and
+- entry title suffixes (`show_contract_suffix`).
+
+Agents never write market-specific content by hand. Current markets:
+
+| Market | Phone | Availability line | Time-zone line | Contract labels | File suffix |
+|---|---|---|---|---|---|
+| worldwide (default) | shown | Open to B2B contract or full-time employment | shown | shown | none |
+| ukraine | hidden | hidden | hidden | hidden | `_UA` |
+

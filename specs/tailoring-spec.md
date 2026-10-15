@@ -10,6 +10,7 @@ A tailored CV is the master CV adapted to a type of role (a **profile**) or to o
 |---|---|
 | Role profile `profiles/<id>.yaml` | headline, summary focus, tags to emphasize or downplay, skills order, limits, template, overrides |
 | Job ad (`--jd`, a file or pasted text) | saved as `job-description.md`, then mapped to tags in `jd-tags.yaml` |
+| Market (`--market`, default: the default market) | job-specific CVs are built for one market; role variants are built for every market by `build:all` (`cv-spec.md` section 14) |
 | Master CV | preferred wording for every bullet, by source id |
 | Summary digests, full summaries for changed entries, facts | content and sources |
 | `cv-spec.md` | every structure, style, ATS and confidentiality rule still applies |

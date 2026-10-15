@@ -8,14 +8,15 @@ Reviewer persona: an automated screening system that parses the file, extracts s
 - The CV Markdown and, when available, its built PDF and `pdf-check.md`
 - `profile.yaml` (target roles implied by the headline)
 - `decisions.yaml`
+- The market file of the version reviewed (`markets/<id>.yaml`)
 - Job ad mode: `job-description.md` and `jd-tags.yaml`
 
 ## Checks
 | Area | What to check |
 |---|---|
 | Parsing | standard section names, one column, no tables or text boxes, readable PDF text, no forbidden characters |
-| Contact details | name, phone (international format), email on page 1; links readable |
-| Dates and gaps | consistent format, no unexplained gaps, overlaps explained (e.g. consulting "alongside full-time roles"), short jobs labeled as contracts |
+| Contact details | name, email and every contact field the CV's **market** shows (`markets/<id>.yaml`) on page 1, phone in international format where shown; links readable. A field the market hides (e.g. the phone in the Ukraine version) is intended, not a finding. |
+| Dates and gaps | consistent format, no unexplained gaps, overlaps explained (e.g. consulting "alongside full-time roles"); short jobs are noted as a risk, but a "(Contract)" label is only suggested when the job really was a contract (see `facts/decisions.yaml`) |
 | Seniority signals | titles, team size led, architecture and tech-stack ownership, scope words (led, owned, defined) |
 | Keywords in context | key technologies appear in bullets, not only in Skills; acronyms spelled out once |
 | Measured results | numbers in bullets, especially for the current job |

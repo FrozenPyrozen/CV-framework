@@ -1,87 +1,137 @@
-# Work Summary — designai repo (Jira plugin)
+---
+schema_version: 1
+id: designai-jira-plugin
+source: git
+# --- the job ---
+client: Velocity AI
+role: Frontend Engineer
+engagement: contract
+period: { start: 2025-05, end: 2025-08 }
+domain: [Generative AI, Developer tools]
+team_size_led: 0
+counts_as_experience: false
+# --- harvesting ---
+repos:
+  - { name: designai, remote: TODO (needs user input) }
+author_identities: []
+harvested_at: "2026-10-15"
+# --- how it appears in the CV ---
+show_in_cv: true
+cv_section: consulting
+cv_client_label: Generative AI Jira Plugin
+cv_location: Remote
+---
 
-**Author:** Kyrylo Kohan
-**Period:** 2025-05-22 → 2025-08-12 (40 non-merge commits)
-**Area:** `plugins/jira` (Atlassian Forge app, "Velocity AI" Jira plugin). It replaced the earlier `velocity-ai-jira-plugin` folder.
+## 1. Project overview
 
-## About the project
+An AI design-generation product. Its repository holds the backend pieces (API, agents, pipelines, and Docker and Helm deployment configuration) and the plugins that connect the product to other tools. I worked only on the Jira plugin, an Atlassian Forge app that lets a user start AI design generation directly from a Jira issue. The user supplies context, the plugin packages it and hands it to the design-generation pipeline, and the generated result is tracked in Jira as a subtask. The plugin lives in its own folder of the repository and replaced an earlier plugin folder.
 
-**What it is.** `designai` is a repo for an AI design-generation product (Velocity AI). It holds the backend pieces (`api`, `agents`, `pipelines`, Docker/Helm deployment config) and the plugins that connect the product to other tools. I worked on the **Jira plugin** (`plugins/jira`).
+How the plugin is built:
 
-**What the Jira plugin does.** It is an Atlassian Forge app. It adds a panel to Jira issues where a user can start AI design generation directly from a ticket. The user supplies context, and the plugin packages it and hands it to the design-generation pipeline. The generated result is tracked in Jira as a subtask.
-
-**Main features**
-- A Jira issue panel (Forge Custom UI) with a Design Generation form.
-- Multiple input types:
-  - design description
-  - reference images, with preview
-  - PRD upload
-  - flow upload
-  - website URL
-  - MCP URL
-  - design system selection
-- Large file support: files go straight to Azure Blob Storage from the plugin, without passing through the backend.
-- A generate-design config JSON uploaded to blob storage, which triggers generation.
-- Automatic Jira subtask creation for the generated design.
-- Form validation and error handling, in the UI and in the resolver.
-
-**How it works**
-- **Frontend:** a React + TypeScript UI built with Atlassian design tokens and rendered inside Jira.
-- **Resolver:** a Forge function (Node.js 22, TypeScript) that calls the Jira API (`read:jira-work` and `write:jira-work` scopes).
+- **Frontend:** a React and TypeScript Custom UI rendered inside Jira, styled with Atlassian design tokens. The UI is organized into shared components (design system select, file upload, URL upload), feature components (design description, MCP URL, website URL, flow upload, image upload, PRD upload), the design generation form, and API, utility (API and Jira helpers) and type modules.
+- **Resolver:** a Forge function in TypeScript on Node.js 22 that calls the Jira API with read and write access to Jira work items, split into utilities and types.
 - **Storage:** Azure Blob Storage, configured through Forge environment variables.
-- **Deployment:** `forge deploy` and `forge install`.
+- **Deployment:** deployed and installed with the Forge CLI.
 
-## Overview
-I built the Jira plugin from scratch. It adds a **Design Generation form** inside Jira. Users describe a design, attach inputs (images, PRD files, flow files, website/MCP URLs, a design system), and the plugin kicks off design generation and creates a Jira subtask for the result. Over time I moved file handling off the backend and onto direct Azure Blob Storage.
+Team size and collaborators: TODO (needs user input)
 
-## Features implemented
+## 2. Main features
 
-### 1. Project setup and tooling (May 2025) — VEL-2874
-- Set up the Jira (Forge) plugin project and manifest.
-- Initialised the Custom UI project (`static/design-generation-form`) with React + TypeScript.
-- Added ESLint, TypeScript and a pre-commit ESLint hook.
-- Enabled Atlassian design styling and design tokens.
+- A panel on Jira issues with a design generation form.
+- Many kinds of input for the design: a design description, reference images with preview, a product requirements document (PRD) upload, a user-flow upload, a website URL, an MCP server URL, and a design system selection.
+- Support for large files: files go straight from the plugin to Azure Blob Storage instead of through the backend.
+- Design generation starts when the plugin uploads a design configuration file to blob storage.
+- A Jira subtask is created automatically for the generated design.
+- Form validation and error handling, both in the UI and in the resolver.
 
-### 2. Design Generation form (June 2025)
-- **Image upload**: preview container, hover re-render optimisation, fixed preview heights.
-- **Enter website URL** and **design description** fields, with minimum rows.
-- **Form validation** and a bypass for the large-image error.
-- **Generate design** action and **create subtask** in Jira (including route/error fixes).
-- Design creation popup.
+## 3. My role and responsibilities
 
-### 3. Resolver layer (June 2025)
-- Converted the Jira plugin resolver to TypeScript.
-- Separated API utils and improved resolver error handling.
-- Replaced nested-string error handling with an error util.
-- Fixed a SonarQube TS error.
-- Moved types to devDependencies.
+Frontend Engineer on a contract. I built the Jira plugin from scratch and owned it from May to August 2025: project setup and tooling, the Forge manifest, the Custom UI, the resolver layer, the move of file handling from the backend to direct Azure Blob Storage, and the plugin's documentation (README and deployment guide). I also formatted the team's pull request template in Azure DevOps.
 
-### 4. Azure Blob uploads (July 2025) — VEL-5486, VEL-6145, VEL-5846
-- Upload images directly to Azure Blob Storage so larger images work.
-- Upload the generate-design JSON config file to blob storage when generating a design, instead of calling the backend.
-- Delete images from Azure Blob Storage instead of via the backend.
-- Removed `BACKEND_URL`, since the plugin no longer uses the backend.
+Key collaborators: TODO (needs user input)
 
-### 5. Reusable components and new inputs (Aug 2025) — VEL-7051, VEL-7451, VEL-6948
-- Built a **reusable file-upload component** and used it across the upload flows (PRD upload, flow upload).
-- Added the **Enter MCP URL** component (VEL-7451).
-- Cleaned up leftover backend upload and generate-design logic (VEL-6948).
-- Fixed image upload spacing.
+## 4. My contributions
 
-### 6. Documentation and process
-- Updated the plugin README and the "how to deploy Jira plugin" doc. Removed the "run backend" instructions.
-- Formatted the Azure DevOps PR template.
+### 4.1 Jira Forge app for AI design generation, built from scratch
 
-## Plugin structure
-- `src/`: Forge resolver (TypeScript) with `utils/` and `types/`.
-- `static/design-generation-form/src/`: React UI.
-  - `components/`: DesignSystemSelect, FileUpload, URLUpload
-  - `features/`: DesignDescription, EnterMcpURL, EnterWebsiteURL, FlowUpload, ImageUpload, PrdUpload
-  - `forms/DesignGenerationForm`
-  - `api/`, `utils/` (apiUtils, jiraUtils), `types/`
+Built the Atlassian Forge app that starts AI design generation from a Jira issue. Set up the plugin project and its manifest, created the Custom UI project with React and TypeScript, and built the generate-design action and automatic Jira subtask creation for the result, including fixes to routes and errors. Converted the resolver to TypeScript on Node.js, separated the API utilities, improved resolver error handling, and replaced nested-string error handling with a shared error utility. Added a design creation popup.
 
-## Tech
-React, TypeScript, Atlassian Forge (Custom UI + resolvers), Atlassian design tokens, Azure Blob Storage, ESLint, SonarQube.
+Result: users can start design generation from a Jira ticket and get a subtask that tracks the result.
+Tags: jira-forge, react, typescript, node, generative-ai
 
-## Tickets referenced
-VEL-2874, VEL-5486, VEL-5846, VEL-6145, VEL-6948, VEL-7051, VEL-7451
+### 4.2 Design generation form with multiple inputs
+
+Built the design generation form in the Jira issue panel: a design description field and a website URL field (with minimum rows), image upload with a preview container (fixed preview heights, fewer re-renders on hover, fixed spacing), PRD upload and user-flow upload built on a reusable file-upload component, an MCP server URL input, and design system selection. Added form validation, including a way past the large-image error.
+
+Tags: react, typescript, jira-forge, mcp, generative-ai
+
+### 4.3 Direct uploads to Azure Blob Storage
+
+Moved file handling off the backend. Forge limits the size of image uploads, so images are uploaded straight from the plugin to Azure Blob Storage, which bypasses that limit and lets larger images work (Forge limit confirmed by user 2026-10-15), and they are deleted there instead of through the backend. When the user generates a design, the plugin uploads the generation configuration file to blob storage instead of calling the backend. Removed the backend URL setting, since the plugin no longer uses the backend, and cleaned up the leftover backend upload and generation logic.
+
+Result: the plugin no longer depends on the backend, and larger images can be uploaded.
+Tags: azure, jira-forge, typescript
+
+### 4.4 Project tooling, quality gates and documentation
+
+Added ESLint, TypeScript and a pre-commit ESLint hook to the plugin project, and enabled Atlassian design styling and design tokens. Fixed a SonarQube TypeScript error and moved type packages to development dependencies. Updated the plugin README and the Jira plugin deployment guide, removing the now-unneeded backend instructions, and formatted the Azure DevOps pull request template.
+
+Tags: code-quality, typescript, design-systems
+
+## 5. Technologies and frameworks
+
+| Category | Technology | Use |
+|---|---|---|
+| Language | TypeScript | **hands-on** |
+| UI | React | **hands-on** |
+| UI | Atlassian design tokens and styling | **hands-on** |
+| Platform | Atlassian Forge (Custom UI and resolvers, environment variables, CLI deploy and install) | **hands-on** |
+| Platform | Jira API (read and write access to work items) | **hands-on** |
+| Backend runtime | Node.js 22 (Forge resolver) | **hands-on** |
+| Cloud | Azure Blob Storage | **hands-on** |
+| AI | MCP server URL as a design input | **hands-on** (UI input only) |
+| Code quality | ESLint, pre-commit hook | **hands-on** |
+| Code quality | SonarQube | **hands-on** (fixed a reported error) |
+| Process | Azure DevOps pull requests | **hands-on** (PR template) |
+| Product backend | API, agents and design-generation pipelines | **used by the project** |
+| Deployment | Docker, Helm | **used by the project** |
+
+## 6. Skills demonstrated
+
+- Atlassian Jira Forge: 4.1, 4.2, 4.3
+- React: 4.1, 4.2
+- TypeScript: 4.1, 4.2, 4.3, 4.4
+- Node.js (Forge resolver): 4.1
+- Generative AI integration: 4.1, 4.2
+- Model Context Protocol (MCP) input: 4.2
+- Microsoft Azure (Azure Blob Storage): 4.3
+- Form design and validation: 4.2
+- Reusable component design: 4.2
+- Design tokens: 4.4
+- ESLint, pre-commit hooks and SonarQube: 4.4
+- Technical documentation: 4.4
+
+## 7. Metrics and outcomes
+
+| Metric | Value | Source | Confidence |
+|---|---|---|---|
+| Commits | 40 non-merge commits | git | exact |
+| Period of commits | 2025-05-22 to 2025-08-12 | git | exact |
+| Node.js version of the resolver | 22 | git | exact |
+| Kinds of input in the design generation form (4.2) | 7 | git | exact |
+
+## 8. Portfolio material
+
+TODO (needs user input)
+
+## 9. Confidentiality notes
+
+- term: Velocity AI
+- term: Velocity
+- term: designai
+- term: plugins/jira
+- term: velocity-ai-jira-plugin
+- term: design-generation-form
+- term: DesignGenerationForm
+- term: BACKEND_URL
+- prefix: VEL-                     # tickets: VEL-2874, VEL-5486, VEL-5846, VEL-6145, VEL-6948, VEL-7051, VEL-7451

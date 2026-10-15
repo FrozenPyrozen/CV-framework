@@ -42,7 +42,7 @@ CV/
 ├── .nvmrc                         # Node version
 ├── package-lock.json              # exact dependency versions (committed; install with `npm ci`)
 ├── package.json                   # scripts: build, build:all, render, pdf, pdf-check, preview, lint, trace,
-│                                  #          check, status, validate, index, template-import, test, doctor, refresh,
+│                                  #          check, status, validate, index, template-import, test, doctor, refresh, market,
 │                                  #          backup, restore, digest, git-digest, select, reattach-src
 ├── specs/
 │   ├── cv-spec.md                 # CV structure and writing rules (seeded from this chat)
@@ -75,10 +75,13 @@ CV/
 │   └── .digests/                  # generated short digests (contributions + tags) read by composer/tailor (R10; git-ignored,
 │                                  # recreated by `npm run digest`)
 ├── profiles/                      # role profiles: react.yaml, react-native.yaml, fullstack-react-node.yaml, nodejs.yaml
+├── markets/                       # market definitions: worldwide.yaml, ukraine.yaml (4.6)
 ├── cv/
 │   ├── <name>_CV.md               # master CV (generated, hand-editable); file name from config
 │   ├── <name>_CV.docx / .pdf / pdf-check.md / preview/   # built outputs, git-ignored
+│   ├── markets/<market-id>/       # non-default market versions of the master CV (generated, git-ignored; 4.6)
 │   ├── variants/<profile-id>/     # role-based CVs (generated, not hand-edited): cv.md + gap-report.md committed; built files git-ignored
+│   │   └── markets/<market-id>/   # non-default market versions of each variant (generated, git-ignored)
 │   ├── tailored/<company-role>/   # per job ad (git-ignored): cv.md, .docx, .pdf, job-description.md, jd-tags.yaml, gap-report.md
 │   ├── sent/                      # optional exact copies of PDFs you sent (git-ignored, included in backups; 4.5)
 │   └── .build-state.json          # source/output hashes used by `status` (local, git-ignored)
@@ -92,7 +95,7 @@ CV/
 │       └── import-report.md       # ATS warnings + preview from the import
 ├── reports/<YYYY-MM-DD-HHmm>/     # reviewer reports for one run: ats.md, hr.md, proofreading.md, ...
 ├── .cv-runs/<run-id>/             # per-run working files: state.json (resume), git-digest.md (git-ignored)
-├── schemas/                       # summary, facts, profile, skills, profile-role, report, style-map JSON Schemas
+├── schemas/                       # summary, facts, profile, skills, profile-role, market, report, style-map JSON Schemas
 ├── scripts/                       # Node/TypeScript CLIs
 │   ├── lib/                       # shared engine: md parsing, front matter, trace resolution, config, hashing,
 │   │                              # text normalization (R4), export lock (R1)
@@ -414,6 +417,44 @@ Rules for the tailor agent with a profile:
 
 Profiles and job descriptions can be combined: `--profile react --jd job.md` starts from the profile, then tailors to the job. New profiles, such as `frontend-architect` or `tech-lead`, are added as new files with no code changes.
 
+### 4.6 Markets (`markets/*.yaml`)
+
+A **market** is the audience a CV is sent to. It changes only deterministic details (header fields, labels, availability wording), never the content. Every CV (the master and each role variant) is built once per market, so `build:all` produces profiles × markets.
+
+```yaml
+# markets/worldwide.yaml
+schema_version: 1
+id: worldwide
+default: true                      # the master CV Markdown is written for this market
+file_suffix: ""                    # Kirill_Kohan_CV.pdf, Kirill_Kohan_CV_React_Native.pdf
+header:
+  show_phone: true
+  show_time_zone_overlap: true
+  engagement_types: [b2b-contract, full-time]   # "Open to B2B contract or full-time employment"
+entries:
+  show_contract_suffix: true       # "(Contract)" on entries whose engagement is contract
+
+# markets/ukraine.yaml
+schema_version: 1
+id: ukraine
+file_suffix: _UA                   # Kirill_Kohan_CV_UA.pdf, Kirill_Kohan_CV_React_Native_UA.pdf
+header:
+  show_phone: false
+  show_time_zone_overlap: false    # not relevant for local roles (optional, can be switched on)
+  show_availability: false         # no availability line at all
+entries:
+  show_contract_suffix: false      # no "(Contract)" labels
+```
+
+**How it works:**
+- The committed Markdown (master and variants) is written for the default market.
+- `npm run market` turns it into each other market's version **by script, without AI**: it regenerates the header block and adjusts entry title lines according to the market file. Market versions are build outputs, written to a `markets/<id>/` folder next to the source CV (e.g. `cv/markets/ukraine/`, `cv/variants/react/markets/ukraine/`) and git-ignored like the Word and PDF files.
+- `lint` and `pdf-check` run on every market version (e.g. the phone number must be absent from the Ukraine PDF).
+- A job-specific CV (`/tailor --jd`) is built for one market, chosen with `--market` (default: worldwide).
+- New markets (e.g. `eu.yaml` with work-permit wording) are new files.
+- **Profile vs market:** `profile.yaml` states the truth (e.g. `work.engagement_types`). A market can only **hide or narrow** it (`show_availability: false`, a subset of `engagement_types`), never add something the profile doesn't have. `validate` fails on a market that adds a value.
+- **Outputs:** `cv/markets/<id>/` (master) and `cv/variants/<profile>/markets/<id>/` (variants) hold each market's `.md`, `.docx`, `.pdf`, `pdf-check.md` and `preview/`. The default market's files sit directly in the CV folder. All market folders are git-ignored.
+
 ### 4.5 Application log (`facts/applications.yaml`, optional)
 
 Records what each recruiter received, so you can answer "which CV did I send them?" later:
@@ -425,6 +466,7 @@ Records what each recruiter received, so you can answer "which CV did I send the
   cv: cv/tailored/example-corp-senior-rn/      # or a variant id
   pdf_sha256: 3f1c...                          # exact file sent
   build_commit: 772590a                        # git commit of the sources at build time
+  market: worldwide                            # which market version was sent (4.6)
   exporter: pages                              # which PDF exporter built it (PDFs can differ slightly between exporters)
   sent_copy: cv/sent/2026-10-20-example-corp.pdf   # optional exact copy of the sent PDF (git-ignored, included in backups)
   status: applied                              # applied | interview | offer | rejected | withdrawn
@@ -466,7 +508,8 @@ What the main rubrics must produce (taken from the reviews done in this chat):
 | Script | What it does |
 |---|---|
 | `build [file]` | **The full chain:** `refresh`, `lint` and `trace`, then Markdown to Word, Word to PDF, `pdf-check` and the preview. Stops at the first failing step. Defaults to the master CV. **Exception:** for the master CV, a bullet or summary sentence without a source is a *warning* in `build` (so a quick hand-written bullet doesn't block your PDF). It stays an error in `check` and for variants and tailored CVs, which are built only from sourced content. The warning suggests `/add-experience` to turn the bullet into a confirmed fact with a source. |
-| `build:all` | `build` for the master CV and every role variant (tailored CVs only when named) |
+| `build:all` | `build` for the master CV and every role variant, **for every market** in `markets/` (tailored CVs only when named) |
+| `market <cv-file> [--market <id>]` | writes the market versions of a CV by script: header and entry title lines per market file (4.6). Called by `build`. |
 | `render [file] [--template <name>]` | Markdown to `.docx`, filling the chosen template through its `style-map.yaml`, plus the template's `fixes.yaml` (the Pages bullet-indent fix for `classic`). Links (email, portfolio, any `show: true` link in the profile) are created as proper hyperlink entries in the Word file, never by reusing the template's own link ids. The default template comes from config, or from the profile's `template:` field. |
 | `template-import <file.docx\|file.pdf> <name>` | Script part of the template import (6.4) |
 | `pdf [file]` | `.docx` to `.pdf` with the first available exporter from `pdf_exporters` in `framework.config.yaml` (see 6.1) |
@@ -476,7 +519,7 @@ What the main rubrics must produce (taken from the reviews done in this chat):
 | `trace [file]` | Claim-to-source check (section 4.3) |
 | `check` | lint + trace for the master CV, all variants and all tailored CVs |
 | `refresh [file]` | rewrites generated blocks (4.2d) from their sources, without rendering |
-| `status` | compares hashes of sources (summaries, facts, profile, skills, profiles, templates, config) with `cv/.build-state.json` and lists which CVs are stale and why, e.g. "react-native: summaries/syspro-saas-erp.md changed" |
+| `status` | compares hashes of sources (summaries, facts, profile, skills, profiles, markets, templates, config) with `cv/.build-state.json` and lists which CVs are stale and why, e.g. "react-native: summaries/syspro-saas-erp.md changed" |
 | `validate` | checks all inputs against `schemas/`. Every tag (summary contributions, facts, skills, profiles' `emphasize_tags`/`deemphasize_tags`/`summary_focus`) must be in the config tag list, so a typo like `react-nativ` fails instead of silently breaking selection. **New** tags enter the list only through an approved proposal (from `/harvest` or `/add-experience`), so new technologies are added deliberately, never blocked. |
 | `index` | regenerates the lists of agents, rubrics, profiles and outputs in `AGENTS.md` |
 | `test` | runs the script tests in `tests/fixtures/` |
@@ -523,7 +566,7 @@ It extracts the text with `pdfjs-dist` (no system tools needed) and fails when:
 - **Sections are missing:** every CV heading in the Markdown must appear in the PDF text.
 - **Text doesn't match:** after normalizing whitespace and hyphenation, the PDF's words must cover the Markdown's words, ignoring formatting and trace comments. Missing words are listed.
 - **Garbled characters:** the replacement character `�`, private-use glyphs, or broken ligatures.
-- **The contact details aren't on page 1** (email, phone).
+- **The contact details aren't on page 1:** every contact field the CV's market shows (email, and the phone where `show_phone: true`) must be on page 1, and **a field the market hides must not appear anywhere** (e.g. no phone number in a Ukraine PDF).
 - **Fonts were substituted:** every font listed in the template's `style-map.yaml` must be embedded in the PDF. A substitute (for example, a different serif when Cambria is missing on a Linux laptop) fails the check, with the name of the font to install.
 
 It also fails when the page count exceeds `max_pages` (from the profile, else config), and reports words per page. The results go to `pdf-check.md` next to the PDF.
@@ -565,7 +608,7 @@ Dependencies: TypeScript run with `tsx`, `jszip` for reading and writing `.docx`
 | `/tailor --profile <id>` | Tailor builds `cv/variants/<id>/cv.md` from the profile, then `npm run build` on it |
 | `/tailor --jd <file \| pasted text> [--profile <id>]` | Tailor builds `cv/tailored/<company-role>/` for one job, optionally starting from a profile, then `npm run build`. Pasted job ad text is saved as `job-description.md` in that folder. |
 | `/variants` | Rebuilds every profile variant (after summaries or the master CV change), then `npm run build:all` |
-| `/review [cv-file] [rubric…] [--jd <file>]` | Runs the reviewers (default all 6) and writes `reports/<date-time>/`. With `--jd`, the ATS reviewer also scores the CV against that job ad. "Would this CV pass an AI ATS?" is `/review --rubric ats`, and "…and then HR?" is `--rubric hr`. |
+| `/review [cv-file] [rubric…] [--jd <file>] [--market <id>]` | Runs the reviewers (default all 6) on the chosen market version (default: the default market) and writes `reports/<date-time>/`. The ATS and HR reviewers read the market file, so hidden fields count as intended and HR questions fit the market. With `--jd`, the ATS reviewer also scores the CV against that job ad. "Would this CV pass an AI ATS?" is `/review --rubric ats`, and "…and then HR?" is `--rubric hr`. |
 | `/improve [report…]` | Advisor goes through the findings one topic at a time. It asks you questions with suggested answers, records them as facts, has the composer apply them, and shows the diff. Findings you decline are recorded as decisions (e.g. "no LinkedIn link", "keep length"), so later reviews don't raise them again. |
 | `/profile` | You describe a change ("moved to Poland, new phone +48…"). The advisor asks the follow-up questions (work permit? still B2B? new time zone? relocation?), updates `profile.yaml`, runs `/variants` and `build:all`, and lists tailored CVs and already-sent PDFs that still have the old details. |
 | `/add-experience` | You describe experience in your own words (e.g. "technical interviewing, legacy React Native audits, presales"). The advisor asks follow-up questions, writes a `confirmed.yaml` entry (or a `cv_entry` for a new job), and the composer adds the bullets. |
@@ -582,7 +625,7 @@ Each command file in `.claude/commands/` only says "follow `agents/<name>.md`". 
 
 Each step ends with something you can check.
 
-1. **Restructure and preserve.** Create the folders. Move the CV files to `cv/` and the template to `templates/` (committing the template). Move the summaries to `summaries/` with the new names. Add `package.json` (with `engines: node >= 20`), `package-lock.json`, `.nvmrc` and `framework.local.example.yaml`, and update `.gitignore` (`summaries/.digests/`, `.cv-runs/`, `framework.local.yaml`, `backups/`, `node_modules/`, `cv/tailored/`, `facts/applications.yaml`, `cv/**/*.docx`, `cv/**/*.pdf`, `cv/**/pdf-check.md`, `cv/**/preview/`, `cv/**/selection.json`, `cv/.build-state.json`, `cv/sent/`). The currently committed `Kirill_Kohan_CV.docx` is untracked with `git rm --cached` (the file stays on disk and is rebuilt in step 5).
+1. **Restructure and preserve.** Create the folders. Move the CV files to `cv/` and the template to `templates/` (committing the template). Move the summaries to `summaries/` with the new names. Add `package.json` (with `engines: node >= 20`), `package-lock.json`, `.nvmrc` and `framework.local.example.yaml`, and update `.gitignore` (`summaries/.digests/`, `.cv-runs/`, `framework.local.yaml`, `backups/`, `node_modules/`, `cv/tailored/`, `facts/applications.yaml`, `cv/**/*.docx`, `cv/**/*.pdf`, `cv/**/pdf-check.md`, `cv/**/preview/`, `cv/**/markets/`, `cv/**/selection.json`, `cv/.build-state.json`, `cv/sent/`). The currently committed `Kirill_Kohan_CV.docx` is untracked with `git rm --cached` (the file stays on disk and is rebuilt in step 5).
    *Check:* `git status` shows moves only, no content changes.
 2. **Specs.** Write `cv-spec.md` (the current CV's structure plus every rule from this chat), `work-summary-spec.md`, `tailoring-spec.md`, `templates.md` and the 6 rubrics. The ATS and HR rubrics are based on the reviews done in this chat.
    *Check:* you review the specs. This is the most important review.
@@ -609,6 +652,8 @@ Each step ends with something you can check.
    *Check:* the outputs pass `pdf-check`, the content matches the original laptop, and `doctor` reports nothing missing.
 13. **New laptop + new repo test.** On the second-laptop setup, run `/add-repo` on a small repo the framework has never seen (e.g. one of your own GitHub repos). Added to `docs/acceptance.md` as a permanent scenario.
    *Check:* identities are detected and confirmed, you're asked "new or existing job" and for the job details, new tags and skills are proposed, `validate` passes, the CV and every variant gain the new entry or bullets with sources, `build:all` passes `pdf-check`, and `/review` runs.
+14. **Market test.** Run `build:all` and check both markets for the master CV and one variant.
+   *Check:* the Ukraine PDFs have no phone number, no availability line, no time-zone line and no "(Contract)" label; the worldwide PDFs have the phone, availability and time-zone lines; `pdf-check` passes for both; the content (bullets) is identical. Added to `docs/acceptance.md`.
 
 ## 9. Scalability
 
@@ -627,7 +672,7 @@ The framework is designed so new outputs, reviewers and agents are **added as fi
     master_dir: cv
     variants_dir: cv/variants
     tailored_dir: cv/tailored
-    file_name: "{name_underscored}_CV{profile_suffix}"   # Kirill_Kohan_CV, Kirill_Kohan_CV_React_Native
+    file_name: "{name_underscored}_CV{profile_suffix}{market_suffix}"   # Kirill_Kohan_CV, Kirill_Kohan_CV_React_Native_UA
   display:
     date_format: "MMMM YYYY"          # December 2025
     date_range_separator: " - "
@@ -734,6 +779,7 @@ Problems expected when the flows actually run, found by simulating every flow ag
 | Tailored CVs in git | `cv/tailored/` and `facts/applications.yaml` are in `.gitignore` by default. To keep one, run `git add -f`. The tailor agent reminds you of this after each run. |
 | Built files in git | **Only Markdown is committed** (CV `.md` files and `gap-report.md`). Every built output, for the master CV, variants and tailored CVs (`.docx`, `.pdf`, `pdf-check.md`, `preview/`, `selection.json`, `cv/.build-state.json`), is git-ignored and recreated by `npm run build` / `build:all`. The exception is `templates/*/template.docx`, which is an input, so it's committed. |
 | Role profiles | First four: `react`, `react-native`, `fullstack-react-node`, `nodejs` (section 4.4) |
+| Markets | `worldwide` (default: phone shown, B2B or full-time, time-zone line, contract labels for entries that really were contracts) and `ukraine` (no phone, no availability line, no time-zone line, no contract labels). Every CV is built for both (4.6). |
 | Decisions already made in this chat | Recorded in `facts/decisions.yaml` so reviewers don't raise them again: no LinkedIn/GitHub links (the old CV had them, so they can come back), keep the current length, keep the Drive portfolio link, keep the job title step from GM to SYSPRO |
 | Variants vs manual edits | Variants are generated. The master CV's wording is reused by source id, and lasting variant tweaks go in profile `overrides` |
 | Application log | Optional `facts/applications.yaml`, git-ignored by default |
@@ -747,7 +793,7 @@ Problems expected when the flows actually run, found by simulating every flow ag
 - Cover-letter agent (the format leaves room to add it later).
 - Pulling history from remote GitHub or Azure DevOps (local clones only).
 - A fully code-driven pipeline (Agent SDK CLI). It can wrap the same `agents/*.md` later.
-- Translating the CV into other languages.
+- Translating the CV into other languages. If a local market ever needs a Ukrainian CV, it fits as a market setting (`language: uk`) with an agent translation that you review.
 
 ## 12. Coverage of the 2026-10-15 chat
 
@@ -786,3 +832,5 @@ Every step done by hand in the chat, and the capability that repeats it:
 | 29 | Validated "any laptop + any new repo" end to end | AI tool in new-laptop steps and `doctor`, identity detection, new-or-existing-job choice, job details interview, approved growth of tags and skills, `/add-repo` for the whole flow, acceptance scenario (step 13) |
 | 30 | Simulated running every flow | Section 9b: export queue and timeouts, sample-paragraph style maps, font check from embedded PDF fonts, text normalization, scan exceptions, script-based bullet selection, git digests, summary digests, source-comment reattachment, all-page previews, one-time stale warnings |
 | 31 | Gap check after the risks section | New scripts exposed as `npm run digest`, `git-digest`, `select`, `reattach-src`; digests auto-regenerated; `/status --ack`; new config keys; job ad mapped to tags (`jd-tags.yaml`) |
+| 32 | Asked for Ukraine and worldwide versions | Markets (4.6): `markets/worldwide.yaml` and `markets/ukraine.yaml`, built for every CV by script (`npm run market`) |
+| 33 | Checked the plan against the market requirement | Market-aware `pdf-check`, ATS and HR rubrics and `/review --market`; markets tracked by `status` and `validate`; `market` in the application log; profile-vs-market rule; outputs in the folder tree; market test (step 14) |
