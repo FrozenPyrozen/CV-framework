@@ -31,7 +31,7 @@ A tailored CV is the master CV adapted to a type of role (a **profile**) or to o
    - Keep its `src` comment.
 4. **Headline and summary.** Use the profile's `headline` (or one fitting the job ad). Rewrite the summary paragraph around `summary_focus`, with a `src` comment on every sentence.
 5. **Skills.** Reordered by `skills_order` through the generated `skills` block (not by hand).
-6. **Only changed entries are rewritten.** On a rebuild, entries whose sources didn't change since the last build (from `cv/.build-state.json`) are copied unchanged, so variants don't change in git without a reason.
+6. **Only changed entries are rewritten.** Each build record in `cv/.build-state.json` has an `entries` map: a hash per CV entry of everything it's built from (its summary's front matter, contributions, metrics and facts, or its `cv_entry` and facts). `npm run status` lists the entries whose hash changed. On a rebuild, entries whose hash didn't change are copied unchanged, so variants don't change in git without a reason.
 7. **Checks.** `npm run reattach-src -- <cv.md>` (after saving a snapshot with `--save` before step 3), then `npm run build` on the result. Report failures.
 8. **Gap report** (section 5).
 9. Show a diff. Never commit. For a job-specific CV, remind the user it's git-ignored and can be kept with `git add -f`.

@@ -23,7 +23,10 @@
     "template-import": "tsx scripts/template-import.ts",
     "preview": "tsx scripts/preview.ts",
     "pdf": "tsx scripts/export-pdf.ts",
-    "pdf-check": "tsx scripts/pdf-check.ts"
+    "pdf-check": "tsx scripts/pdf-check.ts",
+    "build": "tsx scripts/build.ts",
+    "build:all": "tsx scripts/build.ts --all",
+    "status": "tsx scripts/status.ts"
   },
   "devDependencies": {
     "@types/node": "^22.20.5",

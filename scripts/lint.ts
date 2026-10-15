@@ -7,6 +7,7 @@ import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join, relative, resolve } from "node:path";
 import { type Context, entriesForSection, loadContext, parseCv, stripComments } from "./lib/cvmd.ts";
 import { masterCvPath, marketCvPath } from "./lib/paths.ts";
+import { readState, sha } from "./lib/buildstate.ts";
 import { type Summary, cliPath, isMain, loadConfig, loadMarkets, loadSummaries, rootPath } from "./lib/repo.ts";
 import { parseArgs, refreshText } from "./refresh.ts";
 
@@ -161,6 +162,12 @@ export function lintCv(file: string, ctx: Context, summaries = loadSummaries(ctx
   // Secrets and foreign URLs/emails.
   const profileUrls = (ctx.profile.contacts.links ?? []).map((l: any) => l.url);
   for (const s of secretFindings(stripComments(text), ctx, profileUrls, { checkUrls: true })) add("error", `secret scan: ${s}`);
+
+  // Variants are generated: a hand edit since the last build would be lost on the next /variants run.
+  if (file.startsWith(rootPath(cfg.output.variants_dir) + "/") && !/\/markets\//.test(file)) {
+    const rec = readState()[relative(rootPath(), file)];
+    if (rec && sha(file) !== rec.md_sha) add("warning", "edited by hand since its last build; variants are rebuilt by /variants, so put lasting changes in the role profile's overrides");
+  }
 
   // Market: hidden contact details must not appear (plan 6.2, cv-spec 14).
   if (!ctx.market.header.show_phone && ctx.profile.contacts.phone) {

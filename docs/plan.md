@@ -86,7 +86,7 @@ CV/
 │   │   └── markets/<market-id>/   # non-default market versions of each variant (generated, git-ignored)
 │   ├── tailored/<company-role>/   # per job ad (git-ignored): cv.md, .docx, .pdf, job-description.md, jd-tags.yaml, gap-report.md
 │   ├── sent/                      # optional exact copies of PDFs you sent (git-ignored, included in backups; 4.5)
-│   └── .build-state.json          # source/output hashes used by `status` (local, git-ignored)
+│   └── .build-state.json          # per built CV: template, CV Markdown hash, source, output and per-entry hashes (local, git-ignored)
 ├── templates/
 │   └── <name>/                    # one folder per template; "classic" = your previous CV
 │       ├── source.docx            # the original file the template was imported from (own CVs only)
@@ -111,7 +111,7 @@ CV/
 │   ├── digest.ts                  # writes summaries/.digests/ from summaries + facts (R10)
 │   ├── select.ts                  # deterministic bullet selection/ordering by profile or job-ad tags (R8)
 │   ├── reattach-src.ts            # re-attaches source comments after an agent edit (R7)
-│   ├── build.ts                   # md -> docx -> pdf -> pdf-check -> preview
+│   ├── build.ts                   # build and build:all: validate -> refresh -> lint -> trace -> markets -> docx -> pdf -> pdf-check -> preview
 │   ├── render.ts                  # npm run render: Markdown -> .docx (picks the template and output name)
 │   ├── renderers/docx.ts          # template-driven Word renderer
 │   ├── lib/docx.ts                # .docx zip and XML helpers
@@ -125,7 +125,8 @@ CV/
 │   ├── lint.ts
 │   ├── trace.ts
 │   ├── check.ts                   # lint + trace for every CV
-│   ├── status.ts                  # which outputs are stale
+│   ├── status.ts                  # which CVs are stale and why; sent-CV warnings
+│   ├── lib/buildstate.ts          # build records: source/output hashes
 │   ├── validate.ts                # JSON Schema validation of all inputs
 │   ├── index.ts                   # regenerates the agents/rubrics/profiles/outputs list in AGENTS.md
 │   └── migrations/
@@ -474,7 +475,9 @@ Records what each recruiter received, so you can answer "which CV did I send the
   company: Example Corp
   role: Senior React Native Engineer
   cv: cv/tailored/example-corp-senior-rn/      # or a variant id
-  pdf_sha256: 3f1c...                          # exact file sent
+  pdf: cv/tailored/example-corp-senior-rn/Kirill_Kohan_CV.pdf   # the PDF that was sent
+  pdf_sha256: "3f1c..."                        # its hash (quoted: an all-digit hash would be read as a number)
+  acknowledged_sha256: null                    # set by status --ack when you know the CV changed since
   build_commit: 772590a                        # git commit of the sources at build time
   market: worldwide                            # which market version was sent (4.6)
   exporter: pages                              # which PDF exporter built it (PDFs can differ slightly between exporters)
@@ -517,19 +520,19 @@ What the main rubrics must produce (taken from the reviews done in this chat):
 
 | Script | What it does |
 |---|---|
-| `build [file]` | **The full chain:** `refresh`, `lint` and `trace`, then Markdown to Word, Word to PDF, `pdf-check` and the preview. Stops at the first failing step. Defaults to the master CV. **Exception:** for the master CV, a bullet or summary sentence without a source is a *warning* in `build` (so a quick hand-written bullet doesn't block your PDF). It stays an error in `check` and for variants and tailored CVs, which are built only from sourced content. The warning suggests `/add-experience` to turn the bullet into a confirmed fact with a source. |
-| `build:all` | `build` for the master CV and every role variant, **for every market** in `markets/` (tailored CVs only when named) |
+| `build [file] [--template <name>] [--no-pdf]` | **The full chain:** `validate` (refuses invalid sources), `digest`, `refresh`, `lint` and `trace` (unsourced claims are a warning for the master CV, an error for variants and tailored CVs), market versions, then for every market: Markdown to Word, Word to PDF, `pdf-check`, previews of every page. Stops a CV at its first failing step and records a successful build in `cv/.build-state.json`. Defaults to the master CV. `--no-pdf` stops after the `.docx` (e.g. a laptop without a PDF exporter). An unapproved template is built with a warning. |
+| `build:all [--no-pdf]` | `build` for the master CV and every role variant (`cv/variants/*/cv.md`), **for every market**; refuses templates that aren't approved. Tailored CVs are built by naming them: `npm run build -- cv/tailored/<company-role>/cv.md`. |
 | `market [cv-file] [--market <id>]` | writes the market versions of a CV (default: the master) by script: header and entry title lines per market file, using the variant's role profile when the file is in `cv/variants/<id>/` (4.6). Called by `build`. |
 | `render [file] [--template <name>] [--out <file.docx>]` | Markdown to `.docx`, filling the chosen template through its `style-map.yaml`, then applying the template's `fixes.yaml` (for `classic`: Pages bullet indent, headings kept with what follows, right-aligned dates, first and last two bullets kept together, consistent left edge and spacing, invisible letter spacing that prevents fi/fl ligatures). Links (email, portfolio, any `show: true` link in the profile) are created as proper hyperlink entries, never by reusing the template's own link ids. Template: `--template`, else the role profile's `template:`, else config. Output sits next to the Markdown (`cv.md` in a variant folder becomes `<Name>_CV_<Profile>.docx`). |
 | `template-import <file.docx> <name> [--map <map.yaml>]` | Template import, script part (6.4): without `--map` lists paragraphs for the template-importer agent; with `--map` builds `template.docx` and `style-map.yaml`. PDF input comes after `build` works end to end. |
 | `pdf [file.docx] [--exporter <id>]` | `.docx` to `.pdf` with the first available exporter from `pdf_exporters` (`framework.local.yaml` overrides `framework.config.yaml`), one export at a time under `.cv-runs/export.lock`, each limited to `checks.export_timeout_s` (6.1). Default file: the master CV's `.docx`. |
 | `pdf-check <file.pdf> [--md <cv.md>]` | Checks that the PDF is ATS-readable and faithful to its Markdown (6.2). The Markdown defaults to the `.md` next to the PDF (or `cv.md` in a variant folder); the market comes from the `markets/<id>/` path. Writes `pdf-check.md`; exits 1 on failure. |
 | `preview [file]` | Page images of the PDF into `preview/` (6.3) |
-| `lint [file] [--market <id>] [--profile <id>]` | Deterministic checks on CV files: supported Markdown (including only `#`/`##`/`###` headings), forbidden characters, filler words (warning), length, bullet length (warning), bold balance, section order, entry order (`cv_order`, then newest first), bullet limits (`cv_max_bullets` / profile `max_bullets_per_entry`), the current job's Stack line (warning), **generated parts match their sources**, calculated values in the summary paragraph, the **confidentiality blocklist** (terms from every summary's *Confidentiality notes*, whole-word and case-sensitive with `allow_in` contexts; ticket prefixes like `OR-`, `ENGAGE-`, `VEL-`; hidden client names; internal address patterns matched against URLs, git remotes and hostnames), the **secret scan** (keys, tokens, credential assignments, foreign emails and URLs; profile links allowed), and hidden market fields (e.g. no phone in a Ukraine CV). Without a file it lints the master, its market versions, every variant and tailored CV, and secret-scans summary bodies. Phone format, duplicate and unsupported skills, and unknown `cv_section` are checked by `validate`. *Part 3:* "variant edited by hand since its last build" (needs `.build-state.json`). |
+| `lint [file] [--market <id>] [--profile <id>]` | Deterministic checks on CV files: supported Markdown (including only `#`/`##`/`###` headings), forbidden characters, filler words (warning), length, bullet length (warning), bold balance, section order, entry order (`cv_order`, then newest first), bullet limits (`cv_max_bullets` / profile `max_bullets_per_entry`), the current job's Stack line (warning), **generated parts match their sources**, calculated values in the summary paragraph, the **confidentiality blocklist** (terms from every summary's *Confidentiality notes*, whole-word and case-sensitive with `allow_in` contexts; ticket prefixes like `OR-`, `ENGAGE-`, `VEL-`; hidden client names; internal address patterns matched against URLs, git remotes and hostnames), the **secret scan** (keys, tokens, credential assignments, foreign emails and URLs; profile links allowed), and hidden market fields (e.g. no phone in a Ukraine CV). Without a file it lints the master, its market versions, every variant and tailored CV, and secret-scans summary bodies. Phone format, duplicate and unsupported skills, and unknown `cv_section` are checked by `validate`. Also warns when a variant was edited by hand since its last build (from `.build-state.json`). |
 | `trace [file] [--warn-only]` | Claim-to-source check (section 4.3). `--warn-only` reports without failing (used by `build` for the master CV). |
 | `check` | lint + trace for the master CV, all variants and all tailored CVs |
 | `refresh [file] [--market <id>] [--profile <id>] [--out <file>] [--check]` | rewrites the script-owned parts (4.2d): header, section headings and intro lines, entry title and detail lines with `<!-- entry: id -->` markers, education, skills and languages. Runs `validate` first and refuses invalid sources, then writes digests. Reports any hand-written text it replaces. The role profile comes from `--profile` or the `cv/variants/<id>/` path. `--check` exits 1 if the file isn't up to date. |
-| `status` | compares hashes of sources (summaries, facts, profile, skills, profiles, markets, templates, config) with `cv/.build-state.json` and lists which CVs are stale and why, e.g. "react-native: summaries/syspro-saas-erp.md changed" |
+| `status [--ack <company>]` | Compares `cv/.build-state.json` with the current sources (config, summaries, profile, confirmed facts, skills, markets, the template's files, the role profile; not `decisions.yaml`, which only affects reviewers) and per-entry hashes, the CV Markdown and the outputs, and lists each CV as up to date, stale (with every reason, e.g. "summaries/velas-wallet.md changed") or never built. Also warns once per application when the PDF you sent has changed since (R14); `--ack <company>` records that you know. |
 | `validate` | checks all inputs against `schemas/`. Every tag (summary contributions, facts, skills, profiles' `emphasize_tags`/`deemphasize_tags`/`summary_focus`) must be in the config tag list, so a typo like `react-nativ` fails instead of silently breaking selection. **New** tags enter the list only through an approved proposal (from `/harvest` or `/add-experience`), so new technologies are added deliberately, never blocked. |
 | `index` | regenerates the lists of agents, rubrics, profiles and outputs in `AGENTS.md` |
 | `test` | runs every `tests/*.test.ts` file with Node's test runner; most tests break a temporary copy of the real repo |
@@ -771,7 +774,7 @@ Problems expected when the flows actually run, found by simulating every flow ag
 | # | Risk | Mitigation | Step |
 |---|---|---|---|
 | R7 | Agents drop or misplace source comments when rewriting text, so `trace` keeps failing | Agents edit **one entry at a time**, never rewriting the whole file. `reattach-src` then matches each bullet to its previous version (same entry, closest text) and restores its comment. The agent is asked to fix only what's left, and `trace` runs last. | 5, 6 |
-| R8 | AI wording differs on every rebuild, so variants change in git even when nothing meaningful changed | `select` (a script) chooses and orders bullets by profile tags and limits, so selection is fixed. The tailor agent rewrites only entries whose sources changed since the last build (from `.build-state.json`), and copies everything else unchanged. | 5, 6, 8 |
+| R8 | AI wording differs on every rebuild, so variants change in git even when nothing meaningful changed | `select` (a script) chooses and orders bullets by profile tags and limits, so selection is fixed. The tailor agent rewrites only entries whose per-entry hash changed since the last build (the `entries` map in `.build-state.json`, also listed by `status`), and copies everything else unchanged. | 5, 6, 8 |
 | R9 | Large repos have too much history for one AI session, making runs slow, expensive or incomplete | `git-digest` condenses history into a compact digest per area (commit counts, date range, key commit messages, changed folders, diff statistics). The harvester reads the digest and opens individual commits only when needed. | 5, 6 |
 | R10 | The composer must read every summary (about 30 KB each), which gets slow and costly as they accumulate | Each summary gets a generated short digest in `summaries/.digests/` (contributions, tags, metrics, `cv_*` fields). Composer and tailor read digests, and open a full summary only for entries they change. | 5, 6 |
 | R11 | Squash-merged pull requests are often credited to whoever merged them, or to a bot, so your work goes missing | `git-digest` also searches `Co-authored-by` lines and PR merge commits mentioning your identities, and lists "possibly yours" commits for you to confirm | 5 |
@@ -855,3 +858,4 @@ Every step done by hand in the chat, and the capability that repeats it:
 | 37 | Built step 5 part 3a (template import, Word renderer) | `classic` imported from `source.docx` via `import-map.yaml`; rendering matches the approved Word file (identical formatting in all 123 paragraphs; only intended text changes) |
 | 38 | Reviewed every page of the rendered CV and asked for layout changes | `fixes.yaml` fix types (keep-with-next, date tab, bullet groups, per-type spacing, first item under a section line), header rule removed, all-page previews with `npm run preview`, layout rubric checks spacing and page breaks |
 | 39 | Built step 5 part 3b (PDF export, pdf-check) | Pages/Word/LibreOffice exporters under a lock with timeouts; `pdf-check` with text normalization and pdfjs font reading; found and fixed the ligature problem (R15) with the `no-ligatures` template fix |
+| 40 | Built step 5 part 3c (build, build:all, status) | One command for the whole chain per CV and market, build records, staleness with reasons, sent-CV warnings with acknowledgment, hand-edited-variant warning in lint |
