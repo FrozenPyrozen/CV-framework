@@ -8,7 +8,7 @@ Kyiv, Ukraine (Remote) · Working hours overlap with EU, UK and US time zones
 
 # **SUMMARY**
 
-Senior software engineer and tech lead with 7+ years of experience building React, React Native and TypeScript applications for enterprise ERP, automotive, healthcare IoT, fintech and blockchain products. At SYSPRO, builds a schema-driven React 19 runtime that renders 1,800+ ERP programs from data-model definitions. Previously led a team of 8 developers delivering in-car navigation features for General Motors on the HERE SDK. Experienced in micro-frontend architecture, OIDC authentication, OpenTelemetry observability, test automation, and AI-assisted, specification-driven development.
+Senior software engineer and tech lead with 7+ years of experience building React, React Native and TypeScript applications for enterprise ERP SaaS, automotive, healthcare and clinical trials, fintech and blockchain products. At SYSPRO, builds a schema-driven React 19 runtime that renders 1,800+ ERP programs from data-model definitions. Previously led a team of 8 developers delivering in-car navigation features for General Motors on the HERE SDK. Experienced in micro-frontend architecture, OpenID Connect (OIDC) authentication, OpenTelemetry observability, test automation, native Android migrations, generative AI integrations, frontend technology-stack decisions, and architecture-governed, specification-driven development (SDD).
 
 # **EXPERIENCE**
 
@@ -16,15 +16,23 @@ Senior software engineer and tech lead with 7+ years of experience building Reac
 
 ### **SYSPRO | Remote | 12/2025 – Present**
 
-* Built core modules of a schema-driven **React 19 / TypeScript** runtime that renders ERP screens (forms, search grids with filtering, date fields, smart-tag lookups) from declarative data-model definitions, covering **1,800+ ERP programs** without per-screen frontend code. Stack: **KendoReact, Zustand, XState, TanStack Router and Query, Vite, Docker, Azure DevOps**.
+* Built core modules of a schema-driven **React 19 / TypeScript** runtime for SYSPRO's **ERP SaaS** modernization platform (25+ person program) that renders **1,800+ ERP programs** from declarative data-model definitions, cutting the time to bring an ERP screen to the web from days to hours with no per-screen frontend code.
 
-* Built the **Login micro-frontend** from scratch and integrated **OpenID Connect (OIDC)** authentication into the host application using **oidc-client-ts** and **react-oidc-context**.
+* Delivered the frontend through an architecture-governed **specification-driven development (SDD)** process rather than ad-hoc AI code generation, and helped define the process itself: specification templates, the validation routine and the rules for **AI coding agents**. Every subsystem was traced from platform architecture to solution architecture, component specification and implementation across 4 repositories.
 
-* Designed and implemented a browser telemetry module on **OpenTelemetry**: event taxonomy, payload contracts, and a redaction stage that strips sensitive data (PII) before export.
+* Worked with the lead architect on the **platform and solution architecture**: reviewed and co-authored architecture documents, drove open architecture questions and blockers to decisions, and authored the **frontend technology-stack decision record** (choice of OIDC libraries, move from React Testing Library to **Vitest Browser Mode**).
 
-* Drove **system design** decisions as author of the platform's **frontend technology-stack specification**, including the choice of OIDC libraries and the move from React Testing Library to **Vitest Browser Mode**.
+* Authored ~17 component specifications (view orchestration, telemetry, navigation, overlays, runtime configuration) and validated each for architecture alignment before and after implementation, with AI agents acting as a governed reviewer that flagged constraint violations and spec-to-code drift for human decision. This reduced PR review cycles, and deferred issues were tracked in a reviewed **technical-debt register**.
 
-* Wrote and validated component specifications against the platform architecture using **AI coding agents** in a **specification-driven development (SDD)** workflow, and covered the implementations with **Vitest** and **Playwright** tests.
+* Implemented the runtime's **KendoReact** rendering handlers (forms, date fields, search grids with filtering, sorting and persisted filter state, smart-tag lookups, predictive search) and the view orchestration layer with **XState** and **Zustand** (view session lifecycle, navigation menu, context-aware related-program navigation, modal overlays).
+
+* Built the **Login micro-frontend** from scratch (sign-in, forgot and reset password flows, reusable form components, schema-based validation, **WCAG** accessible typography, **Storybook**) and integrated **OpenID Connect (OIDC)** authentication into the host and admin applications using **oidc-client-ts** and **react-oidc-context** in a **zero-trust**, independently deployable **micro-frontend architecture**.
+
+* Designed and built a browser telemetry module on **OpenTelemetry** from scratch: event bus, event taxonomy, payload contracts, OTLP exporter, and a redaction stage that strips sensitive data (PII) before export.
+
+* Covered implementations with **Vitest**, **Vitest Browser Mode** and **Playwright** tests, and maintained a **Node.js** mock backend and the **monorepo** tooling (npm workspaces, ESLint, Prettier, Husky, **Azure Pipelines** CI, schema-to-TypeScript **code generation**).
+
+* Stack: **React 19, TypeScript, KendoReact, Zustand, XState, TanStack Router, TanStack Query, Vite, SCSS / CSS Modules, OpenTelemetry, Vitest, Playwright, Storybook, Docker, Azure DevOps**.
 
 ## **Team Leader**
 
@@ -46,7 +54,7 @@ Senior software engineer and tech lead with 7+ years of experience building Reac
 
 * Implemented a passenger second-screen feature for a luxury car brand.
 
-* Stack: **React Native, TypeScript, Redux Saga, RxJS, Storybook, Detox** (E2E), **Fastlane, Bitrise** (CI/CD), **Bugsnag, Kibana** (monitoring), **Figma**.
+* Stack: **React Native, TypeScript, Node.js, Redux Saga, RxJS, Storybook, Detox** (E2E), **Fastlane, Bitrise** (CI/CD), **Bugsnag, Kibana** (monitoring), **Figma**.
 
 ## **Technical Leader**
 
@@ -70,7 +78,7 @@ Senior software engineer and tech lead with 7+ years of experience building Reac
 
 * Made the first interaction with the Android wallet 3x faster by caching and optimizing wallet and account creation.
 
-## **Team Leader**
+## **Team Leader (Contract)**
 
 ### **OMO Systems | Remote | 04/2021 – 12/2021**
 
@@ -84,7 +92,7 @@ Senior software engineer and tech lead with 7+ years of experience building Reac
 
 * Led and mentored the development team: ran **code reviews**, set coding standards and onboarded new developers.
 
-## **Software Engineer**
+## **Software Engineer (Contract)**
 
 ### **Thermo Fisher Scientific | Remote | 11/2020 – 04/2021**
 
@@ -118,7 +126,7 @@ Senior software engineer and tech lead with 7+ years of experience building Reac
 
 * Built web features with **Next.js** (server-side rendering) and **GraphQL**, and containerized services with **Docker**.
 
-## **Full-Stack Engineer & Team Leader**
+## **Full-Stack Engineer and Team Leader (Contract)**
 
 ### **The Admasters | Kyiv, Ukraine (Hybrid) | 04/2019 – 08/2019**
 
@@ -130,17 +138,47 @@ Senior software engineer and tech lead with 7+ years of experience building Reac
 
 * Redesigned a legacy codebase to speed up feature deployment.
 
-# **SELECTED FREELANCE PROJECTS**
+# **CONSULTING AND FREELANCE PROJECTS**
 
-### **Part-time, alongside full-time roles | 2017 – Present**
+Part-time contract and consulting work, alongside full-time roles
+
+## **Senior React Native Engineer (Contract)**
+
+### **Clinical Ink — Clinical Trials Patient App | Remote**
+
+* Developed and maintained a patient-facing **clinical trial (eCOA)** mobile app built with **React Native, Expo and TypeScript**, and its native **Android (Java / Kotlin)** counterpart.
+
+* Refactored the legacy documents library module from JavaScript to **TypeScript** and added ~1,000 lines of **Jest** and **React Native Testing Library** tests.
+
+* Migrated the app to **react-native-safe-area-context** across all screens and enforced it with an **ESLint** rule, fixing layout overlaps on iOS and Android.
+
+* Migrated the native Android app to **Android 14 (SDK 34)**: Gradle 8, Java 17, exact-alarm and PendingIntent behavior changes, and **Jenkins** CI build fixes.
+
+* Upgraded the **SQLCipher** encrypted database to meet Google Play requirements and rotated **SSL certificate pinning** for a backend certificate change.
+
+* Resolved production crashes and patient-facing bugs by bisecting dependency versions and adding targeted logging, including login, PIN, task scheduling and document loading issues.
+
+## **Frontend Engineer (Contract)**
+
+### **Velocity AI — Generative AI Jira Plugin | Remote**
+
+* Built an **Atlassian Jira Forge** app from scratch with **React, TypeScript** and **Node.js** resolvers that starts **generative AI** design generation from a Jira issue and creates a Jira subtask for the result.
+
+* Built the design generation form with multiple inputs: design description, reference images with preview, PRD and user-flow uploads, website URL, **MCP (Model Context Protocol)** server URL and design-system selection, using a reusable file-upload component and form validation.
+
+* Moved file handling to direct **Azure Blob Storage** uploads, working around Forge file-size limits and removing the plugin's dependency on the backend.
+
+* Set up project tooling and quality gates: ESLint, pre-commit hooks, **SonarQube** and Atlassian design tokens.
+
+## **Software Engineering Consultant**
+
+### **Various Clients | Remote**
 
 * Led scaling and optimization engagements for client teams, reducing operational costs by up to 50% by refactoring core apps, adding caching and adding unit tests.
 
 * Acted as a JavaScript subject-matter expert for large enterprise clients: technical consulting, estimations, senior-level interviews and educational webinars.
 
-* Built a **Jira Forge** plugin for generative-AI website design, using **Azure Blob Storage** to work around Forge file-size limits.
-
-* Led library and native migrations, including Android 13 to 14 compliance and **React Native** version and legacy library upgrades.
+* Led **React Native** version upgrades and legacy library migrations for client mobile apps.
 
 # **EDUCATION**
 
@@ -162,23 +200,25 @@ National Aviation University • Ukraine • 2016 – 2020
 
 **Languages:** JavaScript (ES6+), TypeScript, HTML5, CSS3, SCSS
 
-**Frontend:** React 19, React.js, Next.js, Server-side rendering (SSR), Micro-frontends, Design systems, Web performance optimization, KendoReact, Storybook, Styled Components, Atomic Design, Vite
+**Frontend:** React 19, React.js, Next.js, Server-side rendering (SSR), Micro-frontends, Schema-driven UI, Design systems, Web accessibility (WCAG), Web performance optimization, KendoReact, Storybook, CSS Modules, Styled Components, Atomic Design, Vite, Monorepo (npm workspaces)
 
-**Mobile:** React Native, React Native Web, Native Modules (iOS/Android), Realm (realm-js), Keychain, Fastlane, Bitrise
+**Mobile:** React Native, Expo, React Native Web, Android (Java, Kotlin, Gradle), Native Modules (iOS/Android), Realm (realm-js), SQLCipher, Keychain, Fastlane, Bitrise
 
 **State and Data:** Redux (Redux Thunk, Redux Saga), MobX, Zustand, XState, TanStack Query, TanStack Router, RxJS, REST APIs, GraphQL, WebSockets
 
-**Backend and Cloud:** Node.js, PostgreSQL, Amazon Web Services (AWS: EC2, S3, RDS), Azure Blob Storage, Stripe, Docker
+**Backend and Cloud:** Node.js, PostgreSQL, Amazon Web Services (AWS: EC2, S3, RDS), Microsoft Azure (Azure Blob Storage), Stripe, Docker
 
-**Authentication and Security:** OAuth 2.0, OpenID Connect (OIDC)
+**Authentication and Security:** OAuth 2.0, OpenID Connect (OIDC), Zero-trust architecture, SSL certificate pinning, PII redaction
 
-**Testing:** Vitest, Playwright, Jest, Detox, Puppeteer, Cucumber, End-to-end (E2E) testing, Unit testing
+**Testing:** Vitest, Vitest Browser Mode, Playwright, Jest, React Testing Library, React Native Testing Library, Detox, Puppeteer, Cucumber, End-to-end (E2E) testing, Unit testing
 
-**DevOps and Observability:** CI/CD, Azure DevOps, GitHub Actions, Bitbucket Pipelines, Git, OpenTelemetry, Kibana, Bugsnag
+**DevOps and Observability:** CI/CD, Azure DevOps, Azure Pipelines, GitHub Actions, Bitbucket Pipelines, Jenkins, Git, ESLint, Prettier, Husky, SonarQube, OpenTelemetry, Kibana, Bugsnag
 
-**Domain and SDKs:** HERE SDK (HNav, HNod, HERE API), IoT, Bluetooth Low Energy (BLE), MQTT, Blockchain, Web3.js, Jira Forge
+**AI:** Generative AI integration, Model Context Protocol (MCP), AI coding agents, AI-assisted development
 
-**Leadership and Methodologies:** Team leadership (up to 8 engineers), Mentoring, Code review, System design, Technical interviewing, Agile, AI-assisted development (AI coding agents), Specification-driven development (SDD), Figma, Jira
+**Domain and SDKs:** ERP, Clinical trials (eCOA), HERE SDK (HNav, HNod, HERE API), IoT, Bluetooth Low Energy (BLE), MQTT, Blockchain, Web3.js, Atlassian Jira Forge
+
+**Leadership and Methodologies:** Team leadership (up to 8 engineers), Mentoring, Code review, System design, Software architecture, Architecture decision records (ADR), Technology stack selection, Technical interviewing, Agile, Specification-driven development (SDD), Figma, Jira
 
 # **LANGUAGES**
 
