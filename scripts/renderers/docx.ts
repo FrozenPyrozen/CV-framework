@@ -14,7 +14,7 @@ interface StyleMap {
   paragraphs: Record<string, { sample: number; keep?: boolean; bold?: boolean; date_tab?: boolean }>;
 }
 
-interface Fix { id: string; set: { bullet?: { indent_left: number; hanging: number; tab?: { type: string; pos: number } }; keep_with_next?: string[]; date_tab?: { align: "left" | "right"; pos: number }; keep_last_bullets_together?: number; keep_first_bullets_together?: number; paragraphs?: Record<string, { indent_left?: number; first_line?: number; before?: number; after?: number; line?: number }>; first_after_section_heading?: { before: number } } }
+interface Fix { id: string; set: { bullet?: { indent_left: number; hanging: number; tab?: { type: string; pos: number } }; keep_with_next?: string[]; date_tab?: { align: "left" | "right"; pos: number }; keep_last_bullets_together?: number; keep_first_bullets_together?: number; paragraphs?: Record<string, { indent_left?: number; first_line?: number; before?: number; after?: number; line?: number }>; first_after_section_heading?: { before: number }; letter_spacing?: number } }
 
 export interface RenderResult { paragraphs: number; links: number; warnings: string[] }
 
@@ -41,6 +41,7 @@ export async function renderDocx(markdown: string, outPath: string, templateName
 
   // ----- fixes (applied to samples and numbering before filling) -----
   let keepLastBullets = 0;
+  let letterSpacing = 0;
   let firstAfterHeading: number | undefined;
   let keepFirstBullets = 0;
   let numbering = doc.zip.file("word/numbering.xml") ? await doc.zip.file("word/numbering.xml")!.async("string") : undefined;
@@ -68,6 +69,7 @@ export async function renderDocx(markdown: string, outPath: string, templateName
       if (idx === undefined) continue;
       doc.paragraphs[idx] = setSpacingAndIndent(doc.paragraphs[idx], v);
     }
+    if (f.set.letter_spacing) letterSpacing = f.set.letter_spacing;
     if (f.set.first_after_section_heading) firstAfterHeading = f.set.first_after_section_heading.before;
     if (f.set.keep_last_bullets_together) keepLastBullets = Math.max(keepLastBullets, f.set.keep_last_bullets_together);
     if (f.set.keep_first_bullets_together) keepFirstBullets = Math.max(keepFirstBullets, f.set.keep_first_bullets_together);
@@ -225,6 +227,9 @@ export async function renderDocx(markdown: string, outPath: string, templateName
     }
   }
 
+  // letter_spacing: a tiny character spacing on every run (e.g. to stop Pages from forming ligatures).
+  if (letterSpacing) for (let i = 0; i < body.length; i++) body[i] = body[i].replace(/<w:rPr>[\s\S]*?<\/w:rPr>/g, (r) => withCharSpacing(r, letterSpacing));
+
   // Unique drawing ids (each section rule is a copy of the same drawing).
   let n = 100;
   const xml = body.join("").replace(/(<wp:docPr id=")\d+"/g, (_m, p1) => `${p1}${++n}"`);
@@ -263,4 +268,11 @@ export function setSpacingAndIndent(p: string, v: { indent_left?: number; first_
   head = head.slice(0, at) + ins + head.slice(at);
   const out = rpr ? head.replace("</w:pPr>", `${rpr}</w:pPr>`) : head;
   return p.replace(m[0], out);
+}
+
+// Sets <w:spacing w:val> (character spacing) in a run's rPr at the schema position (before w:w/kern/position/sz…).
+export function withCharSpacing(rpr: string, val: number): string {
+  const r = rpr.replace(/<w:spacing w:val="[^"]*"\/>/, "");
+  const at = r.search(/<w:w |<w:kern|<w:position|<w:sz |<w:szCs|<w:highlight|<w:u |<w:effect|<w:bdr|<w:shd|<w:fitText|<w:vertAlign|<w:rtl|<w:cs\b|<w:em |<w:lang|<w:eastAsianLayout|<w:specVanish|<w:oMath|<w14:|<\/w:rPr>/);
+  return r.slice(0, at) + `<w:spacing w:val="${val}"/>` + r.slice(at);
 }

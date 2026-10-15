@@ -21,7 +21,9 @@
     "check": "tsx scripts/check.ts",
     "render": "tsx scripts/render.ts",
     "template-import": "tsx scripts/template-import.ts",
-    "preview": "tsx scripts/preview.ts"
+    "preview": "tsx scripts/preview.ts",
+    "pdf": "tsx scripts/export-pdf.ts",
+    "pdf-check": "tsx scripts/pdf-check.ts"
   },
   "devDependencies": {
     "@types/node": "^22.20.5",

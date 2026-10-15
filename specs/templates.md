@@ -71,6 +71,7 @@ Supported fix types (each fix has `id`, `why`, `found`, `set`):
 | `keep_last_bullets_together: N` | an entry's last N bullets stay together, so no bullet sits alone on a new page |
 | `paragraphs: { <type>: { indent_left, first_line, before, after, line } }` | indentation and spacing per paragraph type in twips (20 = 1 pt; `line: 240` = single spacing); overrides the Word style |
 | `first_after_section_heading: { before }` | space above whatever comes first under a section line, so every section starts with the same gap |
+| `letter_spacing: N` | character spacing of N twentieths of a point on every run; `1` is invisible and stops Pages from forming fi/fl ligatures that some PDF readers extract wrongly |
 
 ## 4. Import (`/import-template <file> <name>`)
 

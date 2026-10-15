@@ -105,7 +105,8 @@ CV/
 │   ├── lib/repo.ts                # shared loader: config, summaries, facts, profile, skills, markets, entries, CLI paths
 │   ├── lib/cvmd.ts                # CV Markdown model: generated parts (header, entry lines, blocks) per market and role profile
 │   ├── lib/paths.ts               # output file names and market output paths
-│   ├── lib/…                      # (part 3) text normalization (R4), export lock (R1)
+│   ├── lib/text.ts                # text normalization for pdf-check (R4)
+│   ├── lib/lock.ts                # export lock: one PDF export at a time (R1)
 │   ├── git-digest.ts              # condenses a repo's history into a compact digest for the harvester (R9, R11)
 │   ├── digest.ts                  # writes summaries/.digests/ from summaries + facts (R10)
 │   ├── select.ts                  # deterministic bullet selection/ordering by profile or job-ad tags (R8)
@@ -115,8 +116,8 @@ CV/
 │   ├── renderers/docx.ts          # template-driven Word renderer
 │   ├── lib/docx.ts                # .docx zip and XML helpers
 │   ├── exporters/                 # pages.ts, word.ts, libreoffice.ts
-│   ├── export-pdf.ts              # runs exporters in config order
-│   ├── pdf-check.ts
+│   ├── export-pdf.ts              # npm run pdf: runs exporters in config order, under the lock, with a timeout
+│   ├── pdf-check.ts               # ATS-readability and fidelity check of a built PDF (6.2)
 │   ├── preview.ts
 │   ├── template-import.ts         # Word sample -> templates/<name>/ (PDF later)
 │   ├── refresh.ts                 # regenerates the script-owned parts of a CV (4.2d)
@@ -519,10 +520,10 @@ What the main rubrics must produce (taken from the reviews done in this chat):
 | `build [file]` | **The full chain:** `refresh`, `lint` and `trace`, then Markdown to Word, Word to PDF, `pdf-check` and the preview. Stops at the first failing step. Defaults to the master CV. **Exception:** for the master CV, a bullet or summary sentence without a source is a *warning* in `build` (so a quick hand-written bullet doesn't block your PDF). It stays an error in `check` and for variants and tailored CVs, which are built only from sourced content. The warning suggests `/add-experience` to turn the bullet into a confirmed fact with a source. |
 | `build:all` | `build` for the master CV and every role variant, **for every market** in `markets/` (tailored CVs only when named) |
 | `market [cv-file] [--market <id>]` | writes the market versions of a CV (default: the master) by script: header and entry title lines per market file, using the variant's role profile when the file is in `cv/variants/<id>/` (4.6). Called by `build`. |
-| `render [file] [--template <name>] [--out <file.docx>]` | Markdown to `.docx`, filling the chosen template through its `style-map.yaml`, then applying the template's `fixes.yaml` (for `classic`: Pages bullet indent, headings kept with what follows, right-aligned dates, first and last two bullets kept together, consistent left edge and spacing). Links (email, portfolio, any `show: true` link in the profile) are created as proper hyperlink entries, never by reusing the template's own link ids. Template: `--template`, else the role profile's `template:`, else config. Output sits next to the Markdown (`cv.md` in a variant folder becomes `<Name>_CV_<Profile>.docx`). |
+| `render [file] [--template <name>] [--out <file.docx>]` | Markdown to `.docx`, filling the chosen template through its `style-map.yaml`, then applying the template's `fixes.yaml` (for `classic`: Pages bullet indent, headings kept with what follows, right-aligned dates, first and last two bullets kept together, consistent left edge and spacing, invisible letter spacing that prevents fi/fl ligatures). Links (email, portfolio, any `show: true` link in the profile) are created as proper hyperlink entries, never by reusing the template's own link ids. Template: `--template`, else the role profile's `template:`, else config. Output sits next to the Markdown (`cv.md` in a variant folder becomes `<Name>_CV_<Profile>.docx`). |
 | `template-import <file.docx> <name> [--map <map.yaml>]` | Template import, script part (6.4): without `--map` lists paragraphs for the template-importer agent; with `--map` builds `template.docx` and `style-map.yaml`. PDF input comes after `build` works end to end. |
-| `pdf [file]` | `.docx` to `.pdf` with the first available exporter from `pdf_exporters` in `framework.config.yaml` (see 6.1) |
-| `pdf-check [file]` | Checks that the PDF is ATS-readable (6.2) |
+| `pdf [file.docx] [--exporter <id>]` | `.docx` to `.pdf` with the first available exporter from `pdf_exporters` (`framework.local.yaml` overrides `framework.config.yaml`), one export at a time under `.cv-runs/export.lock`, each limited to `checks.export_timeout_s` (6.1). Default file: the master CV's `.docx`. |
+| `pdf-check <file.pdf> [--md <cv.md>]` | Checks that the PDF is ATS-readable and faithful to its Markdown (6.2). The Markdown defaults to the `.md` next to the PDF (or `cv.md` in a variant folder); the market comes from the `markets/<id>/` path. Writes `pdf-check.md`; exits 1 on failure. |
 | `preview [file]` | Page images of the PDF into `preview/` (6.3) |
 | `lint [file] [--market <id>] [--profile <id>]` | Deterministic checks on CV files: supported Markdown (including only `#`/`##`/`###` headings), forbidden characters, filler words (warning), length, bullet length (warning), bold balance, section order, entry order (`cv_order`, then newest first), bullet limits (`cv_max_bullets` / profile `max_bullets_per_entry`), the current job's Stack line (warning), **generated parts match their sources**, calculated values in the summary paragraph, the **confidentiality blocklist** (terms from every summary's *Confidentiality notes*, whole-word and case-sensitive with `allow_in` contexts; ticket prefixes like `OR-`, `ENGAGE-`, `VEL-`; hidden client names; internal address patterns matched against URLs, git remotes and hostnames), the **secret scan** (keys, tokens, credential assignments, foreign emails and URLs; profile links allowed), and hidden market fields (e.g. no phone in a Ukraine CV). Without a file it lints the master, its market versions, every variant and tailored CV, and secret-scans summary bodies. Phone format, duplicate and unsupported skills, and unknown `cv_section` are checked by `validate`. *Part 3:* "variant edited by hand since its last build" (needs `.build-state.json`). |
 | `trace [file] [--warn-only]` | Claim-to-source check (section 4.3). `--warn-only` reports without failing (used by `build` for the master CV). |
@@ -573,11 +574,11 @@ If none is available, `pdf` stops with a clear message listing what to install. 
 
 It extracts the text with `pdfjs-dist` (no system tools needed) and fails when:
 - **No selectable text** (an image-only PDF), which screening software can't read.
-- **Sections are missing:** every CV heading in the Markdown must appear in the PDF text.
-- **Text doesn't match:** after normalizing whitespace and hyphenation, the PDF's words must cover the Markdown's words, ignoring formatting and trace comments. Missing words are listed.
+- **Sections are missing or out of order:** every CV section heading in the Markdown must appear in the PDF text, in the same order.
+- **Text doesn't match:** after normalizing (Unicode NFKC, one kind of quote and dash, single spaces; a word broken at a line-end hyphen is rejoined *with* its hyphen, since CVs don't use automatic hyphenation), the PDF's words must cover the Markdown's words, ignoring formatting, trace comments and URLs shown as link text. Missing words are listed. This is also how broken ligatures are caught ("fintech" read as "intech").
 - **Garbled characters:** the replacement character `�`, private-use glyphs, or broken ligatures.
 - **The contact details aren't on page 1:** every contact field the CV's market shows (email, and the phone where `show_phone: true`) must be on page 1, and **a field the market hides must not appear anywhere** (e.g. no phone number in a Ukraine PDF).
-- **Fonts were substituted:** every font listed in the template's `style-map.yaml` must be embedded in the PDF. A substitute (for example, a different serif when Cambria is missing on a Linux laptop) fails the check, with the name of the font to install.
+- **Fonts were substituted:** every font listed in the template's `style-map.yaml` must be embedded in the PDF (read through pdfjs, which also handles compressed PDFs); a font used without being embedded fails too. A substitute (for example, a different serif when Cambria is missing on a Linux laptop) fails the check, with the name of the font to install.
 
 It also fails when the page count exceeds `max_pages` (from the profile, else config), and reports words per page. The results go to `pdf-check.md` next to the PDF.
 
@@ -674,7 +675,7 @@ The framework is designed so new outputs, reviewers and agents are **added as fi
   - Any file in `specs/rubrics/` is a reviewer. Dropping in `rubrics/frontend-architect-role.md` adds a reviewer with no other changes.
   - Any file in `profiles/` is a CV variant. `/variants` builds them all.
   - Any file in `agents/` is listed in `AGENTS.md` by the `index` script, so new agents are discovered automatically.
-  - Any renderer in `scripts/renderers/` (docx now, later HTML or JSON) is chosen by file type or output type. Any exporter in `scripts/exporters/` (Pages, Word, LibreOffice) can be added to `pdf_exporters` in config.
+  - Any renderer in `scripts/renderers/` (docx now, later HTML or JSON) is chosen by file type or output type. Any exporter module in `scripts/exporters/` (Pages, Word, LibreOffice), once registered in `scripts/exporters/index.ts`, can be added to `pdf_exporters` in config.
 - **One config file.** `framework.config.yaml` sets paths, default rubrics, the default renderer, the template, the spelling variant (US), CV sections, display formats, output names, header line templates, the tag list and check limits. Scripts and agents read it instead of hard-coding values. Example of the parts that remove remaining hard-coded values:
 
   ```yaml
@@ -763,7 +764,7 @@ Problems expected when the flows actually run, found by simulating every flow ag
 | R4 | `pdf-check` text comparison gives false failures: joined letters ("ﬁ"), line-end hyphenation, link text vs URL ("Portfolio" in the PDF, a URL in the Markdown), different quote and dash characters | A shared text normalizer: Unicode NFKC (splits joined letters), rejoins hyphenated line breaks, unifies quotes, dashes and whitespace, and compares link *text* rather than URLs | 5 |
 | R5 | The secret scan flags your own portfolio link (a Drive file ID looks like a random token) | Links in `profile.yaml` are exempt, and `framework.config.yaml` has a `secret_scan.allow` list for other approved values | 5 |
 | R6 | The confidentiality blocklist raises false alarms on ordinary words ("Orion", "Studio Shell") | Whole-word, case-sensitive matching, plus a per-term `allow_in` list in the summary's confidentiality notes (e.g. allow "Orion" in a generic sentence) | 5 |
-| R12 | The one-time macOS permission prompt for controlling Pages can hang an unattended agent session | `doctor` triggers the prompt while you're at the keyboard. Exports check permission first and fail fast if it's missing. | 5 |
+| R12 | The one-time macOS permission prompt for controlling Pages can hang an unattended agent session | `doctor` triggers the prompt while you're at the keyboard (part 4). macOS offers no way to check the permission without prompting, so each export is limited by `checks.export_timeout_s`; on a timeout Pages is quit without saving, and a permission error ("not allowed", -1743) is reported with the hint to run `npm run doctor`. | 5 |
 | R13 | Only page 1 can be previewed on this Mac (no `pdftoppm`), so layout issues on later pages are missed | Render all pages with `pdfjs-dist` and a Node canvas package (section 6.3). Built in part 3a; text is drawn as shapes from the embedded fonts (`disableFontFace`), because Node can't load PDF fonts directly. | 5 |
 
 ### AI agent behavior
@@ -778,6 +779,7 @@ Problems expected when the flows actually run, found by simulating every flow ag
 ### Noise
 | # | Risk | Mitigation | Step |
 |---|---|---|---|
+| R15 | Pages joins "fi"/"fl" into ligature glyphs that some PDF readers extract wrongly (found 2026-10-15: pdfjs read "fintech" as "intech"; Apple PDFKit read it correctly). Screening systems using such readers would see misspelled keywords. | Template fix `no-ligatures`: an invisible letter spacing of 1/20 pt on every run stops Pages from forming ligatures (Pages ignores Word's own no-ligatures setting). `pdf-check` catches any remaining case as missing words. | 5 |
 | R14 | `status` warns "sent CV is outdated" forever after any change | Warn once per application. `/status --ack <application>` stores the acknowledgment in `applications.yaml`, and the warning comes back only if the CV changes again after that. | 5 |
 
 **Design consequence:** scripts handle selection, history condensing, source comments and comparisons. AI agents handle only writing and judgment. That keeps runs cheaper, repeatable and low-noise.
@@ -791,7 +793,7 @@ Problems expected when the flows actually run, found by simulating every flow ag
 | Tailored CVs in git | `cv/tailored/` and `facts/applications.yaml` are in `.gitignore` by default. To keep one, run `git add -f`. The tailor agent reminds you of this after each run. |
 | Built files in git | **Only Markdown is committed** (CV `.md` files and `gap-report.md`). Every built output, for the master CV, variants and tailored CVs (`.docx`, `.pdf`, `pdf-check.md`, `preview/`, `selection.json`, `cv/.build-state.json`), is git-ignored and recreated by `npm run build` / `build:all`. The exception is `templates/*/template.docx`, which is an input, so it's committed. |
 | Role profiles | First four: `react`, `react-native`, `fullstack-react-node`, `nodejs` (section 4.4) |
-| `classic` template look | Chosen with the user from all-page previews on 2026-10-15: one left edge for everything, tight spacing (section 7 pt, job 4 pt, bullet 1 pt), right-aligned dates, no header rule, headings and bullet groups never split across pages. Recorded in `templates/classic/fixes.yaml`. |
+| `classic` template look | Chosen with the user from all-page previews on 2026-10-15: one left edge for everything, tight spacing (section 7 pt, job 4 pt, bullet 1 pt), right-aligned dates, no header rule, headings and bullet groups never split across pages, invisible 1/20 pt letter spacing so PDF readers see plain "fi"/"fl" (R15). Recorded in `templates/classic/fixes.yaml`. |
 | Markets | `worldwide` (default: phone shown, B2B or full-time, time-zone line, contract labels for entries that really were contracts) and `ukraine` (no phone, no availability line, no time-zone line, no contract labels). Every CV is built for both (4.6). |
 | Decisions already made in this chat | Recorded in `facts/decisions.yaml` so reviewers don't raise them again: no LinkedIn/GitHub links (the old CV had them, so they can come back), keep the current length, keep the Drive portfolio link, keep the job title step from GM to SYSPRO |
 | Variants vs manual edits | Variants are generated. The master CV's wording is reused by source id, and lasting variant tweaks go in profile `overrides` |
@@ -852,3 +854,4 @@ Every step done by hand in the chat, and the capability that repeats it:
 | 36 | Checked plan and code against each other | `reattach-src --save` snapshots, role-profile-aware refresh/market/lint, `select --tags` in the CV folder, refresh reports replaced text and validates first, new lint rules (heading levels, section order, bullet limits, team size, internal addresses), unsupported-skill check, plan layout, flags and wording updated |
 | 37 | Built step 5 part 3a (template import, Word renderer) | `classic` imported from `source.docx` via `import-map.yaml`; rendering matches the approved Word file (identical formatting in all 123 paragraphs; only intended text changes) |
 | 38 | Reviewed every page of the rendered CV and asked for layout changes | `fixes.yaml` fix types (keep-with-next, date tab, bullet groups, per-type spacing, first item under a section line), header rule removed, all-page previews with `npm run preview`, layout rubric checks spacing and page breaks |
+| 39 | Built step 5 part 3b (PDF export, pdf-check) | Pages/Word/LibreOffice exporters under a lock with timeouts; `pdf-check` with text normalization and pdfjs font reading; found and fixed the ligature problem (R15) with the `no-ligatures` template fix |
