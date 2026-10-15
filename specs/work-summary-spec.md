@@ -1,0 +1,166 @@
+# Work Summary Spec
+
+Status: v1 · Applies to: `summaries/*.md`, written by the harvester, `/add-experience`, `/job-change` and by hand
+
+A work summary is the **single source of truth for one job or project**. The CV, role variants and tailored CVs are built from it now, and the portfolio will be later. It is richer than any one output needs.
+
+## 1. File
+
+- One file per job or project: `summaries/<id>.md`.
+- `id` is lowercase-kebab `<client>-<project>` (e.g. `syspro-saas-erp`), suggested by `/harvest` and confirmed by the user. **It never changes once created**, because CV source comments refer to it.
+- Several repos for the same job go into one summary (`repos` list). A new job gets a new summary.
+
+## 2. Front matter
+
+```yaml
+---
+schema_version: 1
+id: syspro-saas-erp
+source: git                        # git | cv | user
+# --- the job ---
+client: SYSPRO
+role: Senior Software Engineer
+engagement: full-time              # full-time | contract | freelance
+period: { start: 2025-12, end: present }
+domain: [ERP, SaaS]
+team_size_led: 0
+counts_as_experience: true
+# --- harvesting ---
+repos:
+  - { name: saas-frontend-repo, remote: <git remote URL> }
+author_identities: []
+harvested_at: 2026-09-30
+# --- how it appears in the CV ---
+show_in_cv: true
+cv_section: experience
+cv_order: 1
+cv_client_label: SYSPRO
+cv_location: Remote
+show_dates_in_cv: true
+cv_title_suffix: " (Contract)"
+cv_emphasis:
+  - Architecture-governed specification-driven development (SDD), not ad-hoc AI code generation
+cv_max_bullets: 8
+---
+```
+
+| Field | Required | Meaning |
+|---|---|---|
+| `schema_version` | yes | format version; migrations move old files forward |
+| `id` | yes | stable id (section 1) |
+| `source` | yes | `git` = harvested from repos, `cv` = built from old CV text, `user` = described by the user |
+| `client` | yes | real company or client name (private) |
+| `role` | yes | job title as it should appear in the CV, without the contract suffix |
+| `engagement` | yes | `full-time`, `contract` or `freelance` |
+| `period.start` / `period.end` | yes | `YYYY-MM`; `end` may be `present` |
+| `domain` | no | industry tags (ERP, automotive, healthcare …) |
+| `team_size_led` | no | people you led on this job; default 0 |
+| `counts_as_experience` | no | default true for `cv_section: experience`, false otherwise |
+| `repos[].name` / `repos[].remote` | for `source: git` | repo name and remote URL. **No local paths**: those are per laptop in `framework.local.yaml`. |
+| `author_identities` | no | overrides `profile.yaml` `git_identities` for this summary only |
+| `harvested_at` | for `source: git` | date of the last harvest; `null` otherwise |
+| `show_in_cv` | no | default true; false keeps the summary as a source (e.g. for the portfolio) but never shows it in a CV |
+| `cv_section` | yes | a section id from `cv_sections` in config (`experience`, `consulting` …) |
+| `cv_order` | no | position inside the section; default newest first |
+| `cv_client_label` | yes | what the CV shows instead of `client` (same value when nothing is hidden) |
+| `cv_location` | yes | e.g. `Remote`, `Kyiv, Ukraine (Hybrid)` |
+| `show_dates_in_cv` | no | default from the section's `show_dates` |
+| `cv_title_suffix` | no | default derived from `engagement` (`contract` gives `display.contract_suffix`) |
+| `cv_emphasis` | no | points the CV entry must make clear, in its first bullets |
+| `cv_max_bullets` | no | limit for this entry in the master CV |
+
+**Rule for optional fields:** if missing, the default applies; if set, it wins.
+
+## 3. Body sections
+
+The body always has these nine `##` sections, in this order and with these numbers, so source ids like `#4.2` stay meaningful:
+
+```markdown
+## 1. Project overview
+## 2. Main features
+## 3. My role and responsibilities
+## 4. My contributions
+## 5. Technologies and frameworks
+## 6. Skills demonstrated
+## 7. Metrics and outcomes
+## 8. Portfolio material
+## 9. Confidentiality notes
+```
+
+| Section | Content |
+|---|---|
+| 1. Project overview | What the product is, who uses it, the business problem, and the team and organization context (team size, who you worked with). |
+| 2. Main features | The product's key features **in user terms**, whether or not you built them, so a portfolio reader understands the product. |
+| 3. My role and responsibilities | Title, ownership areas, leadership, architecture and process responsibilities, and key collaborators (e.g. "worked with the lead architect"). |
+| 4. My contributions | Numbered items (section 4 below). The CV cites these. |
+| 5. Technologies and frameworks | Grouped by category (language, UI, state, data, testing, CI/CD, cloud, AI and agents …), versions where known, each marked **hands-on** or **used by the project**. |
+| 6. Skills demonstrated | Each skill with the contribution numbers that prove it, e.g. `OpenID Connect (OIDC): 4.2, 4.3`. |
+| 7. Metrics and outcomes | Every number with its source (`git`, `user`, `dashboard`, `cv`) and confidence (`exact`, `approximate`). |
+| 8. Portfolio material | Links, screenshots, demo notes, and what is safe to show publicly. May be `TODO (needs user input)`. |
+| 9. Confidentiality notes | Internal names, repo names, ticket prefixes and internal URLs that must never appear in a CV. `lint` reads this section to build its blocklist. Exceptions use `allow_in`. |
+
+A section with nothing known yet contains `TODO (needs user input)`. **Never invent content to fill a section.**
+
+### 3.1 Confidentiality notes format
+
+```markdown
+## 9. Confidentiality notes
+
+- term: Application Studio Platform
+- term: ASP
+  allow_in: []                     # optional: CV contexts where the term may appear
+- term: saas-frontend-repo
+- prefix: OR-                      # ticket prefixes
+- url_pattern: "*.syspro.internal"
+```
+
+## 4. Contributions
+
+```markdown
+### 4.2 Login micro-frontend
+
+Built the login app from scratch: sign-in, forgot and reset password flows, reusable form components, schema-based validation and accessible typography, with a Storybook component library. Integrated OpenID Connect authentication into the host and admin applications.
+
+Result: one shared identity flow; the only app that ever sees a password.
+Tags: react, typescript, micro-frontends, oidc, accessibility, storybook, testing
+```
+
+- **Numbering:** `4.1`, `4.2` … in order of importance. **Numbers never change once used.** A new contribution gets the next free number, even if it would rank higher. A removed contribution keeps its number as `### 4.5 (removed)` with a one-line reason, so old source ids still resolve.
+- **Title:** short, plain (no internal code names).
+- **Body:** what you built, why, and how, in your own words. Several sentences are fine; the CV shortens them.
+- **Result:** one line with the outcome, if any is known. Numbers must also appear in section 7 with their source.
+- **Tags:** one line, only tags from the tag list in `framework.config.yaml`. New tags are proposed to the user, never added silently.
+
+## 5. Writing rules
+
+- **Your own words only.** Never copy source code, internal document text, commit messages verbatim, internal URLs, hostnames, tokens or credentials. Describe the work.
+- **No secrets.** `lint` scans summaries for tokens, keys and internal URLs.
+- **Facts only.** Everything must be supported by the repos, by the user, or (for `source: cv`) by the old CV text. Unknowns are `TODO (needs user input)`.
+- **US English.**
+
+## 6. Harvesting rules
+
+These apply to the harvester (`/harvest`, `/add-repo`):
+
+1. **Input** is a history digest from `npm run git-digest` (commit counts per area, date range, key commit messages, changed folders, diff statistics, co-authored and squash-merged commits, "possibly yours" commits), plus the repo's README and docs. The harvester opens individual commits only when the digest isn't enough.
+2. **Your commits** are those matching `author_identities` (or `profile.yaml` `git_identities`). New identities are confirmed by the user before use.
+3. **Large repos** are summarized per area (folder or package).
+4. **Job details** (`client`, `role`, `engagement`, `period`, `cv_*` fields) come from the user, with suggestions from the repo. They are never guessed silently.
+5. **New tags and skills** for technologies used hands-on are proposed for approval.
+6. Finish with `npm run validate` and show a diff. Never commit.
+
+## 7. Merging into an existing summary (re-harvest)
+
+- Contributions are updated from the new history. **Existing numbers are kept.** New items get new numbers.
+- Sections the user edited, filled `TODO`s, all `cv_*` fields and section 9 are kept as they are. Proposed changes to them are listed for approval instead of applied.
+- The new repo is added to `repos`, and `harvested_at` is updated.
+- The result is shown as a diff.
+
+## 8. Summaries built from the old CV (`source: cv`)
+
+For jobs that exist only as CV text (General Motors, Velas, OMO Systems, Thermo Fisher Scientific, Itjet, The Admasters):
+
+- Each CV bullet becomes one contribution, in CV order, with its tags.
+- Front matter comes from the CV entry (role, client, location, dates, contract suffix).
+- Numbers in bullets go to section 7 with source `cv`.
+- Every other section is `TODO (needs user input)`, to be enriched later with `/harvest` or `/add-experience`.

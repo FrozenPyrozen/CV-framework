@@ -1,0 +1,162 @@
+# CV Spec
+
+Status: v1 · Owner: Kirill Kohan · Applies to: the master CV, role variants and tailored CVs
+
+This spec defines what a CV Markdown file must look like and how agents may write it. The composer and tailor follow it, the reviewers check against it, and `npm run lint` and `npm run trace` enforce the parts that can be checked mechanically. If an agent needs to behave differently, this spec changes first.
+
+## 1. Sources
+
+A CV contains nothing that doesn't come from one of these files:
+
+| CV part | Source |
+|---|---|
+| Header (name, headline, location, availability, contacts) | `facts/profile.yaml` + header templates in `framework.config.yaml` (+ a role profile's `headline`) |
+| Summary paragraph | summaries, `facts/confirmed.yaml`, calculated values (section 7) |
+| Entries (jobs and projects) | `summaries/*.md` with `show_in_cv: true`, and `cv_entry` items in `facts/confirmed.yaml` |
+| Bullets | summary contributions (section 4 of a summary) and confirmed facts |
+| Education, languages | `facts/profile.yaml` |
+| Skills | `facts/skills.yaml` |
+| Decisions about the CV | `facts/decisions.yaml` (agents follow them and don't re-open them) |
+
+## 2. Structure
+
+Sections appear in the order of `cv_sections` in `framework.config.yaml`, using each section's `heading` text. A role profile may disable or reorder sections with `include_sections`. Current order:
+
+1. Header (generated, no heading)
+2. SUMMARY
+3. EXPERIENCE
+4. CONSULTING AND FREELANCE PROJECTS, with the section intro line from config under the heading
+5. EDUCATION (generated)
+6. SKILLS (generated)
+7. LANGUAGES (generated)
+
+### 2.1 Headings
+
+| Level | Used for | Format |
+|---|---|---|
+| `#` | Name (in the header) and section headings | `# **SECTION HEADING**`, uppercase, bold |
+| `##` | Entry title line: the role | `## **Role**` or `## **Role (Contract)**` |
+| `###` | Entry detail line | `### **Company \| Location \| Dates**` |
+
+### 2.2 Entry detail line
+
+`### **<cv_client_label> | <cv_location> | <dates>**`
+
+- `cv_client_label` comes from the summary. It may hide the real client, e.g. "Clinical Trials Patient App".
+- `cv_location` comes from the summary, e.g. "Remote" or "Kyiv, Ukraine (Hybrid)".
+- `dates` appears only when the entry's `show_dates_in_cv` (or its section's `show_dates` default) is true. Format: `display.date_format` + `display.date_range_separator` + end date or `display.present_label`, e.g. `December 2025 - Present`.
+- Parts are joined with `display.field_separator` (` | `).
+- The role line gets `cv_title_suffix` if set, or `display.contract_suffix` (" (Contract)") when `engagement` is `contract`.
+
+The composer writes the title and detail lines from these fields. `lint` checks that they match the fields, so a changed date or label in a summary can't leave a stale line in the CV.
+
+### 2.3 Entry order
+
+Inside each section: by `cv_order` if set, otherwise newest first by `period.start`.
+
+## 3. Bullets
+
+Each entry is a list of `*` bullets (one level, no nesting).
+
+- **Content:** one achievement or responsibility per bullet. State what you did, how (the technologies), and the result when there is one: *action, then technology, then outcome*.
+- **Start with a strong past-tense verb** (Built, Led, Designed, Migrated, Reduced …). Use present tense only for the current job's summary sentence.
+- **Numbers:** use them whenever a source provides one (`1,800+`, `12x`, `95%`, `25+ person program`). Never invent or round up a number. "~" is allowed when the source says "about".
+- **Bold:** bold the technologies and key terms a screener searches for (`**React Native**`, `**OpenID Connect (OIDC)**`), and important numbers or outcomes when they're the point of the bullet. Don't bold whole sentences.
+- **Acronyms:** spell out once with the acronym in brackets where screeners may search either form: `**specification-driven development (SDD)**`, `**OpenID Connect (OIDC)**`.
+- **Stack line:** an entry may end with `* Stack: **A, B, C**` listing the main technologies (for the current job, required).
+- **Length:** a bullet should fit in about 2 lines of the rendered CV (roughly 45 words at most).
+- **Limits:** `cv_max_bullets` in the summary caps an entry in the master CV. Profiles set their own limits (see the tailoring spec).
+- **Source:** every bullet ends with a source comment (section 6).
+
+## 4. Writing style
+
+- **US English** (`optimization`, `behavior`, `analyze`). Set by `spelling: en-US` in config.
+- **No first person** ("I", "my"). Bullets start with the verb. The summary paragraph uses third person without a subject ("Senior software engineer … At SYSPRO, builds …").
+- **Plain words for a mixed audience.** Technical terms are fine, but internal jargon needs a short plain explanation the first time ("a governed reviewer that flagged constraint violations" is fine; an unexplained "steward" or "realization spec" is not).
+- **No filler or hype:** avoid "passionate", "results-driven", "highly accomplished", "leveraged", "synergy", "cutting-edge", "rockstar", "ninja".
+- **Company names exactly as in the summary:** `SYSPRO` (all caps), `General Motors`, `Thermo Fisher Scientific`.
+- **Consistent terms:** pick one form per term and keep it everywhere (`React Native`, not `RN`; `Node.js`, not `NodeJS`).
+
+## 5. Emphasis rules
+
+- **`cv_emphasis`** in a summary lists what an entry must make clear. Those points go into the **first bullets** of that entry, in the given order.
+- **SYSPRO (from the 2026-10-15 decisions):** the first bullets must show that the work was an *architecture-governed specification-driven development (SDD)* process, **not ad-hoc AI code generation**: you helped define the process, worked with the lead architect on platform and solution architecture, and owned the frontend technology stack. AI agents are described as governed reviewers, never as the authors of the code.
+- **Contract roles** are labeled with the contract suffix so short engagements read as planned contracts.
+- **Consulting section** entries carry no dates by default, and their client labels may hide the client.
+
+## 6. Traceability
+
+- Every bullet ends with `<!-- src: <id> -->`, where `<id>` is a summary contribution (`syspro-saas-erp#4.2`), another summary section (`syspro-saas-erp#3`), or a fact id (`syspro-team-size`). Several ids are comma-separated: `<!-- src: syspro-saas-erp#4.1, syspro-speed -->`.
+- Every **summary paragraph** sentence ends with its own `src` comment, unless it uses only calculated values and the headline.
+- **Generated blocks** (section 8) need no `src`.
+- `npm run trace` fails on a missing or unresolvable `src`. During `npm run build` of the master CV it is only a warning, so a hand-written bullet doesn't block the PDF. Fix it with `/add-experience`.
+- A claim that has no source must not be written. If the user wants it in the CV, it becomes a confirmed fact first.
+
+## 7. Calculated values
+
+Typed numbers that change over time are calculated, never guessed:
+
+| Value | Rule |
+|---|---|
+| Years of experience | from the earliest `period.start` of entries with `counts_as_experience: true`, rounded down, written as `N+ years` |
+| Largest team led | highest `team_size_led` across summaries and facts, written as `up to N engineers` |
+| Present | `period.end: present` renders as `display.present_label` |
+
+Agents write the calculated value as plain text. `lint` fails if a typed value differs from the calculated one.
+
+## 8. Generated blocks
+
+These parts are produced by `npm run refresh` (and every `build`) and kept in the Markdown between markers:
+
+```markdown
+<!-- generated:header -->
+...
+<!-- /generated:header -->
+```
+
+Blocks: `header`, `education`, `skills`, `languages`. Agents never edit inside them. A change goes into the source file (`profile.yaml`, `skills.yaml`, config), followed by `npm run refresh`.
+
+## 9. Supported Markdown
+
+Only these are allowed, because the Word renderer and screening software handle them reliably:
+
+- `#`, `##`, `###` headings
+- `*` bullets, one level
+- `**bold**`
+- links `[text](url)` and bare URLs in the header
+- plain paragraphs
+- HTML comments (`<!-- src: … -->`, `<!-- generated:… -->`)
+
+Not allowed (lint fails): italics, tables, nested lists, numbered lists, images, code, block quotes, horizontal rules, raw HTML other than comments.
+
+## 10. ATS-safety rules
+
+- **Forbidden characters** (`checks.forbidden_chars` in config): `→`, `·`, `•`, `—`. Use `|` as a separator, `-` in date ranges, and words instead of arrows. Generated blocks follow the same rule.
+- One column, standard section names, no information only in headers or footers, contact details on page 1.
+- Dates in one format everywhere (section 2.2).
+- Keywords appear in context (in bullets), not only in the Skills section.
+- Length: `checks.max_pages` and `checks.max_words` from config (or the profile's overrides).
+
+## 11. Confidentiality
+
+- Terms listed in a summary's *Confidentiality notes* (internal project names, repo names, ticket ids such as `OR-`, `ENGAGE-`, `VEL-`, internal URLs) never appear in a CV.
+- When `cv_client_label` differs from `client`, the real client name never appears in the CV.
+- `lint` enforces this with a blocklist and secret scan. The confidentiality reviewer checks the meaning ("could a reader identify the client from this description?").
+
+## 12. How agents edit a CV
+
+1. Start from the file as it is on disk. The user's manual edits are kept.
+2. Edit **one entry at a time**. Never rewrite the whole file in one step.
+3. For a bullet that already exists, keep the wording unless its source changed or the user asked for a change.
+4. Run `npm run reattach-src`, then `npm run check`, and report any failures.
+5. Show a diff and a short change log. Never commit.
+
+## 13. Decisions in force
+
+The current decisions live in `facts/decisions.yaml`. At the time of writing:
+
+- No LinkedIn or GitHub link in the header (they are stored in the profile with `show: false` and can come back).
+- Keep the current length (about 2,000 words).
+- Keep the Google Drive portfolio link.
+- Keep the job title step from Team Leader (General Motors) to Senior Software Engineer (SYSPRO).
+- The consulting section shows no dates, and the Clinical Ink and Velocity AI clients are hidden behind their labels.

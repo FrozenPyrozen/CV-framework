@@ -1,0 +1,83 @@
+# Tailoring Spec
+
+Status: v1 · Applies to: role variants (`cv/variants/<profile>/`) and job-specific CVs (`cv/tailored/<company-role>/`)
+
+A tailored CV is the master CV adapted to a type of role (a **profile**) or to one **job ad**. It may change emphasis, order and length. It may never add a claim without a source.
+
+## 1. Inputs
+
+| Input | Used for |
+|---|---|
+| Role profile `profiles/<id>.yaml` | headline, summary focus, tags to emphasize or downplay, skills order, limits, template, overrides |
+| Job ad (`--jd`, a file or pasted text) | saved as `job-description.md`, then mapped to tags in `jd-tags.yaml` |
+| Master CV | preferred wording for every bullet, by source id |
+| Summary digests, full summaries for changed entries, facts | content and sources |
+| `cv-spec.md` | every structure, style, ATS and confidentiality rule still applies |
+
+## 2. Steps
+
+1. **Tags.** For a profile, take its tags. For a job ad, map its requirements to tags from the config tag list, propose new tags for anything missing, and save `jd-tags.yaml` for the user to adjust. With both, the job ad's tags add to the profile's.
+2. **Selection (script).** `npm run select -- <cv-dir> --profile <id>` (or `--tags jd-tags.yaml`) scores every contribution and fact by its tags, applies limits and overrides, and writes `selection.json`: which bullets each entry gets, in which order. **The agent doesn't change the selection.** If it disagrees, it says so in the gap report, and the user changes the profile or `jd-tags.yaml`.
+3. **Wording (agent).** For each selected bullet:
+   - If the master CV has a bullet with the same source id, start from its wording (including the user's manual edits) and only shorten or re-emphasize it.
+   - Otherwise write it fresh from the source, following `cv-spec.md`.
+   - Keep its `src` comment.
+4. **Headline and summary.** Use the profile's `headline` (or one fitting the job ad). Rewrite the summary paragraph around `summary_focus`, with a `src` comment on every sentence.
+5. **Skills.** Reordered by `skills_order` through the generated `skills` block (not by hand).
+6. **Only changed entries are rewritten.** On a rebuild, entries whose sources didn't change since the last build (from `cv/.build-state.json`) are copied unchanged, so variants don't change in git without a reason.
+7. **Checks.** `npm run reattach-src`, then `npm run build` on the result. Report failures.
+8. **Gap report** (section 5).
+9. Show a diff. Never commit. For a job-specific CV, remind the user it's git-ignored and can be kept with `git add -f`.
+
+## 3. Rules
+
+| Allowed | Not allowed |
+|---|---|
+| Select, reorder, shorten and reword bullets | Add a claim with no source |
+| Rewrite the headline and summary within the focus | Change numbers, dates, titles, company labels or contract suffixes |
+| Reorder skills and sections allowed by the profile | Hide a job (every entry stays listed; less relevant ones shrink to `min_bullets_per_entry`) |
+| Drop low-relevance bullets down to the minimum | Edit generated blocks by hand |
+| Apply profile `overrides` | Change the master CV or any summary |
+
+## 4. Overrides
+
+Lasting changes for one variant go in the profile, by source id. Variant files are rebuilt and never edited by hand.
+
+```yaml
+overrides:
+  syspro-saas-erp#4.1: { text: "Built core modules of a schema-driven React 19 runtime ...", pin: true }   # exact wording, always included
+  velas#4.5: { drop: true }                                                                               # never include
+```
+
+`lint` warns when a variant file was edited after its last build.
+
+## 5. Gap report (`gap-report.md`)
+
+```markdown
+# Gap report: <profile or company-role>
+
+Built: 2026-10-20 · Profile: react-native · Job ad: yes/no
+
+## Strong evidence
+- <emphasis area>: <entries and source ids that support it>
+
+## Weak or missing evidence
+| Area | What exists | Suggestion |
+|---|---|---|
+| Recent Node.js backend | Itjet 2019-2020, SYSPRO mock backend | enrich a summary with /harvest, or add a confirmed fact with /add-experience if true |
+
+## Job ad keywords (job ad only)
+| Keyword | Found in CV | Honestly addable (source exists) | Real gap |
+
+## Selection disagreements
+- <bullets the agent would have chosen differently, and why>
+```
+
+The gap report never suggests claiming something that isn't true. "Add as a fact" always means "if it's true".
+
+## 6. Output
+
+| Kind | Folder | In git |
+|---|---|---|
+| Role variant | `cv/variants/<profile-id>/` | `cv.md` and `gap-report.md` committed; built files ignored |
+| Job-specific CV | `cv/tailored/<company-role>/` (`<company-role>` lowercase-kebab, e.g. `example-corp-senior-rn`) | whole folder git-ignored |

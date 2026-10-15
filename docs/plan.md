@@ -49,6 +49,7 @@ CV/
 │   ├── work-summary-spec.md       # summary template + front matter schema
 │   ├── tailoring-spec.md          # how variants and tailored CVs may differ from the master
 │   ├── templates.md               # template import rules and style-map format
+│   ├── review-report-spec.md      # shared format for every reviewer report
 │   ├── outputs/                   # one spec per output type: cv.md, tailored-cv.md (later portfolio.md ...)
 │   └── rubrics/
 │       ├── ats.md                 # AI ATS screener rubric (+ job-ad match mode)
@@ -147,6 +148,7 @@ show_in_cv: true                   # false = kept as a source, never used in CV/
 cv_section: experience             # section id from framework.config.yaml: experience | consulting | ...
 cv_order: 1                        # optional; default is newest-first inside the section
 cv_client_label: SYSPRO            # what the CV may show; e.g. "Clinical Trials Patient App"
+cv_location: Remote                # e.g. Remote, "Kyiv, Ukraine (Hybrid)"
 show_dates_in_cv: true             # optional; if missing, the cv_section's show_dates default applies
 # cv_title_suffix: " (Contract)"   # optional; if missing, derived from engagement (contract -> display.contract_suffix)
 cv_emphasis:                       # what this entry must make clear; the composer puts it in the first bullets
