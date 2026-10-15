@@ -132,6 +132,8 @@ test("lint scans summary bodies for secrets when run without a file", () => {
 
 test("trace reports unsourced and unresolved claims, and accepts valid sources", () => {
   const dir = refreshed();
+  edit(dir, CV, / <!-- src: velas-wallet#4\.1 -->/, "");
+  edit(dir, CV, /(development \(SDD\)\.) <!-- src: [^>]*-->/, "$1");
   const r1 = run("trace.ts", dir, [CV]);
   assert.equal(r1.code, 1);
   assert.match(r1.out, /bullet without a source/);

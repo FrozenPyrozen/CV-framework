@@ -11,6 +11,7 @@ const pagesAvailable = process.platform === "darwin" && existsSync("/Application
 test("build --no-pdf: refresh, lint, trace warning, both markets rendered, build record; status follows changes", () => {
   const dir = tempRepo();
   edit(dir, "cv/Kirill_Kohan_CV.md", "December 2025 - Present", "12/2025 - Present"); // a stale job line refresh must fix
+  edit(dir, "cv/Kirill_Kohan_CV.md", / <!-- src: velas-wallet#4\.1 -->/, ""); // an unsourced claim: only a warning for the master CV
   const r = run("build.ts", dir, ["--no-pdf"]);
   assert.equal(r.code, 0, r.out);
   assert.match(r.out, /refresh: generated parts updated/);
@@ -42,6 +43,7 @@ test("build of a variant fails on unsourced claims; build:all refuses an unappro
   writeFileSync(join(dir, "profiles/rn.yaml"), "id: rn\nheadline: Senior React Native Engineer\n");
   mkdirSync(join(dir, "cv/variants/rn"), { recursive: true });
   writeFileSync(join(dir, "cv/variants/rn/cv.md"), readFileSync(join(dir, "cv/Kirill_Kohan_CV.md"), "utf8"));
+  edit(dir, "cv/variants/rn/cv.md", / <!-- src: velas-wallet#4\.1 -->/, "");
   const v = run("build.ts", dir, ["cv/variants/rn/cv.md", "--no-pdf"]);
   assert.equal(v.code, 1);
   assert.match(v.out, /FAILED trace: \d+ unsourced or unresolved claim/);
