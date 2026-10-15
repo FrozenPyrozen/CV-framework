@@ -10,7 +10,10 @@ A small, local, specification-driven (SDD) framework that keeps the CV current a
 2. Compose the master CV from summaries and confirmed facts.
 3. Tailor the CV to a specific job description.
 4. Review the CV with several independent reviewers that write reports and never edit the CV.
-5. Render to `.docx` (and PDF) using the existing Word template.
+5. Improve the CV together with you: go through review findings one at a time, ask you questions, and record your answers as confirmed facts.
+6. Build `.docx` and PDF from any Word template, including templates imported from someone else's Word or PDF CV.
+
+Every step done by hand in the 2026-10-15 chat maps to a framework capability (section 12).
 
 ## 2. Principles
 
@@ -20,6 +23,7 @@ A small, local, specification-driven (SDD) framework that keeps the CV current a
 - **Deterministic work is done by scripts, not AI:** rendering (Markdown to Word to PDF), PDF checks, previews, linting and trace checking. Any agent, or you, runs them with `npm run …`.
 - **Private by default.** Summaries may contain internal names. Only the CV and its tailored versions are scrubbed, following confidentiality rules in the facts file.
 - **Reviewers only write reports.** You decide what to change.
+- **Your manual edits are kept.** You can edit any CV Markdown by hand at any time. Agents always start from the file as it is on disk, show a diff of their changes, and never revert your edits silently.
 
 ## 3. Repository layout
 
@@ -33,20 +37,25 @@ CV/
 │   ├── cv-spec.md                 # CV structure and writing rules (seeded from this chat)
 │   ├── work-summary-spec.md       # summary template + front matter schema
 │   ├── tailoring-spec.md          # how a tailored CV may differ from the master
+│   ├── templates.md               # template import rules and style-map format
 │   └── rubrics/
 │       ├── ats.md                 # AI ATS screener rubric
 │       ├── hr.md                  # recruiter / HR reader rubric
 │       ├── proofreading.md        # spelling, grammar, consistency
 │       ├── fact-check.md          # claim -> source tracing
-│       └── confidentiality.md     # client names, internal codes, ticket IDs
+│       ├── confidentiality.md     # client names, internal codes, ticket IDs
+│       └── layout.md              # visual check of the preview images (bullets, spacing, page breaks)
 ├── agents/                        # tool-neutral agent definitions (role, inputs, outputs, spec, steps)
 │   ├── harvester.md
 │   ├── composer.md
 │   ├── tailor.md
-│   └── reviewer.md                # one generic reviewer, run once per rubric
+│   ├── reviewer.md                # one generic reviewer, run once per rubric
+│   ├── advisor.md                 # interactive: findings -> questions -> confirmed facts -> composer
+│   └── template-importer.md       # labels paragraphs of a sample CV to create a style map
 ├── facts/
 │   ├── profile.yaml               # name, contacts, location, availability, education, languages
-│   └── confirmed.yaml             # facts and decisions you confirmed, each with id + source
+│   ├── confirmed.yaml             # facts you confirmed, each with id + source
+│   └── decisions.yaml             # choices you made about the CV (e.g. "no LinkedIn"), so reviewers stop re-raising them
 ├── summaries/                     # one file per project, all following work-summary-spec
 │   ├── syspro-saas-erp.md
 │   ├── orion-mobile-clinical-ink.md
@@ -58,7 +67,11 @@ CV/
 │   └── tailored/<company-role>/   # cv.md, cv.docx, job-description.md, gap-report.md
 ├── profiles/                      # role profiles: react.yaml, react-native.yaml, fullstack-react-node.yaml, nodejs.yaml
 ├── templates/
-│   └── cv-template.docx           # current Kirill_Kohan_CV_prev.docx, committed
+│   └── <name>/                    # one folder per template; "classic" = current Kirill_Kohan_CV_prev.docx
+│       ├── template.docx          # styles only, sample content removed
+│       ├── style-map.yaml         # which style/paragraph is title, h1, h2, h3+date, bullet, body, skills line
+│       ├── fixes.yaml             # renderer fixes for this template (e.g. bullet indent for Pages)
+│       └── import-report.md       # ATS warnings + preview from the import
 ├── reports/<YYYY-MM-DD>/          # reviewer reports: ats.md, hr.md, proofreading.md, ...
 ├── scripts/                       # Node/TypeScript CLIs
 │   ├── build.ts                   # md -> docx -> pdf -> pdf-check -> preview
@@ -67,11 +80,12 @@ CV/
 │   ├── exporters/                 # pages.ts, word.ts, libreoffice.ts
 │   ├── pdf-check.ts
 │   ├── preview.ts
+│   ├── template-import.ts         # Word/PDF sample -> templates/<name>/
 │   ├── lint-cv.ts
 │   └── trace-check.ts
 └── .claude/
     ├── agents/                    # thin wrappers -> agents/*.md
-    └── commands/                  # /harvest /compose /tailor /variants /review /build
+    └── commands/                  # /harvest /compose /tailor /variants /review /improve /add-experience /import-template /build
 ```
 
 ## 4. Data formats
@@ -102,6 +116,11 @@ show_in_cv: true                   # false = kept as a source, never used in CV/
 cv_section: experience             # which CV section the entry goes into: experience | consulting (ids from framework.config.yaml)
 cv_order: 1                        # optional; default is newest-first inside the section
 domain: [ERP, SaaS]                # industry tags, used by tailoring and later the portfolio
+cv_title_suffix: ""                # e.g. " (Contract)"; set automatically when engagement is contract, can be overridden
+cv_emphasis:                       # what this entry must make clear; the composer puts it in the first bullets
+  - Architecture-governed specification-driven development (SDD), not ad-hoc AI code generation
+  - Owned the frontend technology stack, worked with the lead architect
+cv_max_bullets: 8                  # optional length limit for this entry in the master CV
 ```
 
 **CV placement.** Each summary decides which CV section its entry goes in, so any job can appear under **EXPERIENCE** or under **CONSULTING AND FREELANCE PROJECTS**, and you can move it by changing one field:
@@ -233,9 +252,25 @@ Profiles and job descriptions can be combined: `--profile react --jd job.md` sta
 | **Harvester** | repo path(s), project id, author identities | `summaries/<id>.md` | work-summary-spec |
 | **Composer** | all summaries, facts, current CV | updated `cv/Kirill_Kohan_CV.md` with trace comments + short change log in the reply | cv-spec |
 | **Tailor** | a profile and/or a job description file, master CV, summaries, facts | `cv/variants/<profile>/` or `cv/tailored/<company-role>/`: `cv.md` + `gap-report.md` | tailoring-spec + the profile (may reorder, re-emphasize, drop; may not add unsourced claims) |
-| **Reviewer** (run per rubric) | CV file, rubric, summaries/facts (fact-check only) | `reports/<date>/<rubric>.md` with verdict, score, findings (line, issue, suggestion) | rubrics/* |
+| **Reviewer** (run per rubric) | CV file, rubric, summaries/facts (fact-check only), preview images (layout only) | `reports/<date>/<rubric>.md` with verdict, score, findings (line, issue, suggestion, severity, `needs_user_input: yes/no`) | rubrics/* |
+| **Advisor** | a report (or several), the CV, facts | asks you questions one topic at a time with suggested answers. It writes your answers to `facts/confirmed.yaml` (or to a summary's `cv_emphasis`), hands the change list to the composer, and shows the diff. | cv-spec + the report's rubric |
+| **Template importer** | a Word or PDF CV | `templates/<name>/` (section 6.4) | template-import rules in `specs/templates.md` |
 
-Reviewer set: **ATS**, **HR**, **proofreading**, **fact-check**, **confidentiality**. They run in parallel when the tool supports it, otherwise one after another.
+Reviewer set: **ATS**, **HR**, **proofreading**, **fact-check**, **confidentiality**, **layout**. They run in parallel when the tool supports it, otherwise one after another.
+
+What the main rubrics must produce (taken from the reviews done in this chat):
+- **ATS:**
+  - a pass/fail verdict;
+  - a score table (parsing, contact details, dates and gaps, seniority signals, keywords in context, measured results, signs of AI padding);
+  - an estimated match per role (Senior Frontend, React Native, Tech Lead, Full-stack, Native Android …);
+  - issues ranked by importance.
+- **HR:**
+  - the first-10-seconds impression;
+  - strengths;
+  - the questions a recruiter will ask (for example "why leave after 10 months?", a title step down, side work alongside a full-time job, workload, name consistency, hiring setup from Ukraine);
+  - wording a non-technical reader won't understand;
+  - suggested answers to prepare.
+- **Layout:** compares the preview images with the template's reference preview, checking bullet alignment, indentation, date alignment, page breaks inside an entry, and orphaned headings.
 
 ## 6. Scripts (`npm run …`)
 
@@ -243,7 +278,8 @@ Reviewer set: **ATS**, **HR**, **proofreading**, **fact-check**, **confidentiali
 |---|---|
 | `build [file]` | **The full chain:** `lint` and `trace`, then Markdown to Word, Word to PDF, `pdf-check` and the preview. Stops at the first failing step. Defaults to the master CV. |
 | `build:all` | `build` for the master CV and every role variant (tailored CVs only when named) |
-| `render [file]` | Markdown to `.docx` using `templates/cv-template.docx`. This ports the build script used in this chat, including the Pages bullet-indent fix. |
+| `render [file] [--template <name>]` | Markdown to `.docx`, filling the chosen template through its `style-map.yaml`, plus the template's `fixes.yaml` (the Pages bullet-indent fix for `classic`). The default template comes from config, or from the profile's `template:` field. |
+| `template-import <file.docx\|file.pdf> <name>` | Script part of the template import (6.4) |
 | `pdf [file]` | `.docx` to `.pdf` with the first available exporter from `pdf_exporters` in `framework.config.yaml` (see 6.1) |
 | `pdf-check [file]` | Checks that the PDF is ATS-readable (6.2) |
 | `preview [file]` | Page images of the PDF into `preview/` (6.3) |
@@ -298,7 +334,24 @@ It renders page images from the PDF into `preview/`:
 
 An agent, or you, can open the images to catch layout problems (like the bullet issue) before sending the CV. `build` prints the preview paths at the end.
 
-Dependencies: TypeScript run with `tsx`, `jszip` for reading and writing `.docx`, `yaml` for front matter and facts, and `pdfjs-dist` for PDF text extraction. LibreOffice and `pdftoppm` are optional. No Python, since your Homebrew Python's XML parser is currently broken.
+### 6.4 Template import
+
+To make your CV look like an existing Word or PDF CV, run `/import-template <file> <name>`. It produces a reusable `templates/<name>/`.
+
+| Input | How |
+|---|---|
+| **Word** | Precise. The script reads the file's styles, numbering and paragraph properties. The template-importer agent labels each paragraph type (name, contact line, section heading and its rule, job title, company and dates, bullet, body text, skills line, education line) using the text and a preview. The result is the original styles with all sample content removed, plus `style-map.yaml`. |
+| **PDF** | Approximate. The script extracts fonts, sizes, colors, positions, margins and line spacing with `pdfjs-dist`. The agent compares them with the page preview and the template is *rebuilt* as a new Word file (with the `docx` npm package) that copies the look. `import-report.md` lists what couldn't be copied exactly. |
+
+**Rules:**
+- **Only the styling is kept.** The other person's text, name and contacts are never saved. Their file stays wherever you keep it and is not copied into the repo.
+- **ATS warnings.** The import report flags multi-column layouts, text boxes, layout tables, header/footer-only contact details, and icons used in place of words. It offers a one-column version.
+- **Test build.** After import, your master CV is built with the new template and previewed. The template is marked `approved: true` in its style map only after you confirm.
+- **Templates can be chosen** with `npm run build -- --template <name>` or `template: <name>` in a profile.
+
+Your current template is the first one imported (`templates/classic/`). Rebuilding today's CV through it must match the current `.docx`, which tests the importer.
+
+Dependencies: TypeScript run with `tsx`, `jszip` for reading and writing `.docx`, `yaml` for front matter and facts, `pdfjs-dist` for PDF text extraction, and `docx` for rebuilding templates from PDF samples. LibreOffice and `pdftoppm` are optional. No Python, since your Homebrew Python's XML parser is currently broken.
 
 ## 7. Workflows (commands)
 
@@ -309,7 +362,10 @@ Dependencies: TypeScript run with `tsx`, `jszip` for reading and writing `.docx`
 | `/tailor --profile <id>` | Tailor builds `cv/variants/<id>/cv.md` from the profile, then `npm run build` on it |
 | `/tailor --jd <file> [--profile <id>]` | Tailor builds `cv/tailored/<company-role>/` for one job, optionally starting from a profile, then `npm run build` |
 | `/variants` | Rebuilds every profile variant (after summaries or the master CV change), then `npm run build:all` |
-| `/review [cv-file] [rubric…]` | Runs the reviewers (default all 5) and writes `reports/<date>/` |
+| `/review [cv-file] [rubric…]` | Runs the reviewers (default all 6) and writes `reports/<date>/`. "Would this CV pass an AI ATS?" is `/review --rubric ats`, and "…and then HR?" is `--rubric hr`. |
+| `/improve [report…]` | Advisor goes through the findings one topic at a time. It asks you questions with suggested answers, records them as facts, has the composer apply them, and shows the diff. Findings you decline are recorded as decisions (e.g. "no LinkedIn link", "keep length"), so later reviews don't raise them again. |
+| `/add-experience` | You describe experience in your own words (e.g. "technical interviewing, legacy React Native audits, presales"). The advisor asks follow-up questions, writes a `confirmed.yaml` entry (or a `cv_entry` for a new job), and the composer adds the bullets. |
+| `/import-template <file> <name>` | Template import (6.4), followed by a test build and preview for your approval |
 | `/build [cv-file]` | `npm run build`, then reports the pdf-check result and shows the page previews |
 
 Each command file in `.claude/commands/` only says "follow `agents/<name>.md`". The same instructions are listed in `AGENTS.md` for other tools.
@@ -320,24 +376,26 @@ Each step ends with something you can check.
 
 1. **Restructure and preserve.** Create the folders. Move the CV files to `cv/` and the template to `templates/` (committing the template). Move the summaries to `summaries/` with the new names. Add `package.json`.
    *Check:* `git status` shows moves only, no content changes.
-2. **Specs.** Write `cv-spec.md` (the current CV's structure plus every rule from this chat), `work-summary-spec.md`, `tailoring-spec.md` and the 5 rubrics. The ATS and HR rubrics are based on the reviews done in this chat.
+2. **Specs.** Write `cv-spec.md` (the current CV's structure plus every rule from this chat), `work-summary-spec.md`, `tailoring-spec.md`, `templates.md` and the 6 rubrics. The ATS and HR rubrics are based on the reviews done in this chat.
    *Check:* you review the specs. This is the most important review.
-3. **Facts.** Write `profile.yaml` and `confirmed.yaml` (section 4.2).
+3. **Facts.** Write `profile.yaml`, `confirmed.yaml` (section 4.2) and `decisions.yaml` (section 10).
    *Check:* you confirm every entry is true.
 4. **Migrate summaries.** Add front matter and restructure the body into the 9 sections from section 4.1, numbering the contributions. Existing content is kept. Sections the old summaries don't cover (for example, *Main features* for the Jira plugin, *Portfolio material*) are filled only from what the summary already says, or marked `TODO (needs user input)`. Nothing is invented.
    *Check:* you review the 3 migrated summaries and fill in the TODOs.
-5. **Scripts and config.** `framework.config.yaml`, `schemas/`, `scripts/lib/`, the docx renderer, the PDF exporters (Pages, Word, LibreOffice), `pdf-check`, `preview`, `build`/`build:all`, `lint`, `trace`, `validate`, `index` and `check`, each with fixture tests.
+5. **Scripts and config.** `framework.config.yaml`, `schemas/`, `scripts/lib/`, the template-driven docx renderer, `template-import` (Word input first, then PDF), the PDF exporters (Pages, Word, LibreOffice), `pdf-check`, `preview`, `build`/`build:all`, `lint`, `trace`, `validate`, `index` and `check`, each with fixture tests.
    *Check:*
    - `npm test` passes, and `npm run validate` passes on all summaries and facts.
-   - `npm run build` produces a `.docx` matching the current one, a PDF that passes `pdf-check`, and a page-1 preview showing correct bullets.
-6. **Agents and wrappers.** `agents/*.md`, `.claude/agents/*`, `.claude/commands/*`, `AGENTS.md`, `CLAUDE.md`.
+   - `templates/classic/` is created by importing `Kirill_Kohan_CV_prev.docx`.
+   - `npm run build` through it produces a `.docx` matching the current one, a PDF that passes `pdf-check`, and a page-1 preview showing correct bullets.
+6. **Agents and wrappers.** `agents/*.md` (harvester, composer, tailor, reviewer, advisor, template-importer), `.claude/agents/*`, `.claude/commands/*`, `AGENTS.md`, `CLAUDE.md`.
 7. **Trace the current CV.** Run the composer once in "annotate only" mode to add `src` comments to the existing CV without changing its text. Then run `npm run check`.
    *Check:* every bullet resolves, or the gaps are listed for you.
 8. **Role profiles and variants.** Write the 4 profiles, tag the contributions in the migrated summaries, and build the 4 variants plus their gap reports.
    *Check:* you review the variants and gap reports. `npm run check` passes on all of them.
-9. **First full review run.** Run `/review` with all 5 rubrics.
-   *Check:* the reports match what we found by hand in this chat.
-10. **README.**
+9. **First full review run.** Run `/review` with all 6 rubrics.
+   *Check:* the reports match what we found by hand in this chat. Findings already decided in this chat (no LinkedIn link, keep the length, etc.) are not raised again.
+10. **Replay this chat.** Use the chat-step table in section 12 as an acceptance test: run each capability once on a copy of the CV from before this chat, and confirm the result matches today's CV.
+11. **README.**
 
 ## 9. Scalability
 
@@ -381,6 +439,7 @@ Updated layout additions:
 | Tailored CVs in git | `cv/tailored/` is in `.gitignore` by default. To keep one, run `git add -f`. The tailor agent reminds you of this after each run. |
 | Role variants in git | `cv/variants/` is committed, since it has no confidential job descriptions |
 | Role profiles | First four: `react`, `react-native`, `fullstack-react-node`, `nodejs` (section 4.4) |
+| Decisions already made in this chat | Recorded in `facts/decisions.yaml` so reviewers don't raise them again: no LinkedIn/GitHub links (the old CV had them, so they can come back), keep the current length, keep the Drive portfolio link, keep the job title step from GM to SYSPRO |
 | Projects hidden from the CV | Supported with `show_in_cv: false`. Composer and tailor skip them, but they stay available for the portfolio and can be switched on later. |
 
 ## 11. Out of scope for now
@@ -390,4 +449,32 @@ Updated layout additions:
 - Pulling history from remote GitHub or Azure DevOps (local clones only).
 - A fully code-driven pipeline (Agent SDK CLI). It can wrap the same `agents/*.md` later.
 - Translating the CV into other languages.
+
+## 12. Coverage of the 2026-10-15 chat
+
+Every step done by hand in the chat, and the capability that repeats it:
+
+| # | What we did in the chat | Framework capability |
+|---|---|---|
+| 1 | Generated work summaries from repo history (before the chat) | `/harvest` (Harvester, work-summary-spec) |
+| 2 | Put SYSPRO into Experience and the other two projects into the freelance section | Composer + `cv_section` (4.1) |
+| 3 | Made the CV ATS-friendly | cv-spec rules + `lint` + ATS rubric |
+| 4 | Removed dates from the freelance section and renamed it | `cv_sections` config (`heading`, `show_dates`) + `show_dates_in_cv` |
+| 5 | Removed client names (Clinical Ink, Velocity AI) | `cv_client_label` + confidentiality rubric |
+| 6 | Highlighted SDD and architecture work rather than AI vibe coding, and tech-stack ownership | `cv_emphasis` in the summary + composer rule "emphasis first" |
+| 7 | "Would this pass an AI ATS?" | `/review --rubric ats` (verdict, score table, role match, ranked issues) |
+| 8 | Went through findings one by one with questions | `/improve` (Advisor) |
+| 9 | Added numbers (25+ people, days to hours, fewer review cycles) | Advisor, then `confirmed.yaml`, then composer |
+| 10 | Shortened the SYSPRO entry and merged bullets | `cv_max_bullets` + composer |
+| 11 | Marked OMO, Thermo Fisher and Admasters as contracts | `engagement: contract` gives `cv_title_suffix: " (Contract)"` |
+| 12 | Decided to keep length, contacts and the portfolio link | `facts/decisions.yaml` |
+| 13 | Replaced special characters, made company spelling consistent, removed duplicate skills | `lint` + proofreading rubric |
+| 14 | "Would HR pass it?" with likely interview questions | `/review --rubric hr` |
+| 15 | Added the "Open to B2B contract or full-time employment" line | `profile.yaml` availability field, then the header |
+| 16 | Added interviewing, legacy React Native audits and presales from your description | `/add-experience` |
+| 17 | Converted the Markdown to Word in your old CV's format | `/import-template` (6.4) + `render` |
+| 18 | Fixed the bullet indentation that broke in Pages | template `fixes.yaml`, PDF export through Pages, `preview`, layout rubric |
+| 19 | Exported a PDF and checked it | `pdf` + `pdf-check` |
+| 20 | Kept your manual edits made between steps | Principle "your manual edits are kept" + diffs |
+| 21 | Saved preferences and decisions for future sessions | specs, `confirmed.yaml`, `decisions.yaml` (in the repo, so any tool sees them) |
 
