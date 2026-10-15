@@ -17,7 +17,7 @@ A small, local, specification-driven (SDD) framework that keeps the CV current a
 - **Specs come first.** Every agent follows a written spec in `specs/`. An agent that changes behavior changes its spec first.
 - **Every claim needs a source.** Each CV bullet must trace to a work summary or a confirmed fact. Unsourced bullets are flagged, not silently allowed.
 - **Tool-neutral.** `AGENTS.md` is the entry point, and agent definitions are plain Markdown in `agents/`. Claude Code files in `.claude/` are thin wrappers that point to them. Codex, Cursor, Gemini CLI or anything else can run the same agents by reading `AGENTS.md`.
-- **Deterministic work is done by scripts, not AI:** rendering, linting and trace checking. Any agent, or you, runs them with `npm run …`.
+- **Deterministic work is done by scripts, not AI:** rendering (Markdown to Word to PDF), PDF checks, previews, linting and trace checking. Any agent, or you, runs them with `npm run …`.
 - **Private by default.** Summaries may contain internal names. Only the CV and its tailored versions are scrubbed, following confidentiality rules in the facts file.
 - **Reviewers only write reports.** You decide what to change.
 
@@ -28,7 +28,7 @@ CV/
 ├── AGENTS.md                      # entry point for any AI tool: layout, workflows, rules, commands
 ├── CLAUDE.md                      # one line: "Read AGENTS.md"
 ├── README.md                      # for humans: what this is, how to run it
-├── package.json                   # npm scripts: render, pdf, lint, trace, check
+├── package.json                   # npm scripts: build, build:all, render, pdf, pdf-check, preview, lint, trace, check
 ├── specs/
 │   ├── cv-spec.md                 # CV structure and writing rules (seeded from this chat)
 │   ├── work-summary-spec.md       # summary template + front matter schema
@@ -54,18 +54,24 @@ CV/
 ├── cv/
 │   ├── Kirill_Kohan_CV.md         # master CV (generated, hand-editable)
 │   ├── Kirill_Kohan_CV.docx
+│   ├── variants/<profile-id>/     # role-based CVs: cv.md, cv.docx, gap-report.md
 │   └── tailored/<company-role>/   # cv.md, cv.docx, job-description.md, gap-report.md
+├── profiles/                      # role profiles: react.yaml, react-native.yaml, fullstack-react-node.yaml, nodejs.yaml
 ├── templates/
 │   └── cv-template.docx           # current Kirill_Kohan_CV_prev.docx, committed
 ├── reports/<YYYY-MM-DD>/          # reviewer reports: ats.md, hr.md, proofreading.md, ...
 ├── scripts/                       # Node/TypeScript CLIs
+│   ├── build.ts                   # md -> docx -> pdf -> pdf-check -> preview
 │   ├── render-docx.ts
-│   ├── export-pdf.ts              # macOS Pages via osascript
+│   ├── export-pdf.ts              # runs exporters in config order
+│   ├── exporters/                 # pages.ts, word.ts, libreoffice.ts
+│   ├── pdf-check.ts
+│   ├── preview.ts
 │   ├── lint-cv.ts
 │   └── trace-check.ts
 └── .claude/
     ├── agents/                    # thin wrappers -> agents/*.md
-    └── commands/                  # /harvest /compose /tailor /review /render
+    └── commands/                  # /harvest /compose /tailor /variants /review /build
 ```
 
 ## 4. Data formats
@@ -126,7 +132,12 @@ A summary is the **single source of truth for a project**. The CV uses it now, a
 1. **Project overview:** what the product is, who uses it, the business problem, and your team and organization context.
 2. **Main features:** the product's key features, described in user terms whether or not you built them, so a portfolio reader understands the product.
 3. **My role and responsibilities:** your title, ownership areas, leadership, architecture and process responsibilities, and who you worked with (for example, the lead architect).
-4. **My contributions:** numbered work items (`4.1`, `4.2` …) that the CV cites as `syspro-saas-erp#4.2`. Each item gives what you built, why, and the result.
+4. **My contributions:** numbered work items (`4.1`, `4.2` …) that the CV cites as `syspro-saas-erp#4.2`. Each item gives what you built, why, and the result, and ends with a tags line from the shared tag list in `framework.config.yaml`. Role profiles use these tags to pick and order bullets (section 4.4):
+   ```markdown
+   ### 4.2 Login micro-frontend
+   ...
+   Tags: react, typescript, micro-frontends, oidc, accessibility, storybook, testing
+   ```
 5. **Technologies and frameworks:** grouped by category (language, UI, state, testing, CI/CD, cloud, AI and agents …) with versions where known, marked *hands-on* or *used by the project*.
 6. **Skills demonstrated:** a skills list mapped to the contributions that prove each skill.
 7. **Metrics and outcomes:** each number with its source (git history, the user, or a dashboard) and a confidence level.
@@ -181,13 +192,47 @@ The composer adds an HTML comment after each bullet, which Markdown viewers and 
 
 `trace-check` reports bullets with no `src`, and `src` ids that don't resolve to a summary section or a fact id.
 
+### 4.4 Role profiles (`profiles/*.yaml`)
+
+A profile describes a reusable CV version for a type of role, built without a job description. The first four profiles:
+
+| Profile | Headline | Emphasis |
+|---|---|---|
+| `react` | Senior React Engineer / Frontend Tech Lead | React 19, micro-frontends, schema-driven UI, state machines, testing, OIDC, observability, SDD/architecture |
+| `react-native` | Senior React Native Engineer / Tech Lead (Mobile) | React Native, Expo, Android/iOS native, BLE/IoT, offline-first, mobile CI/CD, store releases |
+| `fullstack-react-node` | Senior Full-Stack Engineer (React / Node.js) | React + Node.js APIs, PostgreSQL, AWS, Stripe, Docker, CI/CD, mock backends, Forge resolvers |
+| `nodejs` | Senior Node.js / Backend-leaning Full-Stack Engineer | Node.js, REST/GraphQL, PostgreSQL, AWS, integrations. The gap report is expected to flag limited recent backend depth. |
+
+Example:
+
+```yaml
+schema_version: 1
+id: react-native
+headline: Senior React Native Engineer / Tech Lead (Mobile)
+summary_focus: [react-native, mobile, android, ios, offline-first, performance, leadership]
+emphasize_tags: [react-native, expo, android, ios, ble, iot, mobile-ci, performance]
+deemphasize_tags: [kendo, erp-forms]
+skills_order: [Mobile, Languages, State and Data, Testing, DevOps and Observability, Frontend, Backend and Cloud]
+max_bullets_per_entry: 6           # lower-relevance bullets are dropped first
+min_bullets_per_entry: 2
+include_sections: [summary, experience, consulting, education, skills, languages]
+```
+
+Rules for the tailor agent with a profile:
+- It may **select, reorder, shorten and reword** bullets, rewrite the summary and headline within the profile's focus, and reorder skills.
+- It may **not add claims** without a source. Every bullet keeps its `src`, so `trace` still passes.
+- All jobs stay listed (no hidden gaps in the timeline), but less relevant jobs shrink to `min_bullets_per_entry`.
+- It writes a `gap-report.md`: the profile's emphasis areas that have little supporting evidence. It also suggests which summaries could be enriched, or what you could add as a confirmed fact if it's true.
+
+Profiles and job descriptions can be combined: `--profile react --jd job.md` starts from the profile, then tailors to the job. New profiles, such as `frontend-architect` or `tech-lead`, are added as new files with no code changes.
+
 ## 5. Agents
 
 | Agent | Input | Output | Spec / rubric |
 |---|---|---|---|
 | **Harvester** | repo path(s), project id, author identities | `summaries/<id>.md` | work-summary-spec |
 | **Composer** | all summaries, facts, current CV | updated `cv/Kirill_Kohan_CV.md` with trace comments + short change log in the reply | cv-spec |
-| **Tailor** | job description file, master CV, summaries, facts | `cv/tailored/<company-role>/cv.md` + `gap-report.md` | tailoring-spec (may reorder, re-emphasize, drop; may not add unsourced claims) |
+| **Tailor** | a profile and/or a job description file, master CV, summaries, facts | `cv/variants/<profile>/` or `cv/tailored/<company-role>/`: `cv.md` + `gap-report.md` | tailoring-spec + the profile (may reorder, re-emphasize, drop; may not add unsourced claims) |
 | **Reviewer** (run per rubric) | CV file, rubric, summaries/facts (fact-check only) | `reports/<date>/<rubric>.md` with verdict, score, findings (line, issue, suggestion) | rubrics/* |
 
 Reviewer set: **ATS**, **HR**, **proofreading**, **fact-check**, **confidentiality**. They run in parallel when the tool supports it, otherwise one after another.
@@ -196,13 +241,64 @@ Reviewer set: **ATS**, **HR**, **proofreading**, **fact-check**, **confidentiali
 
 | Script | What it does |
 |---|---|
-| `render [file]` | Markdown to `.docx` using `templates/cv-template.docx`. This ports the build script used in this chat, including the Pages bullet-indent fix. Defaults to the master CV. |
-| `pdf [file]` | `.docx` to `.pdf` via Pages (`osascript`). macOS only. |
+| `build [file]` | **The full chain:** `lint` and `trace`, then Markdown to Word, Word to PDF, `pdf-check` and the preview. Stops at the first failing step. Defaults to the master CV. |
+| `build:all` | `build` for the master CV and every role variant (tailored CVs only when named) |
+| `render [file]` | Markdown to `.docx` using `templates/cv-template.docx`. This ports the build script used in this chat, including the Pages bullet-indent fix. |
+| `pdf [file]` | `.docx` to `.pdf` with the first available exporter from `pdf_exporters` in `framework.config.yaml` (see 6.1) |
+| `pdf-check [file]` | Checks that the PDF is ATS-readable (6.2) |
+| `preview [file]` | Page images of the PDF into `preview/` (6.3) |
 | `lint [file]` | Deterministic checks: forbidden characters, date format, duplicate skills, word count, heading structure, bold balance |
 | `trace [file]` | Claim-to-source check (section 4.3) |
-| `check` | lint + trace for the master CV and all tailored CVs |
+| `check` | lint + trace for the master CV, all variants and all tailored CVs |
 
-Dependencies: TypeScript run with `tsx`, `jszip` for reading and writing `.docx`, `yaml` for front matter and facts. No LibreOffice and no Python, since your Homebrew Python's XML parser is currently broken.
+Each built CV folder ends up as:
+
+```
+cv/variants/react-native/
+├── cv.md
+├── Kirill_Kohan_CV_React_Native.docx     # file names from framework.config.yaml
+├── Kirill_Kohan_CV_React_Native.pdf
+├── pdf-check.md                          # result of 6.2
+├── gap-report.md
+└── preview/page-1.png …
+```
+
+### 6.1 PDF exporters
+
+Exporters are pluggable modules in `scripts/exporters/`. `pdf` tries them in the order set in config and uses the first one that is installed and succeeds:
+
+```yaml
+pdf_exporters: [pages, word, libreoffice]
+```
+
+| Exporter | How | Notes |
+|---|---|---|
+| `pages` | `osascript` drives Pages: open, export as PDF, close without saving | Installed now. This is how the bullet fix was tested. |
+| `word` | `osascript` drives Microsoft Word: save as PDF | Used only if Word is installed |
+| `libreoffice` | `soffice --headless --convert-to pdf` | Cross-platform fallback if installed |
+
+If none is available, `pdf` stops with a clear message listing what to install. The Word file is still produced.
+
+### 6.2 PDF check (`pdf-check`)
+
+It extracts the text with `pdfjs-dist` (no system tools needed) and fails when:
+- **No selectable text** (an image-only PDF), which screening software can't read.
+- **Sections are missing:** every CV heading in the Markdown must appear in the PDF text.
+- **Text doesn't match:** after normalizing whitespace and hyphenation, the PDF's words must cover the Markdown's words, ignoring formatting and trace comments. Missing words are listed.
+- **Garbled characters:** the replacement character `�`, private-use glyphs, or broken ligatures.
+- **The contact details aren't on page 1** (email, phone).
+
+It also reports the page count and words per page. The results go to `pdf-check.md` next to the PDF.
+
+### 6.3 Preview
+
+It renders page images from the PDF into `preview/`:
+- **Page 1** with macOS Quick Look (`qlmanage`), as used in this chat.
+- **All pages** when `pdftoppm` or LibreOffice is available.
+
+An agent, or you, can open the images to catch layout problems (like the bullet issue) before sending the CV. `build` prints the preview paths at the end.
+
+Dependencies: TypeScript run with `tsx`, `jszip` for reading and writing `.docx`, `yaml` for front matter and facts, and `pdfjs-dist` for PDF text extraction. LibreOffice and `pdftoppm` are optional. No Python, since your Homebrew Python's XML parser is currently broken.
 
 ## 7. Workflows (commands)
 
@@ -210,9 +306,11 @@ Dependencies: TypeScript run with `tsx`, `jszip` for reading and writing `.docx`
 |---|---|
 | `/harvest <repo-path> <id>` | Harvester writes the summary, then you review it |
 | `/compose` | Composer updates the master CV, then `npm run check` |
-| `/tailor <jd-file>` | Tailor creates the variant and gap report, then `npm run check` and `npm run render` on it |
+| `/tailor --profile <id>` | Tailor builds `cv/variants/<id>/cv.md` from the profile, then `npm run build` on it |
+| `/tailor --jd <file> [--profile <id>]` | Tailor builds `cv/tailored/<company-role>/` for one job, optionally starting from a profile, then `npm run build` |
+| `/variants` | Rebuilds every profile variant (after summaries or the master CV change), then `npm run build:all` |
 | `/review [cv-file] [rubric…]` | Runs the reviewers (default all 5) and writes `reports/<date>/` |
-| `/render [cv-file]` | `npm run render`, plus `npm run pdf` if asked |
+| `/build [cv-file]` | `npm run build`, then reports the pdf-check result and shows the page previews |
 
 Each command file in `.claude/commands/` only says "follow `agents/<name>.md`". The same instructions are listed in `AGENTS.md` for other tools.
 
@@ -228,14 +326,18 @@ Each step ends with something you can check.
    *Check:* you confirm every entry is true.
 4. **Migrate summaries.** Add front matter and restructure the body into the 9 sections from section 4.1, numbering the contributions. Existing content is kept. Sections the old summaries don't cover (for example, *Main features* for the Jira plugin, *Portfolio material*) are filled only from what the summary already says, or marked `TODO (needs user input)`. Nothing is invented.
    *Check:* you review the 3 migrated summaries and fill in the TODOs.
-5. **Scripts and config.** `framework.config.yaml`, `schemas/`, `scripts/lib/`, the docx renderer, `pdf`, `lint`, `trace`, `validate`, `index` and `check`, each with fixture tests.
-   *Check:* `npm test` passes, `npm run validate` passes on all summaries and facts, and `npm run render` produces a `.docx` matching the current one.
+5. **Scripts and config.** `framework.config.yaml`, `schemas/`, `scripts/lib/`, the docx renderer, the PDF exporters (Pages, Word, LibreOffice), `pdf-check`, `preview`, `build`/`build:all`, `lint`, `trace`, `validate`, `index` and `check`, each with fixture tests.
+   *Check:*
+   - `npm test` passes, and `npm run validate` passes on all summaries and facts.
+   - `npm run build` produces a `.docx` matching the current one, a PDF that passes `pdf-check`, and a page-1 preview showing correct bullets.
 6. **Agents and wrappers.** `agents/*.md`, `.claude/agents/*`, `.claude/commands/*`, `AGENTS.md`, `CLAUDE.md`.
 7. **Trace the current CV.** Run the composer once in "annotate only" mode to add `src` comments to the existing CV without changing its text. Then run `npm run check`.
    *Check:* every bullet resolves, or the gaps are listed for you.
-8. **First full review run.** Run `/review` with all 5 rubrics.
+8. **Role profiles and variants.** Write the 4 profiles, tag the contributions in the migrated summaries, and build the 4 variants plus their gap reports.
+   *Check:* you review the variants and gap reports. `npm run check` passes on all of them.
+9. **First full review run.** Run `/review` with all 5 rubrics.
    *Check:* the reports match what we found by hand in this chat.
-9. **README.**
+10. **README.**
 
 ## 9. Scalability
 
@@ -244,8 +346,9 @@ The framework is designed so new outputs, reviewers and agents are **added as fi
 - **Sources and outputs are separate.** Summaries and facts are the sources. The CV, tailored CVs, and later the portfolio, a LinkedIn profile or cover letters are *outputs*. Each output is defined by one spec plus an optional renderer, so adding the portfolio later means adding `specs/outputs/portfolio.md` and an agent, without touching summaries.
 - **Folders act as registries:**
   - Any file in `specs/rubrics/` is a reviewer. Dropping in `rubrics/frontend-architect-role.md` adds a reviewer with no other changes.
+  - Any file in `profiles/` is a CV variant. `/variants` builds them all.
   - Any file in `agents/` is listed in `AGENTS.md` by the `index` script, so new agents are discovered automatically.
-  - Any renderer in `scripts/renderers/` (docx now, then PDF, HTML or JSON) is chosen by file type or output type.
+  - Any renderer in `scripts/renderers/` (docx now, later HTML or JSON) is chosen by file type or output type. Any exporter in `scripts/exporters/` (Pages, Word, LibreOffice) can be added to `pdf_exporters` in config.
 - **One config file.** `framework.config.yaml` sets paths, default rubrics, the default renderer, the template, the CV owner and the spelling variant (US). Scripts and agents read it instead of hard-coding values.
 - **Versioned, validated formats:**
   - Summaries, facts and reports carry `schema_version`.
@@ -276,6 +379,8 @@ Updated layout additions:
 | Spelling | US English, enforced by the proofreading rubric and `framework.config.yaml` |
 | Local clone paths | Stored in summary front matter (`repos[].path`), so a summary can be re-harvested later |
 | Tailored CVs in git | `cv/tailored/` is in `.gitignore` by default. To keep one, run `git add -f`. The tailor agent reminds you of this after each run. |
+| Role variants in git | `cv/variants/` is committed, since it has no confidential job descriptions |
+| Role profiles | First four: `react`, `react-native`, `fullstack-react-node`, `nodejs` (section 4.4) |
 | Projects hidden from the CV | Supported with `show_in_cv: false`. Composer and tailor skip them, but they stay available for the portfolio and can be switched on later. |
 
 ## 11. Out of scope for now
