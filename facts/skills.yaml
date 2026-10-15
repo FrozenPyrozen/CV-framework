@@ -1,0 +1,154 @@
+# Skills: the only source of the CV's SKILLS section (docs/plan.md 4.2b).
+# Seeded on 2026-10-15 from the SKILLS section of cv/Kirill_Kohan_CV.md, in the same order.
+# Tags must exist in the tag list in framework.config.yaml. Lint warns about skills no contribution supports.
+schema_version: 1
+
+categories:
+  - id: languages
+    label: Languages
+    items:
+      - { name: JavaScript (ES6+), tags: [javascript] }
+      - { name: TypeScript, tags: [typescript] }
+      - { name: HTML5, tags: [html-css] }
+      - { name: CSS3, tags: [html-css] }
+      - { name: SCSS, tags: [html-css] }
+
+  - id: frontend
+    label: Frontend
+    items:
+      - { name: React 19, tags: [react] }
+      - { name: React.js, tags: [react] }
+      - { name: Next.js, tags: [nextjs, ssr] }
+      - { name: Server-side rendering (SSR), tags: [ssr] }
+      - { name: Micro-frontends, tags: [micro-frontends] }
+      - { name: Schema-driven UI, tags: [schema-driven-ui] }
+      - { name: Design systems, tags: [design-systems] }
+      - { name: Web accessibility (WCAG), tags: [accessibility] }
+      - { name: Web performance optimization, tags: [performance] }
+      - { name: KendoReact, tags: [kendo] }
+      - { name: Storybook, tags: [storybook] }
+      - { name: CSS Modules, tags: [html-css] }
+      - { name: Styled Components, tags: [html-css] }
+      - { name: Atomic Design, tags: [design-systems] }
+      - { name: Vite, tags: [build-tooling] }
+      - { name: Monorepo (npm workspaces), tags: [monorepo] }
+
+  - id: mobile
+    label: Mobile
+    items:
+      - { name: React Native, tags: [react-native] }
+      - { name: Expo, tags: [expo] }
+      - { name: React Native Web, tags: [react-native-web] }
+      - { name: "Android (Java, Kotlin, Gradle)", tags: [android] }
+      - { name: Native Modules (iOS/Android), tags: [native-modules] }
+      - { name: Realm (realm-js), tags: [realm, offline-first] }
+      - { name: SQLCipher, tags: [android, security] }
+      - { name: Keychain, tags: [security, ios] }
+      - { name: Fastlane, tags: [mobile-ci] }
+      - { name: Bitrise, tags: [mobile-ci] }
+
+  - id: state-and-data
+    label: State and Data
+    items:
+      - { name: "Redux (Redux Thunk, Redux Saga)", tags: [redux] }
+      - { name: MobX, tags: [mobx] }
+      - { name: Zustand, tags: [zustand] }
+      - { name: XState, tags: [state-machines] }
+      - { name: TanStack Query, tags: [tanstack] }
+      - { name: TanStack Router, tags: [tanstack] }
+      - { name: RxJS, tags: [rxjs] }
+      - { name: REST APIs, tags: [rest-api] }
+      - { name: GraphQL, tags: [graphql] }
+      - { name: WebSockets, tags: [websockets] }
+
+  - id: backend-and-cloud
+    label: Backend and Cloud
+    items:
+      - { name: Node.js, tags: [node] }
+      - { name: PostgreSQL, tags: [postgres] }
+      - { name: "Amazon Web Services (AWS: EC2, S3, RDS)", tags: [aws] }
+      - { name: Microsoft Azure (Azure Blob Storage), tags: [azure] }
+      - { name: Stripe, tags: [payments] }
+      - { name: Docker, tags: [docker] }
+
+  - id: auth-and-security
+    label: Authentication and Security
+    items:
+      - { name: OAuth 2.0, tags: [oauth] }
+      - { name: OpenID Connect (OIDC), tags: [oidc] }
+      - { name: Zero-trust architecture, tags: [security, architecture] }
+      - { name: SSL certificate pinning, tags: [security] }
+      - { name: PII redaction, tags: [security, observability] }
+
+  - id: testing
+    label: Testing
+    items:
+      - { name: Vitest, tags: [testing] }
+      - { name: Vitest Browser Mode, tags: [testing] }
+      - { name: Playwright, tags: [testing, e2e] }
+      - { name: Jest, tags: [testing] }
+      - { name: React Testing Library, tags: [testing] }
+      - { name: React Native Testing Library, tags: [testing, react-native] }
+      - { name: Detox, tags: [testing, e2e, react-native] }
+      - { name: Puppeteer, tags: [testing, e2e] }
+      - { name: Cucumber, tags: [testing] }
+      - { name: End-to-end (E2E) testing, tags: [e2e] }
+      - { name: Unit testing, tags: [testing] }
+
+  - id: devops
+    label: DevOps and Observability
+    items:
+      - { name: CI/CD, tags: [ci-cd] }
+      - { name: Azure DevOps, tags: [ci-cd, azure] }
+      - { name: Azure Pipelines, tags: [ci-cd, azure] }
+      - { name: GitHub Actions, tags: [ci-cd] }
+      - { name: Bitbucket Pipelines, tags: [ci-cd] }
+      - { name: Jenkins, tags: [ci-cd] }
+      - { name: Git, tags: [git] }
+      - { name: ESLint, tags: [code-quality] }
+      - { name: Prettier, tags: [code-quality] }
+      - { name: Husky, tags: [code-quality] }
+      - { name: SonarQube, tags: [code-quality] }
+      - { name: OpenTelemetry, tags: [observability] }
+      - { name: Kibana, tags: [observability] }
+      - { name: Bugsnag, tags: [observability] }
+
+  - id: ai
+    label: AI
+    items:
+      - { name: Generative AI integration, tags: [generative-ai] }
+      - { name: Model Context Protocol (MCP), tags: [mcp, generative-ai] }
+      - { name: AI coding agents, tags: [ai-agents] }
+      - { name: AI-assisted development, tags: [ai-agents] }
+
+  - id: domain
+    label: Domain and SDKs
+    items:
+      - { name: ERP, tags: [erp] }
+      - { name: Clinical trials (eCOA), tags: [healthcare] }
+      - { name: "HERE SDK (HNav, HNod, HERE API)", tags: [here-sdk, automotive] }
+      - { name: IoT, tags: [iot] }
+      - { name: Bluetooth Low Energy (BLE), tags: [ble, iot] }
+      - { name: MQTT, tags: [mqtt, iot] }
+      - { name: Blockchain, tags: [blockchain] }
+      - { name: Web3.js, tags: [blockchain] }
+      - { name: Atlassian Jira Forge, tags: [jira-forge] }
+
+  - id: leadership
+    label: Leadership and Methodologies
+    items:
+      - { name: Team leadership (up to 8 engineers), tags: [leadership], calculated: team_size_led }   # number from calculated values
+      - { name: Mentoring, tags: [mentoring] }
+      - { name: Code review, tags: [code-review] }
+      - { name: System design, tags: [architecture] }
+      - { name: Software architecture, tags: [architecture] }
+      - { name: Architecture decision records (ADR), tags: [architecture, tech-stack] }
+      - { name: Technology stack selection, tags: [tech-stack] }
+      - { name: Technical interviewing, tags: [interviewing] }
+      - { name: Technical audits, tags: [audits] }
+      - { name: Effort estimation, tags: [estimation] }
+      - { name: Presales, tags: [presales] }
+      - { name: Agile, tags: [agile] }
+      - { name: Specification-driven development (SDD), tags: [sdd] }
+      - { name: Figma, tags: [design-tools] }
+      - { name: Jira, tags: [agile] }

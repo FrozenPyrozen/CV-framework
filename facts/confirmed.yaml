@@ -1,0 +1,82 @@
+# Confirmed facts: things the user confirmed that no repo history shows (docs/plan.md 4.2).
+# Every fact has an id (used in CV source comments), a source, the entry it belongs to, and tags.
+# Items with type: cv_entry define whole CV entries that have no summary.
+schema_version: 1
+
+facts:
+  # --- SYSPRO (confirmed in the 2026-10-15 chat) ---
+  - id: syspro-team-size
+    fact: The SYSPRO platform program has 25+ people (frontend, backend, architects).
+    source: user, 2026-10-15
+    entry: syspro-saas-erp
+    tags: [scale, enterprise]
+
+  - id: syspro-speed
+    fact: The schema-driven runtime cut the time to bring an ERP screen to the web from days to hours, with no per-screen frontend code.
+    source: user, 2026-10-15
+    entry: syspro-saas-erp
+    tags: [schema-driven-ui, delivery-speed, react]
+
+  - id: syspro-review-cycles
+    fact: The SDD process reduced PR review cycles (no exact number available).
+    source: user, 2026-10-15
+    entry: syspro-saas-erp
+    tags: [sdd, code-review, quality]
+
+  - id: syspro-architecture-scope
+    fact: Worked with the lead architect on platform and solution architecture; reviewed and co-authored architecture documents, drove open architecture questions and blockers to decisions, and helped define the SDD process itself (specification templates, the validation routine, the rules for AI coding agents).
+    source: user, 2026-10-15
+    entry: syspro-saas-erp
+    tags: [architecture, sdd, tech-stack, ai-agents, leadership]
+
+  # --- Consulting (confirmed in the 2026-10-15 chat) ---
+  - id: consulting-interviews
+    fact: Conducted senior-level technical interviews for React, React Native, JavaScript and TypeScript roles for enterprise clients.
+    source: user, 2026-10-15
+    entry: various-clients
+    tags: [interviewing, react, react-native, javascript, typescript, leadership]
+
+  - id: consulting-audits
+    fact: Audited legacy React Native codebases to find the critical parts that needed updating, and prepared upgrade plans with effort estimations.
+    source: user, 2026-10-15
+    entry: various-clients
+    tags: [audits, estimation, react-native, legacy-migration]
+
+  - id: consulting-presales
+    fact: Provided technical expertise for presales, including solution proposals, effort estimations and answering technical questions in client calls.
+    source: user, 2026-10-15
+    entry: various-clients
+    tags: [presales, estimation]
+
+  # --- Consulting (carried over from the previous CV) ---
+  - id: consulting-optimization
+    fact: Led scaling and optimization engagements for client teams, reducing operational costs by up to 50% by refactoring core apps, adding caching and adding unit tests.
+    source: previous CV, confirmed by user 2026-10-15
+    entry: various-clients
+    tags: [performance, testing, leadership]
+
+  - id: consulting-sme
+    fact: Acted as a JavaScript subject-matter expert for large enterprise clients, giving technical consulting and educational webinars.
+    source: previous CV, confirmed by user 2026-10-15
+    entry: various-clients
+    tags: [javascript, mentoring]
+
+  - id: consulting-rn-upgrades
+    fact: Led React Native version upgrades and legacy library migrations for client mobile apps.
+    source: previous CV, confirmed by user 2026-10-15
+    entry: various-clients
+    tags: [react-native, legacy-migration]
+
+  # --- CV entries without a summary ---
+  - id: various-clients
+    type: cv_entry
+    role: Software Engineering Consultant
+    client: Various Clients
+    cv_client_label: Various Clients
+    cv_location: Remote
+    engagement: freelance
+    period: { start: 2017-01, end: present }
+    cv_section: consulting
+    show_dates_in_cv: false
+    counts_as_experience: false
+    source: user + previous CV

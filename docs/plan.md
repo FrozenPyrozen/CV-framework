@@ -232,9 +232,9 @@ Seeded from this chat:
 - id: consulting-presales
   fact: Technical interviews (React, React Native, JS, TS), legacy React Native audits with estimations, presales technical expertise
   source: user, 2026-10-15
-  entry: various-clients-entry
+  entry: various-clients
   tags: [react, react-native, javascript, typescript, interviewing, audits, estimation, presales]
-- id: various-clients-entry          # a CV entry defined in facts, not in a summary
+- id: various-clients          # a CV entry defined in facts, not in a summary
   type: cv_entry
   role: Software Engineering Consultant
   cv_client_label: Various Clients

@@ -1,0 +1,52 @@
+# Decisions: choices the user made about the CV. Agents follow them; reviewers list matching
+# findings under "Decided" instead of raising them again (specs/review-report-spec.md).
+schema_version: 1
+
+decisions:
+  - id: no-profile-links
+    decision: No LinkedIn or GitHub link in the CV header.
+    date: "2026-10-15"
+    why: User's choice after the ATS review. The links are kept in profile.yaml with show false and can be switched on.
+    matches: [missing LinkedIn, missing GitHub, no profile links]
+
+  - id: keep-length
+    decision: Keep the current length (about 2,000 words, 3 to 4 pages); don't trim older roles.
+    date: "2026-10-15"
+    why: User's choice; AI screeners don't penalize length.
+    matches: [CV too long, trim older roles, page count]
+
+  - id: keep-portfolio-link
+    decision: Keep the Google Drive portfolio link in the header.
+    date: "2026-10-15"
+    why: User's choice. The file must stay shared as "Anyone with the link can view".
+    matches: [Google Drive link, portfolio link not parseable]
+
+  - id: keep-title-step
+    decision: Keep the title step from Team Leader (General Motors) to Senior Software Engineer (SYSPRO).
+    date: "2026-10-15"
+    why: The SYSPRO bullets show architecture-level scope; prepare an interview answer instead of changing the title.
+    matches: [title step down, Team Leader to Senior Software Engineer]
+
+  - id: consulting-no-dates
+    decision: The consulting and freelance section shows no dates.
+    date: "2026-10-15"
+    why: User's choice.
+    matches: [missing dates in consulting, freelance dates]
+
+  - id: hidden-clients
+    decision: The Clinical Ink and Velocity AI clients stay hidden behind their CV labels.
+    date: "2026-10-15"
+    why: User removed the client names from the CV.
+    matches: [client name missing, unnamed client]
+
+  - id: sdd-not-vibe-coding
+    decision: SYSPRO work is presented as architecture-governed specification-driven development, with AI agents as governed reviewers, never as AI-generated code.
+    date: "2026-10-15"
+    why: User's explicit priority; also a rule in specs/cv-spec.md section 5.
+    matches: [AI-generated code, vibe coding, defensive wording about AI]
+
+  - id: contract-labels
+    decision: OMO Systems, Thermo Fisher Scientific and The Admasters are labeled "(Contract)".
+    date: "2026-10-15"
+    why: They were direct contracts; the label explains short tenures.
+    matches: [short tenure, job hopping]

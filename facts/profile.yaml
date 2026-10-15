@@ -1,0 +1,53 @@
+# Personal profile: the only place for personal details.
+# The CV header, education and languages are generated from this file (docs/plan.md 4.2a, specs/cv-spec.md 8).
+schema_version: 1
+
+name: Kirill Kohan
+legal_name: Kyrylo Kokhan              # shown as "Kirill (Kyrylo) Kohan" only if show_legal_name is true
+show_legal_name: false
+git_identities: [Kyrylo Kohan, Kyrylo Kokhan, Kyrylo_Kokhan, FrozenPyrozen]   # default author names for /harvest
+headline_default: Senior Software Engineer / Tech Lead (Frontend & Mobile)   # role profiles can override
+
+contacts:
+  phone: "+380 97 891 9783"
+  email: kiril.kohan@gmail.com
+  links:
+    - { label: Portfolio, url: "https://drive.google.com/file/d/1-BtpQknjSQ9bxTFAKm6v-r3DQR7IOX6s/view?usp=sharing", show: true }
+    - { label: LinkedIn, url: "https://www.linkedin.com/in/kyrylo-kohan/", show: false }   # decision: no-profile-links
+    - { label: GitHub, url: "https://github.com/FrozenPyrozen", show: false }              # decision: no-profile-links
+
+location:
+  city: Kyiv
+  country: Ukraine
+  remote: true
+  time_zone: Europe/Kyiv
+  overlaps: [EU, UK, US]               # "Working hours overlap with EU, UK and US time zones"
+
+work:
+  engagement_types: [b2b-contract, full-time]   # "Open to B2B contract or full-time employment"
+  work_authorization: []
+  open_to_relocation: false
+
+education:
+  - degree: PhD Candidate, Computer Science
+    status: in-progress
+    institution: National University of Life and Environmental Sciences
+    country: Ukraine
+    start: 2023
+    end: 2027
+    end_expected: true
+  - degree: Master of Computer Science
+    institution: National University of Life and Environmental Sciences
+    country: Ukraine
+    start: 2020
+    end: 2022
+    honors: Honors Diploma (top 10% of graduates)
+  - degree: Bachelor of Computer Science
+    institution: National Aviation University
+    country: Ukraine
+    start: 2016
+    end: 2020
+
+languages:
+  - { language: English, level: C1 (Advanced) }
+  - { language: Ukrainian, level: Native }
