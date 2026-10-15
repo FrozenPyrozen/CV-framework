@@ -53,7 +53,7 @@ CV/
 │   ├── advisor.md                 # interactive: findings -> questions -> confirmed facts -> composer
 │   └── template-importer.md       # labels paragraphs of a sample CV to create a style map
 ├── facts/
-│   ├── profile.yaml               # name, contacts, location, availability, education, languages
+│   ├── profile.yaml               # the only place for personal details; the CV header is generated from it (4.2a)
 │   ├── confirmed.yaml             # facts you confirmed, each with id + source
 │   └── decisions.yaml             # choices you made about the CV (e.g. "no LinkedIn"), so reviewers stop re-raising them
 ├── summaries/                     # one file per project, all following work-summary-spec
@@ -85,7 +85,7 @@ CV/
 │   └── trace-check.ts
 └── .claude/
     ├── agents/                    # thin wrappers -> agents/*.md
-    └── commands/                  # /harvest /compose /tailor /variants /review /improve /add-experience /import-template /build
+    └── commands/                  # /harvest /compose /tailor /variants /review /improve /add-experience /profile /import-template /build
 ```
 
 ## 4. Data formats
@@ -201,6 +201,42 @@ Seeded from this chat:
 
 Rules that came out of this chat (SDD emphasis, freelance entries without dates, hidden client names, no `→`/`·`/`•`/`—`, "SYSPRO" spelling) go into `specs/cv-spec.md`, not the facts file.
 
+### 4.2a Personal profile (`facts/profile.yaml`)
+
+All personal details live **only** here. The CV header is **always generated** from this file and never typed into the Markdown, so changing your phone or country is one edit followed by a rebuild.
+
+```yaml
+schema_version: 1
+name: Kirill Kohan
+legal_name: Kyrylo Kokhan              # optional; shown as "Kirill (Kyrylo) Kohan" if show_legal_name is true
+show_legal_name: false
+headline_default: Senior Software Engineer / Tech Lead (Frontend & Mobile)   # profiles can override
+contacts:
+  phone: "+380 97 891 9783"            # international format, checked by lint
+  email: kiril.kohan@gmail.com
+  links:
+    - { label: Portfolio, url: "https://drive.google.com/file/d/1-BtpQknjSQ9bxTFAKm6v-r3DQR7IOX6s/view?usp=sharing", show: true }
+    - { label: LinkedIn, url: "https://www.linkedin.com/in/kyrylo-kohan/", show: false }
+    - { label: GitHub, url: "https://github.com/FrozenPyrozen", show: false }
+location:
+  city: Kyiv
+  country: Ukraine
+  remote: true
+  time_zone: Europe/Kyiv
+  overlaps: [EU, UK, US]               # generates "Working hours overlap with EU, UK and US time zones"
+work:
+  engagement_types: [b2b-contract, full-time]   # generates "Open to B2B contract or full-time employment"
+  work_authorization: []               # e.g. ["EU work permit"]; shown when not empty
+  open_to_relocation: false
+education: [...]
+languages: [...]
+```
+
+Rules:
+- The header lines (name, headline, location, availability, time zones, contacts) are generated from these fields with templates set in `framework.config.yaml`. Changing `country` changes every line that depends on it.
+- `lint` fails if any CV, role version or tailored CV has a header that doesn't match the generated one (for example, an old phone number left in one file).
+- The HR rubric reads `location` and `work` to choose its questions: hiring setup from Ukraine, a work permit in a new country, relocation, time-zone overlap.
+
 ### 4.3 Trace references in the CV
 
 The composer adds an HTML comment after each bullet, which Markdown viewers and the renderer ignore:
@@ -283,7 +319,7 @@ What the main rubrics must produce (taken from the reviews done in this chat):
 | `pdf [file]` | `.docx` to `.pdf` with the first available exporter from `pdf_exporters` in `framework.config.yaml` (see 6.1) |
 | `pdf-check [file]` | Checks that the PDF is ATS-readable (6.2) |
 | `preview [file]` | Page images of the PDF into `preview/` (6.3) |
-| `lint [file]` | Deterministic checks: forbidden characters, date format, duplicate skills, word count, heading structure, bold balance |
+| `lint [file]` | Deterministic checks: forbidden characters, date format, duplicate skills, word count, heading structure, bold balance, **header matches `profile.yaml`**, phone in international format |
 | `trace [file]` | Claim-to-source check (section 4.3) |
 | `check` | lint + trace for the master CV, all variants and all tailored CVs |
 
@@ -364,6 +400,7 @@ Dependencies: TypeScript run with `tsx`, `jszip` for reading and writing `.docx`
 | `/variants` | Rebuilds every profile variant (after summaries or the master CV change), then `npm run build:all` |
 | `/review [cv-file] [rubric…]` | Runs the reviewers (default all 6) and writes `reports/<date>/`. "Would this CV pass an AI ATS?" is `/review --rubric ats`, and "…and then HR?" is `--rubric hr`. |
 | `/improve [report…]` | Advisor goes through the findings one topic at a time. It asks you questions with suggested answers, records them as facts, has the composer apply them, and shows the diff. Findings you decline are recorded as decisions (e.g. "no LinkedIn link", "keep length"), so later reviews don't raise them again. |
+| `/profile` | You describe a change ("moved to Poland, new phone +48…"). The advisor asks the follow-up questions (work permit? still B2B? new time zone? relocation?), updates `profile.yaml`, runs `/variants` and `build:all`, and lists tailored CVs and already-sent PDFs that still have the old details. |
 | `/add-experience` | You describe experience in your own words (e.g. "technical interviewing, legacy React Native audits, presales"). The advisor asks follow-up questions, writes a `confirmed.yaml` entry (or a `cv_entry` for a new job), and the composer adds the bullets. |
 | `/import-template <file> <name>` | Template import (6.4), followed by a test build and preview for your approval |
 | `/build [cv-file]` | `npm run build`, then reports the pdf-check result and shows the page previews |
@@ -378,7 +415,7 @@ Each step ends with something you can check.
    *Check:* `git status` shows moves only, no content changes.
 2. **Specs.** Write `cv-spec.md` (the current CV's structure plus every rule from this chat), `work-summary-spec.md`, `tailoring-spec.md`, `templates.md` and the 6 rubrics. The ATS and HR rubrics are based on the reviews done in this chat.
    *Check:* you review the specs. This is the most important review.
-3. **Facts.** Write `profile.yaml`, `confirmed.yaml` (section 4.2) and `decisions.yaml` (section 10).
+3. **Facts.** Write `profile.yaml` (section 4.2a), `confirmed.yaml` (section 4.2) and `decisions.yaml` (section 10). Replace the typed header in the master CV with the generated one.
    *Check:* you confirm every entry is true.
 4. **Migrate summaries.** Add front matter and restructure the body into the 9 sections from section 4.1, numbering the contributions. Existing content is kept. Sections the old summaries don't cover (for example, *Main features* for the Jira plugin, *Portfolio material*) are filled only from what the summary already says, or marked `TODO (needs user input)`. Nothing is invented.
    *Check:* you review the 3 migrated summaries and fill in the TODOs.
@@ -470,11 +507,11 @@ Every step done by hand in the chat, and the capability that repeats it:
 | 12 | Decided to keep length, contacts and the portfolio link | `facts/decisions.yaml` |
 | 13 | Replaced special characters, made company spelling consistent, removed duplicate skills | `lint` + proofreading rubric |
 | 14 | "Would HR pass it?" with likely interview questions | `/review --rubric hr` |
-| 15 | Added the "Open to B2B contract or full-time employment" line | `profile.yaml` availability field, then the header |
+| 15 | Added the "Open to B2B contract or full-time employment" line | `profile.yaml` `work.engagement_types` generates the header line; `/profile` changes it |
 | 16 | Added interviewing, legacy React Native audits and presales from your description | `/add-experience` |
 | 17 | Converted the Markdown to Word in your old CV's format | `/import-template` (6.4) + `render` |
 | 18 | Fixed the bullet indentation that broke in Pages | template `fixes.yaml`, PDF export through Pages, `preview`, layout rubric |
 | 19 | Exported a PDF and checked it | `pdf` + `pdf-check` |
 | 20 | Kept your manual edits made between steps | Principle "your manual edits are kept" + diffs |
 | 21 | Saved preferences and decisions for future sessions | specs, `confirmed.yaml`, `decisions.yaml` (in the repo, so any tool sees them) |
-
+| 22 | Asked what happens if you move country or change your phone | `profile.yaml` + generated header + lint header check + `/profile` |
