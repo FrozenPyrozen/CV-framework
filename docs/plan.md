@@ -1,6 +1,6 @@
 # CV Agent Framework: Plan
 
-Status: steps 1–11 done (section 8); full-archive move specified (`specs/portability-spec.md`); next: step 12 (second-laptop test) · 2026-10-16
+Status: steps 1–12 done (section 8; step 12 by full archive on this Mac); next: step 13 (new laptop + new repo) · 2026-10-16
 
 ## 1. Goal
 
@@ -36,7 +36,7 @@ CV/
 ├── AGENTS.md                      # entry point for any AI tool: layout, workflows, rules, commands
 ├── CLAUDE.md                      # "Read AGENTS.md" + "do not use cns:* skills in this repo"
 ├── README.md                      # for humans: what this is, how to run it
-├── docs/                          # plan.md (this file), acceptance.md (replay checklist for agents)
+├── docs/                          # plan.md (this file), acceptance.md (replay checklist for agents), open-items.md (to add or answer later)
 ├── framework.config.yaml          # paths, sections, display formats, output names, checks, exporters, tags
 ├── framework.local.yaml           # per-laptop settings: repo paths, backup folder, exporter order (git-ignored)
 ├── framework.local.example.yaml   # committed example of the file above
@@ -746,7 +746,7 @@ The framework must work on any laptop with the repo cloned. Everything machine-s
 | Built outputs | `.docx`, `.pdf`, previews, `pdf-check.md`, `.build-state.json` | not moved; `npm run build:all` recreates them |
 | Private, not in git | tailored CVs and job ads, `applications.yaml`, sent PDFs | `npm run backup` (also inside a full archive), then `restore` on the other laptop |
 | Per-laptop settings | repo paths, backup folder, exporter order | `framework.local.yaml`, created on each laptop from the example file (a restore keeps the old one as `framework.local.previous.yaml`) |
-| AI tool memory | my memory on this Mac | not needed: every rule and decision is in the repo (`AGENTS.md`, `CLAUDE.md`, specs, `decisions.yaml`) |
+| AI tool memory | my memory on this Mac | not needed: every rule, decision and open item is in the repo (`AGENTS.md`, `CLAUDE.md`, specs, `decisions.yaml`, `docs/open-items.md`) |
 
 **`framework.local.yaml` (git-ignored):**
 ```yaml
@@ -837,7 +837,7 @@ Problems expected when the flows actually run, found by simulating every flow ag
 
 ## 12. Coverage of the 2026-10-15 chat
 
-Every step done by hand in the chat, and the capability that repeats it. Rows 37 onward also log the build steps of section 8 (step 5: rows 37–42, step 6: 43–44, step 7: 46–47, step 8: 48–49, step 9: 50–52, step 10: 54, step 11: 55) and the audits after them.
+Every step done by hand in the chat, and the capability that repeats it. Rows 37 onward also log the build steps of section 8 (step 5: rows 37–42, step 6: 43–44, step 7: 46–47, step 8: 48–49, step 9: 50–52, step 10: 54, step 11: 55, step 12: 56–57) and the audits after them.
 
 | # | What we did in the chat | Framework capability |
 |---|---|---|
@@ -897,3 +897,4 @@ Every step done by hand in the chat, and the capability that repeats it. Rows 37
 | 54 | Ran step 10 (acceptance replay) | `docs/acceptance.md` written (scripted, agent and end-to-end scenarios with expected results, replay rules, run log); replay from `b130643` passed: same structure, entries, bullet counts and sources as today's CV. Fixes from the replay: composer handles old unmarked sections and self-checks against sources, US spelling warnings (`checks.spelling_variants`), `check` skips stale market copies, one-off `overrides` in `jd-tags.yaml`, job-specific CVs named like the master, tailoring rules for multi-source bullets and order |
 | 55 | Wrote step 11 (README) | `README.md`: what the framework produces, requirements, first run, new-laptop steps (backup, private remote or folder copy, `framework.local.yaml`, restore, doctor, build), everyday commands, how claims stay truthful, where things are |
 | 56 | Asked to cover archiving the repo, moving it to another laptop and connecting a remote there | `specs/portability-spec.md` (what travels, backup, full archive, restore, both routes, history check before the first push); `npm run backup -- --full` (git bundle + private backup + manifest + restore steps, plain outer zip, refuses uncommitted changes); restore keeps `framework.local.yaml` and saves the archived one as `framework.local.previous.yaml`; step 12 tests the archive route |
+| 57 | Tested the full archive on a fresh folder (step 12, route B) | 146 committed files identical by content hash, 44 commits identical, private files restored, old settings kept as `framework.local.previous.yaml`, `doctor` ready, `build:all` with the same words per page, 101 tests pass. One loss found: open items lived only in the AI tool's memory, so they moved to `docs/open-items.md` (read by the advisor) |

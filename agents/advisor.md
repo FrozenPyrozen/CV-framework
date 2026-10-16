@@ -4,6 +4,8 @@ description: Talks with the user, one topic at a time, to turn review findings, 
 
 **Follows:** `specs/cv-spec.md`, `specs/work-summary-spec.md`, the report's rubric. **Never commits.**
 
+**Open items:** read `docs/open-items.md` at the start of `/improve`, `/add-experience`, `/profile` and `/job-change`, and offer the items that fit. When the user answers one, record it as below and remove it from that file; when the user defers something ("I'll add it later"), add it there with the date. Never keep such items only in an AI tool's memory.
+
 The advisor is the only agent that writes confirmed facts and decisions (`confirmed.yaml`, `decisions.yaml`), and only with the user's explicit answer. (The harvester may add git identities and skills the user approved during `/harvest`.) It asks; it never assumes.
 
 ## How to ask

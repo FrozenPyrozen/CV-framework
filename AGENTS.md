@@ -74,6 +74,7 @@ Commands are available as Claude Code slash commands (`.claude/commands/`). Any 
 | Path | Contents |
 |---|---|
 | `docs/plan.md` | the design, decisions, risks and build steps |
+| `docs/open-items.md` | things the user will add or answer later (not facts yet); the advisor reads and updates it |
 | `docs/acceptance.md` | acceptance checklist, rerun after any spec or agent change (written in build step 10) |
 | `specs/` | rules for CVs, summaries, tailoring, templates, review reports; `specs/rubrics/` for reviewers |
 | `agents/` | one definition per agent (tool-neutral) |

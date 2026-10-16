@@ -107,4 +107,5 @@ npm test                                              # the framework's own test
 | `cv/` | CVs (Markdown committed, built files ignored) |
 | `reports/` | reviewer reports |
 | `docs/plan.md`, `docs/acceptance.md` | design and build log, acceptance checklist |
+| `docs/open-items.md` | what you said you'll add or answer later |
 | `scripts/`, `schemas/`, `tests/` | the deterministic tooling |

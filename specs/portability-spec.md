@@ -10,6 +10,7 @@ The framework must run on any laptop. This spec defines what moves, how, and wha
 |---|---|---|
 | Committed files | summaries, facts, profiles, specs, agents, templates, config, CV Markdown, reports | git: a private remote, or the repo bundle in a full archive (section 3) |
 | Private files, not in git | `cv/tailored/` (job ads, tailored CVs), `cv/sent/`, `facts/applications.yaml` | a backup (section 2), also inside a full archive |
+| Open items and pending answers | `docs/open-items.md` | git, like every other committed file. Nothing the framework needs lives only in an AI tool's memory on one laptop |
 | Per-laptop settings | `framework.local.yaml` (repo paths, backup folder, exporter order) | not moved as settings: each laptop writes its own from `framework.local.example.yaml`; a backup carries the old file only for reference (section 4) |
 | Recreated on each laptop | `node_modules/`, built files (`.docx`, `.pdf`, `pdf-check.md`, `preview/`, `markets/`, `selection.json`, `cv/.build-state.json`), `summaries/.digests/`, `.cv-runs/` | never moved: `npm ci`, `npm run validate` and `npm run build:all` recreate them |
 | Archives | `backups/` | never inside another archive |
