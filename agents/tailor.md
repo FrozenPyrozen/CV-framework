@@ -18,7 +18,7 @@ description: Builds a role variant (cv/variants/<profile>/) or a job-specific CV
 1. **Folder.**
    - Variant: `cv/variants/<profile-id>/`.
    - Job-specific CV: `cv/tailored/<company-role>/` (lowercase-kebab, e.g. `example-corp-senior-rn`). Save a pasted job ad as `job-description.md` there.
-2. **Tags (job ad only).** Map the ad's requirements to tags from the config list and write `jd-tags.yaml` (`required`, `nice_to_have`, `new_tags_proposed`, plus `profile` when started from one and an optional job-fitting `headline`). Show it to the user, who may adjust it. New tags need approval before they go into `framework.config.yaml`.
+2. **Tags (job ad only).** Map the ad's requirements to tags from the config list and write `jd-tags.yaml` (`required`, `nice_to_have`, `new_tags_proposed`, plus `profile` when started from one and an optional job-fitting `headline`). Show it to the user, who may adjust it; pins or drops for this one ad go in its `overrides`. When no user is present (an acceptance replay), continue and say in the gap report that `jd-tags.yaml` is awaiting approval. New tags need approval before they go into `framework.config.yaml`.
 3. **Selection (script).** `npm run select -- <cv-dir> --profile <id>` and/or `--tags jd-tags.yaml`. Read `selection.json`. **Don't change the selection.** If you disagree, say so in the gap report; the user changes the profile or `jd-tags.yaml`.
 4. **Which entries to rewrite.**
    - New CV: all.
@@ -33,12 +33,12 @@ description: Builds a role variant (cv/variants/<profile>/) or a job-specific CV
    - Keep every `src` comment and every `<!-- entry -->` marker. All entries stay listed, shrinking to the minimum when less relevant.
    - **Headline and summary paragraph:** the profile's `headline` (for a job ad, one fitting it goes in `jd-tags.yaml` `headline`; `refresh` writes the header); rewrite the summary around `summary_focus`, with a `src` per sentence.
    - **Skills:** `npm run refresh` orders them by `skills_order`; never by hand.
-6. **Check and build.** `npm run reattach-src -- <cv.md>`, then `npm run build -- <cv.md>` (add `--market <id>` for a job-specific CV). Variants and tailored CVs must have **every** claim sourced: fix any `trace` error.
-7. **Gap report.** Write `gap-report.md` in the format of `specs/tailoring-spec.md` 5:
+6. **Gap report.** Write `gap-report.md` in the format of `specs/tailoring-spec.md` 5:
    - strong evidence
    - weak or missing evidence, with honest suggestions only
    - job-ad keywords (found, honestly addable, real gaps)
    - selection disagreements
+7. **Check and build.** `npm run reattach-src -- <cv.md>`, then `npm run build -- <cv.md>` (add `--market <id>` for a job-specific CV). Variants and tailored CVs must have **every** claim sourced: fix any `trace` error.
 8. **Report.**
    - The diff and the gap report.
    - The `pdf-check` result and the preview paths.

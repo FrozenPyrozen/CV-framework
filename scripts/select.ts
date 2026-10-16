@@ -17,7 +17,7 @@ export interface SelectionInput {
     overrides?: Record<string, { pin?: boolean; drop?: boolean; text?: string }>;
     skills_order?: string[]; include_sections?: string[];
   };
-  jdTags?: { required?: string[]; nice_to_have?: string[] };
+  jdTags?: { required?: string[]; nice_to_have?: string[]; overrides?: Record<string, { pin?: boolean; drop?: boolean; text?: string }> };
 }
 
 export interface Selection {
@@ -33,7 +33,9 @@ export function select(input: SelectionInput): Selection {
   const summaries = loadSummaries(cfg);
   const confirmed = loadConfirmed(cfg);
   const entries = loadEntries(cfg, summaries, confirmed);
-  const p = input.profile ?? { id: "" };
+  // A job ad's own overrides (jd-tags.yaml) apply on top of the profile's, for that one CV only.
+  const base = input.profile ?? { id: "" };
+  const p = { ...base, overrides: { ...(base.overrides ?? {}), ...(input.jdTags?.overrides ?? {}) } };
   const max = p.max_bullets_per_entry ?? 99;
   const min = Math.min(p.min_bullets_per_entry ?? 1, max);
   const count = (tags: string[], list?: string[]) => tags.filter((t) => list?.includes(t)).length;

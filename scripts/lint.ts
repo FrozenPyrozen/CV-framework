@@ -100,6 +100,7 @@ export function lintCv(file: string, ctx: Context, summaries = loadSummaries(ctx
     const noUrls = visible.replace(URL_RE, "");
     for (const ch of cfg.checks.forbidden_chars) if (noUrls.includes(ch)) add("error", `forbidden character "${ch}"`, i);
     for (const w of cfg.checks.filler_words) if (new RegExp(`\\b${escapeRe(w)}\\b`, "i").test(noUrls)) add("warning", `filler word "${w}"`, i);
+    for (const [w, us] of Object.entries<string>(cfg.checks.spelling_variants ?? {})) if (new RegExp(`\\b${escapeRe(w)}\\b`, "i").test(noUrls)) add("warning", `"${w}": use "${us}" (US English)`, i);
     if (/^\* /.test(visible)) {
       const words = visible.slice(2).replace(/\*\*/g, "").split(/\s+/).filter(Boolean).length;
       if (words > cfg.checks.max_bullet_words) add("warning", `bullet has ${words} words (max ${cfg.checks.max_bullet_words})`, i);

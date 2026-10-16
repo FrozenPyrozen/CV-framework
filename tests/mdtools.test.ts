@@ -387,3 +387,31 @@ test("a job-specific CV takes its profile and headline from jd-tags.yaml", () =>
   const skills = md.slice(md.indexOf("<!-- generated:skills -->"));
   assert.ok(skills.indexOf("**Mobile:**") < skills.indexOf("**Frontend:**"), "skills follow the react-native profile order");
 });
+
+test("lint warns about non-US spellings from checks.spelling_variants", () => {
+  const dir = refreshed();
+  edit(dir, CV, "user engagement grew 4x afterward.", "user engagement grew 4x afterwards.");
+  assert.match(run("lint.ts", dir, [CV]).out, /"afterwards": use "afterward" \(US English\)/);
+});
+
+test("select: a job ad's jd-tags.yaml overrides apply on top of the profile", () => {
+  const dir = tempRepo();
+  mkdirSync(join(dir, "cv/tailored/acme"), { recursive: true });
+  writeFileSync(join(dir, "cv/tailored/acme/jd-tags.yaml"), "required: [react-native]\noverrides:\n  velas-wallet#4.7: { pin: true }\n  general-motors-navigation#4.1: { drop: true }\n");
+  const r = run("select.ts", dir, ["cv/tailored/acme", "--profile", "react-native", "--tags", "jd-tags.yaml"]);
+  assert.equal(r.code, 0, r.out);
+  const sel = JSON.parse(readFileSync(join(dir, "cv/tailored/acme/selection.json"), "utf8"));
+  const srcs = (id: string) => sel.entries.find((e: any) => e.id === id).bullets.map((b: any) => b.src);
+  assert.ok(srcs("velas-wallet").includes("velas-wallet#4.7"));
+  assert.ok(!srcs("general-motors-navigation").includes("general-motors-navigation#4.1"));
+});
+
+test("check skips a market copy older than its CV instead of linting stale text", async () => {
+  const { utimesSync } = await import("node:fs");
+  const dir = refreshed();
+  run("market.ts", dir);
+  const ua = join(dir, "cv/markets/ukraine/Kirill_Kohan_CV_UA.md");
+  const old = new Date(Date.now() - 60_000);
+  utimesSync(ua, old, old);
+  assert.match(run("check.ts", dir).out, /Kirill_Kohan_CV_UA\.md: older than Kirill_Kohan_CV\.md; skipped/);
+});

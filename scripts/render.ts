@@ -4,14 +4,15 @@
 // Output: next to the Markdown; "cv.md" in a variant folder becomes <Name>_CV_<Profile>.docx.
 import { readFileSync } from "node:fs";
 import { basename, dirname, join } from "node:path";
-import { loadContext, profileIdForFile } from "./lib/cvmd.ts";
+import { loadContext, profileIdForFile, variantIdForFile } from "./lib/cvmd.ts";
 import { masterCvPath, outputBaseName } from "./lib/paths.ts";
 import { cliPath, isMain, loadConfig, rootPath } from "./lib/repo.ts";
 import { parseArgs } from "./refresh.ts";
 import { renderDocx } from "./renderers/docx.ts";
 
 export function docxPathFor(mdFile: string): string {
-  if (basename(mdFile) === "cv.md") return join(dirname(mdFile), `${outputBaseName({ profileId: profileIdForFile(mdFile) })}.docx`);
+  // Role variants carry the profile in the file name; a job-specific CV is just <Name>_CV (plan 4.5).
+  if (basename(mdFile) === "cv.md") return join(dirname(mdFile), `${outputBaseName({ profileId: variantIdForFile(mdFile) })}.docx`);
   return mdFile.replace(/\.md$/, ".docx");
 }
 

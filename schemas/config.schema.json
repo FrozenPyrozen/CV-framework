@@ -41,7 +41,8 @@
         "max_bullet_words": { "type": "integer", "minimum": 5 }, "contacts_on_page_1": { "type": "boolean" },
         "export_timeout_s": { "type": "integer", "minimum": 5 },
         "forbidden_chars": { "type": "array", "items": { "type": "string" } },
-        "filler_words": { "type": "array", "items": { "type": "string" } }
+        "filler_words": { "type": "array", "items": { "type": "string" } },
+        "spelling_variants": { "type": "object", "additionalProperties": { "type": "string" } }
       },
       "additionalProperties": false
     },

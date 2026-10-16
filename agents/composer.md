@@ -22,22 +22,24 @@ description: Updates the master CV from the summaries and confirmed facts, one e
    - Note its messages: entries missing from the CV, entries in the wrong section.
    - Run `npm run status`: "entries to update" lists master-CV entries whose sources changed since the last build. They stay listed until the CV is edited; if one needs no text change, build with `--entries-reviewed`.
 2. **Plan the changes.** For each entry that needs work (new entry, new or changed contributions or facts, `cv_emphasis`, advisor change list), decide which bullets to add, update or remove. Leave every other entry exactly as it is.
-3. **New entries.** Add the entry block in its section, in the right order (`cv_order`, then newest first): the marker line `<!-- entry: <id> -->` followed by a placeholder `## **x**` and `### **x**`. `refresh` (step 6) fills the real lines. Then write its bullets.
-4. **Write bullets, one entry at a time.**
+3. **Old sections without markers** (a CV written before the framework): move their bullets into the configured section (`cv_sections` heading), delete the old heading and its stray lines, and add the entry markers. `refresh` only reports these ("add to section …"); it doesn't move text.
+4. **New entries.** Add the entry block in its section, in the right order (`cv_order`, then newest first): the marker line `<!-- entry: <id> -->` followed by a placeholder `## **x**` and `### **x**`. `refresh` (step 7) fills the real lines. Then write its bullets.
+5. **Write bullets, one entry at a time.**
    - **Shape:** action, then technology, then outcome; a past-tense verb first; one achievement per bullet; about 45 words at most.
    - **Numbers:** only from the source, never rounded up.
    - **Bold:** key technologies and terms.
    - **Acronyms:** spelled out once with the acronym (e.g. "OpenID Connect (OIDC)").
    - **Emphasis first:** the points in `cv_emphasis` go into the first bullets of their entry. For SYSPRO this means architecture-governed SDD, not AI-generated code (decision `sdd-not-vibe-coding`).
-   - **Current job:** ends with a `* Stack: **…**` line, sourced from the summary's section 5 (`<id>#5`).
+   - **Stack lines:** the current job ends with a `* Stack: **…**` line, sourced from the summary's section 5 (`<id>#5`). An older job keeps a Stack line it already has, updated when section 5 changes; don't add new ones to older jobs.
    - **Sources:** end every bullet with `<!-- src: <id>#4.N -->`, a fact id, or several, comma-separated.
-   - **Existing bullets:** keep the user's wording unless its source changed or the user asked for a change.
-   - **Limits:** respect `cv_max_bullets` (the Stack line doesn't count).
-5. **Summary paragraph.** Update only if the entries changed what it should say. One `src` comment per sentence; calculated values cite `calc:years_experience` / `calc:team_size_led`, profile facts cite `profile`. Use the calculated values (lint checks "7+ years" and "up to N engineers").
-6. **Check.**
+   - **Existing bullets:** keep the user's wording unless the contribution or fact it cites now says something different (compare meaning, not the file's age), the user asked for a change, or the wording claims more than its source ("maintained" for "used", "authored" for "contributed to"): then correct it to match the source.
+   - **Limits:** respect `cv_max_bullets` (the Stack line doesn't count). Entries without one, such as consulting entries, keep to 6 bullets.
+6. **Summary paragraph.** Update only if the entries changed what it should say. One `src` comment per sentence; calculated values cite `calc:years_experience` / `calc:team_size_led`, profile facts cite `profile`. Use the calculated values (lint checks "7+ years" and "up to N engineers").
+7. **Check.**
+   - **Self-check against the sources:** reread every bullet you wrote or kept next to the contribution or fact its `src` cites, as the fact-check rubric does; fix any verb or scope stronger than the source.
    - `npm run refresh -- <cv>`, then `npm run reattach-src -- <cv>`, then `npm run check`.
    - Fix every lint error and every unsourced or unresolved claim you introduced. Report anything you can't fix (for example a claim the user asked for that has no source: suggest `/add-experience`).
-7. **Report** a short change log per entry (added, updated, removed bullets and why), the diff, remaining warnings, and the next step: `npm run build`, `/variants` for role versions, `/review`.
+8. **Report** a short change log per entry (added, updated, removed bullets and why), the diff, remaining warnings, and the next step: `npm run build`, `/variants` for role versions, `/review`.
 
 ## Annotate-only mode
 

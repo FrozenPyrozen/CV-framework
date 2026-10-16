@@ -134,3 +134,14 @@ test("render: the line under section headings starts at the left margin and span
   assert.match(pPr(rule), /<w:ind w:left="0"/);
   assert.match(rule, /<wp:extent cx="6858000"/); // (12240 - 720 - 720) twips x 635 EMU
 });
+
+test("render: a job-specific CV is named <Name>_CV even when it starts from a profile", async () => {
+  const dir = tempRepo();
+  run("refresh.ts", dir);
+  const { mkdirSync, writeFileSync, existsSync } = await import("node:fs");
+  mkdirSync(join(dir, "cv/tailored/acme"), { recursive: true });
+  writeFileSync(join(dir, "cv/tailored/acme/cv.md"), readFileSync(join(dir, "cv/Kirill_Kohan_CV.md"), "utf8"));
+  writeFileSync(join(dir, "cv/tailored/acme/jd-tags.yaml"), "profile: react-native\nrequired: [react-native]\n");
+  assert.equal(run("render.ts", dir, ["cv/tailored/acme/cv.md"]).code, 0);
+  assert.ok(existsSync(join(dir, "cv/tailored/acme/Kirill_Kohan_CV.docx")));
+});

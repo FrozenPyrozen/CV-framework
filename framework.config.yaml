@@ -68,6 +68,21 @@ checks:
   export_timeout_s: 60
   forbidden_chars: ["→", "·", "•", "—", "–"]
   filler_words: [passionate, results-driven, highly accomplished, leveraged, leverage, synergy, cutting-edge, rockstar, ninja, guru]
+  spelling_variants:                 # word to avoid: preferred US spelling (lint warns; spelling: en-US)
+    afterwards: afterward
+    towards: toward
+    colour: color
+    behaviour: behavior
+    optimise: optimize
+    optimised: optimized
+    organise: organize
+    analyse: analyze
+    analysed: analyzed
+    modelling: modeling
+    licence: license
+    centre: center
+    favour: favor
+    catalogue: catalog
 
 secret_scan:
   allow: []                          # approved values that look like secrets (profile links are always allowed)

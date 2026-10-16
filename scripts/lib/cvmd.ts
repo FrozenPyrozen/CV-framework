@@ -30,6 +30,13 @@ export function profileIdForFile(cvFile: string, cfg = loadConfig()): string | u
   return tailoredSettings(abs, cfg).profile;
 }
 
+// The role variant a CV file belongs to (cv/variants/<id>/…), ignoring tailored CVs' profiles.
+export function variantIdForFile(cvFile: string, cfg = loadConfig()): string | undefined {
+  const variants = rootPath(cfg.output.variants_dir) + "/";
+  const abs = resolve(cvFile);
+  return abs.startsWith(variants) ? abs.slice(variants.length).split("/")[0] : undefined;
+}
+
 // A job-specific CV's jd-tags.yaml may name the role profile it starts from and a headline fitting the job ad
 // (specs/tailoring-spec.md 2). Both are optional.
 export function tailoredSettings(cvFile: string, cfg = loadConfig()): { profile?: string; headline?: string } {

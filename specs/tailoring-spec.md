@@ -23,6 +23,8 @@ A tailored CV is the master CV adapted to a type of role (a **profile**) or to o
    required: [react-native, typescript, testing]     # must-have requirements, weight 3
    nice_to_have: [graphql, aws]                       # weight 1
    new_tags_proposed: [kotlin-multiplatform]          # not in the config list yet; need approval
+   overrides:                                         # optional: pins and drops for this one CV, on top of the profile's
+     velas-wallet#4.7: { pin: true }
    profile: react-native                              # optional: the role profile it starts from (--profile)
    headline: Senior React Native Engineer (Healthcare)   # optional: a headline fitting the job ad
    ```
@@ -31,6 +33,8 @@ A tailored CV is the master CV adapted to a type of role (a **profile**) or to o
    - If the master CV has a bullet with the same source id, start from its wording (including the user's manual edits) and only shorten or re-emphasize it.
    - Otherwise write it fresh from the source, following `cv-spec.md`.
    - Keep its `src` comment.
+   - **Master bullets with several sources:** keep the parts backed by selected sources. A part backed by an unselected source is dropped, unless the same claim is already elsewhere in the CV; cite only the sources the remaining text uses.
+   - **Order:** bullets appear in selection order; the agent doesn't reorder them (pins set the opening bullets). Bullets with a score of 0 or less are selected only to reach `min_bullets_per_entry`, so an entry can end below its limit.
 4. **Headline and summary.** Use the profile's `headline`, or for a job ad one fitting it, written to `jd-tags.yaml` `headline` (the header is generated, so `refresh` reads it from there). Rewrite the summary paragraph around `summary_focus`, with a `src` comment on every sentence.
 5. **Skills.** Reordered by `skills_order` through the generated `skills` block (not by hand).
 6. **Only changed entries are rewritten.** Each build record in `cv/.build-state.json` has an `entries` map: a hash per CV entry of everything it's built from (its summary's front matter, contributions, metrics and facts, or its `cv_entry` and facts). `npm run status` lists the entries whose hash changed. On a rebuild, entries whose hash didn't change are copied unchanged, so variants don't change in git without a reason. `build` keeps the old hashes while the CV Markdown is unchanged, so `build:all` can't hide entries that still need rewriting; when the listed entries need no text change, build with `--entries-reviewed`.
@@ -90,6 +94,9 @@ Built: 2026-10-20 · Profile: react-native · Job ad: yes/no
 ```
 
 The gap report never suggests claiming something that isn't true. "Add as a fact" always means "if it's true".
+
+- **File names:** role variants carry the profile in the file name (`Kirill_Kohan_CV_React_Native.pdf`); a job-specific CV is named like the master (`Kirill_Kohan_CV.pdf`) inside its own folder, even when it starts from a profile.
+- **Length:** `max_words` counts the rendered words of the default-market Markdown (comments and Markdown markers removed), the same count `lint` reports.
 
 ## 6. Output
 

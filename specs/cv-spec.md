@@ -64,7 +64,7 @@ Each entry is a list of `*` bullets (one level, no nesting).
 - **Numbers:** use them whenever a source provides one (`1,800+`, `12x`, `95%`, `25+ person program`). Never invent or round up a number. "~" is allowed when the source says "about".
 - **Bold:** bold the technologies and key terms a screener searches for (`**React Native**`, `**OpenID Connect (OIDC)**`), and important numbers or outcomes when they're the point of the bullet. Don't bold whole sentences.
 - **Acronyms:** spell out once with the acronym in brackets where screeners may search either form: `**specification-driven development (SDD)**`, `**OpenID Connect (OIDC)**`.
-- **Stack line:** an entry may end with `* Stack: **A, B, C**` listing the main technologies (expected for the current job; `lint` warns when it's missing).
+- **Stack line:** an entry may end with `* Stack: **A, B, C**` listing the main technologies, sourced from its summary's section 5 (expected for the current job, and `lint` warns when it's missing; older jobs keep one they already have). It doesn't count toward bullet limits.
 - **Length:** a bullet should fit in about 2 lines of the rendered CV (roughly 45 words at most).
 - **Limits:** `cv_max_bullets` in the summary caps an entry in the master CV. Profiles set their own limits (see the tailoring spec).
 - **Source:** every bullet ends with a source comment (section 6).
@@ -136,7 +136,8 @@ Not allowed (lint fails): italics, tables, nested lists, numbered lists, images,
 - One column, standard section names, no information only in headers or footers, contact details on page 1.
 - Dates in one format everywhere (section 2.2).
 - Keywords appear in context (in bullets), not only in the Skills section.
-- Length: `checks.max_pages` and `checks.max_words` from config (or the profile's overrides).
+- Length: `checks.max_pages` and `checks.max_words` from config (or the profile's overrides). Words are counted on the rendered text, without comments and Markdown markers.
+- US spelling: `lint` warns about the words in `checks.spelling_variants` (e.g. "afterwards": use "afterward").
 
 ## 11. Confidentiality
 
