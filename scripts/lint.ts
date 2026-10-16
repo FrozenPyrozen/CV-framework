@@ -108,7 +108,8 @@ export function lintCv(file: string, ctx: Context, summaries = loadSummaries(ctx
   });
 
   // Length.
-  const words = stripComments(text).replace(/[#*]/g, " ").split(/\s+/).filter(Boolean).length;
+  // Rendered words: separators such as | - / don't count (specs/cv-spec.md 10).
+  const words = stripComments(text).replace(/[#*]/g, " ").split(/\s+/).filter((w) => /[\p{L}\p{N}]/u.test(w)).length;
   const maxWords = (ctx.roleProfile?.max_words as number | undefined) ?? cfg.checks.max_words;
   if (words > maxWords) add("error", `${words} words (max ${maxWords})`);
 
@@ -118,7 +119,7 @@ export function lintCv(file: string, ctx: Context, summaries = loadSummaries(ctx
     const visible = stripComments(p.text);
     for (const m of visible.matchAll(/(\d+)\+ years/g)) if (Number(m[1]) !== ctx.calculated.years_experience) add("error", `"${m[0]}" but the calculated value is ${ctx.calculated.years_experience}+ years`, p.line);
     for (const m of visible.matchAll(/up to (\d+) (?:developers|engineers)/gi)) if (Number(m[1]) !== ctx.calculated.team_size_led) add("error", `"${m[0]}" but the largest team led is ${ctx.calculated.team_size_led}`, p.line);
-    for (const m of visible.matchAll(/led a team of (\d+) (?:developers|engineers)/gi)) if (Number(m[1]) > ctx.calculated.team_size_led) add("error", `"${m[0]}" exceeds the largest team led (${ctx.calculated.team_size_led})`, p.line);
+    for (const m of visible.matchAll(/team of (?:about |up to )?(\d+) (?:[\w-]+ )?(?:developers|engineers)/gi)) if (Number(m[1]) > ctx.calculated.team_size_led) add("error", `"${m[0]}" exceeds the largest team led (${ctx.calculated.team_size_led})`, p.line);
   }
 
   // Section order (specs/cv-spec.md 2): enabled cv_sections in config order (or the role profile's include_sections).

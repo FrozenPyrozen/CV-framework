@@ -13,6 +13,7 @@ Kept in the repo (not in any AI tool's memory) so it travels to every laptop (`s
 | GraphQL | Also used on the clinical-trials app and other projects | `orion-mobile-clinical-ink` (today "used by the project"; hands-on only if it was) and other summaries | 2026-10-16 |
 | Docker on the Jira plugin | Used Docker there | `designai-jira-plugin` section 5 (today "used by the project") | 2026-10-16 |
 | More skills | More detail on Styled Components, Redux Thunk, Keychain, React Testing Library and others | summaries' section 5, `facts/skills.yaml` | 2026-10-16 |
+| Playwright E2E at SYSPRO | Are there real Playwright end-to-end suites at SYSPRO, beyond Playwright as the Vitest Browser Mode provider? (react gap report) | `syspro-saas-erp` 4.9 | 2026-10-16 |
 | Portfolio and older CVs | You'll add the previous portfolio and older CVs; update the portfolio and take details from them | summaries (`source: cv`), portfolio material (section 8) | 2026-10-16 |
 
 ## Questions from the first review (`reports/2026-10-16-1201/`)

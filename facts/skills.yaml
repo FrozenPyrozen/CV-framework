@@ -118,7 +118,7 @@ categories:
     items:
       - { name: Generative AI integration, tags: [generative-ai] }
       - { name: Model Context Protocol (MCP), tags: [mcp, generative-ai] }
-      - { name: AI coding agents, tags: [ai-agents] }
+      - { name: AI agent governance (SDD), tags: [ai-agents] }   # renamed 2026-10-16: not "AI coding agents", which can read as AI-written code
       - { name: AI-assisted development, tags: [ai-agents] }
 
   - id: domain

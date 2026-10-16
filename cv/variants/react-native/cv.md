@@ -19,7 +19,7 @@ Senior React Native engineer and tech lead with 7+ years of experience building 
 
 ### **SYSPRO | Remote | December 2025 - Present**
 
-* Delivered the frontend through an architecture-governed **specification-driven development (SDD)** process, not ad-hoc AI code generation, and helped define it: specification templates, the validation routine and rules for **AI coding agents** as governed reviewers. Traced each subsystem from architecture to specification to code across 4 repositories. <!-- src: syspro-saas-erp#4.2, syspro-architecture-scope -->
+* Delivered the frontend through an architecture-governed **specification-driven development (SDD)** process, not ad-hoc AI code generation, and helped define it: specification templates, the validation routine and rules for **AI review agents**. Traced each subsystem from architecture to specification to code across 4 repositories. <!-- src: syspro-saas-erp#4.2, syspro-architecture-scope -->
 
 * Owned the **frontend technology stack** for the Login micro-frontend and the schema-driven runtime, including the OIDC libraries and the move from React Testing Library to **Vitest Browser Mode**. <!-- src: syspro-saas-erp#4.3, syspro-tech-stack-ownership -->
 
@@ -193,7 +193,7 @@ National Aviation University | Ukraine | 2016 - 2020
 
 **Authentication and Security:** OAuth 2.0, OpenID Connect (OIDC), Zero-trust architecture, SSL certificate pinning, PII redaction
 
-**AI:** Generative AI integration, Model Context Protocol (MCP), AI coding agents, AI-assisted development
+**AI:** Generative AI integration, Model Context Protocol (MCP), AI agent governance (SDD), AI-assisted development
 
 **Leadership and Methodologies:** Team leadership (up to 8 engineers), Mentoring, Code review, System design, Software architecture, Architecture decision records (ADR), Technology stack selection, Technical interviewing, Technical audits, Effort estimation, Presales, Agile, Specification-driven development (SDD), Figma, Jira
 

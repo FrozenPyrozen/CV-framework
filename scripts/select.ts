@@ -36,8 +36,7 @@ export function select(input: SelectionInput): Selection {
   // A job ad's own overrides (jd-tags.yaml) apply on top of the profile's, for that one CV only.
   const base = input.profile ?? { id: "" };
   const p = { ...base, overrides: { ...(base.overrides ?? {}), ...(input.jdTags?.overrides ?? {}) } };
-  const max = p.max_bullets_per_entry ?? 99;
-  const min = Math.min(p.min_bullets_per_entry ?? 1, max);
+  const min = p.min_bullets_per_entry ?? 1;
   const count = (tags: string[], list?: string[]) => tags.filter((t) => list?.includes(t)).length;
   const sections = new Set(p.include_sections ?? cfg.cv_sections.map((s) => s.id));
 
@@ -64,7 +63,8 @@ export function select(input: SelectionInput): Selection {
       const pinned = ranked.filter((c) => c.pinned).sort((a, b) => pinOrder.indexOf(a.src) - pinOrder.indexOf(b.src));
       const rest = ranked.filter((c) => !c.pinned);
       const positive = rest.filter((c) => c.score > 0);
-      const entryMax = p.entry_max_bullets?.[e.id] ?? max;
+      // Same limit order as lint: the profile's entry limit, its general limit, then the entry's cv_max_bullets.
+      const entryMax = p.entry_max_bullets?.[e.id] ?? p.max_bullets_per_entry ?? e.maxBullets ?? 99;
       const take = Math.max(Math.min(min, entryMax) - pinned.length, Math.min(positive.length, entryMax - pinned.length), 0);
       const chosen = [...pinned, ...rest.slice(0, take)];
       out.entries.push({
@@ -82,17 +82,19 @@ export function select(input: SelectionInput): Selection {
 if (isMain(import.meta.url)) {
   const { args, positional } = parseArgs(process.argv.slice(2));
   if (!positional[0] || (!args.profile && !args.tags)) {
-    console.error("usage: npm run select -- <cv-dir> --profile <id> | --tags <jd-tags.yaml>");
+    console.error("usage: npm run select -- <cv-dir> [--profile <id>] [--tags <jd-tags.yaml>]   (at least one)");
     process.exit(2);
   }
   const cfg = loadConfig();
   const input: SelectionInput = {};
-  if (args.profile) input.profile = readYaml(rootPath(cfg.paths.profiles, `${args.profile}.yaml`));
   if (args.tags) {
     // jd-tags.yaml usually sits in the CV folder: look there first, then relative to the repo root.
     const inDir = join(cliPath(positional[0]), args.tags as string);
     input.jdTags = readYaml(existsSync(inDir) ? inDir : cliPath(args.tags as string));
   }
+  // The profile: --profile, else the one jd-tags.yaml names (as refresh, lint and build read it).
+  const profileId = (args.profile as string | undefined) ?? (input.jdTags as any)?.profile;
+  if (profileId) input.profile = readYaml(rootPath(cfg.paths.profiles, `${profileId}.yaml`));
   const sel = select(input);
   const dir = cliPath(positional[0]);
   mkdirSync(dir, { recursive: true });

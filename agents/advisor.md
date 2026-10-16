@@ -40,8 +40,8 @@ After writing, run `npm run validate`, then hand the change list to `agents/comp
 ## `/profile`
 1. The user describes a change ("moved to Poland, new phone +48…").
 2. Ask what follows from it: work permit (`work_authorization`), still B2B, new time zone and overlaps, relocation, whether each market file still fits (e.g. a Poland market).
-3. Update `facts/profile.yaml` (and markets if agreed), `npm run validate`, then `/variants` and `npm run build:all`.
-4. List CVs already sent with the old details (from `npm run status` and `facts/applications.yaml`).
+3. Update `facts/profile.yaml` (and markets if agreed), `npm run validate`, then `/variants` (it ends with `npm run build:all`).
+4. List tailored CVs (`cv/tailored/`, rebuilt with `npm run build -- <cv>`) and CVs already sent with the old details (from `npm run status` and `facts/applications.yaml`).
 
 ## `/job-change`
 - **Leaving:**

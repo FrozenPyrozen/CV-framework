@@ -39,6 +39,12 @@ decisions:
     why: User confirmed.
     matches: [email spelling, React.js duplicate keyword]
 
+  - id: ai-review-agents-wording
+    decision: Describe AI at SYSPRO as "AI review agents" or "AI agents only as governed reviewers", never as "AI coding agents", which can read as if AI wrote the code (also the skill name "AI agent governance (SDD)").
+    date: "2026-10-16"
+    why: User's choice after the line-by-line validation; supports sdd-not-vibe-coding.
+    matches: [AI coding agents, AI-written code, AI agent wording]
+
   - id: keep-length
     decision: Keep the master CV's current length (about 2,000 words, 3 to 4 pages); don't trim older roles there. Role variants follow their profile's max_pages and max_words and shrink less relevant roles by design.
     date: "2026-10-15"

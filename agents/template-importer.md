@@ -28,7 +28,7 @@ description: Turns a Word CV into a reusable template (templates/<name>/) by lab
    ```
    npm run render -- <master cv> --template <name> --out $T/test.docx
    npm run pdf -- $T/test.docx
-   npm run pdf-check -- $T/test.pdf --md <master cv>
+   npm run pdf-check -- $T/test.pdf --md <master cv> --template <name>
    npm run preview -- $T/test.pdf
    ```
    Repeat with the Ukraine market version (`cv/markets/ukraine/…_UA.md`) if it exists. Read `pdf-check.md` and look at every page in `$T/preview/` (alignment, spacing, orphaned headings, dates).

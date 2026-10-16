@@ -103,7 +103,7 @@ export async function buildCv(mdFile: string, opts: { template?: string; noPdf?:
       return fail(`pdf (${label}): ${(e as Error).message}`);
     }
     out.outputs.push(pdf);
-    const chk = await checkPdf(pdf, v.md);
+    const chk = await checkPdf(pdf, v.md, template);
     writeReport(pdf, v.md, chk);
     if (!chk.ok) return fail(`pdf-check (${label}): ${chk.failures.join("; ")}`);
     step(`pdf-check (${label}): pass, ${chk.notes[0]}`);

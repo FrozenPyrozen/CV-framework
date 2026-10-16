@@ -33,7 +33,7 @@ description: Updates the master CV from the summaries and confirmed facts, one e
    - **Stack lines:** the current job ends with a `* Stack: **…**` line, sourced from the summary's section 5 (`<id>#5`). An older job keeps a Stack line it already has, updated when section 5 changes; don't add new ones to older jobs.
    - **Sources:** end every bullet with `<!-- src: <id>#4.N -->`, a fact id, or several, comma-separated.
    - **Existing bullets:** keep the user's wording unless the contribution or fact it cites now says something different (compare meaning, not the file's age), the user asked for a change, or the wording claims more than its source ("maintained" for "used", "authored" for "contributed to"): then correct it to match the source.
-   - **Limits:** respect `cv_max_bullets` (the Stack line doesn't count). Entries without one, such as consulting entries, keep to 6 bullets.
+   - **Limits:** respect `cv_max_bullets` (the Stack line doesn't count). Entries without one have no fixed limit; follow decision `keep-length` and don't trim older roles.
 6. **Summary paragraph.** Update only if the entries changed what it should say. One `src` comment per sentence; calculated values cite `calc:years_experience` / `calc:team_size_led`, profile facts cite `profile`. Use the calculated values (lint checks "7+ years" and "up to N engineers").
 7. **Check.**
    - **Self-check against the sources:** reread every bullet you wrote or kept next to the contribution or fact its `src` cites, as the fact-check rubric does; fix any verb or scope stronger than the source.

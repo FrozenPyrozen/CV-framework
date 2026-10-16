@@ -51,7 +51,7 @@ export function markdownFor(pdf: string): string | undefined {
 
 export interface CheckResult { ok: boolean; failures: string[]; notes: string[] }
 
-export async function checkPdf(pdf: string, mdFile: string): Promise<CheckResult> {
+export async function checkPdf(pdf: string, mdFile: string, templateName?: string): Promise<CheckResult> {
   const failures: string[] = [];
   const notes: string[] = [];
   const cfg = loadConfig();
@@ -82,7 +82,7 @@ export async function checkPdf(pdf: string, mdFile: string): Promise<CheckResult
   if (garbled) failures.push(`${garbled.length} garbled or private-use character(s)`);
 
   // 5. Fonts: the template's fonts must be embedded; anything else may be a substitute.
-  const template = templateFor(mdFile);
+  const template = templateName ?? templateFor(mdFile); // the template the PDF was rendered with (--template)
   const sm = parseYaml(readFileSync(rootPath(cfg.paths.templates, template, "style-map.yaml"), "utf8"));
   const families = fonts.filter((f) => !f.includes("(not embedded)")).map((f) => f.split(/[-,]/)[0].replace(/MT$|PSMT$/, ""));
   for (const f of fonts.filter((x) => x.includes("(not embedded)"))) failures.push(`font ${f}: readers without it will substitute another font`);
@@ -124,11 +124,11 @@ export function writeReport(pdf: string, mdFile: string, r: CheckResult): string
 
 if (isMain(import.meta.url)) {
   const { args, positional } = parseArgs(process.argv.slice(2));
-  if (!positional[0]) { console.error("usage: npm run pdf-check -- <file.pdf> [--md <cv.md>]"); process.exit(2); }
+  if (!positional[0]) { console.error("usage: npm run pdf-check -- <file.pdf> [--md <cv.md>] [--template <name>]"); process.exit(2); }
   const pdf = cliPath(positional[0]);
   const md = args.md ? cliPath(args.md as string) : markdownFor(pdf);
   if (!md) { console.error(`pdf-check: can't find the Markdown for ${positional[0]}; pass --md`); process.exit(2); }
-  const r = await checkPdf(pdf, md);
+  const r = await checkPdf(pdf, md, args.template as string | undefined);
   const report = writeReport(pdf, md, r);
   for (const f of r.failures) console.log(`FAIL   ${f}`);
   for (const n of r.notes) console.log(`note   ${n}`);

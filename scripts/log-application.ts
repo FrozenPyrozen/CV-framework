@@ -7,7 +7,7 @@ import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from
 import { dirname, relative } from "node:path";
 import { parse as parseYaml, stringify } from "yaml";
 import { readState, sha } from "./lib/buildstate.ts";
-import { cliPath, isMain, loadConfig, rootPath } from "./lib/repo.ts";
+import { cliPath, isMain, loadConfig, loadMarkets, rootPath } from "./lib/repo.ts";
 import { parseArgs } from "./refresh.ts";
 
 const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
@@ -28,7 +28,7 @@ export function logApplication(o: { company: string; pdf: string; role?: string;
     pdf: rel,
     pdf_sha256: sha(o.pdf),
     build_commit: commit || null,
-    market: rel.match(/\/markets\/([\w-]+)\//)?.[1] ?? "default",
+    market: rel.match(/\/markets\/([\w-]+)\//)?.[1] ?? loadMarkets(loadConfig()).find((m) => m.market.default)?.market.id ?? "default",
     exporter: exporter ?? null,
     status: o.status ?? "applied",
     notes: o.notes ?? "",

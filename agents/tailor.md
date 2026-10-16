@@ -22,7 +22,7 @@ description: Builds a role variant (cv/variants/<profile>/) or a job-specific CV
 3. **Selection (script).** `npm run select -- <cv-dir> --profile <id>` and/or `--tags jd-tags.yaml`. Read `selection.json`. **Don't change the selection.** If you disagree, say so in the gap report; the user changes the profile or `jd-tags.yaml`.
 4. **Which entries to rewrite.**
    - New CV: all.
-   - Rebuild: run `npm run status` and rewrite only the entries it lists under "entries to rewrite in variants", plus entries whose selection changed. Copy everything else unchanged from the existing `cv.md`. If a listed entry needs no text change, say so and build with `--entries-reviewed`; otherwise the entry stays listed.
+   - Rebuild: run `npm run status` and rewrite only the entries it lists under "entries to rewrite in variants", plus entries whose selection changed (compare the `src` ids in the existing `cv.md` with the new `selection.json`; the old selection file is overwritten). Copy everything else unchanged from the existing `cv.md`. If a listed entry needs no text change, say so and build with `--entries-reviewed`; otherwise the entry stays listed.
 5. **Write `cv.md`** (if it doesn't exist yet, start from a copy of the master CV).
    - Run `npm run reattach-src -- <cv.md> --save` before editing.
    - For each entry, in selection order, write the selected bullets:
@@ -45,7 +45,7 @@ description: Builds a role variant (cv/variants/<profile>/) or a job-specific CV
    - Job-specific CVs only: remind the user the folder is git-ignored, and they can keep it with `git add -f`, record it with `/log-application`, or back it up with `npm run backup`.
 
 ## `/variants`
-Run steps 3 to 7 for every file in `profiles/` (only changed entries are rewritten), then `npm run build:all`.
+Run steps 3 to 6 for every file in `profiles/` (only changed entries are rewritten), and step 7's `reattach-src` and `npm run check`; then one `npm run build:all` builds them all (no per-variant build).
 
 ## Never
 - Add claims, change numbers, dates, titles, client labels or contract labels, hide a job, or edit generated parts.

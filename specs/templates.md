@@ -54,11 +54,11 @@ paragraphs:                        # paragraph type -> position of its sample pa
 Known rendering problems of a template, applied by the renderer after filling. Each fix records why it exists:
 
 ```yaml
-- id: bullet-indent-pages
-  why: "The original bullet indent (163/105 twips, tab at 162) renders with text pushed about 0.6 inch right in Pages."
-  found: 2026-10-15
+- id: bullet-indent-pages      # as in templates/classic/fixes.yaml
+  why: "The original bullet indent (163/105 twips, tab at 162) renders with the text pushed about 0.6 inch right in Pages."
+  found: "2026-10-15"
   set:
-    bullet: { indent_left: 284, hanging: 226, tab: { type: num, pos: 284 } }
+    bullet: { indent_left: 226, hanging: 226, tab: { type: num, pos: 226 } }
 ```
 
 Supported fix types (each fix has `id`, `why`, `found`, `set`):
@@ -112,7 +112,7 @@ Pages: N · pdf-check: pass/fail · Preview: preview/page-1.png …
 ## 5. Rendering rules
 
 - Every Markdown element in the supported subset (`cv-spec.md` section 9) maps to one paragraph type: the header block to `name`, `headline`, `contact_line` (and `header_rule`); `#` to `section_heading` + `section_rule`; `##` to `entry_title`; `###` to `entry_details`; `*` to `bullet`; config intro lines to `section_intro`; lines in the education section to `education_line`; `**Label:** …` lines to `skills_line`; other paragraphs to `body`. Required types are checked at import; optional ones fall back as listed in section 2, and a missing fallback is reported as a render warning.
-- Hyperlinks are created as new link entries from the URLs in the Markdown (and `profile.yaml`), never by reusing the template's own link ids.
+- Hyperlinks are created as new link entries from the URLs in the Markdown (profile links reach it through the generated header), never by reusing the template's own link ids.
 - Bold Markdown becomes bold text in the same font, size and color as the sample.
 - Dates in entry detail lines go after the sample's tab stop.
 - `fixes.yaml`: fixes that change sample paragraphs or the list definition (bullets, tabs, spacing, keep-with-next) are applied to the samples before filling; fixes that depend on the filled document (bullet groups, the first item under a section line, letter spacing) are applied after filling.

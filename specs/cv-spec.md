@@ -12,7 +12,7 @@ A CV contains nothing that doesn't come from one of these files:
 |---|---|
 | Header (name, headline, location, availability, contacts) | `facts/profile.yaml` + header templates in `framework.config.yaml` (+ a role profile's `headline`), filtered by the market (`markets/<id>.yaml`, section 14) |
 | Summary paragraph | summaries, `facts/confirmed.yaml`, calculated values (section 7) |
-| Entries (jobs and projects) | `summaries/*.md` with `show_in_cv: true`, and `cv_entry` items in `facts/confirmed.yaml` |
+| Entries (jobs and projects) | `summaries/*.md` (unless `show_in_cv: false`), and `cv_entry` items in `facts/confirmed.yaml` |
 | Bullets | summary contributions (section 4 of a summary) and confirmed facts |
 | Education, languages | `facts/profile.yaml` |
 | Skills | `facts/skills.yaml` |
@@ -88,7 +88,7 @@ Each entry is a list of `*` bullets (one level, no nesting).
 ## 6. Traceability
 
 - Every bullet ends with `<!-- src: <id> -->`, where `<id>` is a summary contribution (`syspro-saas-erp#4.2`), another summary section (`syspro-saas-erp#3`), or a fact id (`syspro-team-size`). Several ids are comma-separated: `<!-- src: syspro-saas-erp#4.1, syspro-speed -->`.
-- Every **summary paragraph** sentence ends with its own `src` comment. Sentences built from calculated values or the profile cite them with pseudo-sources: `calc:years_experience`, `calc:team_size_led`, `profile` (e.g. `<!-- src: calc:years_experience, syspro-saas-erp#1 -->`).
+- Every **summary paragraph** sentence ends with its own `src` comment (`trace` warns when sentences share one). Sentences built from calculated values or the profile cite them with pseudo-sources: `calc:years_experience`, `calc:team_size_led`, `profile` (e.g. `<!-- src: calc:years_experience, syspro-saas-erp#1 -->`).
 - **Generated blocks** (section 8) need no `src`.
 - `npm run trace` fails on a missing or unresolvable `src`. During `npm run build` of the master CV it is only a warning, so a hand-written bullet doesn't block the PDF. Fix it with `/add-experience`.
 - A claim that has no source must not be written. If the user wants it in the CV, it becomes a confirmed fact first.
@@ -103,7 +103,7 @@ Typed numbers that change over time are calculated, never guessed:
 | Largest team led | highest `team_size_led` across summaries and facts, written as `up to N engineers` or `a team of N <people>` (e.g. `led a team of 8 developers`) |
 | Present | `period.end: present` renders as `display.present_label` |
 
-Agents write the calculated value as plain text in the summary paragraph. `lint` fails when `N+ years` or `up to N engineers/developers` differs from the calculated value, or when `a team of N developers/engineers` is larger than it.
+Agents write the calculated value as plain text in the summary paragraph. `lint` fails when `N+ years` or `up to N engineers/developers` differs from the calculated value, or when "team of N … engineers/developers" (any wording around it) is larger than it.
 
 ## 8. Generated blocks
 

@@ -28,7 +28,7 @@ A tailored CV is the master CV adapted to a type of role (a **profile**) or to o
    profile: react-native                              # optional: the role profile it starts from (--profile)
    headline: Senior React Native Engineer (Healthcare)   # optional: a headline fitting the job ad
    ```
-2. **Selection (script).** `npm run select -- <cv-dir> --profile <id>` (or `--tags jd-tags.yaml`) scores every contribution and fact by its tags (2 × emphasize, 1 × summary focus, −2 × de-emphasize, 3 × job-ad required, 1 × job-ad nice-to-have; pinned bullets first in the order the profile's `overrides` list them, ties keep the summary's order), applies limits and overrides, and writes `selection.json`: which bullets each entry gets, in which order. **The agent doesn't change the selection.** If it disagrees, it says so in the gap report, and the user changes the profile or `jd-tags.yaml`.
+2. **Selection (script).** `npm run select -- <cv-dir> [--profile <id>] [--tags jd-tags.yaml]` (the profile may also come from `jd-tags.yaml` `profile`) scores every contribution and fact by its tags (2 × emphasize, 1 × summary focus, −2 × de-emphasize, 3 × job-ad required, 1 × job-ad nice-to-have; pinned bullets first in the order the profile's `overrides` list them, ties keep the summary's order), applies limits (the profile's `entry_max_bullets`, then `max_bullets_per_entry`, else the entry's `cv_max_bullets`, the same order lint uses) and overrides, and writes `selection.json`: which bullets each entry gets, in which order. **The agent doesn't change the selection.** If it disagrees, it says so in the gap report, and the user changes the profile or `jd-tags.yaml`.
 3. **Wording (agent).** For each selected bullet:
    - If the master CV has a bullet with the same source id, start from its wording (including the user's manual edits) and only shorten or re-emphasize it.
    - Otherwise write it fresh from the source, following `cv-spec.md`.
@@ -38,8 +38,8 @@ A tailored CV is the master CV adapted to a type of role (a **profile**) or to o
 4. **Headline and summary.** Use the profile's `headline`, or for a job ad one fitting it, written to `jd-tags.yaml` `headline` (the header is generated, so `refresh` reads it from there). Rewrite the summary paragraph around `summary_focus`, with a `src` comment on every sentence.
 5. **Skills.** Reordered by `skills_order` through the generated `skills` block (not by hand).
 6. **Only changed entries are rewritten.** Each build record in `cv/.build-state.json` has an `entries` map: a hash per CV entry of everything it's built from (its summary's front matter, contributions, metrics and facts, or its `cv_entry` and facts). `npm run status` lists the entries whose hash changed. On a rebuild, entries whose hash didn't change are copied unchanged, so variants don't change in git without a reason. `build` keeps the old hashes while the CV Markdown is unchanged, so `build:all` can't hide entries that still need rewriting; when the listed entries need no text change, build with `--entries-reviewed`.
-7. **Checks.** `npm run reattach-src -- <cv.md>` (after saving a snapshot with `--save` before step 3), then `npm run build` on the result. Report failures.
-8. **Gap report** (section 5).
+7. **Gap report** (section 5).
+8. **Checks.** `npm run reattach-src -- <cv.md>` (after saving a snapshot with `--save` before step 3), then `npm run build` on the result. Report failures.
 9. Show a diff. Never commit. For a job-specific CV, remind the user it's git-ignored and can be kept with `git add -f`.
 
 ## 3. Rules

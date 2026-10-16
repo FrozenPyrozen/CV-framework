@@ -57,3 +57,9 @@ test("AGENTS.md registry is up to date and lists every command", () => {
   for (const f of readdirSync(join(REPO, ".claude/commands"))) assert.ok(a.includes(`/${f.replace(/\.md$/, "")}`), `AGENTS.md doesn't mention /${f}`);
 });
 
+
+test("no per-laptop tool settings (.claude/*.local.*) are committed anywhere", async () => {
+  const { execFileSync } = await import("node:child_process");
+  const tracked = execFileSync("git", ["ls-files"], { cwd: REPO, encoding: "utf8" }).split("\n");
+  assert.deepEqual(tracked.filter((f) => /(^|\/)\.claude\/[^/]*\.local\./.test(f)), []);
+});

@@ -9,7 +9,7 @@ The framework must run on any laptop. This spec defines what moves, how, and wha
 | Kind | Examples | How it travels |
 |---|---|---|
 | Committed files | summaries, facts, profiles, specs, agents, templates, config, CV Markdown, reports | git: a private remote, or the repo bundle in a full archive (section 3) |
-| Private files, not in git | `cv/tailored/` (job ads, tailored CVs), `cv/sent/`, `facts/applications.yaml` | a backup (section 2), also inside a full archive |
+| Private files, not in git | `cv/tailored/` (job ads, tailored CV Markdown, `jd-tags.yaml`, gap reports; their built files are left out), `cv/sent/`, `facts/applications.yaml` | a backup (section 2), also inside a full archive |
 | Open items and pending answers | `docs/open-items.md` | git, like every other committed file. Nothing the framework needs lives only in an AI tool's memory on one laptop |
 | Per-laptop settings | `framework.local.yaml` (repo paths, backup folder, exporter order) | not moved as settings: each laptop writes its own from `framework.local.example.yaml`; a backup carries the old file only for reference (section 4) |
 | Recreated on each laptop | `node_modules/`, built files (`.docx`, `.pdf`, `pdf-check.md`, `preview/`, `markets/`, `selection.json`, `cv/.build-state.json`), `summaries/.digests/`, `.cv-runs/` | never moved: `npm ci`, `npm run validate` and `npm run build:all` recreate them |
@@ -42,7 +42,7 @@ Rules:
 ## 4. Restore
 
 `npm run restore -- <archive> [--force]`, run inside the project folder:
-- unpacks a backup (`.zip`, or `.zip.enc` with the same password variable) or the `private-backup.zip[.enc]` taken out of a full archive;
+- unpacks a backup (`.zip`, or `.zip.enc` with the same password variable), a full archive (it restores the private backup inside it), or the `private-backup.zip[.enc]` taken out of one;
 - writes only backup paths, never anything else;
 - never overwrites a local file that is newer; it lists those conflicts, and `--force` overwrites them;
 - **never writes `framework.local.yaml`.** The archived file is saved as `framework.local.previous.yaml` (git-ignored), and restore says so: copy what still applies (backup folder, exporter order) into this laptop's `framework.local.yaml`. Repo paths usually differ per laptop, and repos you no longer have access to are left out (their summaries are the record).
@@ -52,7 +52,7 @@ Rules:
 **A. With a private remote:**
 1. Old laptop: commit, push, and `npm run backup`.
 2. New laptop: install Node (`.nvmrc`), an exporter (Pages, Word or LibreOffice), the template fonts and an AI agent tool; then `git clone <private remote>` and `npm ci`.
-3. Continue at step 4 of route B.
+3. Continue at step 3 of route B (restore the private backup from A1).
 
 **B. With a full archive (no remote yet):**
 1. Old laptop: commit everything, then `npm run backup -- --full`. Copy `cv-full-<date-time>.zip` to the new laptop.
@@ -77,4 +77,4 @@ Rules:
 ## 7. Checks
 
 - `npm run doctor` on the new laptop: Node version, exporters, fonts (by a real test export), repo paths from `framework.local.yaml`.
-- `docs/acceptance.md` C1 runs route B on one machine (a fresh folder stands in for the new laptop); route A is the same from step 4.
+- `docs/acceptance.md` C1 runs route B on one machine (a fresh folder stands in for the new laptop); route A is the same from step 3 (the restore).

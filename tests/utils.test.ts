@@ -117,6 +117,21 @@ test("log-application records a sent CV with a quoted hash, market and optional 
   assert.match(y, /pdf_sha256: "?[0-9a-f]{16}"?/);
   assert.ok(existsSync(join(dir, `cv/sent/${new Date().toISOString().slice(0, 10)}-acme-corp.pdf`)));
   assert.match(run("status.ts", dir).out, /status:/); // the log parses and status reads it
+  // A default-market PDF is logged with that market's id, not "default".
+  writeFileSync(join(dir, "cv/Kirill_Kohan_CV.pdf"), "%PDF-1.4 fake");
+  assert.equal(run("log-application.ts", dir, ["--company", "Beta", "--pdf", "cv/Kirill_Kohan_CV.pdf"]).code, 0);
+  assert.match(readFileSync(join(dir, "facts/applications.yaml"), "utf8"), /company: Beta[\s\S]*market: worldwide/);
+});
+
+test("backup leaves out built files of tailored CVs (they are recreated)", async () => {
+  const dir = tempRepo();
+  mkdirSync(join(dir, "cv/tailored/acme/preview"), { recursive: true });
+  for (const f of ["cv.md", "jd-tags.yaml", "job-description.md", "gap-report.md", "Kirill_Kohan_CV.docx", "Kirill_Kohan_CV.pdf", "pdf-check.md", "selection.json", "preview/page-1.png"]) writeFileSync(join(dir, "cv/tailored/acme", f), "x");
+  writeFileSync(join(dir, "framework.local.yaml"), `backup_dir: ${join(dir, "bk")}\n`);
+  assert.equal(run("backup.ts", dir, ["--no-password"]).code, 0);
+  const zip = await JSZip.loadAsync(readFileSync(join(dir, "bk", readdirSync(join(dir, "bk"))[0])));
+  const names = Object.keys(zip.files).filter((n) => n.startsWith("cv/tailored/acme/") && !zip.files[n].dir).map((n) => n.slice(17)).sort();
+  assert.deepEqual(names, ["cv.md", "gap-report.md", "jd-tags.yaml", "job-description.md"]);
 });
 
 test("doctor: a summary repo without a local path is info, not a warning", () => {

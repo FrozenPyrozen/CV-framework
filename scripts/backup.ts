@@ -34,6 +34,10 @@ export function backupPaths(): string[] {
   ];
 }
 
+// Built outputs inside backup folders (a tailored CV's .docx, .pdf, checks, previews, markets, selection) aren't moved.
+export const isBuiltOutput = (rel: string) =>
+  rel.startsWith("cv/tailored/") && /(\.docx|\.pdf|\/pdf-check\.md|\/selection\.json)$|\/(preview|markets)\//.test(rel);
+
 function walk(abs: string): string[] {
   if (!existsSync(abs)) return [];
   if (statSync(abs).isFile()) return [abs];
@@ -75,6 +79,7 @@ async function privateArchive(password: string | undefined): Promise<{ data: Buf
   const zip = new JSZip();
   let n = 0;
   for (const p of backupPaths()) for (const abs of walk(rootPath(p))) {
+    if (isBuiltOutput(relative(rootPath(), abs))) continue; // recreated by build (specs/portability-spec.md 1)
     zip.file(relative(rootPath(), abs), readFileSync(abs), { date: statSync(abs).mtime });
     n++;
   }

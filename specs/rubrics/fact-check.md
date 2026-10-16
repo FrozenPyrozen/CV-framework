@@ -16,6 +16,7 @@
 | Numbers | each number matches the source exactly (no rounding up, no "~" turned into an exact figure) |
 | Scope inflation | "led" when the source says "contributed", "architected" when it says "implemented", "team" when it was solo work |
 | Ownership | work done by others not presented as yours, e.g. AI agents described as authors rather than reviewers |
+| Emphasis | the points in an entry's `cv_emphasis` appear in its first bullets, in the given order (`specs/cv-spec.md` 5); lint can't judge this |
 | Dates and titles | entry lines match summary front matter |
 | Calculated values | years of experience and team size match the calculation |
 | Unsourced content | sentences without `src` outside generated blocks |

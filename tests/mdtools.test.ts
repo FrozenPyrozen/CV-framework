@@ -415,3 +415,36 @@ test("check skips a market copy older than its CV instead of linting stale text"
   utimesSync(ua, old, old);
   assert.match(run("check.ts", dir).out, /Kirill_Kohan_CV_UA\.md: older than Kirill_Kohan_CV\.md; skipped/);
 });
+
+test("select without a role profile keeps each entry's cv_max_bullets; jd-tags.yaml can name the profile", () => {
+  const dir = tempRepo();
+  mkdirSync(join(dir, "cv/tailored/acme"), { recursive: true });
+  writeFileSync(join(dir, "cv/tailored/acme/jd-tags.yaml"), "required: [react, typescript, architecture, testing, sdd]\nnice_to_have: [oidc, observability]\n");
+  assert.equal(run("select.ts", dir, ["cv/tailored/acme", "--tags", "jd-tags.yaml"]).code, 0);
+  let sel = JSON.parse(readFileSync(join(dir, "cv/tailored/acme/selection.json"), "utf8"));
+  assert.ok(sel.entries.find((e: any) => e.id === "syspro-saas-erp").bullets.length <= 8, "SYSPRO stays within cv_max_bullets: 8");
+  writeFileSync(join(dir, "cv/tailored/acme/jd-tags.yaml"), "profile: react-native\nrequired: [react-native]\n");
+  assert.equal(run("select.ts", dir, ["cv/tailored/acme", "--tags", "jd-tags.yaml"]).code, 0);
+  sel = JSON.parse(readFileSync(join(dir, "cv/tailored/acme/selection.json"), "utf8"));
+  assert.equal(sel.profile, "react-native");
+  assert.ok(sel.entries.every((e: any) => e.bullets.length <= 6), "the react-native profile's limit of 6 applies");
+});
+
+test("validate checks a job ad's jd-tags.yaml (profile, tags, overrides) and the exporter list", () => {
+  const dir = tempRepo();
+  mkdirSync(join(dir, "cv/tailored/acme"), { recursive: true });
+  writeFileSync(join(dir, "cv/tailored/acme/jd-tags.yaml"), "profile: no-such\nrequired: [react-nativ]\noverrides:\n  velas-wallet#4.99: { pin: true }\n");
+  edit(dir, "framework.config.yaml", "pdf_exporters: [", "pdf_exporters: [keynote, ");
+  const r = run("validate.ts", dir);
+  assert.equal(r.code, 1);
+  assert.match(r.out, /jd-tags\.yaml: profile "no-such" doesn't exist/);
+  assert.match(r.out, /jd-tags\.yaml: .*react-nativ/);
+  assert.match(r.out, /overrides: "velas-wallet#4\.99" doesn't resolve/);
+  assert.match(r.out, /pdf_exporters: "keynote" isn't registered/);
+});
+
+test("lint: team-size wording variants are checked; separators don't count as words", () => {
+  const dir = refreshed();
+  edit(dir, CV, "Previously led a team of 8 engineers", "Previously managed a team of 9 software engineers");
+  assert.match(run("lint.ts", dir, [CV]).out, /team of 9 software engineers" exceeds the largest team led \(8\)/);
+});

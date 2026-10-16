@@ -10,7 +10,7 @@ Kyiv, Ukraine (Remote) | Open to B2B contract or full-time employment | Working 
 
 # **SUMMARY**
 
-Senior software engineer and tech lead with 7+ years of experience building **React**, **TypeScript** and **Node.js** applications for enterprise resource planning (ERP) SaaS, fintech, blockchain, automotive and healthcare products. <!-- src: calc:years_experience, profile, syspro-saas-erp#1, itjet-fintech#1, velas-wallet#1, general-motors-navigation#1, thermo-fisher-dosimeter#1 --> At SYSPRO, builds core modules of a schema-driven React 19 runtime that renders 1,800+ ERP programs from data-model definitions, inside a micro-frontend architecture with OpenID Connect (OIDC) authentication. <!-- src: syspro-saas-erp#4.1, syspro-saas-erp#4.6, syspro-saas-erp#4.7 --> Earlier full-stack work at Itjet and Velas covered Node.js REST APIs with Stripe subscriptions, PostgreSQL on AWS RDS, Next.js with GraphQL, Docker and Node.js backend logic for a blockchain wallet. <!-- src: itjet-fintech#4.6, itjet-fintech#4.4, itjet-fintech#4.7, velas-wallet#4.2, velas-wallet#4.6 --> Works with the lead architect on platform and solution architecture and delivers through an architecture-governed specification-driven development (SDD) process, with AI coding agents as governed reviewers. <!-- src: syspro-architecture-scope, syspro-saas-erp#4.2, syspro-saas-erp#4.3 --> Previously led a team of 8 engineers at General Motors, running code reviews, setting coding standards and owning the system design of a modular app architecture. <!-- src: calc:team_size_led, general-motors-navigation#4.1, general-motors-navigation#4.2, general-motors-navigation#4.4 -->
+Senior software engineer and tech lead with 7+ years of experience building **React**, **TypeScript** and **Node.js** applications for enterprise resource planning (ERP) SaaS, fintech, blockchain, automotive and healthcare products. <!-- src: calc:years_experience, profile, syspro-saas-erp#1, itjet-fintech#1, velas-wallet#1, general-motors-navigation#1, thermo-fisher-dosimeter#1 --> At SYSPRO, builds core modules of a schema-driven React 19 runtime that renders 1,800+ ERP programs from data-model definitions, inside a micro-frontend architecture with OpenID Connect (OIDC) authentication. <!-- src: syspro-saas-erp#4.1, syspro-saas-erp#4.6, syspro-saas-erp#4.7 --> Earlier full-stack work at Itjet and Velas covered Node.js REST APIs with Stripe subscriptions, PostgreSQL on AWS RDS, Next.js with GraphQL, Docker and Node.js backend logic for a blockchain wallet. <!-- src: itjet-fintech#4.6, itjet-fintech#4.4, itjet-fintech#4.7, velas-wallet#4.2, velas-wallet#4.6 --> Works with the lead architect on platform and solution architecture and delivers through an architecture-governed specification-driven development (SDD) process, with AI agents only as governed reviewers. <!-- src: syspro-architecture-scope, syspro-saas-erp#4.2, syspro-saas-erp#4.3 --> Previously led a team of 8 engineers at General Motors, running code reviews, setting coding standards and owning the system design of a modular app architecture. <!-- src: calc:team_size_led, general-motors-navigation#4.1, general-motors-navigation#4.2, general-motors-navigation#4.4 -->
 
 # **EXPERIENCE**
 
@@ -19,7 +19,7 @@ Senior software engineer and tech lead with 7+ years of experience building **Re
 
 ### **SYSPRO | Remote | December 2025 - Present**
 
-* Delivered the frontend through an architecture-governed **specification-driven development (SDD)** process, not ad-hoc AI code generation, and helped define it: specification templates, the validation routine and rules for **AI coding agents**. Each subsystem was traced from architecture to specification to code across 4 repositories. <!-- src: syspro-saas-erp#4.2, syspro-architecture-scope -->
+* Delivered the frontend through an architecture-governed **specification-driven development (SDD)** process, not ad-hoc AI code generation, and helped define it: specification templates, the validation routine and rules for **AI review agents**. Each subsystem was traced from architecture to specification to code across 4 repositories. <!-- src: syspro-saas-erp#4.2, syspro-architecture-scope -->
 
 * Worked with the lead architect on the **platform and solution architecture**: reviewed and co-authored architecture documents and drove open questions to decisions. Owned the **frontend technology stack** for the Login micro-frontend and the schema-driven runtime, including OIDC libraries and the move to **Vitest Browser Mode**. <!-- src: syspro-saas-erp#4.3, syspro-architecture-scope, syspro-tech-stack-ownership -->
 
@@ -183,7 +183,7 @@ National Aviation University | Ukraine | 2016 - 2020
 
 **Authentication and Security:** OAuth 2.0, OpenID Connect (OIDC), Zero-trust architecture, SSL certificate pinning, PII redaction
 
-**AI:** Generative AI integration, Model Context Protocol (MCP), AI coding agents, AI-assisted development
+**AI:** Generative AI integration, Model Context Protocol (MCP), AI agent governance (SDD), AI-assisted development
 
 **Mobile:** React Native, Expo, React Native Web, Android (Java, Kotlin, Gradle), Native modules (iOS / Android), Realm (realm-js), SQLCipher, Keychain, Fastlane, Bitrise
 

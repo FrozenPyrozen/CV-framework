@@ -61,7 +61,7 @@ Commands are available as Claude Code slash commands (`.claude/commands/`). Any 
 | `lint [cv] [--market --profile]`, `trace [cv] [--warn-only]`, `check` | CV rules, claim sources, both for every CV |
 | `select <cv-dir> [--profile <id>] [--tags <file>]` (at least one) | deterministic bullet selection for variants and job ads |
 | `reattach-src <cv> [--save \| --from <old>]` | snapshot before editing; restore dropped source comments after |
-| `render [cv] [--template --out]`, `pdf <file.docx> [--exporter]`, `pdf-check <file.pdf> [--md]`, `preview <file.pdf> [--out --scale]` | Word, PDF, PDF checks, page images |
+| `render [cv] [--template --out]`, `pdf <file.docx> [--exporter]`, `pdf-check <file.pdf> [--md --template]`, `preview <file.pdf> [--out --scale]` | Word, PDF, PDF checks, page images |
 | `build [cv] [--market <id>] [--no-pdf] [--template <name>] [--entries-reviewed]`, `build:all` | the full chain for one CV or all of them |
 | `status [--ack <company>]` | what is stale and why; sent-CV warnings |
 | `template-import <file.docx> <name> [--map <map>]` | list a Word file's paragraphs, or build a template from labels |

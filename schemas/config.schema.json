@@ -9,7 +9,7 @@
     "paths": { "type": "object", "required": ["summaries", "digests", "facts", "profiles", "markets", "templates", "reports", "runs"], "additionalProperties": { "type": "string" } },
     "output": { "type": "object", "required": ["master_dir", "variants_dir", "tailored_dir", "markets_subdir", "file_name"], "additionalProperties": { "type": "string" } },
     "default_template": { "type": "string" },
-    "pdf_exporters": { "type": "array", "items": { "enum": ["pages", "word", "libreoffice"] }, "minItems": 1 },
+    "pdf_exporters": { "type": "array", "items": { "type": "string" }, "minItems": 1, "description": "ids registered in scripts/exporters/index.ts (validate checks)" },
     "cv_sections": {
       "type": "array", "minItems": 1,
       "items": {

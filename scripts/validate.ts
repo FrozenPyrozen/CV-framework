@@ -1,5 +1,6 @@
 // npm run validate: checks every input against schemas/ and the cross-file rules from the specs.
 // Exit code 1 on any error. Warnings don't fail. Runs `digest` afterwards when everything is valid.
+import { EXPORTERS } from "./exporters/index.ts";
 import AjvModule from "ajv/dist/2020.js";
 
 // ajv ships CommonJS; under ES modules the class may sit on .default.
@@ -32,6 +33,7 @@ export function validateRepo(): Issue[] {
   const cfg = loadConfig();
   check("config.schema.json", cfg, "framework.config.yaml");
   const tagSet = new Set(cfg.tags);
+  for (const e of cfg.pdf_exporters ?? []) if (!(e in EXPORTERS)) err("framework.config.yaml", `pdf_exporters: "${e}" isn't registered in scripts/exporters/index.ts`);
   if (tagSet.size !== cfg.tags.length) err("framework.config.yaml", "duplicate tags in the tag list");
   for (const t of cfg.tags) if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(t)) err("framework.config.yaml", `tag "${t}" is not lowercase-kebab`);
   const sectionIds = new Set(cfg.cv_sections.map((s) => s.id));
@@ -213,6 +215,34 @@ export function validateRepo(): Issue[] {
     }
     for (const id of Object.keys(p.entry_max_bullets ?? {})) {
       if (!summaries.some((x) => x.id === id) && !confirmed.entries.some((x: any) => x.id === id)) err(file, `entry_max_bullets: "${id}" isn't a summary or cv_entry`);
+    }
+  }
+
+  // --- job ads of tailored CVs (cv/tailored/*/jd-tags.yaml; specs/tailoring-spec.md 2) ---
+  const jdDir = rootPath(cfg.output.tailored_dir);
+  if (existsSync(jdDir)) for (const d of readdirSync(jdDir)) {
+    const f = join(jdDir, d, "jd-tags.yaml");
+    if (!existsSync(f)) continue;
+    const t = readYaml(f) ?? {};
+    const file = `${cfg.output.tailored_dir}/${d}/jd-tags.yaml`;
+    for (const key of ["required", "nice_to_have"]) unknownTags(t[key] ?? [], file, key);
+    const rp = t.profile ? (existsSync(join(pdir, `${t.profile}.yaml`)) ? readYaml(join(pdir, `${t.profile}.yaml`)) : (err(file, `profile "${t.profile}" doesn't exist in ${cfg.paths.profiles}/`), undefined)) : undefined;
+    const pins: Record<string, number> = {};
+    for (const [src, o] of Object.entries<any>({ ...(rp?.overrides ?? {}), ...(t.overrides ?? {}) })) {
+      const [id, num] = src.split("#");
+      if (src in (t.overrides ?? {})) {
+        const s = summaries.find((x) => x.id === id);
+        const ok = num === "5" ? !!s : num ? !!s?.contributions.some((c) => c.number === num) : confirmed.facts.some((x) => x.id === id);
+        if (!ok) err(file, `overrides: "${src}" doesn't resolve`);
+      }
+      if (o?.pin && !src.endsWith("#5")) {
+        const entry = num ? id : confirmed.facts.find((x) => x.id === id)?.entry;
+        if (entry) pins[entry] = (pins[entry] ?? 0) + 1;
+      }
+    }
+    for (const [id, n] of Object.entries(pins)) {
+      const limit = rp?.entry_max_bullets?.[id] ?? rp?.max_bullets_per_entry ?? summaries.find((x) => x.id === id)?.frontMatter.cv_max_bullets;
+      if (limit && n > limit) err(file, `${n} pinned bullets for ${id}, but its limit is ${limit}`);
     }
   }
 
