@@ -1,6 +1,6 @@
 # CV Agent Framework: Plan
 
-Status: steps 1–10 done (section 8); next: step 11 (README) · 2026-10-16
+Status: steps 1–11 done (section 8); next: step 12 (second-laptop test) · 2026-10-16
 
 ## 1. Goal
 
@@ -765,7 +765,7 @@ pdf_exporters: [pages, word, libreoffice]   # optional override of the config or
 
 **New laptop steps (also in the README):**
 1. Install Node (the version in `.nvmrc`), and Pages, Word or LibreOffice. Install and sign in to an AI agent tool that reads `AGENTS.md` (Claude Code, or Codex, Cursor, Gemini CLI …). The scripts run without one, but `/harvest`, `/compose` and the other agents need it.
-2. `git clone <private remote>`, then `npm ci`.
+2. `git clone <private remote>` (or copy the folder while the repo has no remote), then `npm ci`.
 3. Copy `framework.local.example.yaml` to `framework.local.yaml` and set repo paths and the backup folder.
 4. `npm run restore <latest backup>` (if you have tailored CVs or an application log).
 5. `npm run doctor`, and fix anything it reports (fonts, Pages permission, missing repo paths).
@@ -832,7 +832,7 @@ Problems expected when the flows actually run, found by simulating every flow ag
 
 ## 12. Coverage of the 2026-10-15 chat
 
-Every step done by hand in the chat, and the capability that repeats it. Rows 37 onward also log the build steps of section 8 (step 5: rows 37–42, step 6: 43–44, step 7: 46–47, step 8: 48–49, step 9: 50–52, step 10: 54) and the audits after them.
+Every step done by hand in the chat, and the capability that repeats it. Rows 37 onward also log the build steps of section 8 (step 5: rows 37–42, step 6: 43–44, step 7: 46–47, step 8: 48–49, step 9: 50–52, step 10: 54, step 11: 55) and the audits after them.
 
 | # | What we did in the chat | Framework capability |
 |---|---|---|
@@ -890,3 +890,4 @@ Every step done by hand in the chat, and the capability that repeats it. Rows 37
 | 52 | Went through the rest of the review findings with you (`/improve`) | Facts and summaries updated from your answers (OIDC in the Login app and host runtime, small Azure Pipelines changes, search-grid sorting checked in the repo, interviews with coding assignments, audit scope, OMO team of about 3, Styled Components and other skills); decisions `keep-erp-programs-figure`, `hidden-client-details-ok`, `keep-previous-cv-metrics`, `keep-contact-and-keywords`; headline "Frontend and Mobile", "engineers" everywhere; proofreading and fact-check fixes applied to the master CV and synced into all four variants. Still open: Velas leadership scope, GM second-screen and voice AI publicity, HR interview answers, portfolio and skills updates |
 | 53 | Asked for the section lines to start where the headings start | New template fix type `rule_full_width` (specs/templates.md) and fix `section-rule-aligned` in `classic`: the line under each section heading starts at the left margin and spans the text width; reference preview updated |
 | 54 | Ran step 10 (acceptance replay) | `docs/acceptance.md` written (scripted, agent and end-to-end scenarios with expected results, replay rules, run log); replay from `b130643` passed: same structure, entries, bullet counts and sources as today's CV. Fixes from the replay: composer handles old unmarked sections and self-checks against sources, US spelling warnings (`checks.spelling_variants`), `check` skips stale market copies, one-off `overrides` in `jd-tags.yaml`, job-specific CVs named like the master, tailoring rules for multi-source bullets and order |
+| 55 | Wrote step 11 (README) | `README.md`: what the framework produces, requirements, first run, new-laptop steps (backup, private remote or folder copy, `framework.local.yaml`, restore, doctor, build), everyday commands, how claims stay truthful, where things are |
