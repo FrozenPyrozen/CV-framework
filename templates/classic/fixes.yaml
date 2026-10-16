@@ -38,6 +38,13 @@
       education_line:  { indent_left: 0, first_line: 0, before: 0, after: 30, line: 240 }
       skills_line:     { indent_left: 0, first_line: 0, before: 20, after: 0, line: 240 }
     first_after_section_heading: { before: 20 }   # same small gap under every section line, whatever comes first
+- id: section-rule-aligned
+  why: "The line under each section heading started 75 twips right of the heading text and stopped short of the right margin, which looked misaligned."
+  found: "2026-10-16"
+  set:
+    paragraphs:
+      section_rule: { indent_left: 0 }
+    rule_full_width: true   # the line spans the text width, from the left margin (where headings start) to the right margin
 - id: no-ligatures
   why: "Pages joins fi/fl into ligature glyphs that some PDF readers (pdfjs, possibly ATS parsers) extract wrongly: 'fintech' read as 'intech'. A letter spacing of 1/20 pt (invisible) stops Pages from forming ligatures; Word's own no-ligatures setting is ignored by Pages."
   found: "2026-10-15"

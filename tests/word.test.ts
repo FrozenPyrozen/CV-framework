@@ -124,3 +124,13 @@ test("render removes source comments without leaving double spaces between sente
   assert.match(summary, /products\. At SYSPRO/);
   for (const t of texts) assert.doesNotMatch(t, /\S {2,}\S/, t.slice(0, 60));
 });
+
+test("render: the line under section headings starts at the left margin and spans the text width", async () => {
+  const dir = tempRepo();
+  run("refresh.ts", dir);
+  assert.equal(run("render.ts", dir).code, 0);
+  const d = await openDocx(join(dir, "cv/Kirill_Kohan_CV.docx"));
+  const rule = d.paragraphs.find((p) => p.includes("<w:drawing>") && p.includes("wpg:wgp"))!;
+  assert.match(pPr(rule), /<w:ind w:left="0"/);
+  assert.match(rule, /<wp:extent cx="6858000"/); // (12240 - 720 - 720) twips x 635 EMU
+});

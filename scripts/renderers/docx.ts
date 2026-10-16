@@ -12,9 +12,10 @@ interface StyleMap {
   fonts: string[];
   links: { color: string; underline: boolean };
   paragraphs: Record<string, { sample: number; keep?: boolean; bold?: boolean; date_tab?: boolean }>;
+  page?: { width_twips: number; margins_twips: { left: number; right: number } };
 }
 
-interface Fix { id: string; set: { bullet?: { indent_left: number; hanging: number; tab?: { type: string; pos: number } }; keep_with_next?: string[]; date_tab?: { align: "left" | "right"; pos: number }; keep_last_bullets_together?: number; keep_first_bullets_together?: number; paragraphs?: Record<string, { indent_left?: number; first_line?: number; before?: number; after?: number; line?: number }>; first_after_section_heading?: { before: number }; letter_spacing?: number } }
+interface Fix { id: string; set: { bullet?: { indent_left: number; hanging: number; tab?: { type: string; pos: number } }; keep_with_next?: string[]; date_tab?: { align: "left" | "right"; pos: number }; keep_last_bullets_together?: number; keep_first_bullets_together?: number; paragraphs?: Record<string, { indent_left?: number; first_line?: number; before?: number; after?: number; line?: number }>; first_after_section_heading?: { before: number }; letter_spacing?: number; rule_full_width?: boolean } }
 
 export interface RenderResult { paragraphs: number; links: number; warnings: string[] }
 
@@ -68,6 +69,18 @@ export async function renderDocx(markdown: string, outPath: string, templateName
       const idx = styleMap.paragraphs[type]?.sample;
       if (idx === undefined) continue;
       doc.paragraphs[idx] = setSpacingAndIndent(doc.paragraphs[idx], v);
+    }
+    // rule_full_width: the drawn line under section headings spans the whole text width (margin to margin).
+    if (f.set.rule_full_width) {
+      const idx = styleMap.paragraphs.section_rule?.sample;
+      const width = styleMap.page ? (styleMap.page.width_twips - styleMap.page.margins_twips.left - styleMap.page.margins_twips.right) * 635 : undefined;
+      const old = idx !== undefined ? doc.paragraphs[idx].match(/<wp:extent cx="(\d+)"/)?.[1] : undefined;
+      if (idx !== undefined && width && old) {
+        const w = Number(old);
+        doc.paragraphs[idx] = doc.paragraphs[idx]
+          .replace(new RegExp(`"${w}"`, "g"), `"${width}"`)
+          .replace(new RegExp(`"${w - 1}"`, "g"), `"${width - 1}"`);
+      }
     }
     if (f.set.letter_spacing) letterSpacing = f.set.letter_spacing;
     if (f.set.first_after_section_heading) firstAfterHeading = f.set.first_after_section_heading.before;
