@@ -20,7 +20,7 @@ A CV contains nothing that doesn't come from one of these files:
 
 ## 2. Structure
 
-Sections appear in the order of `cv_sections` in `framework.config.yaml`, using each section's `heading` text. A role profile may disable or reorder sections with `include_sections`. Current order:
+Sections appear in the order of `cv_sections` in `framework.config.yaml`, using each section's `heading` text. A role profile may leave sections out with `include_sections` (the order stays the config order). Current order:
 
 1. Header (generated, no heading)
 2. SUMMARY
@@ -103,7 +103,7 @@ Typed numbers that change over time are calculated, never guessed:
 | Largest team led | highest `team_size_led` across summaries and facts, written as `up to N engineers` or `a team of N <people>` (e.g. `led a team of 8 developers`) |
 | Present | `period.end: present` renders as `display.present_label` |
 
-Agents write the calculated value as plain text in the summary paragraph. `lint` fails if a typed value there differs from the calculated one.
+Agents write the calculated value as plain text in the summary paragraph. `lint` fails when `N+ years` or `up to N engineers/developers` differs from the calculated value, or when `a team of N developers/engineers` is larger than it.
 
 ## 8. Generated blocks
 
@@ -158,7 +158,7 @@ Not allowed (lint fails): italics, tables, nested lists, numbered lists, images,
 The current decisions live in `facts/decisions.yaml`. At the time of writing:
 
 - No LinkedIn or GitHub link in the header (they are stored in the profile with `show: false` and can come back).
-- Keep the current length (about 2,000 words).
+- Keep the current length of the master CV (about 2,000 words). Role variants follow their profile's `max_pages` and `max_words`.
 - Keep the Google Drive portfolio link.
 - Keep the job title step from Team Leader (General Motors) to Senior Software Engineer (SYSPRO).
 - The consulting section shows no dates, and the Clinical Ink and Velocity AI clients are hidden behind their labels.

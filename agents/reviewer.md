@@ -8,6 +8,8 @@ description: Reviews a CV against one rubric and writes a report; never edits an
 - The CV to review (default: the master CV) and the market version (`--market`, default: the default market; the Ukraine version is `cv/markets/ukraine/<Name>_CV_UA.md`)
 - The rubric(s) (default: all files in `specs/rubrics/`)
 - `facts/decisions.yaml` (always), `facts/profile.yaml` and the market file (ATS, HR)
+- **Role variants** (`cv/variants/<id>/cv.md`): the role profile `profiles/<id>.yaml` (headline, `max_pages`, `max_words`, bullet limits) and `gap-report.md`. A variant's other markets are in `cv/variants/<id>/markets/<market>/`.
+- **Job-specific CVs** (`cv/tailored/<company-role>/cv.md`): job-ad mode is on automatically, using `job-description.md` and `jd-tags.yaml` from that folder.
 - For fact-check: the summaries and facts that the `src` comments point to
 - For layout: `preview/page-*.png` of the built PDF (all pages), the template's `reference-preview.png` and `style-map.yaml`, and `pdf-check.md`
 - Job-ad mode (`--jd`): `job-description.md` and `jd-tags.yaml`
@@ -28,6 +30,7 @@ description: Reviews a CV against one rubric and writes a report; never edits an
 
 ## Rubric notes
 - **ATS and HR** read the market file: a field the market hides (e.g. the phone in the Ukraine version) is intended, and HR questions fit the market.
+- **Variants are judged by their profile:** length and page count against the profile's `max_words` and `max_pages` (decision `keep-length` applies to the master CV only); shorter older roles are by design. Gaps already in `gap-report.md` are listed there, not raised again as new findings.
 - **Fact-check** compares meaning, not only ids: a bullet stronger than its source is a finding even when `trace` passes.
 - **Confidentiality** looks for inference (could a reader identify a hidden client?), beyond what lint's blocklist catches.
 - **Layout** looks at every page image, comparing alignment, spacing and page breaks with the reference preview. Suggestions name the template fix (paragraph type and property in `fixes.yaml`).

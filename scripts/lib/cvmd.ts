@@ -1,7 +1,7 @@
 // CV Markdown model: generating the script-owned parts of a CV (specs/cv-spec.md sections 2, 7, 8, 14)
 // and reading a CV's structure (sections, entries, bullets, source comments).
 import { existsSync } from "node:fs";
-import { basename, dirname, resolve } from "node:path";
+import { basename, dirname, join, resolve } from "node:path";
 import {
   type Config, type CvEntry, type Market, loadConfig, loadConfirmed, loadEntries, loadMarkets, loadProfile,
   loadSkills, loadSummaries, readYaml, rootPath, sortEntries,
@@ -21,11 +21,25 @@ export interface Context {
   calculated: { years_experience: number; team_size_led: number };
 }
 
-// The role profile a CV file belongs to: cv/variants/<id>/... (also inside its markets/ subfolder).
+// The role profile a CV file belongs to: cv/variants/<id>/... (also inside its markets/ subfolder),
+// or, for a job-specific CV, the `profile` in cv/tailored/<company-role>/jd-tags.yaml.
 export function profileIdForFile(cvFile: string, cfg = loadConfig()): string | undefined {
   const variants = rootPath(cfg.output.variants_dir) + "/";
   const abs = resolve(cvFile);
-  return abs.startsWith(variants) ? abs.slice(variants.length).split("/")[0] : undefined;
+  if (abs.startsWith(variants)) return abs.slice(variants.length).split("/")[0];
+  return tailoredSettings(abs, cfg).profile;
+}
+
+// A job-specific CV's jd-tags.yaml may name the role profile it starts from and a headline fitting the job ad
+// (specs/tailoring-spec.md 2). Both are optional.
+export function tailoredSettings(cvFile: string, cfg = loadConfig()): { profile?: string; headline?: string } {
+  const tailored = rootPath(cfg.output.tailored_dir) + "/";
+  const abs = resolve(cvFile);
+  if (!abs.startsWith(tailored)) return {};
+  const tags = join(tailored, abs.slice(tailored.length).split("/")[0], "jd-tags.yaml");
+  if (!existsSync(tags)) return {};
+  const t = readYaml(tags) ?? {};
+  return { profile: t.profile ?? undefined, headline: t.headline ?? undefined };
 }
 
 export function loadContext(opts: { market?: string; headline?: string; profileId?: string; cvFile?: string } = {}): Context {
@@ -42,7 +56,8 @@ export function loadContext(opts: { market?: string; headline?: string; profileI
     skills: loadSkills(cfg),
     entries,
     market,
-    ...roleProfileFields(cfg, opts.profileId ?? (opts.cvFile ? profileIdForFile(opts.cvFile, cfg) : undefined), opts.headline),
+    ...roleProfileFields(cfg, opts.profileId ?? (opts.cvFile ? profileIdForFile(opts.cvFile, cfg) : undefined),
+      opts.headline ?? (opts.cvFile ? tailoredSettings(opts.cvFile, cfg).headline : undefined)),
     calculated: calculate(entries, confirmed.facts, new Date()),
   };
 }

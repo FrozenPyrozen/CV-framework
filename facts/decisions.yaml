@@ -10,9 +10,9 @@ decisions:
     matches: [missing LinkedIn, missing GitHub, no profile links]
 
   - id: keep-length
-    decision: Keep the current length (about 2,000 words, 3 to 4 pages); don't trim older roles.
+    decision: Keep the master CV's current length (about 2,000 words, 3 to 4 pages); don't trim older roles there. Role variants follow their profile's max_pages and max_words and shrink less relevant roles by design.
     date: "2026-10-15"
-    why: User's choice; AI screeners don't penalize length.
+    why: User's choice; AI screeners don't penalize length. Scoped to the master CV on 2026-10-16.
     matches: [CV too long, trim older roles, page count]
 
   - id: keep-portfolio-link

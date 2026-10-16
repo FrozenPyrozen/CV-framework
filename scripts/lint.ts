@@ -146,7 +146,10 @@ export function lintCv(file: string, ctx: Context, summaries = loadSummaries(ctx
   // Confidentiality blocklist.
   const bl = buildBlocklist(summaries, ctx);
   let currentEntry = "";
+  let inCommentBl = false; // comments are never rendered, even when they span several lines (cv-spec 11)
   lines.forEach((raw, i) => {
+    if (inCommentBl) { if (raw.includes("-->")) inCommentBl = false; return; }
+    if (raw.includes("<!--") && !raw.includes("-->")) { inCommentBl = true; return; }
     const em = raw.match(/^<!-- entry: ([\w-]+) -->$/);
     if (em) { currentEntry = em[1]; return; }
     const h1 = raw.match(/^# \*\*(.+)\*\*/);

@@ -17,6 +17,12 @@ facts:
     entry: syspro-saas-erp
     tags: [schema-driven-ui, delivery-speed, react]
 
+  - id: syspro-tech-stack-ownership
+    fact: Owned the frontend technology stack for the Login micro-frontend and the Studio Shell (the schema-driven React runtime), including the OIDC libraries and the move from React Testing Library to Vitest Browser Mode.
+    source: user, 2026-10-16 (the Studio Shell stack document lists the user as Frontend Dev among its contributors; the user states the ownership)
+    entry: syspro-saas-erp
+    tags: [tech-stack, architecture, react, oidc, testing]
+
   - id: syspro-review-cycles
     fact: The SDD process reduced PR review cycles (no exact number available).
     source: user, 2026-10-15

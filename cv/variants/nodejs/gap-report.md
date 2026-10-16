@@ -24,5 +24,4 @@ Built: 2026-10-16 · Profile: nodejs · Job ad: no
 ## Selection disagreements
 - Velas: #4.6 (Node.js staking rewards) and #4.2 (server-side filtering) would fit better right after #4.1 than the code-signing bullet (#4.4).
 - Thermo Fisher: #4.2 (MQTT over TLS with client certificates, 30% faster) is closer to backend and security work than #4.1.
-
-Resolved by the 2026-10-16 profile update: headline now "Senior Full-Stack Engineer (TypeScript, Node.js, React)"; SYSPRO #4.3, #4.1 and #4.11 pinned after #4.2; General Motors #4.1 pinned first.
+- (Resolved on 2026-10-16 by the profile update: headline now "Senior Full-Stack Engineer (TypeScript, Node.js, React)"; SYSPRO #4.3, #4.1 and #4.11 pinned after #4.2; General Motors #4.1 pinned first.)

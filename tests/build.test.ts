@@ -97,9 +97,15 @@ test("build records per-entry hashes; status names only the entries that changed
   assert.ok(state["cv/Kirill_Kohan_CV.md"].entries["various-clients"]);
   edit(dir, "facts/confirmed.yaml", "giving technical consulting and educational webinars.", "giving technical consulting, workshops and educational webinars.");
   const st = run("status.ts", dir).out;
-  assert.match(st, /entries to rewrite in variants: various-clients$/m);
-  edit(dir, "facts/decisions.yaml", "decision: Keep the current length", "decision: Keep the present length");
+  assert.match(st, /entries to update: various-clients$/m); // the master CV (composer)
+  assert.match(st, /run \/compose for the master CV and \/variants for role variants first/);
+  edit(dir, "facts/decisions.yaml", "decision: Keep the master CV's current length", "decision: Keep the master CV's present length");
   assert.doesNotMatch(run("status.ts", dir).out, /decisions\.yaml/);
+  // A rebuild without rewriting the CV keeps the entry listed; --entries-reviewed (or an edited CV) clears it.
+  run("build.ts", dir, ["--no-pdf"]);
+  assert.match(run("status.ts", dir).out, /entries to update: various-clients$/m);
+  run("build.ts", dir, ["--no-pdf", "--entries-reviewed"]);
+  assert.doesNotMatch(run("status.ts", dir).out, /entries to update/);
 });
 
 test("build --market builds one market; a tailored CV gets only the default market", () => {

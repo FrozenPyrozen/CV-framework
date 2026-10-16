@@ -366,3 +366,24 @@ test("select: entry_max_bullets sets one entry's limit; a pinned Stack line is l
   assert.match(v.out, /\(a Stack line\) needs an existing summary and only \{ pin: true \}/);
   assert.match(v.out, /entry_max_bullets: "no-such-job" isn't a summary or cv_entry/);
 });
+
+test("lint ignores confidential terms inside a comment that spans several lines", () => {
+  const dir = refreshed();
+  edit(dir, CV, "# **SUMMARY**", "<!--\nnote: studio-shell\n-->\n# **SUMMARY**");
+  assert.doesNotMatch(run("lint.ts", dir, [CV]).out, /confidential term/);
+  edit(dir, CV, "# **SUMMARY**", "# **SUMMARY**\n\nstudio-shell");
+  assert.match(run("lint.ts", dir, [CV]).out, /confidential term "studio-shell"/);
+});
+
+test("a job-specific CV takes its profile and headline from jd-tags.yaml", () => {
+  const dir = refreshed();
+  mkdirSync(join(dir, "cv/tailored/acme-senior-rn"), { recursive: true });
+  writeFileSync(join(dir, "cv/tailored/acme-senior-rn/cv.md"), readFileSync(join(dir, CV), "utf8"));
+  writeFileSync(join(dir, "cv/tailored/acme-senior-rn/jd-tags.yaml"), "profile: react-native\nheadline: Senior React Native Engineer (Healthcare)\nrequired: [react-native]\n");
+  const r = run("refresh.ts", dir, ["cv/tailored/acme-senior-rn/cv.md"]);
+  assert.equal(r.code, 0, r.out);
+  const md = readFileSync(join(dir, "cv/tailored/acme-senior-rn/cv.md"), "utf8");
+  assert.match(md, /^\*\*Senior React Native Engineer \(Healthcare\)\*\*$/m);
+  const skills = md.slice(md.indexOf("<!-- generated:skills -->"));
+  assert.ok(skills.indexOf("**Mobile:**") < skills.indexOf("**Frontend:**"), "skills follow the react-native profile order");
+});

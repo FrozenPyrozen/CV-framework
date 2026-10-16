@@ -1,4 +1,4 @@
-// npm run build [file] [--template <name>] [--market <id>] [--no-pdf]     one CV (default: the master)
+// npm run build [file] [--template <name>] [--market <id>] [--no-pdf] [--entries-reviewed]   one CV (default: the master)
 // npm run build:all [--no-pdf]                              the master CV and every role variant
 //
 // The full chain (plan 6): validate -> digest -> refresh -> lint -> trace -> market versions ->
@@ -10,7 +10,7 @@ import { basename, dirname, join, relative } from "node:path";
 import { parse as parseYaml } from "yaml";
 import { writeDigests } from "./digest.ts";
 import { exportPdf } from "./export-pdf.ts";
-import { entryHashes, hashSources, sha, writeRecord } from "./lib/buildstate.ts";
+import { entryHashes, hashSources, readState, sha, writeRecord } from "./lib/buildstate.ts";
 import { loadContext, profileIdForFile } from "./lib/cvmd.ts";
 import { masterCvPath } from "./lib/paths.ts";
 import { cliPath, isMain, loadConfig, loadMarkets, rootPath } from "./lib/repo.ts";
@@ -33,7 +33,7 @@ export function templateApproved(template: string): boolean {
   return existsSync(p) && parseYaml(readFileSync(p, "utf8"))?.approved === true;
 }
 
-export async function buildCv(mdFile: string, opts: { template?: string; noPdf?: boolean; requireApproved?: boolean; market?: string } = {}): Promise<BuildOutcome> {
+export async function buildCv(mdFile: string, opts: { template?: string; noPdf?: boolean; requireApproved?: boolean; market?: string; entriesReviewed?: boolean } = {}): Promise<BuildOutcome> {
   const cfg = loadConfig();
   const out: BuildOutcome = { cv: rel(mdFile), ok: false, steps: [], problems: [], outputs: [] };
   const exporters: Record<string, string> = {};
@@ -50,6 +50,11 @@ export async function buildCv(mdFile: string, opts: { template?: string; noPdf?:
 
   // refresh
   const before = readFileSync(mdFile, "utf8");
+  // Entries whose sources changed stay listed by status until an agent rewrites the CV: if the Markdown wasn't
+  // edited since the last build, keep the previous per-entry hashes (specs/tailoring-spec.md 6).
+  const prev = readState()[rel(mdFile)];
+  // --entries-reviewed: the agent checked the listed entries and they need no text change.
+  const untouched = !opts.entriesReviewed && !!prev?.entries && prev.md_sha === sha(mdFile);
   const { text, notes } = refreshText(before, loadContext({ cvFile: mdFile }));
   if (text !== before) writeFileSync(mdFile, text);
   step(text === before ? "refresh: up to date" : "refresh: generated parts updated");
@@ -112,7 +117,7 @@ export async function buildCv(mdFile: string, opts: { template?: string; noPdf?:
     md_sha: sha(mdFile),
     sources: hashSources(template, profileId),
     outputs: Object.fromEntries(out.outputs.map((o) => [rel(o), sha(o)])),
-    entries: entryHashes(),
+    entries: untouched ? prev!.entries : entryHashes(),
     exporters,
   });
   out.ok = true;
@@ -144,7 +149,7 @@ if (isMain(import.meta.url)) {
   const targets = all ? allTargets() : [positional[0] ? cliPath(positional[0]) : masterCvPath()];
   const results: BuildOutcome[] = [];
   for (const t of targets) {
-    const r = await buildCv(t, { template: args.template as string | undefined, noPdf: !!args["no-pdf"], requireApproved: all, market: args.market as string | undefined });
+    const r = await buildCv(t, { template: args.template as string | undefined, noPdf: !!args["no-pdf"], requireApproved: all, market: args.market as string | undefined, entriesReviewed: !!args["entries-reviewed"] });
     print(r);
     results.push(r);
   }

@@ -44,7 +44,7 @@ Commands are available as Claude Code slash commands (`.claude/commands/`). Any 
 | `/profile` | Update personal details (phone, country, availability …) | `agents/advisor.md` |
 | `/job-change` | Start or leave a job | `agents/advisor.md` |
 | `/import-template <file> <name>` | Make a template from a Word CV | `agents/template-importer.md` |
-| `/build [cv]` | `npm run build`, report the PDF checks and previews | scripts only |
+| `/build [cv] [--market <id>] [--template <name>] [--no-pdf]` | `npm run build`, report the PDF checks and previews | scripts only |
 | `/status [--ack <company>]` | `npm run status`, suggest the commands that bring stale CVs up to date | scripts only |
 | `/log-application` | Record a sent CV in `facts/applications.yaml` | `npm run log-application` |
 | `/doctor` | `npm run doctor`, explain how to fix anything missing | scripts only |
@@ -59,13 +59,13 @@ Commands are available as Claude Code slash commands (`.claude/commands/`). Any 
 | `refresh [cv] [--market --profile --out --check]` | regenerate the script-owned parts of a CV (header, entry lines, education, skills, languages) |
 | `market [cv] [--market <id>]` | write the other market versions of a CV |
 | `lint [cv] [--market --profile]`, `trace [cv] [--warn-only]`, `check` | CV rules, claim sources, both for every CV |
-| `select <cv-dir> --profile <id> \| --tags <file>` | deterministic bullet selection for variants and job ads |
+| `select <cv-dir> [--profile <id>] [--tags <file>]` (at least one) | deterministic bullet selection for variants and job ads |
 | `reattach-src <cv> [--save \| --from <old>]` | snapshot before editing; restore dropped source comments after |
-| `render`, `pdf`, `pdf-check`, `preview` | Word, PDF, PDF checks, page images |
-| `build [cv] [--market <id>] [--no-pdf] [--template <name>]`, `build:all` | the full chain for one CV or all of them |
+| `render [cv] [--template --out]`, `pdf <file.docx> [--exporter]`, `pdf-check <file.pdf> [--md]`, `preview <file.pdf> [--out --scale]` | Word, PDF, PDF checks, page images |
+| `build [cv] [--market <id>] [--no-pdf] [--template <name>] [--entries-reviewed]`, `build:all` | the full chain for one CV or all of them |
 | `status [--ack <company>]` | what is stale and why; sent-CV warnings |
 | `template-import <file.docx> <name> [--map <map>]` | list a Word file's paragraphs, or build a template from labels |
-| `doctor [--no-export]`, `backup [--out <file>] [--no-password]`, `restore <archive> [--force]`, `index [--check]` | environment check, moving files between laptops, this registry |
+| `doctor [--no-export]`, `backup [--out <dir>] [--no-password]`, `restore <archive> [--force]`, `index [--check]` | environment check, moving files between laptops, this registry |
 | `log-application --company <name> --pdf <file> [--role --status --notes --keep-copy]` | record a sent CV in `facts/applications.yaml` |
 | `test`, `typecheck` | the framework's own tests |
 

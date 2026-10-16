@@ -8,6 +8,7 @@ import { parse as parseYaml, stringify } from "yaml";
 import { allTargets } from "./build.ts";
 import { entryHashes, hashSources, readState, sha } from "./lib/buildstate.ts";
 import { profileIdForFile } from "./lib/cvmd.ts";
+import { masterCvPath } from "./lib/paths.ts";
 import { isMain, loadConfig, rootPath } from "./lib/repo.ts";
 import { parseArgs } from "./refresh.ts";
 
@@ -35,7 +36,8 @@ export function cvStatuses(): CvStatus[] {
     if (rec.entries) {
       const cur = entryHashes();
       const changed = Object.keys(cur).filter((id) => rec.entries![id] !== cur[id]);
-      if (changed.length) reasons.push(`entries to rewrite in variants: ${changed.join(", ")}`);
+      // Listed first: build keeps these hashes until an agent rewrites the CV (/variants, /compose).
+      if (changed.length) reasons.unshift(`${file === masterCvPath() ? "entries to update" : "entries to rewrite in variants"}: ${changed.join(", ")}`);
     }
     for (const [p, h] of Object.entries(rec.outputs)) {
       const abs = rootPath(p);
@@ -84,6 +86,8 @@ if (isMain(import.meta.url)) {
   const warnings = applicationWarnings(args.ack as string | undefined);
   for (const w of warnings) console.log(`SENT   ${w}`);
   const todo = list.filter((s) => s.state !== "up to date");
-  if (todo.length) console.log(`\nstatus: ${todo.length} CV(s) to rebuild: run npm run build:all (or npm run build -- <file>)`);
+  const rewrite = todo.some((s) => s.reasons.some((r) => r.startsWith("entries to rewrite") || r.startsWith("entries to update")));
+  if (rewrite) console.log(`\nstatus: sources changed: run /compose for the master CV and /variants for role variants first (they rewrite the listed entries), then npm run build:all`);
+  else if (todo.length) console.log(`\nstatus: ${todo.length} CV(s) to rebuild: run npm run build:all (or npm run build -- <file>)`);
   else console.log("\nstatus: everything is up to date");
 }

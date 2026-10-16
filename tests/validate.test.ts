@@ -139,3 +139,12 @@ test("role profiles: schema, skills_order, include_sections, overrides and tag c
   assert.match(r.out, /overrides: "velas-wallet#4\.99" doesn't resolve/);
   assert.match(r.out, /both emphasized and de-emphasized: react-native/);
 });
+
+test("role profiles: more pinned bullets than an entry's limit is rejected", () => {
+  const dir = tempRepo();
+  writeFileSync(join(dir, "profiles/rn.yaml"), "schema_version: 1\nid: rn\nheadline: X\nsummary_focus: [react-native]\nemphasize_tags: [react-native]\nskills_order: [mobile]\n"
+    + "max_bullets_per_entry: 1\noverrides:\n  velas-wallet#4.1: { pin: true }\n  velas-wallet#4.2: { pin: true }\n  velas-wallet#5: { pin: true }\n");
+  const r = run("validate.ts", dir);
+  assert.equal(r.code, 1);
+  assert.match(r.out, /2 pinned bullets for velas-wallet, but its limit is 1/);
+});

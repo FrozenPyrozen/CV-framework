@@ -201,6 +201,16 @@ export function validateRepo(): Issue[] {
         : num ? !!s?.contributions.some((c) => c.number === num) : confirmed.facts.some((x) => x.id === id);
       if (!ok) err(file, num === "5" ? `overrides: "${src}" (a Stack line) needs an existing summary and only { pin: true }` : `overrides: "${src}" doesn't resolve to a summary contribution or confirmed fact`);
     }
+    // Pins (Stack lines excepted) can't exceed an entry's limit: select keeps every pin, and lint would then fail.
+    const pinsPerEntry: Record<string, number> = {};
+    for (const [src, o] of Object.entries<any>(p.overrides ?? {})) if (o?.pin && !src.endsWith("#5")) {
+      const id = src.includes("#") ? src.split("#")[0] : confirmed.facts.find((x) => x.id === src)?.entry;
+      if (id) pinsPerEntry[id] = (pinsPerEntry[id] ?? 0) + 1;
+    }
+    for (const [id, n] of Object.entries(pinsPerEntry)) {
+      const limit = p.entry_max_bullets?.[id] ?? p.max_bullets_per_entry;
+      if (limit && n > limit) err(file, `${n} pinned bullets for ${id}, but its limit is ${limit}`);
+    }
     for (const id of Object.keys(p.entry_max_bullets ?? {})) {
       if (!summaries.some((x) => x.id === id) && !confirmed.entries.some((x: any) => x.id === id)) err(file, `entry_max_bullets: "${id}" isn't a summary or cv_entry`);
     }

@@ -1,4 +1,4 @@
-// npm run refresh [file] [--market <id>] [--out <file>] [--check]
+// npm run refresh [file] [--market <id>] [--profile <id>] [--out <file>] [--check]
 // Rewrites the script-owned parts of a CV Markdown file from their sources (specs/cv-spec.md 2.2, 8, 14):
 // the header block, section headings and intro lines, every entry's title and detail lines (with an
 // <!-- entry: id --> marker), and the education, skills and languages blocks. Agent-written text
