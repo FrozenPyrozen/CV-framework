@@ -1,0 +1,20 @@
+# Role profile: Node.js / backend-leaning full-stack roles (docs/plan.md 4.4). The gap report is expected
+# to flag limited recent backend depth. The tailor builds cv/variants/nodejs/ from it.
+schema_version: 1
+id: nodejs
+headline: Senior Full-Stack Engineer (TypeScript, Node.js, React)   # honest for a frontend-heavy career (2026-10-16)
+summary_focus: [node, typescript, aws, architecture, leadership]
+emphasize_tags: [node, rest-api, graphql, postgres, aws, azure, docker, ci-cd, websockets, payments, security, oidc, observability, jira-forge, mcp]
+deemphasize_tags: [kendo, design-systems, storybook, accessibility, native-modules, ble, here-sdk]
+skills_order: [languages, backend-and-cloud, devops, auth-and-security, state-and-data, testing, ai, frontend, mobile, leadership, domain]
+overrides:
+  syspro-saas-erp#4.2: { pin: true }   # SDD, not ad-hoc AI code generation (decision sdd-not-vibe-coding)
+  syspro-saas-erp#4.3: { pin: true }   # lead architect and tech-stack decision record (cv_emphasis)
+  syspro-saas-erp#4.1: { pin: true }   # the current job's main result (1,800+ ERP programs)
+  syspro-saas-erp#4.11: { pin: true }  # Node.js mock backend: the current job's backend-side work (2026-10-16)
+  general-motors-navigation#4.1: { pin: true }   # team of 8: evidence for the tech-lead headline
+max_bullets_per_entry: 6
+min_bullets_per_entry: 2
+include_sections: [summary, experience, consulting, education, skills, languages]
+max_pages: 3
+max_words: 1800

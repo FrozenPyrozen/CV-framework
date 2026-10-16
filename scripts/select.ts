@@ -13,7 +13,7 @@ import { parseArgs } from "./refresh.ts";
 export interface SelectionInput {
   profile?: {
     id: string; emphasize_tags?: string[]; deemphasize_tags?: string[]; summary_focus?: string[];
-    max_bullets_per_entry?: number; min_bullets_per_entry?: number;
+    max_bullets_per_entry?: number; min_bullets_per_entry?: number; entry_max_bullets?: Record<string, number>;
     overrides?: Record<string, { pin?: boolean; drop?: boolean; text?: string }>;
     skills_order?: string[]; include_sections?: string[];
   };
@@ -25,7 +25,7 @@ export interface Selection {
   profile?: string;
   job_ad?: boolean;
   skills_order?: string[];
-  entries: { id: string; section: string; bullets: { src: string; title: string; score: number; pinned?: boolean; text?: string }[] }[];
+  entries: { id: string; section: string; stack?: string; bullets: { src: string; title: string; score: number; pinned?: boolean; text?: string }[] }[];
 }
 
 export function select(input: SelectionInput): Selection {
@@ -57,14 +57,19 @@ export function select(input: SelectionInput): Selection {
         })
         .filter((c) => !c.drop);
       const ranked = [...scored].sort((a, b) => Number(b.pinned) - Number(a.pinned) || b.score - a.score || a.order - b.order);
-      const pinned = ranked.filter((c) => c.pinned);
+      // Pinned bullets come first, in the order they're listed in the profile's overrides.
+      const pinOrder = Object.keys(p.overrides ?? {});
+      const pinned = ranked.filter((c) => c.pinned).sort((a, b) => pinOrder.indexOf(a.src) - pinOrder.indexOf(b.src));
       const rest = ranked.filter((c) => !c.pinned);
       const positive = rest.filter((c) => c.score > 0);
-      const take = Math.max(min - pinned.length, Math.min(positive.length, max - pinned.length), 0);
+      const entryMax = p.entry_max_bullets?.[e.id] ?? max;
+      const take = Math.max(Math.min(min, entryMax) - pinned.length, Math.min(positive.length, entryMax - pinned.length), 0);
       const chosen = [...pinned, ...rest.slice(0, take)];
       out.entries.push({
         id: e.id,
         section: e.section,
+        // The Stack line (<id>#5) is kept when pinned; it doesn't count toward the bullet limits.
+        ...(p.overrides?.[`${e.id}#5`]?.pin ? { stack: `${e.id}#5` } : {}),
         bullets: chosen.map((c) => ({ src: c.src, title: c.title, score: c.score, ...(c.pinned ? { pinned: true } : {}), ...(c.text ? { text: c.text } : {}) })),
       });
     }

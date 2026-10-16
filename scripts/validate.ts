@@ -178,13 +178,32 @@ export function validateRepo(): Issue[] {
     }
   }
 
-  // --- role profiles: tags (the full profile schema comes with step 8) ---
+  // --- role profiles (plan 4.4, specs/tailoring-spec.md) ---
   const pdir = rootPath(cfg.paths.profiles);
   if (existsSync(pdir)) for (const f of readdirSync(pdir).filter((x) => x.endsWith(".yaml"))) {
     const p = readYaml(join(pdir, f)) ?? {};
     const file = `${cfg.paths.profiles}/${f}`;
+    check("role-profile.schema.json", p, file);
     if (p.id !== basename(f, ".yaml")) err(file, `id "${p.id}" doesn't match the file name`);
     for (const key of ["emphasize_tags", "deemphasize_tags", "summary_focus"]) unknownTags(p[key] ?? [], file, key);
+    const categories = (skills?.categories ?? []).map((c: any) => c.id);
+    for (const id of p.skills_order ?? []) if (!categories.includes(id)) err(file, `skills_order: "${id}" isn't a category in facts/skills.yaml`);
+    const sectionIds = cfg.cv_sections.map((d: any) => d.id);
+    for (const id of p.include_sections ?? []) if (!sectionIds.includes(id)) err(file, `include_sections: "${id}" isn't in cv_sections`);
+    if (p.template && !existsSync(rootPath(cfg.paths.templates, p.template))) err(file, `template "${p.template}" doesn't exist`);
+    if ((p.min_bullets_per_entry ?? 1) > (p.max_bullets_per_entry ?? 99)) err(file, "min_bullets_per_entry is larger than max_bullets_per_entry");
+    const both = (p.emphasize_tags ?? []).filter((t: string) => (p.deemphasize_tags ?? []).includes(t));
+    if (both.length) err(file, `tags both emphasized and de-emphasized: ${both.join(", ")}`);
+    for (const src of Object.keys(p.overrides ?? {})) {
+      const [id, num] = src.split("#");
+      const s = summaries.find((x) => x.id === id);
+      const ok = num === "5" ? !!s && !!p.overrides[src]?.pin && !p.overrides[src]?.text
+        : num ? !!s?.contributions.some((c) => c.number === num) : confirmed.facts.some((x) => x.id === id);
+      if (!ok) err(file, num === "5" ? `overrides: "${src}" (a Stack line) needs an existing summary and only { pin: true }` : `overrides: "${src}" doesn't resolve to a summary contribution or confirmed fact`);
+    }
+    for (const id of Object.keys(p.entry_max_bullets ?? {})) {
+      if (!summaries.some((x) => x.id === id) && !confirmed.entries.some((x: any) => x.id === id)) err(file, `entry_max_bullets: "${id}" isn't a summary or cv_entry`);
+    }
   }
 
   return issues;

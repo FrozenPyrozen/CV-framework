@@ -122,3 +122,20 @@ test("summaries store repo names only: a URL or local path as the name is reject
     assert.match(r.out, /\/repos\/0\/name must NOT be valid/);
   }
 });
+
+test("role profiles: schema, skills_order, include_sections, overrides and tag conflicts are checked", () => {
+  const dir = tempRepo();
+  mkdirSync(join(dir, "profiles"), { recursive: true });
+  const base = "schema_version: 1\nid: rn\nheadline: Senior React Native Engineer\nsummary_focus: [react-native]\nemphasize_tags: [react-native]\nskills_order: [mobile]\n";
+  writeFileSync(join(dir, "profiles/rn.yaml"), base);
+  assert.equal(run("validate.ts", dir).code, 0);
+  writeFileSync(join(dir, "profiles/rn.yaml"), base.replace("skills_order: [mobile]", "skills_order: [cooking]")
+    + "deemphasize_tags: [react-native]\ninclude_sections: [hobbies]\noverrides:\n  velas-wallet#4.99: { drop: true }\nmax_bulets: 3\n");
+  const r = run("validate.ts", dir);
+  assert.equal(r.code, 1);
+  assert.match(r.out, /must NOT have additional properties \(max_bulets\)/);
+  assert.match(r.out, /skills_order: "cooking" isn't a category/);
+  assert.match(r.out, /include_sections: "hobbies" isn't in cv_sections/);
+  assert.match(r.out, /overrides: "velas-wallet#4\.99" doesn't resolve/);
+  assert.match(r.out, /both emphasized and de-emphasized: react-native/);
+});

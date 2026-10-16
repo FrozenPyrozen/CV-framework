@@ -1,6 +1,6 @@
 # CV Agent Framework: Plan
 
-Status: steps 1–7 built (section 8); next: step 8 · 2026-10-15
+Status: steps 1–8 built (section 8); next: step 9 · 2026-10-15
 
 ## 1. Goal
 
@@ -394,7 +394,7 @@ A profile describes a reusable CV version for a type of role, built without a jo
 | `react` | Senior React Engineer / Frontend Tech Lead | React 19, micro-frontends, schema-driven UI, state machines, testing, OIDC, observability, SDD/architecture |
 | `react-native` | Senior React Native Engineer / Tech Lead (Mobile) | React Native, Expo, Android/iOS native, BLE/IoT, offline-first, mobile CI/CD, store releases |
 | `fullstack-react-node` | Senior Full-Stack Engineer (React / Node.js) | React + Node.js APIs, PostgreSQL, AWS, Stripe, Docker, CI/CD, mock backends, Forge resolvers |
-| `nodejs` | Senior Node.js / Backend-leaning Full-Stack Engineer | Node.js, REST/GraphQL, PostgreSQL, AWS, integrations. The gap report is expected to flag limited recent backend depth. |
+| `nodejs` | Senior Full-Stack Engineer (TypeScript, Node.js, React) | Node.js, REST/GraphQL, PostgreSQL, AWS, integrations. The gap report is expected to flag limited recent backend depth. |
 
 Example:
 
@@ -409,6 +409,7 @@ skills_order: [mobile, languages, state-and-data, testing, devops, frontend, bac
 template: classic                  # optional; default from framework.config.yaml
 overrides: {}                      # lasting tweaks for this variant, by source id (see 4.4 rules)
 max_bullets_per_entry: 6           # lower-relevance bullets are dropped first
+entry_max_bullets: {}              # optional per-entry limits, e.g. { syspro-saas-erp: 7 }
 min_bullets_per_entry: 2
 include_sections: [summary, experience, consulting, education, skills, languages]
 max_pages: 3                       # optional; overrides checks.max_pages for this variant (used by pdf-check)
@@ -422,6 +423,7 @@ Rules for the tailor agent with a profile:
   overrides:
     syspro-saas-erp#4.1: { text: "Built core modules of a schema-driven React 19 runtime ...", pin: true }   # exact wording, always included
     velas-wallet#4.5: { drop: true }                                                                               # never include
+    general-motors-navigation#5: { pin: true }     # keep an older job's Stack line (it doesn't count toward limits)
   ```
   Lint warns when a variant file was edited after its last build, so a hand edit isn't silently lost.
 - It may **select, reorder, shorten and reword** bullets, rewrite the summary and headline within the profile's focus, and reorder skills.
@@ -826,7 +828,7 @@ Problems expected when the flows actually run, found by simulating every flow ag
 
 ## 12. Coverage of the 2026-10-15 chat
 
-Every step done by hand in the chat, and the capability that repeats it. Rows 37 onward also log the build steps of section 8 (step 5: rows 37–42, step 6: 43–44, step 7: 46–47) and the audits after them.
+Every step done by hand in the chat, and the capability that repeats it. Rows 37 onward also log the build steps of section 8 (step 5: rows 37–42, step 6: 43–44, step 7: 46–47, step 8: 48) and the audits after them.
 
 | # | What we did in the chat | Framework capability |
 |---|---|---|
@@ -877,3 +879,4 @@ Every step done by hand in the chat, and the capability that repeats it. Rows 37
 | 45 | Asked whether summaries need repo remotes, given that access ends with the job | No: summaries store only repo names; no remote URLs (useless after leaving, and they keep internal addresses); local paths stay per laptop and can be dropped after a job; `/job-change` starts with a final harvest; the summary is the lasting record |
 | 46 | Built step 7 (annotate the CV) | Composer "annotate only" mode: a `src` comment on all 66 claims with no text change (verified by stripping comments and diffing); three SYSPRO bullets over 45 words shortened only after your approval; tests no longer assume unsourced claims in the real CV |
 | 47 | Validated steps 1 to 7 against plan and specs | Three independent audits; SYSPRO bullets put in `cv_emphasis` order; Velas bullet starts with a verb; confidentiality rule covers rendered text only (ids and comments are never rendered); `repos` names checked for URLs and paths; composer annotate-only mode written down; AGENTS.md scripts table completed; plan and spec wording brought in line |
+| 48 | Built step 8 (role profiles and variants) | `profiles/react`, `react-native`, `fullstack-react-node`, `nodejs` with the role-profile schema checked by `validate`; four variants and gap reports written by tailor agents from `select`; pins you approved (SYSPRO SDD, architecture and runtime bullets, GM team of 8, Next.js for full-stack), pinned bullets ordered as listed in `overrides`; the nodejs headline softened to "Senior Full-Stack Engineer (TypeScript, Node.js, React)" after the gap reports; then, from your review: `entry_max_bullets` (react: 7 SYSPRO bullets with OpenTelemetry), pinned Stack lines `<id>#5` (react-native keeps the GM Stack line), the SYSPRO Node.js mock backend back in nodejs; gap reports record the iOS, backend, GraphQL and Docker experience you will add with `/add-experience` |

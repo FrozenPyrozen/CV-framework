@@ -1,0 +1,19 @@
+# Role profile: React Native / mobile roles (docs/plan.md 4.4). The tailor builds cv/variants/react-native/ from it.
+schema_version: 1
+id: react-native
+headline: Senior React Native Engineer / Tech Lead (Mobile)
+summary_focus: [react-native, android, ios, offline-first, performance, leadership]
+emphasize_tags: [react-native, react-native-web, expo, android, ios, native-modules, ble, iot, offline-first, realm, mobile-ci, app-distribution, background-jobs, performance]
+deemphasize_tags: [kendo, erp]
+skills_order: [mobile, languages, state-and-data, testing, devops, frontend, backend-and-cloud, auth-and-security, ai, leadership, domain]
+overrides:
+  syspro-saas-erp#4.2: { pin: true }   # SDD, not ad-hoc AI code generation (decision sdd-not-vibe-coding)
+  syspro-saas-erp#4.3: { pin: true }   # lead architect and tech-stack decision record (cv_emphasis)
+  syspro-saas-erp#4.1: { pin: true }   # the current job's main result (1,800+ ERP programs)
+  general-motors-navigation#4.1: { pin: true }   # team of 8: evidence for the tech-lead headline
+  general-motors-navigation#5: { pin: true }     # Stack line: mobile CI and testing tools (2026-10-16)
+max_bullets_per_entry: 6
+min_bullets_per_entry: 2
+include_sections: [summary, experience, consulting, education, skills, languages]
+max_pages: 3
+max_words: 1800

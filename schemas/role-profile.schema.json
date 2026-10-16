@@ -1,0 +1,32 @@
+{
+  "$id": "role-profile.schema.json",
+  "type": "object",
+  "required": ["schema_version", "id", "headline", "summary_focus", "emphasize_tags", "skills_order"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "id": { "$ref": "common.schema.json#/$defs/id" },
+    "headline": { "type": "string", "minLength": 1 },
+    "summary_focus": { "$ref": "common.schema.json#/$defs/tags" },
+    "emphasize_tags": { "$ref": "common.schema.json#/$defs/tags" },
+    "deemphasize_tags": { "$ref": "common.schema.json#/$defs/tags" },
+    "skills_order": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/id" }, "uniqueItems": true },
+    "template": { "$ref": "common.schema.json#/$defs/id" },
+    "overrides": {
+      "type": "object",
+      "propertyNames": { "pattern": "^[a-z0-9-]+(#\\d+(\\.\\d+)?)?$" },
+      "additionalProperties": {
+        "type": "object",
+        "properties": { "text": { "type": "string", "minLength": 1 }, "pin": { "type": "boolean" }, "drop": { "type": "boolean" } },
+        "additionalProperties": false,
+        "not": { "required": ["pin", "drop"], "properties": { "pin": { "const": true }, "drop": { "const": true } } }
+      }
+    },
+    "max_bullets_per_entry": { "type": "integer", "minimum": 1 },
+    "entry_max_bullets": { "type": "object", "additionalProperties": { "type": "integer", "minimum": 1 } },
+    "min_bullets_per_entry": { "type": "integer", "minimum": 1 },
+    "include_sections": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/id" }, "uniqueItems": true },
+    "max_pages": { "type": "integer", "minimum": 1 },
+    "max_words": { "type": "integer", "minimum": 100 }
+  },
+  "additionalProperties": false
+}

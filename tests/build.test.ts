@@ -40,7 +40,7 @@ test("build of a variant fails on unsourced claims; build:all refuses an unappro
   const dir = tempRepo();
   run("refresh.ts", dir);
   mkdirSync(join(dir, "profiles"), { recursive: true });
-  writeFileSync(join(dir, "profiles/rn.yaml"), "id: rn\nheadline: Senior React Native Engineer\n");
+  writeFileSync(join(dir, "profiles/rn.yaml"), "schema_version: 1\nid: rn\nheadline: Senior React Native Engineer\nsummary_focus: [react-native]\nemphasize_tags: [react-native]\nskills_order: [mobile]\n");
   mkdirSync(join(dir, "cv/variants/rn"), { recursive: true });
   writeFileSync(join(dir, "cv/variants/rn/cv.md"), readFileSync(join(dir, "cv/Kirill_Kohan_CV.md"), "utf8"));
   edit(dir, "cv/variants/rn/cv.md", / <!-- src: velas-wallet#4\.1 -->/, "");
@@ -57,7 +57,7 @@ test("lint warns when a built variant was edited by hand", () => {
   const dir = tempRepo();
   run("refresh.ts", dir);
   mkdirSync(join(dir, "profiles"), { recursive: true });
-  writeFileSync(join(dir, "profiles/rn.yaml"), "id: rn\n");
+  writeFileSync(join(dir, "profiles/rn.yaml"), "schema_version: 1\nid: rn\nheadline: Senior React Native Engineer\nsummary_focus: [react-native]\nemphasize_tags: [react-native]\nskills_order: [mobile]\n");
   mkdirSync(join(dir, "cv/variants/rn"), { recursive: true });
   writeFileSync(join(dir, "cv/variants/rn/cv.md"), readFileSync(join(dir, "cv/Kirill_Kohan_CV.md"), "utf8"));
   run("refresh.ts", dir, ["cv/variants/rn/cv.md"]);

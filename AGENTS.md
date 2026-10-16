@@ -106,7 +106,10 @@ Commands are available as Claude Code slash commands (`.claude/commands/`). Any 
 
 ### Role profiles (`profiles/`)
 
-None yet.
+- [fullstack-react-node.yaml](profiles/fullstack-react-node.yaml): Senior Full-Stack Engineer (React / Node.js)
+- [nodejs.yaml](profiles/nodejs.yaml): Senior Full-Stack Engineer (TypeScript, Node.js, React)
+- [react-native.yaml](profiles/react-native.yaml): Senior React Native Engineer / Tech Lead (Mobile)
+- [react.yaml](profiles/react.yaml): Senior React Engineer / Frontend Tech Lead
 
 ### Markets (`markets/`)
 

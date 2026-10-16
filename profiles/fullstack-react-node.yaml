@@ -1,0 +1,17 @@
+# Role profile: full-stack React + Node.js roles (docs/plan.md 4.4). The tailor builds cv/variants/fullstack-react-node/ from it.
+schema_version: 1
+id: fullstack-react-node
+headline: Senior Full-Stack Engineer (React / Node.js)
+summary_focus: [react, node, typescript, aws, architecture, leadership]
+emphasize_tags: [react, node, typescript, rest-api, graphql, postgres, aws, payments, docker, ci-cd, jira-forge, websockets, nextjs, micro-frontends, architecture]
+deemphasize_tags: [kendo, ble, here-sdk, native-modules]
+skills_order: [languages, frontend, backend-and-cloud, state-and-data, devops, testing, auth-and-security, ai, mobile, leadership, domain]
+overrides:
+  syspro-saas-erp#4.2: { pin: true }   # SDD, not ad-hoc AI code generation (decision sdd-not-vibe-coding)
+  syspro-saas-erp#4.3: { pin: true }   # lead architect and tech-stack decision record (cv_emphasis)
+  general-motors-navigation#4.1: { pin: true }   # team of 8: evidence for the tech-lead headline
+max_bullets_per_entry: 6
+min_bullets_per_entry: 2
+include_sections: [summary, experience, consulting, education, skills, languages]
+max_pages: 3
+max_words: 1800

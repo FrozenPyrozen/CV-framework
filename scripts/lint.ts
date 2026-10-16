@@ -137,7 +137,7 @@ export function lintCv(file: string, ctx: Context, summaries = loadSummaries(ctx
     for (const e of sec.entries) {
       const entry = ctx.entries.find((x) => x.id === e.id);
       if (entry?.period.end === "present" && id === "experience" && !e.bullets.some((b) => /^Stack:/.test(b.text))) add("warning", `current job ${e.id} has no "Stack:" bullet`, e.titleLine);
-      const limit = (ctx.roleProfile?.max_bullets_per_entry as number | undefined) ?? entry?.maxBullets;
+      const limit = ((e.id ? ctx.roleProfile?.entry_max_bullets?.[e.id] : undefined) as number | undefined) ?? (ctx.roleProfile?.max_bullets_per_entry as number | undefined) ?? entry?.maxBullets;
       const n = e.bullets.filter((b) => !/^Stack:/.test(b.text)).length;
       if (limit && n > limit) add("error", `${e.id} has ${n} bullets (limit ${limit})`, e.titleLine);
     }

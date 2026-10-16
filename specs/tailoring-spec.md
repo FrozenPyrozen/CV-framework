@@ -24,7 +24,7 @@ A tailored CV is the master CV adapted to a type of role (a **profile**) or to o
    nice_to_have: [graphql, aws]                       # weight 1
    new_tags_proposed: [kotlin-multiplatform]          # not in the config list yet; need approval
    ```
-2. **Selection (script).** `npm run select -- <cv-dir> --profile <id>` (or `--tags jd-tags.yaml`) scores every contribution and fact by its tags (2 × emphasize, 1 × summary focus, −2 × de-emphasize, 3 × job-ad required, 1 × job-ad nice-to-have; pinned bullets first, ties keep the summary's order), applies limits and overrides, and writes `selection.json`: which bullets each entry gets, in which order. **The agent doesn't change the selection.** If it disagrees, it says so in the gap report, and the user changes the profile or `jd-tags.yaml`.
+2. **Selection (script).** `npm run select -- <cv-dir> --profile <id>` (or `--tags jd-tags.yaml`) scores every contribution and fact by its tags (2 × emphasize, 1 × summary focus, −2 × de-emphasize, 3 × job-ad required, 1 × job-ad nice-to-have; pinned bullets first in the order the profile's `overrides` list them, ties keep the summary's order), applies limits and overrides, and writes `selection.json`: which bullets each entry gets, in which order. **The agent doesn't change the selection.** If it disagrees, it says so in the gap report, and the user changes the profile or `jd-tags.yaml`.
 3. **Wording (agent).** For each selected bullet:
    - If the master CV has a bullet with the same source id, start from its wording (including the user's manual edits) and only shorten or re-emphasize it.
    - Otherwise write it fresh from the source, following `cv-spec.md`.
@@ -54,7 +54,13 @@ Lasting changes for one variant go in the profile, by source id. Variant files a
 overrides:
   syspro-saas-erp#4.1: { text: "Built core modules of a schema-driven React 19 runtime ...", pin: true }   # exact wording, always included
   velas-wallet#4.5: { drop: true }                                                                               # never include
+  general-motors-navigation#5: { pin: true }     # keep this older job's Stack line (only pin is allowed for #5)
+entry_max_bullets:
+  syspro-saas-erp: 7                             # per-entry limit instead of max_bullets_per_entry
 ```
+
+- **Stack lines** (`<id>#5`) don't count toward the bullet limits. The current job always keeps its Stack line; an older job keeps it only when pinned, and `selection.json` then lists it as the entry's `stack`.
+- **`entry_max_bullets`** sets a different limit for one entry (e.g. more bullets for the current job in one profile).
 
 `lint` warns when a variant file was edited after its last build.
 

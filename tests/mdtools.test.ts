@@ -192,6 +192,8 @@ test("select scores by tags, applies limits, pins and drops", () => {
     "overrides:",
     "  velas-wallet#4.5: { pin: true }",
     "  orion-mobile-clinical-ink#4.1: { drop: true }",
+    "  itjet-fintech#4.7: { pin: true }",
+    "  itjet-fintech#4.1: { pin: true }",
   ].join("\n"));
   const r = run("select.ts", dir, ["cv/variants/test-rn", "--profile", "test-rn"]);
   assert.equal(r.code, 0, r.out);
@@ -199,6 +201,7 @@ test("select scores by tags, applies limits, pins and drops", () => {
   const byId = (id: string) => sel.entries.find((e: any) => e.id === id).bullets.map((b: any) => b.src);
   for (const e of sel.entries) assert.ok(e.bullets.length >= 2 && e.bullets.length <= 3, `${e.id}: ${e.bullets.length}`);
   assert.equal(byId("velas-wallet")[0], "velas-wallet#4.5"); // pinned first
+  assert.deepEqual(byId("itjet-fintech").slice(0, 2), ["itjet-fintech#4.7", "itjet-fintech#4.1"]); // pins keep the overrides order
   assert.ok(!byId("orion-mobile-clinical-ink").includes("orion-mobile-clinical-ink#4.1")); // dropped
   // Orion with 4.1 dropped: 4.3 (react-native+android = 4) and 4.6 (4) beat 4.2 (react-native+testing = 3);
   // 4.4 and 4.5 (android only = 2) don't make the limit of 3. Ties keep the summary's order.
@@ -271,7 +274,7 @@ test("reattach-src: --save snapshot, works on files not in git, clear error with
 test("refresh, market and lint use the variant's role profile (headline, skills order)", () => {
   const dir = refreshed();
   mkdirSync(join(dir, "profiles"), { recursive: true });
-  writeFileSync(join(dir, "profiles/rn.yaml"), "id: rn\nheadline: Senior React Native Engineer\nskills_order: [mobile, languages]\n");
+  writeFileSync(join(dir, "profiles/rn.yaml"), "schema_version: 1\nid: rn\nheadline: Senior React Native Engineer\nsummary_focus: [react-native]\nemphasize_tags: [react-native]\nskills_order: [mobile, languages]\n");
   mkdirSync(join(dir, "cv/variants/rn"), { recursive: true });
   writeFileSync(join(dir, "cv/variants/rn/cv.md"), readFileSync(join(dir, CV), "utf8"));
   assert.equal(run("refresh.ts", dir, ["cv/variants/rn/cv.md"]).code, 0);
@@ -334,4 +337,32 @@ test("lint uses the role profile's max_words", () => {
   writeFileSync(join(dir, "cv/variants/short/cv.md"), readFileSync(join(dir, CV), "utf8"));
   run("refresh.ts", dir, ["cv/variants/short/cv.md"]);
   assert.match(run("lint.ts", dir, ["cv/variants/short/cv.md"]).out, /\d+ words \(max 500\)/);
+});
+
+test("select: entry_max_bullets sets one entry's limit; a pinned Stack line is listed apart and doesn't count", () => {
+  const dir = tempRepo();
+  mkdirSync(join(dir, "profiles"), { recursive: true });
+  writeFileSync(join(dir, "profiles/t.yaml"), [
+    "schema_version: 1", "id: t", "headline: Test", "summary_focus: [react]", "emphasize_tags: [react, typescript, testing]", "skills_order: [frontend]",
+    "max_bullets_per_entry: 2", "min_bullets_per_entry: 1",
+    "entry_max_bullets:", "  syspro-saas-erp: 4",
+    "overrides:", "  general-motors-navigation#5: { pin: true }",
+  ].join("\n"));
+  assert.equal(run("validate.ts", dir).code, 0);
+  const r = run("select.ts", dir, ["cv/variants/t", "--profile", "t"]);
+  assert.equal(r.code, 0, r.out);
+  const sel = JSON.parse(readFileSync(join(dir, "cv/variants/t/selection.json"), "utf8"));
+  const e = (id: string) => sel.entries.find((x: any) => x.id === id);
+  assert.equal(e("syspro-saas-erp").bullets.length, 4);
+  assert.ok(e("velas-wallet").bullets.length <= 2);
+  assert.equal(e("general-motors-navigation").stack, "general-motors-navigation#5");
+  assert.ok(e("general-motors-navigation").bullets.length <= 2);
+  assert.equal(e("velas-wallet").stack, undefined);
+  // A Stack override with text, or an unknown entry limit, is rejected.
+  writeFileSync(join(dir, "profiles/t.yaml"), readFileSync(join(dir, "profiles/t.yaml"), "utf8")
+    .replace("{ pin: true }", "{ pin: true, text: x }").replace("syspro-saas-erp: 4", "no-such-job: 4"));
+  const v = run("validate.ts", dir);
+  assert.equal(v.code, 1);
+  assert.match(v.out, /\(a Stack line\) needs an existing summary and only \{ pin: true \}/);
+  assert.match(v.out, /entry_max_bullets: "no-such-job" isn't a summary or cv_entry/);
 });

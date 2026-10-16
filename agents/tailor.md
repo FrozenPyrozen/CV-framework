@@ -29,6 +29,7 @@ description: Builds a role variant (cv/variants/<profile>/) or a job-specific CV
      - The master CV has a bullet with the same `src`: start from its wording (including the user's edits) and only shorten or re-emphasize it.
      - Otherwise: write it from the source, following `cv-spec.md`.
      - A profile override with `text`: use that text exactly.
+     - **Stack lines:** the current job keeps its `* Stack: …` line. An older job keeps its Stack line only when `selection.json` lists it as the entry's `stack` (from the master CV, src `<id>#5`).
    - Keep every `src` comment and every `<!-- entry -->` marker. All entries stay listed, shrinking to the minimum when less relevant.
    - **Headline and summary paragraph:** the profile's `headline` (or one fitting the job ad); rewrite the summary around `summary_focus`, with a `src` per sentence.
    - **Skills:** `npm run refresh` orders them by `skills_order`; never by hand.
