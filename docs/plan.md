@@ -1,6 +1,6 @@
 # CV Agent Framework: Plan
 
-Status: steps 1–11 done (section 8); next: step 12 (second-laptop test) · 2026-10-16
+Status: steps 1–11 done (section 8); full-archive move specified (`specs/portability-spec.md`); next: step 12 (second-laptop test) · 2026-10-16
 
 ## 1. Goal
 
@@ -53,6 +53,7 @@ CV/
 │   ├── tailoring-spec.md          # how variants and tailored CVs may differ from the master
 │   ├── templates.md               # template import rules and style-map format
 │   ├── review-report-spec.md      # shared format for every reviewer report
+│   ├── portability-spec.md        # moving to another laptop: backup, full archive, restore, remotes
 │   ├── outputs/                   # (created when first needed) specs for future output types (portfolio.md, linkedin.md, cover-letter.md); the CV's
 │   │                              # output specs are cv-spec.md and tailoring-spec.md
 │   └── rubrics/
@@ -130,7 +131,7 @@ CV/
 │   ├── check.ts                   # lint + trace for every CV
 │   ├── status.ts                  # which CVs are stale and why; sent-CV warnings
 │   ├── doctor.ts                  # environment check with a tiny real export (R3, R12)
-│   ├── backup.ts                  # backup and restore (npm run restore = backup.ts --restore)
+│   ├── backup.ts                  # backup (--full: whole-project archive) and restore (npm run restore = backup.ts --restore)
 │   ├── log-application.ts         # records a sent CV in facts/applications.yaml (4.5)
 │   ├── lib/buildstate.ts          # build records: source/output hashes
 │   ├── validate.ts                # JSON Schema validation of all inputs
@@ -554,8 +555,8 @@ What the main rubrics must produce (taken from the reviews done in this chat):
 | `select <cv-dir> --profile <id> \| --tags <file>` | deterministic bullet selection and ordering by tags, limits and overrides (scoring in `specs/tailoring-spec.md` 2). `--tags` is looked up in `<cv-dir>` first. Writes `selection.json` into `<cv-dir>`, which the tailor agent then words (R8). |
 | `reattach-src <file> [--save \| --from <old-file>]` | `--save` before editing stores a snapshot in `.cv-runs/snapshots/`. After editing, restores dropped source comments by matching each bullet (same entry) or summary sentence to the previous version: `--from`, else the snapshot, else git HEAD; fails with a clear message when none exists. Lists what it couldn't match (R7). |
 | `doctor [--no-export]` | checks the environment and says how to fix each problem: Node version (`engines` in `package.json`), installed dependencies, the preview renderer, AI agent tools on the PATH, `framework.local.yaml`, repo paths (a repo with no local path is *info*: after a job ends that's normal; a path that doesn't exist is a warning), the backup folder, and the PDF exporters (unavailable fallbacks are only *info*). Unless `--no-export`, it renders and exports a tiny test document with the active exporter: this triggers the one-time macOS permission prompt while you're at the keyboard (R12) and checks that the template's fonts are embedded (R3). |
-| `backup [--out <dir>] [--no-password]` | packs everything git doesn't carry (`cv/tailored/` with job ads, `cv/sent/`, `facts/applications.yaml`, `framework.local.yaml`) into one dated zip in `backup_dir` from `framework.local.yaml`. If the environment variable named by `backup_password_env` is set, the whole zip is encrypted with AES-256-GCM (key derived from the password with scrypt, Node's built-in `crypto`) and saved as `.zip.enc`; the password is never stored. |
-| `restore <archive> [--force]` | unpacks a backup (decrypting `.zip.enc` with the same environment variable) without overwriting newer local files, which are listed as conflicts (`--force` overwrites them). Only backup paths can be written, so a damaged or foreign archive can't touch other files. |
+| `backup [--out <dir>] [--no-password] [--full]` | packs everything git doesn't carry (`cv/tailored/` with job ads, `cv/sent/`, `facts/applications.yaml`, `framework.local.yaml`) into one dated zip in `backup_dir` from `framework.local.yaml`, encrypted (AES-256-GCM, `.zip.enc`) when the environment variable named by `backup_password_env` is set; the password is never stored. `--full` writes the whole project as one plain zip that opens without the framework: a git bundle with full history, that private backup, a manifest and restore steps; it refuses to run with uncommitted changes (`specs/portability-spec.md` 3). |
+| `restore <archive> [--force]` | unpacks a backup (decrypting `.zip.enc` with the same environment variable), or the private part of a full archive, without overwriting newer local files, which are listed as conflicts (`--force` overwrites them). Only backup paths can be written, so a damaged or foreign archive can't touch other files. `framework.local.yaml` is never overwritten: the archived one is saved as `framework.local.previous.yaml` for reference (`specs/portability-spec.md` 4). |
 
 Each built CV folder ends up as:
 
@@ -676,8 +677,8 @@ Each step ends with something you can check.
    *Check:* the reports match what we found by hand in this chat. Findings already decided in this chat (no LinkedIn link, keep the length, etc.) are not raised again.
 10. **Replay this chat.** Write the chat-step table in section 12 as `docs/acceptance.md`, a repeatable checklist with inputs and expected results per step, and use it as the acceptance test. Start from the CV at commit `b130643` (your CV before this chat), run each capability once, and compare the result with today's CV (commit `772590a` plus later edits). Differences in wording are fine. Missing content, structure or rules are failures. **Rerun `docs/acceptance.md` whenever a spec, rubric or agent definition changes**, since agents aren't covered by `npm test`.
 11. **README.** Includes a first-run section and a "new laptop" section (section 9a).
-12. **Second-laptop test.** Clone the repo into a fresh folder (or a second user account), follow the new-laptop steps, and run `npm run build:all`.
-   *Check:* the outputs pass `pdf-check`, the content matches the original laptop, and `doctor` reports nothing missing.
+12. **Second-laptop test.** Make a full archive (`npm run backup -- --full`), restore it into a fresh folder outside the repo (or a second user account) following route B of `specs/portability-spec.md` 5, and run `npm run build:all` there. Route A (clone from a remote) is the same from the restore step on.
+   *Check:* the outputs pass `pdf-check`, the content matches the original laptop, `doctor` reports nothing missing, and the restored repo has the full history and no remote.
 13. **New laptop + new repo test.** On the second-laptop setup, run `/add-repo` on a small repo the framework has never seen (e.g. one of your own GitHub repos). Added to `docs/acceptance.md` as a permanent scenario.
    *Check:* identities are detected and confirmed, you're asked "new or existing job" and for the job details, new tags and skills are proposed, `validate` passes, the CV and every variant gain the new entry or bullets with sources, `build:all` passes `pdf-check`, and `/review` runs.
 14. **Market test.** Run `build:all` and check both markets for the master CV and one variant.
@@ -741,10 +742,10 @@ The framework must work on any laptop with the repo cloned. Everything machine-s
 **What travels and how:**
 | Kind | Examples | How it travels |
 |---|---|---|
-| Sources and rules | summaries, facts, profiles, specs, agents, templates, config, CV Markdown | git (private remote) |
+| Sources and rules | summaries, facts, profiles, specs, agents, templates, config, CV Markdown | git: a private remote, or the repo bundle in a full archive (`npm run backup -- --full`) |
 | Built outputs | `.docx`, `.pdf`, previews, `pdf-check.md`, `.build-state.json` | not moved; `npm run build:all` recreates them |
-| Private, not in git | tailored CVs and job ads, `applications.yaml`, sent PDFs | `npm run backup`, then `restore` on the other laptop |
-| Per-laptop settings | repo paths, backup folder, exporter order | `framework.local.yaml`, created on each laptop from the example file |
+| Private, not in git | tailored CVs and job ads, `applications.yaml`, sent PDFs | `npm run backup` (also inside a full archive), then `restore` on the other laptop |
+| Per-laptop settings | repo paths, backup folder, exporter order | `framework.local.yaml`, created on each laptop from the example file (a restore keeps the old one as `framework.local.previous.yaml`) |
 | AI tool memory | my memory on this Mac | not needed: every rule and decision is in the repo (`AGENTS.md`, `CLAUDE.md`, specs, `decisions.yaml`) |
 
 **`framework.local.yaml` (git-ignored):**
@@ -763,13 +764,17 @@ pdf_exporters: [pages, word, libreoffice]   # optional override of the config or
 
 **Reproducibility:** `package-lock.json` plus `npm ci` installs the exact same dependency versions, and `.nvmrc` pins the Node version. PDFs from different exporters can differ slightly in layout. `pdf-check` confirms the content is identical, and `applications.yaml` records the exporter used for every sent PDF.
 
-**New laptop steps (also in the README):**
+**Moving to another laptop** (the rules are in `specs/portability-spec.md`; the steps are also in the README). Two routes:
+- **A. Private remote:** commit and push, `npm run backup` for the private files, then `git clone` on the new laptop.
+- **B. Full archive, no remote yet:** commit, then `npm run backup -- --full` writes one plain zip that opens without the framework: `repo.bundle` (every branch and tag with full history), `private-backup.zip[.enc]`, `manifest.json` and `RESTORE.txt`. On the new laptop: unzip, `git clone repo.bundle CV`, `git remote remove origin` (it points at the bundle), `npm ci`, `npm run restore -- ../private-backup.zip`. A remote can be connected later (`git remote add origin <private url>`, `git push -u origin --all`), after checking that the history holds nothing that should stay local.
+
+Then, on both routes:
 1. Install Node (the version in `.nvmrc`), and Pages, Word or LibreOffice. Install and sign in to an AI agent tool that reads `AGENTS.md` (Claude Code, or Codex, Cursor, Gemini CLI …). The scripts run without one, but `/harvest`, `/compose` and the other agents need it.
-2. `git clone <private remote>` (or copy the folder while the repo has no remote), then `npm ci`.
-3. Copy `framework.local.example.yaml` to `framework.local.yaml` and set repo paths and the backup folder.
-4. `npm run restore <latest backup>` (if you have tailored CVs or an application log).
-5. `npm run doctor`, and fix anything it reports (fonts, Pages permission, missing repo paths).
-6. `npm run build:all`.
+2. Copy `framework.local.example.yaml` to `framework.local.yaml` and set this laptop's repo paths and backup folder. A restore never writes this file; it saves the old laptop's as `framework.local.previous.yaml` for reference.
+3. `npm run doctor`, and fix anything it reports (fonts, Pages permission, missing repo paths).
+4. `npm run build:all`.
+
+`node_modules/`, built files, `.cv-runs/` and `backups/` never move: they are recreated, and `node_modules/` holds native binaries for one OS and CPU.
 
 ## 9b. Known risks and mitigations
 
@@ -891,3 +896,4 @@ Every step done by hand in the chat, and the capability that repeats it. Rows 37
 | 53 | Asked for the section lines to start where the headings start | New template fix type `rule_full_width` (specs/templates.md) and fix `section-rule-aligned` in `classic`: the line under each section heading starts at the left margin and spans the text width; reference preview updated |
 | 54 | Ran step 10 (acceptance replay) | `docs/acceptance.md` written (scripted, agent and end-to-end scenarios with expected results, replay rules, run log); replay from `b130643` passed: same structure, entries, bullet counts and sources as today's CV. Fixes from the replay: composer handles old unmarked sections and self-checks against sources, US spelling warnings (`checks.spelling_variants`), `check` skips stale market copies, one-off `overrides` in `jd-tags.yaml`, job-specific CVs named like the master, tailoring rules for multi-source bullets and order |
 | 55 | Wrote step 11 (README) | `README.md`: what the framework produces, requirements, first run, new-laptop steps (backup, private remote or folder copy, `framework.local.yaml`, restore, doctor, build), everyday commands, how claims stay truthful, where things are |
+| 56 | Asked to cover archiving the repo, moving it to another laptop and connecting a remote there | `specs/portability-spec.md` (what travels, backup, full archive, restore, both routes, history check before the first push); `npm run backup -- --full` (git bundle + private backup + manifest + restore steps, plain outer zip, refuses uncommitted changes); restore keeps `framework.local.yaml` and saves the archived one as `framework.local.previous.yaml`; step 12 tests the archive route |

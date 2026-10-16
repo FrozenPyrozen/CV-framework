@@ -14,7 +14,7 @@ The full design is in `docs/plan.md`. The rules are in `specs/`.
 
 ## Rules for every agent
 
-1. **Specs first.** Follow `specs/cv-spec.md`, `specs/work-summary-spec.md`, `specs/tailoring-spec.md`, `specs/templates.md`, `specs/review-report-spec.md` and the rubrics in `specs/rubrics/`. If a spec and a request conflict, say so and ask; don't silently deviate.
+1. **Specs first.** Follow `specs/cv-spec.md`, `specs/work-summary-spec.md`, `specs/tailoring-spec.md`, `specs/templates.md`, `specs/review-report-spec.md`, `specs/portability-spec.md` and the rubrics in `specs/rubrics/`. If a spec and a request conflict, say so and ask; don't silently deviate.
 2. **Every claim needs a source.** Never write a CV claim without a summary contribution, summary section or confirmed fact behind it. If the user wants something unsourced in the CV, it becomes a confirmed fact first (`/add-experience`).
 3. **Never invent.** Unknowns are `TODO (needs user input)` in summaries, or a question to the user. No invented numbers, dates, titles or technologies.
 4. **The user's manual edits are kept.** Start from files as they are on disk. Edit CVs one entry at a time and run `npm run reattach-src -- <file> --save` before the first edit.
@@ -65,7 +65,7 @@ Commands are available as Claude Code slash commands (`.claude/commands/`). Any 
 | `build [cv] [--market <id>] [--no-pdf] [--template <name>] [--entries-reviewed]`, `build:all` | the full chain for one CV or all of them |
 | `status [--ack <company>]` | what is stale and why; sent-CV warnings |
 | `template-import <file.docx> <name> [--map <map>]` | list a Word file's paragraphs, or build a template from labels |
-| `doctor [--no-export]`, `backup [--out <dir>] [--no-password]`, `restore <archive> [--force]`, `index [--check]` | environment check, moving files between laptops, this registry |
+| `doctor [--no-export]`, `backup [--out <dir>] [--no-password] [--full]`, `restore <archive> [--force]`, `index [--check]` | environment check, moving files between laptops, this registry |
 | `log-application --company <name> --pdf <file> [--role --status --notes --keep-copy]` | record a sent CV in `facts/applications.yaml` |
 | `test`, `typecheck` | the framework's own tests |
 

@@ -68,7 +68,8 @@ Run `npm test` and `npm run check`, plus `npm run build:all` when an export app 
 
 | id | Plan step | Scenario | Expected |
 |---|---|---|---|
-| C1 | 12 | Second laptop: clone, `npm ci`, `npm run restore`, `npm run doctor`, `npm run build:all` | outputs pass `pdf-check`; content matches the first laptop; doctor reports nothing missing |
+| C1 | 12 | Second laptop, route B of `specs/portability-spec.md` 5: `npm run backup -- --full`, then in a fresh folder outside the repo unzip, `git clone repo.bundle CV`, `git remote remove origin`, `npm ci`, `npm run restore -- ../private-backup.zip`, a new `framework.local.yaml`, `npm run doctor`, `npm run build:all` | the restored repo has the full history and no remote; private files are back; `framework.local.previous.yaml` holds the old settings; outputs pass `pdf-check`; content matches the first laptop; doctor reports nothing missing |
+| C1a | 12 | `npm run backup -- --full` with uncommitted changes | refused, with "commit first" |
 | C2 | 13 | New laptop + new repo: `/add-repo` on a repo the framework hasn't seen | identities detected and confirmed; "new or existing job" asked; job details asked; new tags and skills proposed; `validate` passes; the master CV and every variant gain sourced bullets; `build:all` passes `pdf-check`; `/review` runs |
 | C3 | 14 | Markets: `build:all`, then compare both markets for the master and one variant | Ukraine PDFs have no phone, availability, time-zone line or "(Contract)"; worldwide PDFs have them; `pdf-check` passes for both; bullets identical |
 

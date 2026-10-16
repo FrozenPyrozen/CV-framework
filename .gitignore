@@ -13,6 +13,7 @@ node_modules/
 
 # Per-laptop settings and working files
 framework.local.yaml
+framework.local.previous.yaml
 backups/
 .cv-runs/
 

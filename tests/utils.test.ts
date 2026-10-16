@@ -2,7 +2,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, utimesSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, utimesSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import JSZip from "jszip";
@@ -42,11 +42,15 @@ test("backup and restore: encrypted, newer local files kept as conflicts, nothin
   // New laptop: files gone; one local file is newer than the backup.
   const fresh = tempRepo();
   writeFileSync(join(fresh, "framework.local.yaml"), "backup_password_env: CV_TEST_PW\nrepos: {}\n");
-  utimesSync(join(fresh, "framework.local.yaml"), new Date(Date.now() + 60_000), new Date(Date.now() + 60_000));
+  writeFileSync(join(fresh, "facts/applications.yaml"), "- company: Newer\n");
+  utimesSync(join(fresh, "facts/applications.yaml"), new Date(Date.now() + 60_000), new Date(Date.now() + 60_000));
   const r = run("backup.ts", fresh, ["--restore", archive]);
   assert.equal(r.code, 0, r.out);
   assert.equal(readFileSync(join(fresh, "cv/tailored/acme/job-description.md"), "utf8"), "Acme job ad");
-  assert.match(r.out, /CONFLICT\s+framework\.local\.yaml \(the local file is newer; kept it\)/);
+  assert.match(r.out, /CONFLICT\s+facts\/applications\.yaml \(the local file is newer; kept it\)/);
+  // framework.local.yaml is per laptop: never overwritten; the old one is kept as framework.local.previous.yaml.
+  assert.equal(readFileSync(join(fresh, "framework.local.yaml"), "utf8"), "backup_password_env: CV_TEST_PW\nrepos: {}\n");
+  assert.match(readFileSync(join(fresh, "framework.local.previous.yaml"), "utf8"), /backup_dir: /);
   // A foreign archive can't write outside the backup paths.
   const zip = new JSZip();
   zip.file("scripts/evil.ts", "x");
@@ -122,4 +126,44 @@ test("doctor: a summary repo without a local path is info, not a warning", () =>
   const r = run("doctor.ts", dir, ["--no-export"]);
   assert.match(r.out, /info\s+repos with no local path on this laptop: .*normal once a job has ended/);
   assert.doesNotMatch(r.out, /warn\s+repos with no local path/);
+});
+
+test("backup --full: one plain zip with the repo bundle, private backup, manifest and restore steps; restore from it", async () => {
+  const { spawnSync } = await import("node:child_process");
+  const dir = tempRepo();
+  const sh = (cwd: string, ...a: string[]) => spawnSync(a[0], a.slice(1), { cwd, encoding: "utf8" });
+  writeFileSync(join(dir, ".gitignore"), "bk/\ncv/tailored/\nfacts/applications.yaml\nframework.local.yaml\nframework.local.previous.yaml\nsummaries/.digests/\n");
+  mkdirSync(join(dir, "cv/tailored/acme"), { recursive: true });
+  writeFileSync(join(dir, "cv/tailored/acme/job-description.md"), "Acme job ad");
+  writeFileSync(join(dir, "framework.local.yaml"), `backup_dir: ${join(dir, "bk")}\n`);
+  sh(dir, "git", "init", "-q", "-b", "main");
+  sh(dir, "git", "add", "-A");
+  sh(dir, "git", "-c", "user.name=t", "-c", "user.email=t@t", "commit", "-q", "-m", "init");
+  // Uncommitted changes: refused.
+  writeFileSync(join(dir, "summaries/new.md"), "x");
+  const refused = run("backup.ts", dir, ["--full", "--no-password"]);
+  assert.equal(refused.code, 1);
+  assert.match(refused.out, /uncommitted changes .* commit first/);
+  rmSync(join(dir, "summaries/new.md"));
+  const r = run("backup.ts", dir, ["--full", "--no-password"]);
+  assert.equal(r.code, 0, r.out);
+  const archive = join(dir, "bk", readdirSync(join(dir, "bk")).find((f) => f.startsWith("cv-full-"))!);
+  const zip = await JSZip.loadAsync(readFileSync(archive));
+  assert.deepEqual(Object.keys(zip.files).sort(), ["RESTORE.txt", "manifest.json", "private-backup.zip", "repo.bundle"]);
+  const manifest = JSON.parse(await zip.file("manifest.json")!.async("string"));
+  assert.equal(manifest.branch, "main");
+  assert.equal(manifest.private_files, 2);
+  assert.match(await zip.file("RESTORE.txt")!.async("string"), /git clone repo\.bundle CV/);
+  // The new laptop: clone the bundle, then restore the private part straight from the full archive.
+  const target = mkdtempSync(join(tmpdir(), "cv-new-laptop-"));
+  writeFileSync(join(target, "repo.bundle"), await zip.file("repo.bundle")!.async("nodebuffer"));
+  assert.equal(sh(target, "git", "clone", "-q", "repo.bundle", "CV").status, 0);
+  const cv = join(target, "CV");
+  assert.ok(existsSync(join(cv, "summaries/syspro-saas-erp.md")));
+  assert.ok(!existsSync(join(cv, "cv/tailored")));
+  const rr = run("backup.ts", cv, ["--restore", archive]);
+  assert.equal(rr.code, 0, rr.out);
+  assert.equal(readFileSync(join(cv, "cv/tailored/acme/job-description.md"), "utf8"), "Acme job ad");
+  assert.ok(!existsSync(join(cv, "framework.local.yaml")));
+  assert.ok(existsSync(join(cv, "framework.local.previous.yaml")));
 });

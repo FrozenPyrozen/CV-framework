@@ -44,15 +44,22 @@ backup_dir: backups         # relative to this folder, or e.g. iCloud Drive
 
 ## New laptop
 
-The committed files (summaries, facts, profiles, specs, agents, templates, config, CV Markdown) travel with git. Built files are recreated. Private files that aren't in git (tailored CVs, job ads, the application log, sent PDFs) travel in a backup.
+The rules are in `specs/portability-spec.md`. Committed files travel with git; private files that aren't in git (tailored CVs, job ads, the application log, sent PDFs) travel in a backup; `node_modules/`, built files, `.cv-runs/` and `backups/` never move (they are recreated, and `node_modules/` holds native binaries for one OS).
 
-1. **On the old laptop:** `npm run backup`. It writes an archive to `backup_dir`, encrypted (`.zip.enc`) when the variable named by `backup_password_env` holds a password, otherwise a plain `.zip`; keep a plain one on your own disks only. Copy it to the new laptop.
-2. **Get the repo.** This repo has no remote yet. Either push it to a **private** remote once (`git remote add origin <private url> && git push -u origin main`) and `git clone` it, or copy the whole folder. Never use a public remote: the summaries describe client work.
-3. **Install:** Node from `.nvmrc`, an exporter (Pages, Word or LibreOffice), the fonts, and your AI agent tool. Then `npm ci`.
-4. `cp framework.local.example.yaml framework.local.yaml` and set the paths for this laptop. Repos you no longer have access to can be left out: their summaries are the lasting record.
-5. `npm run restore <archive>` (with the same password variable set for an encrypted backup). It never overwrites a newer local file; it lists those, and `--force` overwrites them.
-6. `npm run doctor` and fix anything it reports.
-7. `npm run build:all`. The PDFs match the old laptop's content; `pdf-check` confirms it.
+**Old laptop:** commit everything, then either
+- **with a private remote:** `git push`, and `npm run backup` for the private files; or
+- **without a remote:** `npm run backup -- --full`. It writes `cv-full-<date-time>.zip` to `backup_dir`: the repo with full history (`repo.bundle`), the private files (`private-backup.zip`, encrypted as `.zip.enc` when the password variable is set), a manifest and `RESTORE.txt`. The outer zip isn't encrypted and holds every summary, so keep it on your own devices. It refuses to run with uncommitted changes.
+
+**New laptop:**
+1. Install Node from `.nvmrc`, an exporter (Pages, Word or LibreOffice), the fonts and your AI agent tool.
+2. Get the repo:
+   - from a remote: `git clone <private url> CV && cd CV`
+   - from a full archive: unzip it, then `git clone repo.bundle CV && cd CV && git remote remove origin`
+3. `npm ci`
+4. `npm run restore -- <backup>` (for a full archive: `../private-backup.zip` or `.zip.enc`, with the password variable set). It never overwrites a newer local file (`--force` does), and it saves the old laptop's settings as `framework.local.previous.yaml`.
+5. `cp framework.local.example.yaml framework.local.yaml` and set this laptop's repo paths and backup folder.
+6. `npm run doctor`, fix what it reports, then `npm run build:all`.
+7. **Connect a remote later** (when you have one): `git remote add origin <private url>`, then `git push -u origin --all && git push origin --tags`. Pushing sends the whole history, so first check it holds nothing that should stay local (`specs/portability-spec.md` 6). Use a private remote only: the summaries describe client work.
 
 ## Everyday tasks
 
