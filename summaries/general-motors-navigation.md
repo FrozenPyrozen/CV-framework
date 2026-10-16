@@ -95,7 +95,7 @@ Tags: automotive, react-native
 ## 5. Technologies and frameworks
 
 - **Language:** TypeScript (hands-on)
-- **Mobile and UI:** React Native (hands-on), Storybook (hands-on), Figma (hands-on)
+- **Mobile and UI:** React Native (hands-on), Storybook (hands-on), Figma (hands-on), Styled Components (hands-on, confirmed by user 2026-10-16)
 - **Maps and navigation:** HERE SDK, HERE HNav / HNod SDK (hands-on)
 - **Architecture:** React Native micro-frontends (hands-on)
 - **State and data:** Redux Saga (hands-on), RxJS (hands-on)

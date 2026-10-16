@@ -9,6 +9,36 @@ decisions:
     why: User's choice after the ATS review. The links are kept in profile.yaml with show false and can be switched on.
     matches: [missing LinkedIn, missing GitHub, no profile links]
 
+  - id: keep-cv-name
+    decision: Keep "Kirill Kohan" as the CV name for now, although the legal name is "Kyrylo Kokhan" and the LinkedIn handle is "kyrylo-kohan".
+    date: "2026-10-16"
+    why: User's choice ("let it be for now"); profile.yaml show_legal_name can switch it later. HR review should prepare a one-line explanation instead of raising it.
+    matches: [name mismatch, legal name, Kyrylo Kokhan, name consistency, LinkedIn name]
+
+  - id: keep-erp-programs-figure
+    decision: Keep "renders 1,800+ ERP programs" (counted as 1,891 menu items on a mock backend in local testing); the figure and the level of SYSPRO platform detail are OK to share.
+    date: "2026-10-16"
+    why: User's choice after the fact-check and confidentiality reviews.
+    matches: ["1,800+ ERP programs", mock backend count, current employer detail, SYSPRO platform detail]
+
+  - id: hidden-client-details-ok
+    decision: The Generative AI Jira Plugin and Clinical Trials Patient App entries keep their feature details (eCOA, Expo plus native Android, Jira issue to design, PRD uploads, MCP URL, Azure Blob); only the client names stay hidden.
+    date: "2026-10-16"
+    why: User's choice ("just don't tell the name").
+    matches: [hidden client identifiable, narrow down the client, Velocity AI, Clinical Ink, feature list identifies]
+
+  - id: keep-previous-cv-metrics
+    decision: Keep the numbers taken from the previous CV ("Forbes top 10", "income grew 10x", "tripled new users", "engagement grew 4x"), and don't fill the empty confidentiality notes of the older summaries (GM, Velas, OMO, Thermo Fisher, Itjet, Admasters) from memory.
+    date: "2026-10-16"
+    why: User's choice; internal names from those jobs aren't remembered.
+    matches: [Forbes top 10, revenue figure, income grew 10x, outcome numbers, None known TODO confidentiality notes]
+
+  - id: keep-contact-and-keywords
+    decision: The email kiril.kohan@gmail.com is correct; React.js stays in Skills as an extra keyword.
+    date: "2026-10-16"
+    why: User confirmed.
+    matches: [email spelling, React.js duplicate keyword]
+
   - id: keep-length
     decision: Keep the master CV's current length (about 2,000 words, 3 to 4 pages); don't trim older roles there. Role variants follow their profile's max_pages and max_words and shrink less relevant roles by design.
     date: "2026-10-15"

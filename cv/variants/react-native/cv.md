@@ -10,7 +10,7 @@ Kyiv, Ukraine (Remote) | Open to B2B contract or full-time employment | Working 
 
 # **SUMMARY**
 
-Senior React Native engineer and tech lead with 7+ years of experience building React Native, React and TypeScript apps for automotive, healthcare and clinical trials, IoT, fintech, blockchain and enterprise ERP products. <!-- src: calc:years_experience, profile, general-motors-navigation#1, orion-mobile-clinical-ink#1, thermo-fisher-dosimeter#1, omo-systems-smart-home#1, itjet-fintech#1, velas-wallet#1, syspro-saas-erp#1 --> Led a team of 8 developers delivering an automotive React Native app with in-car navigation on the HERE SDK for General Motors; after release, user engagement rose 20% and app crashes fell 15%. <!-- src: general-motors-navigation#4.1, general-motors-navigation#4.6, calc:team_size_led --> Architected an offline-first IoT healthcare app on Android and iOS with Realm, and built its Bluetooth Low Energy (BLE), MQTT over TLS and background-job features. <!-- src: thermo-fisher-dosimeter#4.1, thermo-fisher-dosimeter#4.2, thermo-fisher-dosimeter#4.3, thermo-fisher-dosimeter#4.4 --> Made mobile apps measurably faster: a 3x faster first interaction on Android, a staking list that loads 12x faster with 5x less battery use, and 30% faster data transfer. <!-- src: velas-wallet#4.9, velas-wallet#4.2, thermo-fisher-dosimeter#4.2 --> Also works in native Android (Java / Kotlin), including an Android 14 (SDK 34) migration, SQLCipher encryption and SSL certificate pinning, and published a wallet app on F-Droid and Snapcraft. <!-- src: orion-mobile-clinical-ink#4.1, orion-mobile-clinical-ink#4.4, orion-mobile-clinical-ink#4.5, velas-wallet#4.5 --> At SYSPRO, builds a schema-driven React 19 runtime that renders 1,800+ ERP programs, through an architecture-governed, specification-driven development (SDD) process. <!-- src: syspro-saas-erp#4.1, syspro-saas-erp#4.2 -->
+Senior React Native engineer and tech lead with 7+ years of experience building React Native, React and TypeScript apps for automotive, healthcare and clinical trials, IoT, fintech, blockchain and enterprise resource planning (ERP) products. <!-- src: calc:years_experience, profile, general-motors-navigation#1, orion-mobile-clinical-ink#1, thermo-fisher-dosimeter#1, omo-systems-smart-home#1, itjet-fintech#1, velas-wallet#1, syspro-saas-erp#1 --> Led a team of 8 engineers delivering an automotive React Native app with in-car navigation on the HERE SDK for General Motors; after release, user engagement rose 20% and app crashes fell 15%. <!-- src: general-motors-navigation#4.1, general-motors-navigation#4.6, calc:team_size_led --> Architected an offline-first IoT healthcare app on Android and iOS with Realm, and built its Bluetooth Low Energy (BLE), MQTT over TLS and background-job features. <!-- src: thermo-fisher-dosimeter#4.1, thermo-fisher-dosimeter#4.2, thermo-fisher-dosimeter#4.3, thermo-fisher-dosimeter#4.4 --> Made mobile apps measurably faster: a 3x faster first interaction on Android, a staking list that loads 12x faster with 5x less battery use and 30% faster data transfer. <!-- src: velas-wallet#4.9, velas-wallet#4.2, thermo-fisher-dosimeter#4.2 --> Also works in native Android (Java / Kotlin): an Android 14 (SDK 34) migration, SQLCipher encryption and SSL certificate pinning, plus wallet app releases on F-Droid and Snapcraft. <!-- src: orion-mobile-clinical-ink#4.1, orion-mobile-clinical-ink#4.4, orion-mobile-clinical-ink#4.5, velas-wallet#4.5 --> At SYSPRO, builds core modules of a schema-driven React 19 runtime that renders 1,800+ ERP programs through architecture-governed specification-driven development (SDD). <!-- src: syspro-saas-erp#4.1, syspro-saas-erp#4.2 -->
 
 # **EXPERIENCE**
 
@@ -19,7 +19,7 @@ Senior React Native engineer and tech lead with 7+ years of experience building 
 
 ### **SYSPRO | Remote | December 2025 - Present**
 
-* Delivered the frontend through an architecture-governed **specification-driven development (SDD)** process, not ad-hoc AI code generation, and helped define it: specification templates, the validation routine and rules for **AI coding agents** as governed reviewers. Traced every subsystem from architecture to specification to implementation across 4 repositories. <!-- src: syspro-saas-erp#4.2, syspro-architecture-scope -->
+* Delivered the frontend through an architecture-governed **specification-driven development (SDD)** process, not ad-hoc AI code generation, and helped define it: specification templates, the validation routine and rules for **AI coding agents** as governed reviewers. Traced each subsystem from architecture to specification to code across 4 repositories. <!-- src: syspro-saas-erp#4.2, syspro-architecture-scope -->
 
 * Owned the **frontend technology stack** for the Login micro-frontend and the schema-driven runtime, including the OIDC libraries and the move from React Testing Library to **Vitest Browser Mode**. <!-- src: syspro-saas-erp#4.3, syspro-tech-stack-ownership -->
 
@@ -27,14 +27,14 @@ Senior React Native engineer and tech lead with 7+ years of experience building 
 
 * Worked with the lead architect on the **platform and solution architecture**: reviewed and co-authored architecture documents and drove open architecture questions and blockers to decisions. <!-- src: syspro-architecture-scope -->
 
-* Stack: **React 19, TypeScript, KendoReact, Zustand, XState, TanStack Router, TanStack Query, Vite, SCSS / CSS Modules, OpenTelemetry, Vitest, Playwright, Storybook, Docker, Azure DevOps**. <!-- src: syspro-saas-erp#5 -->
+* Stack: **React 19, TypeScript, KendoReact, Zustand, XState, TanStack Router, TanStack Query, WebSockets, Vite, SCSS / CSS Modules, OpenTelemetry, Vitest, Playwright, Storybook, Docker, Azure DevOps**. <!-- src: syspro-saas-erp#5 -->
 
 <!-- entry: general-motors-navigation -->
 ## **Team Leader**
 
 ### **General Motors | Remote | July 2023 - November 2025**
 
-* Led a team of 8 developers delivering an automotive **React Native** app, working with stakeholders on scope and planning. After release, user engagement rose 20% and app crashes fell 15%. <!-- src: general-motors-navigation#4.1 -->
+* Led a team of 8 engineers delivering an automotive **React Native** app, working with stakeholders on scope and planning. After release, user engagement rose 20% and app crashes fell 15%. <!-- src: general-motors-navigation#4.1 -->
 
 * Led development of a reusable map library on the **HERE SDK**, packaged as a **React Native micro-frontend** and integrated into several company products. <!-- src: general-motors-navigation#4.3 -->
 
@@ -44,7 +44,7 @@ Senior React Native engineer and tech lead with 7+ years of experience building 
 
 * Implemented a passenger second-screen feature for a luxury car brand. <!-- src: general-motors-navigation#4.8 -->
 
-* Ran **code reviews** and set coding standards for the team, mentoring developers on architecture and testing. <!-- src: general-motors-navigation#4.2 -->
+* Ran **code reviews** and set coding standards for the team, mentoring engineers on architecture and testing. <!-- src: general-motors-navigation#4.2 -->
 
 * Stack: **React Native, TypeScript, Node.js, Redux Saga, RxJS, Storybook, Detox** (E2E), **Fastlane, Bitrise** (CI/CD), **Bugsnag, Kibana** (monitoring), **Figma**. <!-- src: general-motors-navigation#5 -->
 
@@ -59,9 +59,9 @@ Senior React Native engineer and tech lead with 7+ years of experience building 
 
 * Developed the Velas **blockchain** wallet for mobile, web and desktop using **React Native, React, Node.js, TypeScript, MobX and Web3.js**. <!-- src: velas-wallet#4.1 -->
 
-* Made the staking list load 12x faster and use 5x less mobile battery by moving filtering to the server and adding a Node RPC fallback. <!-- src: velas-wallet#4.2 -->
+* Made the staking list load 12x faster and use 5x less mobile battery by moving filtering to the server and adding a blockchain-node RPC fallback. <!-- src: velas-wallet#4.2 -->
 
-* Redesigned the staking-rewards calculation on the **Node.js** backend for stability and speed; user engagement grew 4x afterwards. <!-- src: velas-wallet#4.6 -->
+* Redesigned the staking-rewards calculation on the **Node.js** backend for stability and speed; user engagement grew 4x afterward. <!-- src: velas-wallet#4.6 -->
 
 * Built a new cross-platform wallet in **React Native Web** from scratch, including the architecture for managing tokens and assets. <!-- src: velas-wallet#4.8 -->
 
@@ -72,9 +72,9 @@ Senior React Native engineer and tech lead with 7+ years of experience building 
 
 * Fixed insecure face-recognition unlock on specific Android devices by patching in a native **Android biometrics** library. <!-- src: omo-systems-smart-home#4.4 -->
 
-* Delivered the core mobile app for controlling smart-home **IoT** devices in the R&D department. <!-- src: omo-systems-smart-home#4.1 -->
+* Delivered the R&D department's core mobile app for controlling smart-home **IoT** devices. <!-- src: omo-systems-smart-home#4.1 -->
 
-* Led and mentored the development team: ran **code reviews**, set coding standards and onboarded new developers. <!-- src: omo-systems-smart-home#4.5 -->
+* Led and mentored a team of about 3 engineers: ran **code reviews**, set coding standards and onboarded new engineers. <!-- src: omo-systems-smart-home#4.5 -->
 
 <!-- entry: thermo-fisher-dosimeter -->
 ## **Software Engineer**
@@ -89,7 +89,7 @@ Senior React Native engineer and tech lead with 7+ years of experience building 
 
 * Optimized rendering and offline data access in **Realm** as part of a team-wide **performance** effort that made the app 20% faster. <!-- src: thermo-fisher-dosimeter#4.6 -->
 
-* Implemented a secure login flow with **OAuth 2.0**, and local storage of dosimeter data in **Realm** with efficient filtering. <!-- src: thermo-fisher-dosimeter#4.5 -->
+* Implemented a secure **OAuth 2.0** login flow and local storage of dosimeter data with efficient filtering. <!-- src: thermo-fisher-dosimeter#4.5 -->
 
 * Improved the accuracy of **Bluetooth Low Energy (BLE)** communication with the dosimeter by reworking the buffer-reading logic. <!-- src: thermo-fisher-dosimeter#4.3 -->
 
@@ -111,7 +111,7 @@ Senior React Native engineer and tech lead with 7+ years of experience building 
 
 * Led a team of 3 software engineers and introduced **Agile** processes. <!-- src: admasters-ecommerce#4.2 -->
 
-* Integrated **A/B testing** into e-commerce products to raise conversion rates. <!-- src: admasters-ecommerce#4.1 -->
+* Added **A/B testing** to e-commerce products to raise conversion rates. <!-- src: admasters-ecommerce#4.1 -->
 
 # **CONSULTING AND FREELANCE PROJECTS**
 
@@ -124,9 +124,9 @@ Part-time contract and consulting work, alongside full-time roles
 
 * Migrated the app to **react-native-safe-area-context** across all screens and enforced it with an **ESLint** rule, fixing layout overlaps on iOS and Android. <!-- src: orion-mobile-clinical-ink#4.3 -->
 
-* Resolved production crashes and patient-facing bugs by bisecting dependency versions and adding targeted logging, including login, PIN, task scheduling and document loading issues. <!-- src: orion-mobile-clinical-ink#4.6 -->
+* Investigated production crashes and fixed patient-facing bugs (login, PIN, task scheduling, document loading) by bisecting dependency versions and adding targeted logging. <!-- src: orion-mobile-clinical-ink#4.6 -->
 
-* Developed and maintained a patient-facing **clinical trial (eCOA)** mobile app built with **React Native, Expo and TypeScript**, and its native **Android (Java / Kotlin)** counterpart. <!-- src: orion-mobile-clinical-ink#4.1 -->
+* Developed and maintained a patient-facing **clinical trial** mobile app for electronic clinical outcome assessment (**eCOA**) built with **React Native, Expo and TypeScript**, and its native **Android (Java / Kotlin)** counterpart. <!-- src: orion-mobile-clinical-ink#4.1 -->
 
 * Refactored the legacy documents library module from JavaScript to **TypeScript** and added ~1,000 lines of **Jest** and **React Native Testing Library** tests. <!-- src: orion-mobile-clinical-ink#4.2 -->
 
@@ -139,20 +139,20 @@ Part-time contract and consulting work, alongside full-time roles
 
 ### **Generative AI Jira Plugin | Remote**
 
-* Built an **Atlassian Jira Forge** app from scratch with **React, TypeScript** and **Node.js** resolvers that starts **generative AI** design generation from a Jira issue and creates a Jira subtask for the result. <!-- src: designai-jira-plugin#4.1 -->
+* Built an **Atlassian Jira Forge** app from scratch with **React, TypeScript** and **Node.js** resolvers. The app starts **generative AI** design creation from a Jira issue and adds a Jira subtask for the result. <!-- src: designai-jira-plugin#4.1 -->
 
-* Built the design generation form with multiple inputs: design description, reference images with preview, PRD and user-flow uploads, website URL, **MCP (Model Context Protocol)** server URL and design-system selection, using a reusable file-upload component and form validation. <!-- src: designai-jira-plugin#4.2 -->
+* Built the design generation form with multiple inputs: design description, reference images with preview, product requirements document (PRD) and user-flow uploads, website URL, **MCP (Model Context Protocol)** server URL and design-system selection, using a reusable file-upload component and form validation. <!-- src: designai-jira-plugin#4.2 -->
 
 <!-- entry: various-clients -->
 ## **Software Engineering Consultant**
 
 ### **Various Clients | Remote**
 
-* Conducted senior-level **technical interviews** for **React, React Native, JavaScript and TypeScript** roles for enterprise clients, assessing candidates' coding, architecture and problem-solving skills. <!-- src: consulting-interviews -->
+* Conducted senior-level **technical interviews** for **React, React Native, JavaScript and TypeScript** roles for enterprise clients, with technical questions and coding assignments. <!-- src: consulting-interviews -->
 
-* Led scaling and optimization engagements for client teams, reducing operational costs by up to 50% by refactoring core apps, adding caching and adding unit tests. <!-- src: consulting-optimization -->
+* Led scaling and optimization engagements for client teams, reducing operational costs by up to 50% through refactoring core apps, adding caching and writing unit tests. <!-- src: consulting-optimization -->
 
-* Audited legacy **React Native** codebases to identify the critical parts that needed updating (outdated framework versions, deprecated native libraries, platform requirements) and prepared prioritized upgrade plans with **effort estimations**. <!-- src: consulting-audits -->
+* Audited legacy **React Native** codebases to identify the critical parts that needed updating (outdated framework versions, deprecated native libraries, platform requirements) and prepared prioritized upgrade plans with **effort estimates**. <!-- src: consulting-audits -->
 
 * Led **React Native** version upgrades and legacy library migrations for client mobile apps. <!-- src: consulting-rn-upgrades -->
 
@@ -177,7 +177,7 @@ National Aviation University | Ukraine | 2016 - 2020
 # **SKILLS**
 
 <!-- generated:skills -->
-**Mobile:** React Native, Expo, React Native Web, Android (Java, Kotlin, Gradle), Native Modules (iOS/Android), Realm (realm-js), SQLCipher, Keychain, Fastlane, Bitrise
+**Mobile:** React Native, Expo, React Native Web, Android (Java, Kotlin, Gradle), Native modules (iOS / Android), Realm (realm-js), SQLCipher, Keychain, Fastlane, Bitrise
 
 **Languages:** JavaScript (ES6+), TypeScript, HTML5, CSS3, SCSS
 

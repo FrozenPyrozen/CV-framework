@@ -95,6 +95,8 @@ Tags: sdd, architecture, ai-agents, code-review, typescript
 
 Contributed to the frontend technology-stack decision record in the platform architecture repository. Added oidc-client-ts and react-oidc-context as the identity-management libraries, and recommended replacing React Testing Library with Vitest Browser Mode for component testing.
 
+The user owned the frontend technology stack for the Login app and the Studio Shell (fact `syspro-tech-stack-ownership`, 2026-10-16).
+
 Tags: tech-stack, architecture, oidc, testing
 
 ### 4.4 KendoReact rendering handlers
@@ -102,7 +104,7 @@ Tags: tech-stack, architecture, oidc, testing
 Built the rendering handlers that map view definitions onto live KendoReact components, the largest body of work in the runtime:
 
 - Form and date-field handlers; fixed a defect where date fields showed a fixed placeholder date (1/1/2000) instead of the correct default value.
-- Search grid, search-grid filter and search-grid results handlers: render-readiness gating, filter-panel visibility, per-descriptor filter state persisted through renderer-state writes, and typed filter controls generated from category metadata; fixed the row-click search-value computation and column rendering.
+- Search grid, search-grid filter and search-grid results handlers: render-readiness gating, filter-panel visibility, per-descriptor filter state persisted through renderer-state writes, and typed filter controls generated from category metadata. Built the results handler: column rendering with cell formatting, configurable sorting with a default sort order, and the search value computed on row click (checked in the repo with the user, 2026-10-16).
 - Smart-tag field handler, integrated with backend-driven related-program navigation data, including backend integration for ERP smart-tag fixtures.
 - Predictive search handler, implemented against its specification.
 
@@ -138,7 +140,7 @@ Tags: react, typescript, micro-frontends, accessibility, storybook, tanstack, ke
 
 ### 4.7 OpenID Connect authentication
 
-Set up OIDC authentication for the host runtime with oidc-client-ts and react-oidc-context, including session and configuration wiring. The identity app is hosted separately on the identity domain, and the host and admin apps act purely as OIDC clients.
+Set up OIDC authentication for the Login app and the Studio Shell host runtime with oidc-client-ts and react-oidc-context, including session and configuration wiring (confirmed by user 2026-10-16). The identity app is hosted separately on the identity domain, and the host and admin apps act purely as OIDC clients.
 
 Tags: oidc, security, micro-frontends, react, typescript
 
@@ -158,7 +160,7 @@ Tags: testing, react, typescript
 
 ### 4.10 Monorepo tooling, shared packages and CI
 
-Maintained the npm workspaces monorepo: dependency upgrades, an ESLint import-ordering rule, Prettier formatting rules, TypeScript project references (composite builds) and Vite/Vitest config files. Consumed and extended the shared theme and UI packages behind the login, host and admin apps, including minor package-level changes in the admin app. Worked on the repository's steward audit tooling, including shell scripts that check whether mirrored schemas are up to date, and set up and maintained the CI pipeline specification material for Azure Pipelines. Consumed the schema-to-TypeScript code generation pipeline.
+Maintained the npm workspaces monorepo: dependency upgrades, an ESLint import-ordering rule, Prettier formatting rules, TypeScript project references (composite builds) and Vite/Vitest config files. Consumed and extended the shared theme and UI packages behind the login, host and admin apps, including minor package-level changes in the admin app. Worked on the repository's steward audit tooling, including shell scripts that check whether mirrored schemas are up to date, and set up and maintained the CI pipeline specification material for Azure Pipelines, with small pipeline changes such as allowing connections from localhost (user, 2026-10-16). Consumed the schema-to-TypeScript code generation pipeline and fixed code generation bugs in the application repository (fact `syspro-codegen-fixes`).
 
 Tags: monorepo, build-tooling, code-quality, ci-cd, azure, typescript
 
@@ -219,6 +221,7 @@ Tags: code-review, code-quality, sdd
 | Technology | Where used | Use |
 |---|---|---|
 | Sass/SCSS with CSS Modules | All apps, component-scoped styling | **hands-on** |
+| Styled Components | Styling (confirmed by user 2026-10-16) | **hands-on** |
 | Fontsource Inter and Material Icons | Typography and iconography | **used by the project** |
 | clsx | Conditional class composition | **used by the project** |
 
@@ -262,7 +265,7 @@ Tags: code-review, code-quality, sdd
 
 | Technology | Where used | Use |
 |---|---|---|
-| Azure Pipelines | CI pipeline specification material | **hands-on** |
+| Azure Pipelines | CI pipeline specification material, small pipeline changes (localhost access) | **hands-on** |
 | Azure DevOps | repos, pull requests and pipelines (confirmed by user 2026-10-15) | **hands-on** |
 | Docker | local development and services (confirmed by user 2026-10-15) | **hands-on** |
 

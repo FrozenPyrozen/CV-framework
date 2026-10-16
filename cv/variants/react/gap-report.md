@@ -4,11 +4,11 @@ Built: 2026-10-16 · Profile: react · Job ad: no
 
 ## Strong evidence
 - React and TypeScript (current and hands-on): SYSPRO React 19 schema-driven runtime, view orchestration and Login micro-frontend (`syspro-saas-erp#4.1`, `#4.5`, `#4.6`); Velas React / React Native Web wallets (`velas-wallet#4.1`, `#4.8`); Itjet TypeScript adoption and React Native Web signup flow (`itjet-fintech#4.3`, `#4.1`); Jira Forge app in React and TypeScript (`designai-jira-plugin#4.1`, `#4.2`).
-- Architecture: platform and solution architecture work with the lead architect and the frontend technology-stack decision record (`syspro-saas-erp#4.3`, `syspro-architecture-scope`); General Motors modular app architecture (`general-motors-navigation#4.4`); Thermo Fisher app architected from scratch (`thermo-fisher-dosimeter#4.1`); Velas React Native Web wallet architecture (`velas-wallet#4.8`).
+- Architecture: platform and solution architecture work with the lead architect and ownership of the frontend technology stack (`syspro-saas-erp#4.3`, `syspro-architecture-scope`, `syspro-tech-stack-ownership`); General Motors modular app architecture (`general-motors-navigation#4.4`); Thermo Fisher app architected from scratch (`thermo-fisher-dosimeter#4.1`); Velas React Native Web wallet architecture (`velas-wallet#4.8`).
 - Specification-driven development (SDD): pinned first SYSPRO bullet (`syspro-saas-erp#4.2`, `syspro-architecture-scope`), with AI agents described only as governed reviewers (decision `sdd-not-vibe-coding`).
 - Micro-frontends and authentication: Login micro-frontend, OIDC in a zero-trust, independently deployable setup (`syspro-saas-erp#4.6`, `#4.7`, `#4.1`); React Native micro-frontend map library (`general-motors-navigation#4.3`).
 - State management: XState and Zustand (`syspro-saas-erp#4.5`); MobX (`velas-wallet#4.1`); Redux (`thermo-fisher-dosimeter#4.1`).
-- Leadership: team of 8 at General Motors, code reviews and standards (`general-motors-navigation#4.1`, `#4.2`, `calc:team_size_led`); OMO Systems mentoring (`omo-systems-smart-home#4.5`); The Admasters team of 3 (`admasters-ecommerce#4.2`); senior technical interviews (`consulting-interviews`).
+- Leadership: team of 8 at General Motors, code reviews and standards (`general-motors-navigation#4.1`, `#4.2`, `calc:team_size_led`); OMO Systems team of about 3 engineers (`omo-systems-smart-home#4.5`); The Admasters team of 3 (`admasters-ecommerce#4.2`); senior technical interviews (`consulting-interviews`).
 
 ## Weak or missing evidence
 | Area | What exists | Suggestion |

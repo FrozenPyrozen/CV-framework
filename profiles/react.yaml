@@ -11,6 +11,7 @@ overrides:
   syspro-saas-erp#4.3: { pin: true }   # lead architect and tech-stack decision record (cv_emphasis)
   syspro-saas-erp#4.1: { pin: true }   # the current job's main result (1,800+ ERP programs)
   syspro-saas-erp#4.8: { pin: true }   # OpenTelemetry module (observability is an emphasized tag; 2026-10-16)
+  syspro-tech-stack-ownership: { drop: true }   # already cited in the #4.3 bullet
   general-motors-navigation#4.1: { pin: true }   # team of 8: evidence for the tech-lead headline
 max_bullets_per_entry: 6
 entry_max_bullets:

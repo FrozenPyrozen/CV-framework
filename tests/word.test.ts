@@ -38,7 +38,7 @@ test("render produces the approved layout: same formatting per paragraph type, r
   const d = await openDocx(out);
   const texts = d.paragraphs.map(paragraphText);
   assert.equal(texts[0], "Kirill Kohan");
-  assert.equal(texts[1], "Senior Software Engineer / Tech Lead (Frontend & Mobile)");
+  assert.equal(texts[1], "Senior Software Engineer / Tech Lead (Frontend and Mobile)");
   assert.equal(texts[3], "+380 97 891 9783 | kiril.kohan@gmail.com | Portfolio");
   assert.ok(texts.includes("SYSPRO | RemoteDecember 2025 - Present"), "entry details with tab before dates");
   assert.ok(!texts.some((t) => /Team Leader \(Contract\)/.test(t)));
@@ -104,7 +104,7 @@ test("render: consistent left edge and spacing, lead-in lines stay with their bu
 test("render turns [text](url) into a real link with that text", async () => {
   const dir = tempRepo();
   run("refresh.ts", dir);
-  edit(dir, CV, "* Delivered the core mobile app", "* See [my site](https://example.com/x) and delivered the core mobile app");
+  edit(dir, CV, "* Delivered the R&D department's core mobile app", "* See [my site](https://example.com/x) and delivered the core mobile app");
   run("render.ts", dir);
   const out = join(dir, "cv/Kirill_Kohan_CV.docx");
   const d = await openDocx(out);
@@ -112,4 +112,15 @@ test("render turns [text](url) into a real link with that text", async () => {
   assert.ok(p, "link rendered as its text, no brackets");
   const rels = await (await JSZip.loadAsync(readFileSync(out))).file("word/_rels/document.xml.rels")!.async("string");
   assert.match(rels, /Target="https:\/\/example\.com\/x"/);
+});
+
+test("render removes source comments without leaving double spaces between sentences", async () => {
+  const dir = tempRepo();
+  run("refresh.ts", dir);
+  assert.equal(run("render.ts", dir).code, 0);
+  const d = await openDocx(join(dir, "cv/Kirill_Kohan_CV.docx"));
+  const texts = d.paragraphs.map(paragraphText);
+  const summary = texts.find((t) => t.startsWith("Senior software engineer"))!;
+  assert.match(summary, /products\. At SYSPRO/);
+  for (const t of texts) assert.doesNotMatch(t, /\S {2,}\S/, t.slice(0, 60));
 });

@@ -159,7 +159,8 @@ export async function renderDocx(markdown: string, outPath: string, templateName
   const push = (x: string | undefined, what: string) => { if (x) body.push(x); else warnings.push(`template "${templateName}" has no sample for ${what}`); };
   let inHeader = false;
   let section = "";
-  const lines = markdown.replace(/<!--(?!\s*\/?generated:header)[\s\S]*?-->/g, "").split("\n");
+  // Comments are removed together with the space before them, so "sentence. <!-- src --> Next" renders with one space.
+  const lines = markdown.replace(/[ \t]*<!--(?!\s*\/?generated:header)[\s\S]*?-->/g, "").split("\n");
 
   let firstAfter = -1;
   for (const raw of lines) {

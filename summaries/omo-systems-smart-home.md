@@ -8,7 +8,7 @@ role: Team Leader
 engagement: full-time              # confirmed by user 2026-10-15 (earlier recorded as contract)
 period: { start: 2021-04, end: 2021-12 }
 domain: [IoT, Smart home]
-team_size_led: 0
+team_size_led: 3                   # about 3 engineers (user, 2026-10-16)
 counts_as_experience: true
 # --- harvesting ---
 repos: []
@@ -35,7 +35,7 @@ Control of smart-home IoT devices, a monthly paid subscription that unlocks feat
 
 ## 3. My role and responsibilities
 
-Team Leader in the R&D department. Led and mentored the development team: ran code reviews, set coding standards and onboarded new developers.
+Team Leader in the R&D department. Led and mentored a team of about 3 engineers (team size confirmed by user 2026-10-16): ran code reviews, set coding standards and onboarded new engineers.
 
 TODO (needs user input): team size, ownership areas and key collaborators.
 
@@ -69,7 +69,7 @@ Tags: security, android, native-modules
 
 ### 4.5 Team leadership and mentoring
 
-Led and mentored the development team: ran code reviews, set coding standards and onboarded new developers.
+Led and mentored a team of about 3 engineers (team size confirmed by user 2026-10-16): ran code reviews, set coding standards and onboarded new engineers.
 
 Tags: leadership, mentoring, code-review
 

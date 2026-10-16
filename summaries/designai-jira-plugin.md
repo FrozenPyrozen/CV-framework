@@ -86,6 +86,7 @@ Tags: code-quality, typescript, design-systems
 | Language | TypeScript | **hands-on** |
 | UI | React | **hands-on** |
 | UI | Atlassian design tokens and styling | **hands-on** |
+| UI | Styled Components | **hands-on** (confirmed by user 2026-10-16) |
 | Platform | Atlassian Forge (Custom UI and resolvers, environment variables, CLI deploy and install) | **hands-on** |
 | Platform | Jira API (read and write access to work items) | **hands-on** |
 | Backend runtime | Node.js 22 (Forge resolver) | **hands-on** |

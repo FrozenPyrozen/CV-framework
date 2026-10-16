@@ -1,6 +1,6 @@
 # CV Agent Framework: Plan
 
-Status: steps 1–8 built (section 8); next: step 9 · 2026-10-16
+Status: steps 1–9 done (section 8); next: /improve on the first review, then step 10 · 2026-10-16
 
 ## 1. Goal
 
@@ -832,7 +832,7 @@ Problems expected when the flows actually run, found by simulating every flow ag
 
 ## 12. Coverage of the 2026-10-15 chat
 
-Every step done by hand in the chat, and the capability that repeats it. Rows 37 onward also log the build steps of section 8 (step 5: rows 37–42, step 6: 43–44, step 7: 46–47, step 8: 48–49) and the audits after them.
+Every step done by hand in the chat, and the capability that repeats it. Rows 37 onward also log the build steps of section 8 (step 5: rows 37–42, step 6: 43–44, step 7: 46–47, step 8: 48–49, step 9: 50) and the audits after them.
 
 | # | What we did in the chat | Framework capability |
 |---|---|---|
@@ -885,3 +885,6 @@ Every step done by hand in the chat, and the capability that repeats it. Rows 37
 | 47 | Validated steps 1 to 7 against plan and specs | Three independent audits; SYSPRO bullets put in `cv_emphasis` order; Velas bullet starts with a verb; confidentiality rule covers rendered text only (ids and comments are never rendered); `repos` names checked for URLs and paths; composer annotate-only mode written down; AGENTS.md scripts table completed; plan and spec wording brought in line |
 | 48 | Built step 8 (role profiles and variants) | `profiles/react`, `react-native`, `fullstack-react-node`, `nodejs` with the role-profile schema checked by `validate`; four variants and gap reports written by tailor agents from `select`; pins you approved (SYSPRO SDD, architecture and runtime bullets, GM team of 8) and `nextjs` emphasized for full-stack, pinned bullets ordered as listed in `overrides`; the nodejs headline softened to "Senior Full-Stack Engineer (TypeScript, Node.js, React)" after the gap reports; then, from your review: `entry_max_bullets` (react: 7 SYSPRO bullets with OpenTelemetry), pinned Stack lines `<id>#5` (react-native keeps the GM Stack line), the SYSPRO Node.js mock backend back in nodejs; gap reports record the iOS, backend, GraphQL and Docker experience you will add with `/add-experience` |
 | 49 | Validated steps 1 to 8 against plan and specs | Three audits. Content: the tech-stack bullet now cites a confirmed fact (`syspro-tech-stack-ownership`: owned the Login micro-frontend and the schema-driven runtime stacks; the repo's stack document lists you as a contributor, recorded in the fact's source), and a few variant sentences match their sources more closely. Code: job-specific CVs read their profile and headline from `jd-tags.yaml`; `build` keeps entries that need rewriting listed (`--entries-reviewed`); lint skips multi-line comments in the confidentiality check; `validate` rejects more pins than an entry's limit. Docs: `keep-length` applies to the master CV only; sections can be left out, not reordered; reviewer reads variant profiles and gap reports |
+| 50 | Ran step 9 (first full review) | Six reviewers in parallel into `reports/2026-10-16-1201/`: ATS pass 8.5, proofreading 8.5, layout 9, fact-check 7.5, confidentiality 7.5, HR 7.5. They match what we found by hand (name consistency, side work, hiring from Ukraine, team sizes); the decided points (no profile links, length, portfolio link, title step, consulting dates, hidden clients, all full-time, SDD) were listed as *Decided*, not raised again. New: double spaces in rendered summaries (renderer), and bullets claiming more than their sources |
+| 51 | Answered the three high review findings | Facts `syspro-codegen-fixes` (used the code generation, fixed its bugs, proposed improvements the lead agreed to add) and the SonarQube wording (fixed one error); decision `keep-cv-name` ("Kirill Kohan" for now); renderer no longer leaves double spaces where source comments were removed; react profile drops a fact already cited in another bullet |
+| 52 | Went through the rest of the review findings with you (`/improve`) | Facts and summaries updated from your answers (OIDC in the Login app and host runtime, small Azure Pipelines changes, search-grid sorting checked in the repo, interviews with coding assignments, audit scope, OMO team of about 3, Styled Components and other skills); decisions `keep-erp-programs-figure`, `hidden-client-details-ok`, `keep-previous-cv-metrics`, `keep-contact-and-keywords`; headline "Frontend and Mobile", "engineers" everywhere; proofreading and fact-check fixes applied to the master CV and synced into all four variants. Still open: Velas leadership scope, GM second-screen and voice AI publicity, HR interview answers, portfolio and skills updates |

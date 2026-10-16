@@ -30,7 +30,7 @@ test("build --no-pdf: refresh, lint, trace warning, both markets rendered, build
 test("build stops on lint errors", () => {
   const dir = tempRepo();
   run("refresh.ts", dir);
-  edit(dir, "cv/Kirill_Kohan_CV.md", "* Delivered the core mobile app", "* Delivered the *core* mobile app");
+  edit(dir, "cv/Kirill_Kohan_CV.md", "* Delivered the R&D department's core mobile app", "* Delivered the *core* mobile app");
   const r = run("build.ts", dir, ["--no-pdf"]);
   assert.equal(r.code, 1);
   assert.match(r.out, /FAILED lint: \d+ error\(s\), first: line \d+: italics are not supported/);
@@ -65,7 +65,7 @@ test("lint warns when a built variant was edited by hand", () => {
   const md = readFileSync(join(dir, "cv/variants/rn/cv.md"), "utf8");
   writeFileSync(join(dir, "cv/.build-state.json"), JSON.stringify({ "cv/variants/rn/cv.md": { built_at: "x", template: "classic", md_sha: sha(md), sources: {}, outputs: {} } }));
   assert.doesNotMatch(run("lint.ts", dir, ["cv/variants/rn/cv.md"]).out, /edited by hand/);
-  writeFileSync(join(dir, "cv/variants/rn/cv.md"), md.replace("Delivered the core mobile app", "Delivered the main mobile app"));
+  writeFileSync(join(dir, "cv/variants/rn/cv.md"), md.replace("Delivered the R&D department's core mobile app", "Delivered the main mobile app"));
   assert.match(run("lint.ts", dir, ["cv/variants/rn/cv.md"]).out, /edited by hand since its last build/);
 });
 

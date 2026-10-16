@@ -23,6 +23,12 @@ facts:
     entry: syspro-saas-erp
     tags: [tech-stack, architecture, react, oidc, testing]
 
+  - id: syspro-codegen-fixes
+    fact: Used the schema-to-TypeScript code generation pipeline and fixed code generation bugs in the application repository; proposed improvements to the pipeline in calls with the lead, who agreed to add them.
+    source: user, 2026-10-16
+    entry: syspro-saas-erp
+    tags: [build-tooling, typescript, debugging]
+
   - id: syspro-review-cycles
     fact: The SDD process reduced PR review cycles (no exact number available).
     source: user, 2026-10-15
@@ -37,14 +43,14 @@ facts:
 
   # --- Consulting (confirmed in the 2026-10-15 chat) ---
   - id: consulting-interviews
-    fact: Conducted senior-level technical interviews for React, React Native, JavaScript and TypeScript roles for enterprise clients.
-    source: user, 2026-10-15
+    fact: Conducted senior-level technical interviews for React, React Native, JavaScript and TypeScript roles for enterprise clients, with technical questions and coding assignments.
+    source: user, 2026-10-15; coding assignments confirmed 2026-10-16
     entry: various-clients
     tags: [interviewing, react, react-native, javascript, typescript, leadership]
 
   - id: consulting-audits
-    fact: Audited legacy React Native codebases to find the critical parts that needed updating, and prepared upgrade plans with effort estimations.
-    source: user, 2026-10-15
+    fact: Audited legacy React Native codebases (outdated framework versions, deprecated native libraries, platform requirements) to find the critical parts that needed updating, and prepared prioritized upgrade plans with effort estimates.
+    source: user, 2026-10-15; scope and prioritization confirmed 2026-10-16
     entry: various-clients
     tags: [audits, estimation, react-native, legacy-migration]
 

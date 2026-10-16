@@ -10,7 +10,7 @@ Kyiv, Ukraine (Remote) | Open to B2B contract or full-time employment | Working 
 
 # **SUMMARY**
 
-Senior software engineer and tech lead with 7+ years of experience building TypeScript and JavaScript products, mostly React and React Native frontends, with hands-on Node.js backend work in fintech, blockchain and Jira integration projects. <!-- src: calc:years_experience, profile, itjet-fintech#4.6, velas-wallet#4.6, designai-jira-plugin#4.1 --> At Itjet, built Node.js REST APIs for a Stripe subscription flow, set up PostgreSQL schema migrations and moved PostgreSQL to AWS RDS and tuned slow queries, doubling database performance; at Velas, redesigned a Node.js staking-rewards calculation. <!-- src: itjet-fintech#4.6, itjet-fintech#4.5, itjet-fintech#4.4, velas-wallet#4.6 --> At SYSPRO, builds a schema-driven React 19 and TypeScript runtime that renders 1,800+ ERP programs, working with the lead architect on platform and solution architecture in an architecture-governed, specification-driven development (SDD) process. <!-- src: syspro-saas-erp#4.1, syspro-architecture-scope, syspro-saas-erp#4.2 --> The work there also covers OpenID Connect (OIDC) authentication, OpenTelemetry browser telemetry with PII redaction, and a Node.js mock backend. <!-- src: syspro-saas-erp#4.7, syspro-saas-erp#4.8, syspro-saas-erp#4.11 --> Previously led a team of 8 developers at General Motors, running code reviews, setting coding standards and owning the app's modular architecture. <!-- src: general-motors-navigation#4.1, general-motors-navigation#4.2, general-motors-navigation#4.4, calc:team_size_led -->
+Senior software engineer and tech lead with 7+ years of experience building TypeScript and JavaScript products, mostly React and React Native frontends, with hands-on Node.js backend work in fintech, blockchain and Jira integration projects. <!-- src: calc:years_experience, profile, itjet-fintech#4.6, velas-wallet#4.6, designai-jira-plugin#4.1 --> At Itjet, built Node.js REST APIs for a Stripe subscription flow, set up PostgreSQL schema migrations and moved PostgreSQL to AWS RDS and tuned slow queries, doubling database performance; at Velas, redesigned a Node.js staking-rewards calculation. <!-- src: itjet-fintech#4.6, itjet-fintech#4.5, itjet-fintech#4.4, velas-wallet#4.6 --> At SYSPRO, builds core modules of a schema-driven React 19 and TypeScript runtime that renders 1,800+ enterprise resource planning (ERP) programs, working with the lead architect on platform and solution architecture in an architecture-governed, specification-driven development (SDD) process. <!-- src: syspro-saas-erp#4.1, syspro-architecture-scope, syspro-saas-erp#4.2 --> The work there also covers OpenID Connect (OIDC) authentication, OpenTelemetry browser telemetry with PII redaction and a Node.js mock backend. <!-- src: syspro-saas-erp#4.7, syspro-saas-erp#4.8, syspro-saas-erp#4.11 --> Previously led a team of 8 engineers at General Motors, running code reviews, setting coding standards and owning the app's modular architecture. <!-- src: general-motors-navigation#4.1, general-motors-navigation#4.2, general-motors-navigation#4.4, calc:team_size_led -->
 
 # **EXPERIENCE**
 
@@ -19,7 +19,7 @@ Senior software engineer and tech lead with 7+ years of experience building Type
 
 ### **SYSPRO | Remote | December 2025 - Present**
 
-* Delivered the frontend through an architecture-governed **specification-driven development (SDD)** process, not ad-hoc AI code generation, and helped define it: specification templates, the validation routine and rules for **AI coding agents**. Every subsystem was traced from architecture through component specification to implementation across 4 repositories. <!-- src: syspro-saas-erp#4.2, syspro-architecture-scope -->
+* Delivered the frontend through an architecture-governed **specification-driven development (SDD)** process, not ad-hoc AI code generation, and helped define it: specification templates, the validation routine and rules for **AI coding agents**. Each subsystem was traced from architecture to specification to code across 4 repositories. <!-- src: syspro-saas-erp#4.2, syspro-architecture-scope -->
 
 * Worked with the lead architect on the **platform and solution architecture**: reviewed and co-authored architecture documents and drove open questions to decisions. Owned the **frontend technology stack** for the Login micro-frontend and the schema-driven runtime, including OIDC libraries and the move to **Vitest Browser Mode**. <!-- src: syspro-saas-erp#4.3, syspro-architecture-scope, syspro-tech-stack-ownership -->
 
@@ -27,20 +27,20 @@ Senior software engineer and tech lead with 7+ years of experience building Type
 
 * Maintained a **Node.js** mock backend, adding ERP smart-tag fixtures and view-management routes, so frontend features could be built and tested ahead of the real backend. <!-- src: syspro-saas-erp#4.11 -->
 
-* Designed and built a browser telemetry module on **OpenTelemetry** from scratch: event bus, event taxonomy, payload contracts, OTLP exporter, a redaction stage that strips sensitive data (PII) before export, and a local **Node.js** OTLP receiver for inspecting exported traces. <!-- src: syspro-saas-erp#4.8 -->
+* Designed and built a browser telemetry module on **OpenTelemetry** from scratch: event bus, event taxonomy, payload contracts, an OpenTelemetry Protocol (OTLP) exporter, a redaction stage that strips sensitive data (PII) before export and a local **Node.js** OTLP receiver for inspecting traces. <!-- src: syspro-saas-erp#4.8 -->
 
-* Integrated **OpenID Connect (OIDC)** authentication into the host and admin applications using **oidc-client-ts** and **react-oidc-context** in a **zero-trust**, independently deployable **micro-frontend architecture**. <!-- src: syspro-saas-erp#4.7 -->
+* Integrated **OpenID Connect (OIDC)** authentication into the **Login micro-frontend** and the host application using **oidc-client-ts** and **react-oidc-context** in a **zero-trust**, independently deployable **micro-frontend architecture**. <!-- src: syspro-saas-erp#4.7 -->
 
-* Stack: **React 19, TypeScript, Node.js, KendoReact, Zustand, XState, TanStack Router, TanStack Query, Vite, SCSS / CSS Modules, OpenTelemetry, Vitest, Playwright, Storybook, Docker, Azure DevOps**. <!-- src: syspro-saas-erp#5 -->
+* Stack: **React 19, TypeScript, Node.js, KendoReact, Zustand, XState, TanStack Router, TanStack Query, WebSockets, Vite, SCSS / CSS Modules, OpenTelemetry, Vitest, Playwright, Storybook, Docker, Azure DevOps**. <!-- src: syspro-saas-erp#5 -->
 
 <!-- entry: general-motors-navigation -->
 ## **Team Leader**
 
 ### **General Motors | Remote | July 2023 - November 2025**
 
-* Led a team of 8 developers delivering an automotive **React Native** app, working with stakeholders on scope and planning. After release, user engagement rose 20% and app crashes fell 15%. <!-- src: general-motors-navigation#4.1 -->
+* Led a team of 8 engineers delivering an automotive **React Native** app, working with stakeholders on scope and planning. After release, user engagement rose 20% and app crashes fell 15%. <!-- src: general-motors-navigation#4.1 -->
 
-* Ran **code reviews** and set coding standards for the team, mentoring developers on architecture and testing. <!-- src: general-motors-navigation#4.2 -->
+* Ran **code reviews** and set coding standards for the team, mentoring engineers on architecture and testing. <!-- src: general-motors-navigation#4.2 -->
 
 * Owned the **system design** of the app's modular architecture so that new feature requests from product teams could be added without reworking existing modules. <!-- src: general-motors-navigation#4.4 -->
 
@@ -55,9 +55,9 @@ Senior software engineer and tech lead with 7+ years of experience building Type
 
 * Set up a **GitHub Actions** workflow for code signing and releases on macOS, Linux and Windows, removing the "untrusted source" warning on install. <!-- src: velas-wallet#4.4 -->
 
-* Made the staking list load 12x faster and use 5x less mobile battery by moving filtering to the server and adding a Node RPC fallback. <!-- src: velas-wallet#4.2 -->
+* Made the staking list load 12x faster and use 5x less mobile battery by moving filtering to the server and adding a blockchain-node RPC fallback. <!-- src: velas-wallet#4.2 -->
 
-* Redesigned the staking-rewards calculation on the **Node.js** backend for stability and speed; user engagement grew 4x afterwards. <!-- src: velas-wallet#4.6 -->
+* Redesigned the staking-rewards calculation on the **Node.js** backend for stability and speed; user engagement grew 4x afterward. <!-- src: velas-wallet#4.6 -->
 
 * Fixed a **reverse tabnabbing** vulnerability across several Velas web projects. <!-- src: velas-wallet#4.7 -->
 
@@ -70,9 +70,9 @@ Senior software engineer and tech lead with 7+ years of experience building Type
 
 * Built an automated monthly payment flow with a payment gate in **React** that restricts features for unpaid users; company income grew 10x after launch. <!-- src: omo-systems-smart-home#4.3 -->
 
-* Proposed a refactoring of the mobile app architecture that won 1st place at a local hackathon. <!-- src: omo-systems-smart-home#4.2 -->
+* Proposed a refactoring of the mobile app architecture that won first place at a local hackathon. <!-- src: omo-systems-smart-home#4.2 -->
 
-* Led and mentored the development team: ran **code reviews**, set coding standards and onboarded new developers. <!-- src: omo-systems-smart-home#4.5 -->
+* Led and mentored a team of about 3 engineers: ran **code reviews**, set coding standards and onboarded new engineers. <!-- src: omo-systems-smart-home#4.5 -->
 
 <!-- entry: thermo-fisher-dosimeter -->
 ## **Software Engineer**
@@ -81,7 +81,7 @@ Senior software engineer and tech lead with 7+ years of experience building Type
 
 * Architected an **IoT healthcare** app from scratch using **React Native, TypeScript, Redux** and an offline-first **Realm** database, communicating with radiation dosimeters over Bluetooth. <!-- src: thermo-fisher-dosimeter#4.1 -->
 
-* Implemented a secure login flow with **OAuth 2.0**, and local storage of dosimeter data in **Realm** with efficient filtering. <!-- src: thermo-fisher-dosimeter#4.5 -->
+* Implemented a secure **OAuth 2.0** login flow and local storage of dosimeter data with efficient filtering. <!-- src: thermo-fisher-dosimeter#4.5 -->
 
 <!-- entry: itjet-fintech -->
 ## **Full-Stack Engineer**
@@ -94,9 +94,9 @@ Senior software engineer and tech lead with 7+ years of experience building Type
 
 * Set up **PostgreSQL** schema migrations with **node-pg-migrate**. <!-- src: itjet-fintech#4.5 -->
 
-* Doubled delivery speed by introducing **TypeScript** and an **Atomic Design** component library, and setting up **CI/CD** (Bitbucket Pipelines, **AWS EC2/S3**) with automated tests (**Puppeteer, Jest, Cucumber**). <!-- src: itjet-fintech#4.3 -->
+* Doubled delivery speed by introducing **TypeScript** and an **Atomic Design** component library and by setting up **CI/CD** (Bitbucket Pipelines, **AWS EC2 / S3**) with automated tests (**Puppeteer, Jest, Cucumber**). <!-- src: itjet-fintech#4.3 -->
 
-* Containerized services with **Docker**, used **GraphQL**, and built web features with **Next.js** and server-side rendering (SSR). <!-- src: itjet-fintech#4.7 -->
+* Containerized services with **Docker**, used **GraphQL** and built web features with **Next.js** with server-side rendering (SSR). <!-- src: itjet-fintech#4.7 -->
 
 <!-- entry: admasters-ecommerce -->
 ## **Full-Stack Engineer and Team Leader**
@@ -120,7 +120,7 @@ Part-time contract and consulting work, alongside full-time roles
 
 * Upgraded the **SQLCipher** encrypted database to meet Google Play requirements and rotated **SSL certificate pinning** for a backend certificate change. <!-- src: orion-mobile-clinical-ink#4.5 -->
 
-* Developed and maintained a patient-facing **clinical trial (eCOA)** mobile app built with **React Native, Expo and TypeScript**, and its native **Android (Java / Kotlin)** counterpart. <!-- src: orion-mobile-clinical-ink#4.1 -->
+* Developed and maintained a patient-facing **clinical trial** mobile app for electronic clinical outcome assessment (**eCOA**) built with **React Native, Expo and TypeScript**, and its native **Android (Java / Kotlin)** counterpart. <!-- src: orion-mobile-clinical-ink#4.1 -->
 
 * Refactored the legacy documents library module from JavaScript to **TypeScript** and added ~1,000 lines of **Jest** and **React Native Testing Library** tests. <!-- src: orion-mobile-clinical-ink#4.2 -->
 
@@ -129,9 +129,9 @@ Part-time contract and consulting work, alongside full-time roles
 
 ### **Generative AI Jira Plugin | Remote**
 
-* Built an **Atlassian Jira Forge** app from scratch with **Node.js** resolvers in **TypeScript** and a **React** UI that starts **generative AI** design generation from a Jira issue and creates a Jira subtask for the result. <!-- src: designai-jira-plugin#4.1 -->
+* Built an **Atlassian Jira Forge** app from scratch with **Node.js** resolvers in **TypeScript** and a **React** UI. The app starts **generative AI** design creation from a Jira issue and adds a Jira subtask for the result. <!-- src: designai-jira-plugin#4.1 -->
 
-* Built the design generation form with multiple inputs: design description, reference images with preview, PRD and user-flow uploads, website URL, **MCP (Model Context Protocol)** server URL and design-system selection, using a reusable file-upload component and form validation. <!-- src: designai-jira-plugin#4.2 -->
+* Built the design generation form with multiple inputs: design description, reference images with preview, product requirements document (PRD) and user-flow uploads, website URL, **MCP (Model Context Protocol)** server URL and design-system selection, using a reusable file-upload component and form validation. <!-- src: designai-jira-plugin#4.2 -->
 
 * Moved file handling to direct **Azure Blob Storage** uploads, working around Forge file-size limits and removing the plugin's dependency on the backend. <!-- src: designai-jira-plugin#4.3 -->
 
@@ -140,9 +140,9 @@ Part-time contract and consulting work, alongside full-time roles
 
 ### **Various Clients | Remote**
 
-* Conducted senior-level **technical interviews** for **React, React Native, JavaScript and TypeScript** roles for enterprise clients, assessing candidates' coding, architecture and problem-solving skills. <!-- src: consulting-interviews -->
+* Conducted senior-level **technical interviews** for **React, React Native, JavaScript and TypeScript** roles for enterprise clients, with technical questions and coding assignments. <!-- src: consulting-interviews -->
 
-* Led scaling and optimization engagements for client teams, reducing operational costs by up to 50% by refactoring core apps, adding caching and adding unit tests. <!-- src: consulting-optimization -->
+* Led scaling and optimization engagements for client teams, reducing operational costs by up to 50% through refactoring core apps, adding caching and writing unit tests. <!-- src: consulting-optimization -->
 
 # **EDUCATION**
 
@@ -181,7 +181,7 @@ National Aviation University | Ukraine | 2016 - 2020
 
 **Frontend:** React 19, React.js, Next.js, Server-side rendering (SSR), Micro-frontends, Schema-driven UI, Design systems, Web accessibility (WCAG), Web performance optimization, KendoReact, Storybook, CSS Modules, Styled Components, Atomic Design, Vite, Monorepo (npm workspaces)
 
-**Mobile:** React Native, Expo, React Native Web, Android (Java, Kotlin, Gradle), Native Modules (iOS/Android), Realm (realm-js), SQLCipher, Keychain, Fastlane, Bitrise
+**Mobile:** React Native, Expo, React Native Web, Android (Java, Kotlin, Gradle), Native modules (iOS / Android), Realm (realm-js), SQLCipher, Keychain, Fastlane, Bitrise
 
 **Leadership and Methodologies:** Team leadership (up to 8 engineers), Mentoring, Code review, System design, Software architecture, Architecture decision records (ADR), Technology stack selection, Technical interviewing, Technical audits, Effort estimation, Presales, Agile, Specification-driven development (SDD), Figma, Jira
 

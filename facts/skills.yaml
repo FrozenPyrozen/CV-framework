@@ -40,7 +40,7 @@ categories:
       - { name: Expo, tags: [expo] }
       - { name: React Native Web, tags: [react-native-web] }
       - { name: "Android (Java, Kotlin, Gradle)", tags: [android] }
-      - { name: Native Modules (iOS/Android), tags: [native-modules] }
+      - { name: Native modules (iOS / Android), tags: [native-modules] }
       - { name: Realm (realm-js), tags: [realm, offline-first] }
       - { name: SQLCipher, tags: [android, security] }
       - { name: Keychain, tags: [security, ios] }

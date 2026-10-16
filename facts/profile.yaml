@@ -6,7 +6,7 @@ name: Kirill Kohan
 legal_name: Kyrylo Kokhan              # shown as "Kirill (Kyrylo) Kohan" only if show_legal_name is true
 show_legal_name: false
 git_identities: [Kyrylo Kohan, Kyrylo Kokhan, Kyrylo_Kokhan, FrozenPyrozen]   # default author names for /harvest
-headline_default: Senior Software Engineer / Tech Lead (Frontend & Mobile)   # role profiles can override
+headline_default: Senior Software Engineer / Tech Lead (Frontend and Mobile)   # role profiles can override
 
 contacts:
   phone: "+380 97 891 9783"

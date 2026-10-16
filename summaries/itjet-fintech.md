@@ -95,7 +95,8 @@ Tags: nextjs, ssr, graphql, docker
 - **Payments:** Stripe (hands-on)
 - **Cloud and infrastructure:** AWS EC2, S3 and RDS (hands-on), Docker (hands-on)
 - **CI/CD:** Bitbucket Pipelines (hands-on)
-- **Testing:** Puppeteer (hands-on), Jest (hands-on), Cucumber (hands-on)
+- **Testing:** Puppeteer (hands-on), Jest (hands-on), Cucumber (hands-on), React Testing Library (hands-on, confirmed by user 2026-10-16)
+- **Styling, state and security:** Styled Components, Redux Thunk, Keychain (hands-on, confirmed by user 2026-10-16)
 - **Analytics:** A/B testing (hands-on)
 
 ## 6. Skills demonstrated
