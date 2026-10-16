@@ -226,6 +226,7 @@ export function validateRepo(): Issue[] {
     const t = readYaml(f) ?? {};
     const file = `${cfg.output.tailored_dir}/${d}/jd-tags.yaml`;
     for (const key of ["required", "nice_to_have"]) unknownTags(t[key] ?? [], file, key);
+    for (const tg of t.new_tags_proposed ?? []) if (tagSet.has(tg)) warn(file, `new_tags_proposed: "${tg}" is already in the tag list; use it in required or nice_to_have`);
     const rp = t.profile ? (existsSync(join(pdir, `${t.profile}.yaml`)) ? readYaml(join(pdir, `${t.profile}.yaml`)) : (err(file, `profile "${t.profile}" doesn't exist in ${cfg.paths.profiles}/`), undefined)) : undefined;
     const pins: Record<string, number> = {};
     for (const [src, o] of Object.entries<any>({ ...(rp?.overrides ?? {}), ...(t.overrides ?? {}) })) {

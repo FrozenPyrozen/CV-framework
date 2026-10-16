@@ -33,7 +33,7 @@ A tailored CV is the master CV adapted to a type of role (a **profile**) or to o
    - If the master CV has a bullet with the same source id, start from its wording (including the user's manual edits) and only shorten or re-emphasize it.
    - Otherwise write it fresh from the source, following `cv-spec.md`.
    - Keep its `src` comment.
-   - **Master bullets with several sources:** keep the parts backed by selected sources. A part backed by an unselected source is dropped, unless the same claim is already elsewhere in the CV; cite only the sources the remaining text uses.
+   - **Master bullets with several sources:** keep the parts backed by selected sources, and the parts backed by a confirmed fact about the same work (its number, scope or ownership, e.g. `syspro-team-size` with `#4.1`, `syspro-tech-stack-ownership` with `#4.3`) or by one of the entry's `cv_emphasis` points. Drop a part backed only by an unrelated, unselected source, unless the same claim is already elsewhere in the CV. Cite exactly the sources the remaining text uses.
    - **Order:** bullets appear in selection order; the agent doesn't reorder them (pins set the opening bullets). Bullets with a score of 0 or less are selected only to reach `min_bullets_per_entry`, so an entry can end below its limit.
 4. **Headline and summary.** Use the profile's `headline`, or for a job ad one fitting it, written to `jd-tags.yaml` `headline` (the header is generated, so `refresh` reads it from there). Rewrite the summary paragraph around `summary_focus`, with a `src` comment on every sentence.
 5. **Skills.** Reordered by `skills_order` through the generated `skills` block (not by hand).

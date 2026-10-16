@@ -5,7 +5,7 @@
 // and copies its comment. The previous version is, in order: --from, the snapshot saved with --save,
 // or the file as committed in git (HEAD). Prints what it couldn't match.
 import { execFileSync } from "node:child_process";
-import { copyFileSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, relative } from "node:path";
 import { SRC_RE, parseCv, stripComments } from "./lib/cvmd.ts";
 import { cliPath, isMain, loadConfig, rootPath } from "./lib/repo.ts";
@@ -23,7 +23,8 @@ export function similarity(a: string, b: string): number {
 
 export const MIN_SIMILARITY = 0.5;
 
-export function reattach(newText: string, oldText: string): { text: string; restored: number; unmatched: string[] } {
+// skip: generated lines that never carry a source (section intro lines from config).
+export function reattach(newText: string, oldText: string, skip: Set<string> = new Set()): { text: string; restored: number; unmatched: string[] } {
   const oldCv = parseCv(oldText);
   const newCv = parseCv(newText);
   const lines = newCv.lines.slice();
@@ -56,6 +57,7 @@ export function reattach(newText: string, oldText: string): { text: string; rest
   }
   for (const s of newCv.sections) for (const p of s.paragraphs) {
     if (!oldSentences.length) break;
+    if (skip.has(stripComments(p.text).trim())) continue;
     const parts = p.text.split(/(<!--\s*src:[^>]*-->)/);
     const rebuilt: string[] = [];
     for (let i = 0; i < parts.length; i++) {
@@ -101,9 +103,11 @@ if (isMain(import.meta.url)) {
       process.exit(2);
     }
   }
-  const { text, restored, unmatched } = reattach(readFileSync(file, "utf8"), oldText);
+  const intros = new Set(loadConfig().cv_sections.map((s: any) => s.intro).filter(Boolean) as string[]);
+  const { text, restored, unmatched } = reattach(readFileSync(file, "utf8"), oldText, intros);
   writeFileSync(file, text);
-  if (!args.from && existsSync(snapshot)) rmSync(snapshot); // snapshot is used once
+  // The snapshot stays until the next --save, so later runs never fall back to git HEAD (which, in an acceptance
+  // replay, holds the reference CV).
   for (const u of unmatched) console.log(`unmatched  ${u}`);
   console.log(`\nreattach-src: ${restored} source comment(s) restored, ${unmatched.length} unmatched`);
 }

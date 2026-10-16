@@ -265,10 +265,15 @@ test("reattach-src: --save snapshot, works on files not in git, clear error with
   const r = run("reattach-src.ts", dir, [f]);
   assert.equal(r.code, 0, r.out);
   assert.match(readFileSync(join(dir, f), "utf8"), /Builds things\. <!-- src: syspro-saas-erp#4\.1 -->/);
-  // no git repo in the temp copy and the snapshot was used once: clear message instead of a stack trace
+  // The snapshot stays until the next --save: a second run still compares with it (never with git HEAD).
+  writeFileSync(join(dir, f), "# **SUMMARY**\n\nBuilds things.\n");
   const again = run("reattach-src.ts", dir, [f]);
-  assert.equal(again.code, 2);
-  assert.match(again.out, /no previous version/);
+  assert.equal(again.code, 0, again.out);
+  assert.match(readFileSync(join(dir, f), "utf8"), /Builds things\. <!-- src: syspro-saas-erp#4\.1 -->/);
+  // A generated section intro line is never reported as an unmatched sentence.
+  const cv = "cv/Kirill_Kohan_CV.md";
+  assert.equal(run("reattach-src.ts", dir, [cv, "--save"]).code, 0);
+  assert.doesNotMatch(run("reattach-src.ts", dir, [cv]).out, /unmatched\s+sentence: "Part-time contract/);
 });
 
 test("refresh, market and lint use the variant's role profile (headline, skills order)", () => {
@@ -441,6 +446,8 @@ test("validate checks a job ad's jd-tags.yaml (profile, tags, overrides) and the
   assert.match(r.out, /jd-tags\.yaml: .*react-nativ/);
   assert.match(r.out, /overrides: "velas-wallet#4\.99" doesn't resolve/);
   assert.match(r.out, /pdf_exporters: "keynote" isn't registered/);
+  writeFileSync(join(dir, "cv/tailored/acme/jd-tags.yaml"), "required: [react-native]\nnew_tags_proposed: [mentoring]\n");
+  assert.match(run("validate.ts", dir).out, /new_tags_proposed: "mentoring" is already in the tag list/);
 });
 
 test("lint: team-size wording variants are checked; separators don't count as words", () => {
