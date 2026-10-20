@@ -20,8 +20,8 @@ author_identities: []
 harvested_at: "2026-10-15"
 # --- how it appears in the CV ---
 show_in_cv: true
-cv_section: experience
-cv_order: 1
+cv_section: consulting            # TEMPORARY (user, 2026-10-20; decision syspro-in-consulting-temporary): revert to experience
+cv_order: 1                         # first in the consulting section
 cv_client_label: SYSPRO
 cv_location: Remote
 cv_emphasis:

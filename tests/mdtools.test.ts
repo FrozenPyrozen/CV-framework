@@ -24,7 +24,7 @@ test("refresh generates header, entry lines and blocks, and keeps every bullet",
   run("refresh.ts", dir);
   const after = readFileSync(join(dir, CV), "utf8");
   assert.match(after, /<!-- generated:header -->\n# \*\*Kirill Kohan\*\*/);
-  assert.match(after, /<!-- entry: syspro-saas-erp -->\n## \*\*Senior Software Engineer\*\*\n\n### \*\*SYSPRO \| Remote \| December 2025 - Present\*\*/);
+  assert.match(after, /<!-- entry: general-motors-navigation -->\n## \*\*Team Leader\*\*\n\n### \*\*General Motors \| Remote \| July 2023 - November 2025\*\*/);
   assert.match(after, /### \*\*Clinical Trials Patient App \| Remote\*\*/); // consulting: no dates
   assert.match(after, /## \*\*Senior React Native Engineer \(Contract\)\*\*/); // real contract keeps label (worldwide)
   assert.doesNotMatch(after, /Team Leader \(Contract\)/);
@@ -75,7 +75,7 @@ test("market writes the Ukraine version: no phone, availability, time zones or c
 test("lint passes on the refreshed CV and fails on the unrefreshed one", () => {
   assert.equal(run("lint.ts", refreshed(), [CV]).code, 0);
   const dir = refreshed();
-  edit(dir, CV, "December 2025 - Present", "12/2025 \u2013 Present"); // the old, hand-typed date format
+  edit(dir, CV, "July 2023 - November 2025", "07/2023 \u2013 11/2025"); // the old, hand-typed date format
   const raw = run("lint.ts", dir, [CV]);
   assert.equal(raw.code, 1);
   assert.match(raw.out, /generated parts are out of date/);
@@ -217,10 +217,10 @@ test("select scores by tags, applies limits, pins and drops", () => {
 test("lint reports entries out of order and a missing Stack line on the current job", () => {
   const dir = refreshed();
   assert.doesNotMatch(run("lint.ts", dir, [CV]).out, /out of order|no "Stack:" bullet/);
-  edit(dir, "summaries/designai-jira-plugin.md", "cv_order: 2", "cv_order: 0");
+  edit(dir, "summaries/designai-jira-plugin.md", "cv_order: 3", "cv_order: 0");
   edit(dir, CV, /\n\* Stack: \*\*React 19[^\n]*\n/, "\n");
   const r = run("lint.ts", dir, [CV]);
-  assert.match(r.out, /entries in CONSULTING AND FREELANCE PROJECTS are out of order: expected designai-jira-plugin, orion-mobile-clinical-ink, various-clients/);
+  assert.match(r.out, /entries in CONSULTING AND FREELANCE PROJECTS are out of order: expected designai-jira-plugin, syspro-saas-erp, orion-mobile-clinical-ink, various-clients/);
   assert.match(r.out, /current job syspro-saas-erp has no "Stack:" bullet/);
 });
 

@@ -10,7 +10,7 @@ const pagesAvailable = process.platform === "darwin" && existsSync("/Application
 
 test("build --no-pdf: refresh, lint, trace warning, both markets rendered, build record; status follows changes", () => {
   const dir = tempRepo();
-  edit(dir, "cv/Kirill_Kohan_CV.md", "December 2025 - Present", "12/2025 - Present"); // a stale job line refresh must fix
+  edit(dir, "cv/Kirill_Kohan_CV.md", "July 2023 - November 2025", "07/2023 - 11/2025"); // a stale job line refresh must fix
   edit(dir, "cv/Kirill_Kohan_CV.md", / <!-- src: velas-wallet#4\.1 -->/, ""); // an unsourced claim: only a warning for the master CV
   const r = run("build.ts", dir, ["--no-pdf"]);
   assert.equal(r.code, 0, r.out);

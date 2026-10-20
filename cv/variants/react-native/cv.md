@@ -14,21 +14,6 @@ Senior React Native engineer and tech lead with 7+ years of experience building 
 
 # **EXPERIENCE**
 
-<!-- entry: syspro-saas-erp -->
-## **Senior Software Engineer**
-
-### **SYSPRO | Remote | December 2025 - Present**
-
-* Delivered the frontend through architecture-governed **specification-driven development (SDD)**, not ad-hoc AI code generation, and helped define it: specification templates, validation and rules for **AI agents** that implement and review code against the specifications, with each subsystem traced from architecture to code across 4 repositories. <!-- src: syspro-saas-erp#4.2, syspro-architecture-scope -->
-
-* Worked with the lead architect on the **platform and solution architecture**: reviewed and co-authored architecture documents and drove open architecture questions and blockers to decisions. <!-- src: syspro-architecture-scope -->
-
-* Owned the **frontend technology stack** for the Login micro-frontend and the schema-driven runtime, including the OIDC libraries and the move from React Testing Library to **Vitest Browser Mode**. <!-- src: syspro-saas-erp#4.3, syspro-tech-stack-ownership -->
-
-* Built core modules of a schema-driven **React 19 / TypeScript** runtime for SYSPRO's **ERP SaaS** modernization platform (25+ person program) that renders **1,800+ ERP programs** from data-model definitions, cutting screen delivery from days to hours, with no per-screen frontend code. <!-- src: syspro-saas-erp#4.1, syspro-team-size, syspro-speed -->
-
-* Stack: **React 19, TypeScript, KendoReact, Zustand, XState, TanStack Router, TanStack Query, WebSockets, Vite, SCSS / CSS Modules, OpenTelemetry, Vitest, Playwright, Storybook, Docker, Azure DevOps**. <!-- src: syspro-saas-erp#5 -->
-
 <!-- entry: general-motors-navigation -->
 ## **Team Leader**
 
@@ -115,7 +100,20 @@ Senior React Native engineer and tech lead with 7+ years of experience building 
 
 # **CONSULTING AND FREELANCE PROJECTS**
 
-Part-time contract and consulting work, alongside full-time roles
+<!-- entry: syspro-saas-erp -->
+## **Senior Software Engineer**
+
+### **SYSPRO | Remote**
+
+* Delivered the frontend through architecture-governed **specification-driven development (SDD)**, not ad-hoc AI code generation, and helped define it: specification templates, validation and rules for **AI agents** that implement and review code against the specifications, with each subsystem traced from architecture to code across 4 repositories. <!-- src: syspro-saas-erp#4.2, syspro-architecture-scope -->
+
+* Worked with the lead architect on the **platform and solution architecture**: reviewed and co-authored architecture documents and drove open architecture questions and blockers to decisions. <!-- src: syspro-architecture-scope -->
+
+* Owned the **frontend technology stack** for the Login micro-frontend and the schema-driven runtime, including the OIDC libraries and the move from React Testing Library to **Vitest Browser Mode**. <!-- src: syspro-saas-erp#4.3, syspro-tech-stack-ownership -->
+
+* Built core modules of a schema-driven **React 19 / TypeScript** runtime for SYSPRO's **ERP SaaS** modernization platform (25+ person program) that renders **1,800+ ERP programs** from data-model definitions, cutting screen delivery from days to hours, with no per-screen frontend code. <!-- src: syspro-saas-erp#4.1, syspro-team-size, syspro-speed -->
+
+* Stack: **React 19, TypeScript, KendoReact, Zustand, XState, TanStack Router, TanStack Query, WebSockets, Vite, SCSS / CSS Modules, OpenTelemetry, Vitest, Playwright, Storybook, Docker, Azure DevOps**. <!-- src: syspro-saas-erp#5 -->
 
 <!-- entry: orion-mobile-clinical-ink -->
 ## **Senior React Native Engineer (Contract)**

@@ -14,27 +14,6 @@ Senior React engineer and frontend tech lead with 7+ years of experience buildin
 
 # **EXPERIENCE**
 
-<!-- entry: syspro-saas-erp -->
-## **Senior Software Engineer**
-
-### **SYSPRO | Remote | December 2025 - Present**
-
-* Delivered the frontend through architecture-governed **specification-driven development (SDD)**, not ad-hoc AI code generation, and helped define it: specification templates, validation and rules for **AI agents** that implement and review code against the specifications, with each subsystem traced from architecture to code across 4 repositories. <!-- src: syspro-saas-erp#4.2, syspro-architecture-scope -->
-
-* Worked with the lead architect on the **platform and solution architecture**: reviewed and co-authored architecture documents and drove open questions to decisions. Owned the **frontend technology stack** for the Login micro-frontend and the schema-driven runtime, including OIDC libraries and the move to **Vitest Browser Mode**. <!-- src: syspro-saas-erp#4.3, syspro-architecture-scope, syspro-tech-stack-ownership -->
-
-* Built core modules of a schema-driven **React 19 / TypeScript** runtime for SYSPRO's **ERP SaaS** modernization platform (25+ person program) that renders **1,800+ ERP programs** from data-model definitions, cutting screen delivery from days to hours, with no per-screen frontend code. <!-- src: syspro-saas-erp#4.1, syspro-team-size, syspro-speed -->
-
-* Designed and built a browser telemetry module on **OpenTelemetry** from scratch: event bus, event taxonomy, payload contracts, an OpenTelemetry Protocol (OTLP) exporter and a redaction stage that strips sensitive data (PII) before export. <!-- src: syspro-saas-erp#4.8 -->
-
-* Implemented the runtime's view orchestration layer with **XState** state machines and a **Zustand** global store, each part against its own specification: view session lifecycle, main navigation, context-aware related-program navigation, modal overlays that close without losing the underlying view's state and runtime configuration. <!-- src: syspro-saas-erp#4.5 -->
-
-* Built the **Login micro-frontend** from scratch with **Vite, React 19** and **TypeScript**: sign-in, forgot-password and reset-password flows with **TanStack Router**, reusable form components, schema-based validation, **CSS Modules**, accessible typography per **WCAG** and **Storybook** stories. It is the only app ever exposed to a user's password. <!-- src: syspro-saas-erp#4.6 -->
-
-* Integrated **OpenID Connect (OIDC)** authentication into the Login micro-frontend and the host application using **oidc-client-ts** and **react-oidc-context**, in a **zero-trust**, independently deployable **micro-frontend architecture** where apps never import from each other. <!-- src: syspro-saas-erp#4.7, syspro-saas-erp#4.1 -->
-
-* Stack: **React 19, TypeScript, Zustand, XState, TanStack Router, TanStack Query, WebSockets, Vite, KendoReact, SCSS / CSS Modules, OpenTelemetry, Vitest, Playwright, Storybook, Docker, Azure DevOps**. <!-- src: syspro-saas-erp#5 -->
-
 <!-- entry: general-motors-navigation -->
 ## **Team Leader**
 
@@ -113,7 +92,26 @@ Senior React engineer and frontend tech lead with 7+ years of experience buildin
 
 # **CONSULTING AND FREELANCE PROJECTS**
 
-Part-time contract and consulting work, alongside full-time roles
+<!-- entry: syspro-saas-erp -->
+## **Senior Software Engineer**
+
+### **SYSPRO | Remote**
+
+* Delivered the frontend through architecture-governed **specification-driven development (SDD)**, not ad-hoc AI code generation, and helped define it: specification templates, validation and rules for **AI agents** that implement and review code against the specifications, with each subsystem traced from architecture to code across 4 repositories. <!-- src: syspro-saas-erp#4.2, syspro-architecture-scope -->
+
+* Worked with the lead architect on the **platform and solution architecture**: reviewed and co-authored architecture documents and drove open questions to decisions. Owned the **frontend technology stack** for the Login micro-frontend and the schema-driven runtime, including OIDC libraries and the move to **Vitest Browser Mode**. <!-- src: syspro-saas-erp#4.3, syspro-architecture-scope, syspro-tech-stack-ownership -->
+
+* Built core modules of a schema-driven **React 19 / TypeScript** runtime for SYSPRO's **ERP SaaS** modernization platform (25+ person program) that renders **1,800+ ERP programs** from data-model definitions, cutting screen delivery from days to hours, with no per-screen frontend code. <!-- src: syspro-saas-erp#4.1, syspro-team-size, syspro-speed -->
+
+* Designed and built a browser telemetry module on **OpenTelemetry** from scratch: event bus, event taxonomy, payload contracts, an OpenTelemetry Protocol (OTLP) exporter and a redaction stage that strips sensitive data (PII) before export. <!-- src: syspro-saas-erp#4.8 -->
+
+* Implemented the runtime's view orchestration layer with **XState** state machines and a **Zustand** global store, each part against its own specification: view session lifecycle, main navigation, context-aware related-program navigation, modal overlays that close without losing the underlying view's state and runtime configuration. <!-- src: syspro-saas-erp#4.5 -->
+
+* Built the **Login micro-frontend** from scratch with **Vite, React 19** and **TypeScript**: sign-in, forgot-password and reset-password flows with **TanStack Router**, reusable form components, schema-based validation, **CSS Modules**, accessible typography per **WCAG** and **Storybook** stories. It is the only app ever exposed to a user's password. <!-- src: syspro-saas-erp#4.6 -->
+
+* Integrated **OpenID Connect (OIDC)** authentication into the Login micro-frontend and the host application using **oidc-client-ts** and **react-oidc-context**, in a **zero-trust**, independently deployable **micro-frontend architecture** where apps never import from each other. <!-- src: syspro-saas-erp#4.7, syspro-saas-erp#4.1 -->
+
+* Stack: **React 19, TypeScript, Zustand, XState, TanStack Router, TanStack Query, WebSockets, Vite, KendoReact, SCSS / CSS Modules, OpenTelemetry, Vitest, Playwright, Storybook, Docker, Azure DevOps**. <!-- src: syspro-saas-erp#5 -->
 
 <!-- entry: orion-mobile-clinical-ink -->
 ## **Senior React Native Engineer (Contract)**

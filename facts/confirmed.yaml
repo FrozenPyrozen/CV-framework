@@ -89,7 +89,7 @@ facts:
     engagement: freelance
     period: { start: 2017-01, end: present }
     cv_section: consulting
-    cv_order: 3
+    cv_order: 4
     show_dates_in_cv: false
     counts_as_experience: false
     source: user + previous CV

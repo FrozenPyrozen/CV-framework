@@ -19,7 +19,7 @@ harvested_at: "2026-10-15"
 # --- how it appears in the CV ---
 show_in_cv: true
 cv_section: consulting
-cv_order: 1
+cv_order: 2
 cv_client_label: Clinical Trials Patient App
 cv_location: Remote
 ---

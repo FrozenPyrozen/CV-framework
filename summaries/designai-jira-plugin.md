@@ -18,7 +18,7 @@ harvested_at: "2026-10-15"
 # --- how it appears in the CV ---
 show_in_cv: true
 cv_section: consulting
-cv_order: 2
+cv_order: 3
 cv_client_label: Generative AI Jira Plugin
 cv_location: Remote
 ---

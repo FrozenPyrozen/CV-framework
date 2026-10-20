@@ -25,7 +25,7 @@ Sections appear in the order of `cv_sections` in `framework.config.yaml`, using 
 1. Header (generated, no heading)
 2. SUMMARY
 3. EXPERIENCE
-4. CONSULTING AND FREELANCE PROJECTS, with the section intro line from config under the heading
+4. CONSULTING AND FREELANCE PROJECTS, with the section intro line from config when one is set (switched off while SYSPRO is shown there, decision `syspro-in-consulting-temporary`) under the heading
 5. EDUCATION (generated)
 6. SKILLS (generated)
 7. LANGUAGES (generated)

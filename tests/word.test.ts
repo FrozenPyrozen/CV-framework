@@ -40,7 +40,7 @@ test("render produces the approved layout: same formatting per paragraph type, r
   assert.equal(texts[0], "Kirill Kohan");
   assert.equal(texts[1], "Senior Software Engineer / Tech Lead (Frontend and Mobile)");
   assert.equal(texts[3], "+380 97 891 9783 | kiril.kohan@gmail.com | Portfolio");
-  assert.ok(texts.includes("SYSPRO | RemoteDecember 2025 - Present"), "entry details with tab before dates");
+  assert.ok(texts.includes("General Motors | RemoteJuly 2023 - November 2025"), "entry details with tab before dates");
   assert.ok(!texts.some((t) => /Team Leader \(Contract\)/.test(t)));
   const zip = await JSZip.loadAsync(readFileSync(out));
   const rels = await zip.file("word/_rels/document.xml.rels")!.async("string");
@@ -95,8 +95,8 @@ test("render: consistent left edge and spacing, lead-in lines stay with their bu
   for (const t of ["EXPERIENCE", "Senior Software Engineer", "SYSPRO", "National Aviation University"]) {
     assert.match(pPr(byText(t)), /<w:ind w:left="0"[^>]*w:firstLine="0"\/>/, `${t} starts at the margin`);
   }
-  assert.match(pPr(byText("Senior Software Engineer")), /w:before="20"/, "first item under a section line gets the small gap");
-  assert.match(pPr(byText("Team Leader")), /w:before="80"/, "later job titles get the regular gap");
+  assert.match(pPr(byText("Team Leader")), /w:before="20"/, "first item under a section line gets the small gap");
+  assert.match(pPr(byText("Technical Leader")), /w:before="80"/, "later job titles get the regular gap");
   const master = d.paragraphs.find((p) => paragraphText(p).includes("| 2020 - 2022"))!;
   assert.match(pPr(master), /<w:keepNext w:val="1"\/>/, "education line keeps with its Honors bullet");
 });
