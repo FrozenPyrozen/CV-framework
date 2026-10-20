@@ -1,6 +1,6 @@
 # CV Agent Framework: Plan
 
-Status: steps 1–12 done (section 8; step 12 by full archive on this Mac); next: step 13 (new laptop + new repo) · 2026-10-16
+Status: steps 1–12 and 14 done (section 8; step 12 by full archive on this Mac); left: step 13 (new laptop + new repo, on the new laptop) · 2026-10-20
 
 ## 1. Goal
 
@@ -847,7 +847,7 @@ Problems expected when the flows actually run, found by simulating every flow ag
 
 ## 12. Coverage of the 2026-10-15 chat
 
-Every step done by hand in the chat, and the capability that repeats it. Rows 37 onward also log the build steps of section 8 (step 5: rows 37–42, step 6: 43–44, step 7: 46–47, step 8: 48–49, step 9: 50–52, step 10: 54, step 11: 55, step 12: 56–57) and the audits after them (58).
+Every step done by hand in the chat, and the capability that repeats it. Rows 37 onward also log the build steps of section 8 (step 5: rows 37–42, step 6: 43–44, step 7: 46–47, step 8: 48–49, step 9: 50–52, step 10: 54, step 11: 55, step 12: 56–57, step 14: 61) and the audits after them (58–60).
 
 | # | What we did in the chat | Framework capability |
 |---|---|---|
@@ -911,3 +911,4 @@ Every step done by hand in the chat, and the capability that repeats it. Rows 37
 | 58 | Validated everything line by line against plan and specs (five audits) | Route A restore step fixed in the portability spec; job-ad CVs without a profile keep each entry's `cv_max_bullets`, and `select` reads the profile from `jd-tags.yaml`; `validate` checks `jd-tags.yaml` and exporter ids; backups leave out tailored CVs' built files; `pdf-check --template`; logged market uses the default market's id; broader team-size and word-count lint; stray CNS file removed and ignored everywhere; composer's invented 6-bullet rule removed; plan, specs, agents and README wording brought in line |
 | 59 | Asked to reword "rules for AI coding agents" | "rules for **AI review agents**" in the master CV and all variants, "AI agents only as governed reviewers" in the full-stack summary, skill renamed "AI agent governance (SDD)"; decision `ai-review-agents-wording` |
 | 60 | Reran the acceptance replay after the agent and spec changes (B1–B8) | Passed (see `docs/acceptance.md` run log). Fixes from it: multi-source bullets keep facts about the same work and `cv_emphasis` points; `reattach-src` keeps its snapshot until the next `--save` and skips generated intro lines; `validate` warns on "new" tags that already exist |
+| 61 | Ran step 14 (market test) | Passed for the master CV and all four variants: Ukraine PDFs without phone, availability, time-zone line or "(Contract)", worldwide PDFs with them, identical content from SUMMARY on, `pdf-check` passing for all 10 (`docs/acceptance.md` C3) |
