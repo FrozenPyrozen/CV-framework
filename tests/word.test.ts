@@ -121,7 +121,7 @@ test("render removes source comments without leaving double spaces between sente
   const d = await openDocx(join(dir, "cv/Kirill_Kohan_CV.docx"));
   const texts = d.paragraphs.map(paragraphText);
   const summary = texts.find((t) => t.startsWith("Senior software engineer"))!;
-  assert.match(summary, /products\. At SYSPRO/);
+  assert.match(summary, /products\. Built core modules/);
   for (const t of texts) assert.doesNotMatch(t, /\S {2,}\S/, t.slice(0, 60));
 });
 

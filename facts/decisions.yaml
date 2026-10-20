@@ -51,6 +51,12 @@ decisions:
     why: User's choice; temporary. To revert, set cv_section back to experience in summaries/syspro-saas-erp.md, restore the intro line in framework.config.yaml, run /compose and /variants (or move the entry block back), then npm run build:all.
     matches: [SYSPRO in consulting, current job missing from Experience, no current role, gap after November 2025, SYSPRO without dates, missing intro line]
 
+  - id: summary-no-company-names
+    decision: The summary paragraph names no companies or clients (SYSPRO, General Motors, Itjet, Velas …) and says nothing about when things happened; it describes general experience in past tense ("built…", "led a team of 8…", "for an automotive manufacturer") with no "currently", "previously" or "earlier". Names and dates stay in the entries.
+    date: "2026-10-20"
+    why: User's choice.
+    matches: [company names in summary, summary names employers, employer not named in summary, current role not stated in summary, timing words in summary]
+
   - id: keep-length
     decision: Keep the master CV's current length (about 2,000 words, 3 to 4 pages); don't trim older roles there. Role variants follow their profile's max_pages and max_words and shrink less relevant roles by design.
     date: "2026-10-15"

@@ -60,7 +60,7 @@ Inside each section: by `cv_order` if set, otherwise newest first by `period.sta
 Each entry is a list of `*` bullets (one level, no nesting).
 
 - **Content:** one achievement or responsibility per bullet. State what you did, how (the technologies), and the result when there is one: *action, then technology, then outcome*.
-- **Start with a strong past-tense verb** (Built, Led, Designed, Migrated, Reduced …). Use present tense only for the current job's summary sentence.
+- **Start with a strong past-tense verb** (Built, Led, Designed, Migrated, Reduced …). The summary paragraph uses past tense too: it describes general experience, without timing words ("currently", "previously", "earlier") or present-tense claims about a current job.
 - **Numbers:** use them whenever a source provides one (`1,800+`, `12x`, `95%`, `25+ person program`). Never invent or round up a number. "~" is allowed when the source says "about".
 - **Bold:** bold the technologies and key terms a screener searches for (`**React Native**`, `**OpenID Connect (OIDC)**`), and important numbers or outcomes when they're the point of the bullet. Don't bold whole sentences.
 - **Acronyms:** spell out once with the acronym in brackets where screeners may search either form: `**specification-driven development (SDD)**`, `**OpenID Connect (OIDC)**`.
@@ -72,7 +72,8 @@ Each entry is a list of `*` bullets (one level, no nesting).
 ## 4. Writing style
 
 - **US English** (`optimization`, `behavior`, `analyze`). Set by `spelling: en-US` in config.
-- **No first person** ("I", "my"). Bullets start with the verb. The summary paragraph uses third person without a subject ("Senior software engineer … At SYSPRO, builds …").
+- **No first person** ("I", "my"). Bullets start with the verb. The summary paragraph uses third person without a subject ("Senior software engineer … Built …").
+- **No company names in the summary paragraph.** It describes the work ("built…", "for an automotive manufacturer", "at a fintech company"); company and client names appear only in the entries (decision `summary-no-company-names`; `lint` warns).
 - **Plain words for a mixed audience.** Technical terms are fine, but internal jargon needs a short plain explanation the first time ("a governed reviewer that flagged constraint violations" is fine; an unexplained "steward" or "realization spec" is not).
 - **No filler or hype:** avoid "passionate", "results-driven", "highly accomplished", "leveraged", "synergy", "cutting-edge", "rockstar", "ninja", "guru", "leverage" (list in `checks.filler_words`).
 - **Company names exactly as in the summary:** `SYSPRO` (all caps), `General Motors`, `Thermo Fisher Scientific`.

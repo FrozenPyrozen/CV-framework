@@ -314,7 +314,7 @@ const moreLint: [string, (d: string) => void, RegExp][] = [
   ["a #### heading", (d) => edit(d, CV, "# **SUMMARY**\n", "# **SUMMARY**\n\n#### Note\n"), /only #, ## and ### headings/],
   ["sections out of order", (d) => { const t = readFileSync(join(d, CV), "utf8"); const a = t.indexOf("# **EDUCATION**"), b = t.indexOf("# **SKILLS**"), c = t.indexOf("# **LANGUAGES**"); writeFileSync(join(d, CV), t.slice(0, a) + t.slice(b, c) + t.slice(a, b) + t.slice(c)); }, /sections must be, in order/],
   ["too many bullets", (d) => edit(d, "summaries/velas-wallet.md", "cv_section: experience", "cv_section: experience\ncv_max_bullets: 3"), /velas-wallet has 9 bullets \(limit 3\)/],
-  ["a wrong team size", (d) => edit(d, CV, "Previously led a team of 8 engineers", "Previously led teams of up to 6 engineers"), /"up to 6 engineers" but the largest team led is 8/],
+  ["a wrong team size", (d) => edit(d, CV, "Led a team of 8 engineers delivering", "Led teams of up to 6 engineers delivering"), /"up to 6 engineers" but the largest team led is 8/],
   ["an internal git remote", (d) => edit(d, CV, "* Delivered the R&D department's core **React Native** app", "* Delivered git@ssh.dev.azure.com:v3/SYSPRO-Product/x the core mobile app"), /internal address matching/],
 ];
 for (const [name, breakIt, expected] of moreLint) {
@@ -452,7 +452,7 @@ test("validate checks a job ad's jd-tags.yaml (profile, tags, overrides) and the
 
 test("lint: team-size wording variants are checked; separators don't count as words", () => {
   const dir = refreshed();
-  edit(dir, CV, "Previously led a team of 8 engineers", "Previously managed a team of 9 software engineers");
+  edit(dir, CV, "Led a team of 8 engineers delivering", "Managed a team of 9 software engineers delivering");
   assert.match(run("lint.ts", dir, [CV]).out, /team of 9 software engineers" exceeds the largest team led \(8\)/);
 });
 
@@ -482,4 +482,13 @@ test("market hide_headline_qualifier: master drops the master CV's (…) qualifi
   const rn = readFileSync(join(dir, "cv/variants/react-native/markets/ukraine/Kirill_Kohan_CV_React_Native_UA.md"), "utf8");
   assert.match(rn, /^\*\*Senior React Native Engineer \/ Tech Lead \(Mobile\)\*\*$/m);
   assert.equal(run("lint.ts", dir, ["cv/markets/ukraine/Kirill_Kohan_CV_UA.md", "--market", "ukraine"]).code, 0);
+});
+
+test("lint warns when the summary paragraph names a company (decision summary-no-company-names)", () => {
+  const dir = refreshed();
+  assert.doesNotMatch(run("lint.ts", dir, [CV]).out, /summary names/);
+  edit(dir, CV, "Built core modules", "At SYSPRO, currently builds core modules");
+  const out = run("lint.ts", dir, [CV]).out;
+  assert.match(out, /summary names "SYSPRO": describe the work instead/);
+  assert.match(out, /summary says "currently": describe general experience without timing words/);
 });
