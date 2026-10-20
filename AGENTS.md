@@ -44,7 +44,7 @@ Commands are available as Claude Code slash commands (`.claude/commands/`). Any 
 | `/profile` | Update personal details (phone, country, availability …) | `agents/advisor.md` |
 | `/job-change` | Start or leave a job | `agents/advisor.md` |
 | `/import-template <file> <name>` | Make a template from a Word CV | `agents/template-importer.md` |
-| `/build [cv] [--market <id>] [--template <name>] [--no-pdf]` | `npm run build`, report the PDF checks and previews | scripts only |
+| `/build [cv] [--market <id>] [--template <name>] [--no-pdf] [--entries-reviewed]` | `npm run build`, report the PDF checks and previews | scripts only |
 | `/status [--ack <company>]` | `npm run status`, suggest the commands that bring stale CVs up to date | scripts only |
 | `/log-application` | Record a sent CV in `facts/applications.yaml` | `npm run log-application` |
 | `/doctor` | `npm run doctor`, explain how to fix anything missing | scripts only |

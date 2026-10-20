@@ -17,7 +17,8 @@ import { spawnSync } from "node:child_process";
 import { createCipheriv, createDecipheriv, randomBytes, scryptSync } from "node:crypto";
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, statSync, utimesSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { dirname, join, relative } from "node:path";
+import { basename, dirname, join, relative } from "node:path";
+import { outputBaseName } from "./lib/paths.ts";
 import JSZip from "jszip";
 import { cliPath, isMain, loadConfig, loadLocalConfig, rootPath } from "./lib/repo.ts";
 import { parseArgs } from "./refresh.ts";
@@ -35,8 +36,10 @@ export function backupPaths(): string[] {
 }
 
 // Built outputs inside backup folders (a tailored CV's .docx, .pdf, checks, previews, markets, selection) aren't moved.
-export const isBuiltOutput = (rel: string) =>
-  rel.startsWith("cv/tailored/") && /(\.docx|\.pdf|\/pdf-check\.md|\/selection\.json)$|\/(preview|markets)\//.test(rel);
+// Word and PDF files count only when they carry the CV's own file name (<Name>_CV…), so a job ad saved as a PDF travels.
+export const isBuiltOutput = (rel: string, cvPrefix = "Kirill_Kohan_CV") =>
+  rel.startsWith("cv/tailored/") &&
+  (new RegExp(`/${cvPrefix}[^/]*\\.(docx|pdf)$`).test(rel) || /\/(pdf-check\.md|selection\.json)$|\/(preview|markets)\//.test(rel));
 
 function walk(abs: string): string[] {
   if (!existsSync(abs)) return [];
@@ -77,9 +80,10 @@ function stamp(): string {
 // The private files as a zip (encrypted when a password is given).
 async function privateArchive(password: string | undefined): Promise<{ data: Buffer; files: number }> {
   const zip = new JSZip();
+  const cvPrefix = basename(outputBaseName());
   let n = 0;
   for (const p of backupPaths()) for (const abs of walk(rootPath(p))) {
-    if (isBuiltOutput(relative(rootPath(), abs))) continue; // recreated by build (specs/portability-spec.md 1)
+    if (isBuiltOutput(relative(rootPath(), abs), cvPrefix)) continue; // recreated by build (specs/portability-spec.md 1)
     zip.file(relative(rootPath(), abs), readFileSync(abs), { date: statSync(abs).mtime });
     n++;
   }

@@ -9,7 +9,7 @@ import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { parse as parseYaml } from "yaml";
 import { basename, join } from "node:path";
 import {
-  isMain, SUMMARY_SECTIONS, loadConfig, loadConfirmed, loadDecisions, loadMarkets, loadProfile, loadSkills, loadSummaries, readYaml, rootPath,
+  isMain, SUMMARY_SECTIONS, loadConfig, loadConfirmed, loadDecisions, loadLocalConfig, loadMarkets, loadProfile, loadSkills, loadSummaries, readYaml, rootPath,
 } from "./lib/repo.ts";
 import { writeDigests } from "./digest.ts";
 
@@ -34,6 +34,7 @@ export function validateRepo(): Issue[] {
   check("config.schema.json", cfg, "framework.config.yaml");
   const tagSet = new Set(cfg.tags);
   for (const e of cfg.pdf_exporters ?? []) if (!(e in EXPORTERS)) err("framework.config.yaml", `pdf_exporters: "${e}" isn't registered in scripts/exporters/index.ts`);
+  for (const e of loadLocalConfig()?.pdf_exporters ?? []) if (!(e in EXPORTERS)) warn("framework.local.yaml", `pdf_exporters: "${e}" isn't registered (it will be skipped)`);
   if (tagSet.size !== cfg.tags.length) err("framework.config.yaml", "duplicate tags in the tag list");
   for (const t of cfg.tags) if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(t)) err("framework.config.yaml", `tag "${t}" is not lowercase-kebab`);
   const sectionIds = new Set(cfg.cv_sections.map((s) => s.id));
@@ -210,7 +211,7 @@ export function validateRepo(): Issue[] {
       if (id) pinsPerEntry[id] = (pinsPerEntry[id] ?? 0) + 1;
     }
     for (const [id, n] of Object.entries(pinsPerEntry)) {
-      const limit = p.entry_max_bullets?.[id] ?? p.max_bullets_per_entry;
+      const limit = p.entry_max_bullets?.[id] ?? p.max_bullets_per_entry ?? summaries.find((x) => x.id === id)?.frontMatter.cv_max_bullets;
       if (limit && n > limit) err(file, `${n} pinned bullets for ${id}, but its limit is ${limit}`);
     }
     for (const id of Object.keys(p.entry_max_bullets ?? {})) {

@@ -7,7 +7,7 @@ A work summary is the **single source of truth for one job or project**, and the
 ## 1. File
 
 - One file per job or project: `summaries/<id>.md`.
-- `id` is lowercase-kebab `<client>-<project>` (e.g. `syspro-saas-erp`), suggested by `/harvest` and confirmed by the user. **It never changes once created**, because CV source comments refer to it.
+- `id` is lowercase-kebab, usually `<client>-<project>` (e.g. `syspro-saas-erp`; older ids such as `orion-mobile-clinical-ink` keep their form), suggested by `/harvest` and confirmed by the user. **It never changes once created**, because CV source comments refer to it.
 - Several repos for the same job go into one summary (`repos` list). A new job gets a new summary.
 
 ## 2. Front matter

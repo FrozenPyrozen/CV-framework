@@ -31,7 +31,7 @@ description: Writes or merges a work summary (summaries/<id>.md) from a local gi
 6. **Write the summary** with the nine sections of the spec. Read the README and docs, and open individual commits only where the digest isn't enough.
    - **Contributions** (section 4): numbered by importance, each with body, optional `Result:` and a `Tags:` line.
    - **Technologies** (section 5): hands-on vs used by the project.
-   - **Metrics** (section 7): each number with its source (`git` or `user`) and confidence.
+   - **Metrics** (section 7): each number with its source (`git` or `user`) and confidence. Every number in a contribution's `Result:` line must also be listed here (`specs/work-summary-spec.md` 4); check before finishing.
    - **Confidentiality notes** (section 9): internal product and module names, repo names, ticket prefixes and internal URL patterns. Read the remote with `git -C <path> remote get-url origin` only to derive a host pattern (e.g. `*dev.azure.com*<org>*`); never store the URL itself.
    - Unknowns: `TODO (needs user input)`.
    - Your own words only: no code, copied commit messages, internal URLs or secrets.

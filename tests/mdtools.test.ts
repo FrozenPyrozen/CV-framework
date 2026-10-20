@@ -455,3 +455,19 @@ test("lint: team-size wording variants are checked; separators don't count as wo
   edit(dir, CV, "Previously led a team of 8 engineers", "Previously managed a team of 9 software engineers");
   assert.match(run("lint.ts", dir, [CV]).out, /team of 9 software engineers" exceeds the largest team led \(8\)/);
 });
+
+test("lint word count ignores separators; select reports a missing profile clearly; local exporters are checked", () => {
+  const dir = refreshed();
+  const count = () => Number(run("lint.ts", dir, [CV, "--profile", "react"]).out.match(/(\d+) words \(max/)?.[1] ?? 0);
+  writeFileSync(join(dir, "profiles/react.yaml"), readFileSync(join(dir, "profiles/react.yaml"), "utf8").replace("max_words: 1800", "max_words: 100"));
+  const before = count();
+  edit(dir, CV, "# **EXPERIENCE**", "# **EXPERIENCE**\n\n| | | | / / - -");
+  assert.equal(count(), before, "separators don't add words");
+  mkdirSync(join(dir, "cv/tailored/acme"), { recursive: true });
+  writeFileSync(join(dir, "cv/tailored/acme/jd-tags.yaml"), "profile: no-such\nrequired: [react]\n");
+  const r = run("select.ts", dir, ["cv/tailored/acme", "--tags", "jd-tags.yaml"]);
+  assert.equal(r.code, 2);
+  assert.match(r.out, /role profile "no-such" not found/);
+  writeFileSync(join(dir, "framework.local.yaml"), "pdf_exporters: [keynote]\n");
+  assert.match(run("validate.ts", dir).out, /framework\.local\.yaml: pdf_exporters: "keynote" isn't registered/);
+});

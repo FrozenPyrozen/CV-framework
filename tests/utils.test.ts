@@ -126,12 +126,12 @@ test("log-application records a sent CV with a quoted hash, market and optional 
 test("backup leaves out built files of tailored CVs (they are recreated)", async () => {
   const dir = tempRepo();
   mkdirSync(join(dir, "cv/tailored/acme/preview"), { recursive: true });
-  for (const f of ["cv.md", "jd-tags.yaml", "job-description.md", "gap-report.md", "Kirill_Kohan_CV.docx", "Kirill_Kohan_CV.pdf", "pdf-check.md", "selection.json", "preview/page-1.png"]) writeFileSync(join(dir, "cv/tailored/acme", f), "x");
+  for (const f of ["cv.md", "jd-tags.yaml", "job-description.md", "job-ad.pdf", "gap-report.md", "Kirill_Kohan_CV.docx", "Kirill_Kohan_CV.pdf", "pdf-check.md", "selection.json", "preview/page-1.png"]) writeFileSync(join(dir, "cv/tailored/acme", f), "x");
   writeFileSync(join(dir, "framework.local.yaml"), `backup_dir: ${join(dir, "bk")}\n`);
   assert.equal(run("backup.ts", dir, ["--no-password"]).code, 0);
   const zip = await JSZip.loadAsync(readFileSync(join(dir, "bk", readdirSync(join(dir, "bk"))[0])));
   const names = Object.keys(zip.files).filter((n) => n.startsWith("cv/tailored/acme/") && !zip.files[n].dir).map((n) => n.slice(17)).sort();
-  assert.deepEqual(names, ["cv.md", "gap-report.md", "jd-tags.yaml", "job-description.md"]);
+  assert.deepEqual(names, ["cv.md", "gap-report.md", "jd-tags.yaml", "job-ad.pdf", "job-description.md"]); // a job ad saved as PDF travels
 });
 
 test("doctor: a summary repo without a local path is info, not a warning", () => {

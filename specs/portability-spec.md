@@ -52,7 +52,7 @@ Rules:
 **A. With a private remote:**
 1. Old laptop: commit, push, and `npm run backup`.
 2. New laptop: install Node (`.nvmrc`), an exporter (Pages, Word or LibreOffice), the template fonts and an AI agent tool; then `git clone <private remote>` and `npm ci`.
-3. Continue at step 3 of route B (restore the private backup from A1).
+3. Continue at step 3 of route B, restoring the backup from A1: `npm run restore -- <path to cv-backup-<date-time>.zip>` (or `.zip.enc`).
 
 **B. With a full archive (no remote yet):**
 1. Old laptop: commit everything, then `npm run backup -- --full`. Copy `cv-full-<date-time>.zip` to the new laptop.

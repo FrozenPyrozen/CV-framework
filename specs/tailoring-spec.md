@@ -46,7 +46,7 @@ A tailored CV is the master CV adapted to a type of role (a **profile**) or to o
 
 | Allowed | Not allowed |
 |---|---|
-| Select, reorder, shorten and reword bullets | Add a claim with no source |
+| Shorten and reword the bullets `select` chose, in its order (pins set the opening bullets) | Add a claim with no source, or reorder bullets by hand |
 | Rewrite the headline and summary within the focus | Change numbers, dates, titles, company labels or contract suffixes |
 | Reorder skills; leave out sections the profile excludes | Hide a job (every entry stays listed; less relevant ones shrink to `min_bullets_per_entry`) |
 | Drop low-relevance bullets down to the minimum | Edit generated blocks by hand |

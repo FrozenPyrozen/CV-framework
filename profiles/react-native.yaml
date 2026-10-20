@@ -8,6 +8,7 @@ deemphasize_tags: [kendo, erp]
 skills_order: [mobile, languages, state-and-data, testing, devops, frontend, backend-and-cloud, auth-and-security, ai, leadership, domain]
 overrides:
   syspro-saas-erp#4.2: { pin: true }   # SDD, not ad-hoc AI code generation (decision sdd-not-vibe-coding)
+  syspro-architecture-scope: { pin: true }   # lead architect second: cv_emphasis order (SDD, lead architect, tech stack)
   syspro-saas-erp#4.3: { pin: true }   # lead architect and tech-stack decision record (cv_emphasis)
   syspro-saas-erp#4.1: { pin: true }   # the current job's main result (1,800+ ERP programs)
   general-motors-navigation#4.1: { pin: true }   # team of 8: evidence for the tech-lead headline

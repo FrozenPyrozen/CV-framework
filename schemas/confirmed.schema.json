@@ -26,6 +26,10 @@
             "counts_as_experience": { "type": "boolean" },
             "team_size_led": { "type": "integer", "minimum": 0 },
             "cv_order": { "type": "integer", "minimum": 1 },
+            "cv_title_suffix": { "type": "string" },
+            "cv_emphasis": { "type": "array", "items": { "type": "string" } },
+            "cv_max_bullets": { "type": "integer", "minimum": 1 },
+            "show_in_cv": { "type": "boolean" },
             "source": { "type": "string" }
           },
           "additionalProperties": false

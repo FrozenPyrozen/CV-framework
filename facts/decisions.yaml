@@ -39,11 +39,11 @@ decisions:
     why: User confirmed.
     matches: [email spelling, React.js duplicate keyword]
 
-  - id: ai-review-agents-wording
-    decision: Describe AI at SYSPRO as "AI review agents" or "AI agents only as governed reviewers", never as "AI coding agents", which can read as if AI wrote the code (also the skill name "AI agent governance (SDD)").
-    date: "2026-10-16"
-    why: User's choice after the line-by-line validation; supports sdd-not-vibe-coding.
-    matches: [AI coding agents, AI-written code, AI agent wording]
+  - id: ai-agents-wording
+    decision: At SYSPRO, describe the AI agents truthfully as implementing and reviewing code against the specifications under human review (e.g. "rules for AI agents that implement and review code against the specifications"). Never "AI review agents" or "only as reviewers" (narrower than the source), never AI as the designer, never ad-hoc code generation. Skill name "AI agent governance (SDD)".
+    date: "2026-10-20"
+    why: User confirmed on 2026-10-20 that the agents implemented and reviewed code, governed by the SDD process; replaces ai-review-agents-wording (2026-10-16), whose wording said less than the sources.
+    matches: [AI coding agents, AI-written code, AI review agents, only as reviewers, AI agent wording]
 
   - id: keep-length
     decision: Keep the master CV's current length (about 2,000 words, 3 to 4 pages); don't trim older roles there. Role variants follow their profile's max_pages and max_words and shrink less relevant roles by design.
@@ -76,7 +76,7 @@ decisions:
     matches: [client name missing, unnamed client]
 
   - id: sdd-not-vibe-coding
-    decision: SYSPRO work is presented as architecture-governed specification-driven development, with AI agents as governed reviewers, never as AI-generated code.
+    decision: SYSPRO work is presented as architecture-governed specification-driven development, never as ad-hoc AI code generation. AI agents implemented and reviewed code against the specifications under human review (wording updated 2026-10-20, see ai-agents-wording).
     date: "2026-10-15"
     why: User's explicit priority; also a rule in specs/cv-spec.md section 5.
     matches: [AI-generated code, vibe coding, defensive wording about AI]

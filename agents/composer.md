@@ -51,5 +51,5 @@ Used to add sources to a CV that has none yet (build step 7, or a CV written by 
 
 ## Never
 - Change generated blocks, entry title or detail lines, or `<!-- entry -->` markers by hand.
-- Add a claim without a source, inflate scope ("led" for "contributed"), or describe AI agents as authors of code.
+- Add a claim without a source, inflate scope ("led" for "contributed"), or describe AI agents as designers or as ad-hoc code generation (decision `ai-agents-wording`).
 - Rewrite the whole file in one step.

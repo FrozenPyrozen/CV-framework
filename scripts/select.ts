@@ -94,7 +94,11 @@ if (isMain(import.meta.url)) {
   }
   // The profile: --profile, else the one jd-tags.yaml names (as refresh, lint and build read it).
   const profileId = (args.profile as string | undefined) ?? (input.jdTags as any)?.profile;
-  if (profileId) input.profile = readYaml(rootPath(cfg.paths.profiles, `${profileId}.yaml`));
+  if (profileId) {
+    const pf = rootPath(cfg.paths.profiles, `${profileId}.yaml`);
+    if (!existsSync(pf)) { console.error(`select: role profile "${profileId}" not found (${cfg.paths.profiles}/${profileId}.yaml)`); process.exit(2); }
+    input.profile = readYaml(pf);
+  }
   const sel = select(input);
   const dir = cliPath(positional[0]);
   mkdirSync(dir, { recursive: true });

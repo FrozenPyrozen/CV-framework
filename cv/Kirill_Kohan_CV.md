@@ -19,7 +19,7 @@ Senior software engineer and tech lead with 7+ years of experience building Reac
 
 ### **SYSPRO | Remote | December 2025 - Present**
 
-* Delivered the frontend through an architecture-governed **specification-driven development (SDD)** process, not ad-hoc AI code generation, and helped define it: specification templates, the validation routine and rules for **AI review agents**. Each subsystem was traced from architecture to specification to code across 4 repositories. <!-- src: syspro-saas-erp#4.2, syspro-architecture-scope -->
+* Delivered the frontend through architecture-governed **specification-driven development (SDD)**, not ad-hoc AI code generation, and helped define it: specification templates, validation and rules for **AI agents** that implement and review code against the specifications, with each subsystem traced from architecture to code across 4 repositories. <!-- src: syspro-saas-erp#4.2, syspro-architecture-scope -->
 
 * Worked with the lead architect on the **platform and solution architecture**: reviewed and co-authored architecture documents and drove open questions to decisions. Owned the **frontend technology stack** for the Login micro-frontend and the schema-driven runtime, including OIDC libraries and the move to **Vitest Browser Mode**. <!-- src: syspro-saas-erp#4.3, syspro-architecture-scope, syspro-tech-stack-ownership -->
 

@@ -81,7 +81,7 @@ Each entry is a list of `*` bullets (one level, no nesting).
 ## 5. Emphasis rules
 
 - **`cv_emphasis`** in a summary lists what an entry must make clear. Those points go into the **first bullets** of that entry, in the given order.
-- **SYSPRO (from the 2026-10-15 decisions):** the first bullets must show that the work was an *architecture-governed specification-driven development (SDD)* process, **not ad-hoc AI code generation**: you helped define the process, worked with the lead architect on platform and solution architecture, and owned the frontend technology stack. AI agents are described as governed reviewers, never as the authors of the code.
+- **SYSPRO (from the 2026-10-15 decisions):** the first bullets must show that the work was an *architecture-governed specification-driven development (SDD)* process, **not ad-hoc AI code generation**: you helped define the process, worked with the lead architect on platform and solution architecture, and owned the frontend technology stack. AI agents may be described as implementing and reviewing code against the specifications under human review; never as making the design decisions, and never as ad-hoc code generation.
 - **Contract labels** appear only on entries whose `engagement` really is `contract` (and only in markets that show them). Short full-time jobs get no label; the HR review prepares an interview answer instead (decision `all-full-time`).
 - **Consulting section** entries carry no dates by default, and their client labels may hide the client.
 
@@ -164,7 +164,7 @@ The current decisions live in `facts/decisions.yaml`. At the time of writing:
 - Keep the job title step from Team Leader (General Motors) to Senior Software Engineer (SYSPRO).
 - The consulting section shows no dates, and the Clinical Ink and Velocity AI clients are hidden behind their labels.
 - All jobs are full-time, so no entry carries "(Contract)" except the consulting contracts (decision `all-full-time`).
-- SYSPRO work is presented as architecture-governed SDD, with AI agents as governed reviewers (decision `sdd-not-vibe-coding`).
+- SYSPRO work is presented as architecture-governed SDD, with AI agents implementing and reviewing code against the specifications under human review (decisions `sdd-not-vibe-coding`, `ai-agents-wording`).
 
 ## 14. Markets
 

@@ -69,8 +69,9 @@ export function entryHashes(): Record<string, string> {
   const h = (x: unknown) => createHash("sha256").update(JSON.stringify(x)).digest("hex").slice(0, 16);
   // Computed from the parsed data (not the digest files), so the result never depends on stale digests.
   for (const s of loadSummaries(cfg)) {
-    const metrics = s.sections.find((x) => x.number === 7)?.text.trim() ?? "";
-    out[s.id] = h([s.frontMatter, s.contributions, facts.filter((f) => f.entry === s.id), metrics]);
+    // Every section a CV can cite: 1 (overview, summary paragraph), 3 (role), 5 (Stack line), 7 (metrics).
+    const cited = [1, 3, 5, 7].map((n) => s.sections.find((x) => x.number === n)?.text.trim() ?? "");
+    out[s.id] = h([s.frontMatter, s.contributions, facts.filter((f) => f.entry === s.id), cited]);
   }
   for (const e of entries) out[e.id] = h([e, facts.filter((f) => f.entry === e.id)]);
   return out;
