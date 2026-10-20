@@ -104,7 +104,7 @@ test("render: consistent left edge and spacing, lead-in lines stay with their bu
 test("render turns [text](url) into a real link with that text", async () => {
   const dir = tempRepo();
   run("refresh.ts", dir);
-  edit(dir, CV, "* Delivered the R&D department's core mobile app", "* See [my site](https://example.com/x) and delivered the core mobile app");
+  edit(dir, CV, "* Delivered the R&D department's core **React Native** app", "* See [my site](https://example.com/x) and delivered the core mobile app");
   run("render.ts", dir);
   const out = join(dir, "cv/Kirill_Kohan_CV.docx");
   const d = await openDocx(out);

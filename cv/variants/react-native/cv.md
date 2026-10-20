@@ -70,9 +70,9 @@ Senior React Native engineer and tech lead with 7+ years of experience building 
 
 ### **OMO Systems | Remote | April 2021 - December 2021**
 
-* Fixed insecure face-recognition unlock on specific Android devices by patching in a native **Android biometrics** library. <!-- src: omo-systems-smart-home#4.4 -->
+* Delivered the R&D department's core **React Native** app for controlling smart-home **IoT** devices. <!-- src: omo-systems-smart-home#4.1 -->
 
-* Delivered the R&D department's core mobile app for controlling smart-home **IoT** devices. <!-- src: omo-systems-smart-home#4.1 -->
+* Fixed insecure face-recognition unlock on specific Android devices by patching in a native **Android biometrics** library. <!-- src: omo-systems-smart-home#4.4 -->
 
 * Led and mentored a team of about 3 engineers: ran **code reviews**, set coding standards and onboarded new engineers. <!-- src: omo-systems-smart-home#4.5 -->
 

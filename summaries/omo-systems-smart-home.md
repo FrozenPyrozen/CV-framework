@@ -43,9 +43,9 @@ TODO (needs user input): team size, ownership areas and key collaborators.
 
 ### 4.1 Core smart-home mobile app
 
-Delivered the core mobile app for controlling smart-home IoT devices in the R&D department.
+Delivered the core mobile app for controlling smart-home IoT devices in the R&D department, built with React Native (confirmed by user 2026-10-20).
 
-Tags: iot
+Tags: iot, react-native
 
 ### 4.2 Mobile architecture refactoring proposal
 
@@ -76,11 +76,11 @@ Tags: leadership, mentoring, code-review
 ## 5. Technologies and frameworks
 
 - **UI:** React (hands-on)
-- **Mobile:** native Android biometrics library, applied as a patch (hands-on)
+- **Mobile:** React Native (hands-on, confirmed by user 2026-10-20), native Android biometrics library, applied as a patch (hands-on)
 - **Domain:** IoT smart-home devices (hands-on)
 - **Payments:** payment gate (hands-on)
 
-TODO (needs user input): mobile framework, state management and other tools used.
+TODO (needs user input): state management and other tools used.
 
 ## 6. Skills demonstrated
 

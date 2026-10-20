@@ -88,7 +88,7 @@ Senior software engineer and tech lead with 7+ years of experience building Reac
 
 ### **OMO Systems | Remote | April 2021 - December 2021**
 
-* Delivered the R&D department's core mobile app for controlling smart-home **IoT** devices. <!-- src: omo-systems-smart-home#4.1 -->
+* Delivered the R&D department's core **React Native** app for controlling smart-home **IoT** devices. <!-- src: omo-systems-smart-home#4.1 -->
 
 * Proposed a refactoring of the mobile app architecture that won first place at a local hackathon. <!-- src: omo-systems-smart-home#4.2 -->
 
