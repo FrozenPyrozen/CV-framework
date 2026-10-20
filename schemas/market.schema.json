@@ -14,7 +14,8 @@
         "show_phone": { "type": "boolean" },
         "show_availability": { "type": "boolean" },
         "engagement_types": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/engagementType" } },
-        "show_time_zone_overlap": { "type": "boolean" }
+        "show_time_zone_overlap": { "type": "boolean" },
+        "hide_headline_qualifier": { "enum": ["none", "master", "all"], "description": "drop the closing part in parentheses from the headline: on the master CV only, or on every CV" }
       },
       "additionalProperties": false
     },

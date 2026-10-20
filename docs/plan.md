@@ -490,6 +490,7 @@ header:
   show_phone: false
   show_time_zone_overlap: false    # not relevant for local roles (optional, can be switched on)
   show_availability: false         # no availability line at all
+  hide_headline_qualifier: master  # master CV headline without "(Frontend and Mobile)"; variants keep theirs (none | master | all)
 entries:
   show_contract_suffix: false      # no "(Contract)" labels
 ```
@@ -913,3 +914,4 @@ Every step done by hand in the chat, and the capability that repeats it. Rows 37
 | 60 | Reran the acceptance replay after the agent and spec changes (B1–B8) | Passed (see `docs/acceptance.md` run log). Fixes from it: multi-source bullets keep facts about the same work and `cv_emphasis` points; `reattach-src` keeps its snapshot until the next `--save` and skips generated intro lines; `validate` warns on "new" tags that already exist |
 | 61 | Ran step 14 (market test) | Passed for the master CV and all four variants: Ukraine PDFs without phone, availability, time-zone line or "(Contract)", worldwide PDFs with them, identical content from SUMMARY on apart from the "(Contract)" labels, `pdf-check` passing for all 10 (`docs/acceptance.md` C3) |
 | 62 | Analyzed all steps against the plan and specs again (three audits) | You confirmed the SYSPRO AI agents implemented and reviewed code against the specifications under human review: the CVs now say so ("rules for AI agents that implement and review code against the specifications"), cv-spec, `sdd-not-vibe-coding`, the fact-check rubric and the composer follow it, and decision `ai-agents-wording` replaces `ai-review-agents-wording`. Also: react-native SYSPRO bullets in `cv_emphasis` order (architect fact pinned), present tense fixed; tailoring order comes from `select` (no hand reordering, spec and plan aligned); per-entry hashes cover summary sections 1, 3, 5 and 7; `cv_entry` facts accept the `cv_*` fields; profile pin limits fall back to `cv_max_bullets`; backups keep non-CV PDFs in tailored folders; `select` gives a clear error for a missing profile; local exporters checked; docs aligned |
+| 63 | Asked to drop "(Frontend and Mobile)" from the Ukraine CV | Market setting `header.hide_headline_qualifier` (`none` / `master` / `all`; a market may only hide or narrow); `ukraine` uses `master`, so only the master CV's Ukraine headline becomes "Senior Software Engineer / Tech Lead" and the variants keep their stack in parentheses |

@@ -1,4 +1,5 @@
-# Local Ukrainian market: no phone, no availability line, no time-zone line, no contract labels.
+# Local Ukrainian market: no phone, no availability line, no time-zone line, no contract labels,
+# and the master CV's headline without its "(…)" qualifier.
 schema_version: 1
 id: ukraine
 default: false
@@ -7,5 +8,6 @@ header:
   show_phone: false
   show_availability: false
   show_time_zone_overlap: false
+  hide_headline_qualifier: master    # "Senior Software Engineer / Tech Lead"; variants keep their parentheses (user, 2026-10-20)
 entries:
   show_contract_suffix: false

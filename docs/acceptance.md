@@ -72,7 +72,7 @@ Run `npm test` and `npm run check`, plus `npm run build:all` when an export app 
 | C1b | 12 | Compare the old and new folders | `git ls-files -s` identical (every committed file by content hash), `git log --all` identical; every git-ignored file on the old laptop is either in the backup or recreated (`specs/portability-spec.md` 1); nothing needed lives only outside the repo (open items are in `docs/open-items.md`) |
 | C1a | 12 | `npm run backup -- --full` with uncommitted changes | refused, with "commit first" |
 | C2 | 13 | New laptop + new repo: `/add-repo` on a repo the framework hasn't seen | identities detected and confirmed; "new or existing job" asked; job details asked; new tags and skills proposed; `validate` passes; the master CV and every variant gain sourced bullets; `build:all` passes `pdf-check`; `/review` runs |
-| C3 | 14 | Markets: `build:all`, then compare both markets for the master and one variant | Ukraine PDFs have no phone, availability, time-zone line or "(Contract)"; worldwide PDFs have them; `pdf-check` passes for both; bullets identical |
+| C3 | 14 | Markets: `build:all`, then compare both markets for the master and one variant | Ukraine PDFs have no phone, availability, time-zone line or "(Contract)", and the master's Ukraine headline has no "(Frontend and Mobile)" while the variants keep theirs; worldwide PDFs have them; `pdf-check` passes for both; bullets identical |
 
 ## Run log
 

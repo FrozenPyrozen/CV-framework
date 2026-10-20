@@ -170,13 +170,13 @@ The current decisions live in `facts/decisions.yaml`. At the time of writing:
 
 A CV is written once, for the default market (`markets/*.yaml` with `default: true`, currently `worldwide`), and converted to other markets by `npm run market`, a script that changes only:
 
-- the generated header (phone shown or hidden, time-zone line, availability wording from the market's `engagement_types`), and
+- the generated header (phone shown or hidden, time-zone line, availability wording from the market's `engagement_types`, and, with `hide_headline_qualifier: master`, the master CV's headline without its closing part in parentheses), and
 - entry title suffixes (`show_contract_suffix`).
 
 Agents never write market-specific content by hand. Current markets:
 
-| Market | Phone | Availability line | Time-zone line | Contract labels | File suffix |
-|---|---|---|---|---|---|
-| worldwide (default) | shown | Open to B2B contract or full-time employment | shown | shown | none |
-| ukraine | hidden | hidden | hidden | hidden | `_UA` |
+| Market | Phone | Availability line | Time-zone line | Contract labels | Headline qualifier | File suffix |
+|---|---|---|---|---|---|---|
+| worldwide (default) | shown | Open to B2B contract or full-time employment | shown | shown | shown | none |
+| ukraine | hidden | hidden | hidden | hidden | hidden on the master CV only ("Senior Software Engineer / Tech Lead"); variants and tailored CVs keep theirs | `_UA` |
 

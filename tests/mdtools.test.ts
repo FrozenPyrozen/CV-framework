@@ -471,3 +471,15 @@ test("lint word count ignores separators; select reports a missing profile clear
   writeFileSync(join(dir, "framework.local.yaml"), "pdf_exporters: [keynote]\n");
   assert.match(run("validate.ts", dir).out, /framework\.local\.yaml: pdf_exporters: "keynote" isn't registered/);
 });
+
+test("market hide_headline_qualifier: master drops the master CV's (…) qualifier; variants keep theirs", () => {
+  const dir = refreshed();
+  run("market.ts", dir);
+  const ua = readFileSync(join(dir, "cv/markets/ukraine/Kirill_Kohan_CV_UA.md"), "utf8");
+  assert.match(ua, /^\*\*Senior Software Engineer \/ Tech Lead\*\*$/m);
+  assert.match(readFileSync(join(dir, CV), "utf8"), /^\*\*Senior Software Engineer \/ Tech Lead \(Frontend and Mobile\)\*\*$/m);
+  run("market.ts", dir, ["cv/variants/react-native/cv.md"]);
+  const rn = readFileSync(join(dir, "cv/variants/react-native/markets/ukraine/Kirill_Kohan_CV_React_Native_UA.md"), "utf8");
+  assert.match(rn, /^\*\*Senior React Native Engineer \/ Tech Lead \(Mobile\)\*\*$/m);
+  assert.equal(run("lint.ts", dir, ["cv/markets/ukraine/Kirill_Kohan_CV_UA.md", "--market", "ukraine"]).code, 0);
+});

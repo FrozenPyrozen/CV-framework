@@ -237,7 +237,7 @@ export interface Market {
   id: string;
   default: boolean;
   file_suffix: string;
-  header: { show_phone: boolean; show_availability: boolean; engagement_types?: string[]; show_time_zone_overlap: boolean };
+  header: { show_phone: boolean; show_availability: boolean; engagement_types?: string[]; show_time_zone_overlap: boolean; hide_headline_qualifier?: "none" | "master" | "all" };
   entries: { show_contract_suffix: boolean };
 }
 

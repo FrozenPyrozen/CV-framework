@@ -127,7 +127,13 @@ export function headerBlock(ctx: Context): string {
   const h = cfg.header;
   const sep = cfg.display.field_separator;
   const name = profile.show_legal_name && profile.legal_name ? `${profile.name.split(" ")[0]} (${profile.legal_name.split(" ")[0]}) ${profile.name.split(" ").slice(1).join(" ")}` : profile.name;
-  const lines = [`# **${name}**`, `**${ctx.headline ?? profile.headline_default}**`];
+  // A market may hide the headline's closing "(…)" qualifier: on the master CV only (no role profile and no
+  // job-ad headline), or on every CV (markets/*.yaml header.hide_headline_qualifier).
+  let headline: string = ctx.headline ?? profile.headline_default;
+  const hide = market.header.hide_headline_qualifier ?? "none";
+  const isMaster = !ctx.roleProfile && ctx.headline === undefined;
+  if (hide === "all" || (hide === "master" && isMaster)) headline = headline.replace(/\s*\([^()]*\)\s*$/, "");
+  const lines = [`# **${name}**`, `**${headline}**`];
 
   const loc = h.location
     .replace("{city}", profile.location.city)
