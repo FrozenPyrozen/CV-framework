@@ -20,7 +20,8 @@
           "paragraphs": { "type": "object", "additionalProperties": { "type": "object", "properties": { "indent_left": { "type": "integer" }, "first_line": { "type": "integer" }, "before": { "type": "integer" }, "after": { "type": "integer" }, "line": { "type": "integer" } }, "additionalProperties": false } },
           "first_after_section_heading": { "type": "object", "required": ["before"], "properties": { "before": { "type": "integer" } }, "additionalProperties": false },
           "letter_spacing": { "type": "integer" },
-          "rule_full_width": { "const": true }
+          "rule_full_width": { "const": true },
+          "page_margins": { "type": "object", "properties": { "top": { "type": "integer", "minimum": 0 }, "bottom": { "type": "integer", "minimum": 0 }, "left": { "type": "integer", "minimum": 0 }, "right": { "type": "integer", "minimum": 0 } }, "additionalProperties": false, "minProperties": 1 }
         },
         "additionalProperties": false,
         "minProperties": 1

@@ -15,7 +15,7 @@ interface StyleMap {
   page?: { width_twips: number; margins_twips: { left: number; right: number } };
 }
 
-interface Fix { id: string; set: { bullet?: { indent_left: number; hanging: number; tab?: { type: string; pos: number } }; keep_with_next?: string[]; date_tab?: { align: "left" | "right"; pos: number }; keep_last_bullets_together?: number; keep_first_bullets_together?: number; paragraphs?: Record<string, { indent_left?: number; first_line?: number; before?: number; after?: number; line?: number }>; first_after_section_heading?: { before: number }; letter_spacing?: number; rule_full_width?: boolean } }
+interface Fix { id: string; set: { bullet?: { indent_left: number; hanging: number; tab?: { type: string; pos: number } }; keep_with_next?: string[]; date_tab?: { align: "left" | "right"; pos: number }; keep_last_bullets_together?: number; keep_first_bullets_together?: number; paragraphs?: Record<string, { indent_left?: number; first_line?: number; before?: number; after?: number; line?: number }>; first_after_section_heading?: { before: number }; letter_spacing?: number; rule_full_width?: boolean; page_margins?: Partial<Record<"top" | "bottom" | "left" | "right", number>> } }
 
 export interface RenderResult { paragraphs: number; links: number; warnings: string[] }
 
@@ -81,6 +81,10 @@ export async function renderDocx(markdown: string, outPath: string, templateName
           .replace(new RegExp(`"${w}"`, "g"), `"${width}"`)
           .replace(new RegExp(`"${w - 1}"`, "g"), `"${width - 1}"`);
       }
+    }
+    // page_margins: override the template's page margins (twips) in the section properties.
+    for (const [side, v] of Object.entries(f.set.page_margins ?? {})) {
+      doc.tail = doc.tail.replace(/<w:pgMar [^>]*\/>/, (m) => m.replace(new RegExp(`w:${side}="\\d+"`), `w:${side}="${v}"`));
     }
     if (f.set.letter_spacing) letterSpacing = f.set.letter_spacing;
     if (f.set.first_after_section_heading) firstAfterHeading = f.set.first_after_section_heading.before;

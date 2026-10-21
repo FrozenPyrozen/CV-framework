@@ -145,3 +145,11 @@ test("render: a job-specific CV is named <Name>_CV even when it starts from a pr
   assert.equal(run("render.ts", dir, ["cv/tailored/acme/cv.md"]).code, 0);
   assert.ok(existsSync(join(dir, "cv/tailored/acme/Kirill_Kohan_CV.docx")));
 });
+
+test("render: the page_margins fix sets the page's top margin", async () => {
+  const dir = tempRepo();
+  run("refresh.ts", dir);
+  assert.equal(run("render.ts", dir).code, 0);
+  const xml = await (await JSZip.loadAsync(readFileSync(join(dir, "cv/Kirill_Kohan_CV.docx")))).file("word/document.xml")!.async("string");
+  assert.match(xml, /<w:pgMar [^>]*w:top="360"/); // classic's smaller-top-margin fix (was 580)
+});

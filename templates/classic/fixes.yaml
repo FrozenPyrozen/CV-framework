@@ -47,6 +47,11 @@
       headline:        { before: 0, line: 252 }
       contact_line:    { before: 0, line: 252 }
       section_heading: { indent_left: 0, first_line: 0, before: 90, after: 20 }
+- id: smaller-top-margin
+  why: "The 580-twip (0.4 inch) top margin left a visible gap above the name (user, 2026-10-21)."
+  found: "2026-10-21"
+  set:
+    page_margins: { top: 360 }   # 0.25 inch
 - id: section-rule-aligned
   why: "The line under each section heading started 75 twips right of the heading text and stopped short of the right margin, which looked misaligned."
   found: "2026-10-16"
