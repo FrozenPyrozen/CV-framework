@@ -25,6 +25,7 @@
     },
     "author_identities": { "type": "array", "items": { "type": "string" } },
     "harvested_at": { "anyOf": [{ "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" }, { "type": "null" }] },
+    "harvest_mode": { "enum": ["local", "portable"] },
     "show_in_cv": { "type": "boolean" },
     "cv_section": { "$ref": "common.schema.json#/$defs/id" },
     "cv_order": { "type": "integer", "minimum": 1 },

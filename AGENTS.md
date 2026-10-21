@@ -34,6 +34,8 @@ Commands are available as Claude Code slash commands (`.claude/commands/`). Any 
 | Command | What happens | Follow |
 |---|---|---|
 | `/add-repo <path or name> [--resume]` | Whole new-repo flow: harvest, approve the summary, compose, approve the CV diff, variants, build, review | `agents/harvester.md`, then `agents/composer.md`, `agents/tailor.md`, `agents/reviewer.md` |
+| `/harvest-prompt [--merge <id>]` | Portable harvest, step 1: a self-contained prompt to write a summary on a machine the repo can't leave (`specs/work-summary-spec.md` 9) | `npm run harvest-prompt` |
+| `/import-summary <file>` | Portable harvest, step 4: check a summary written elsewhere, then add or merge it | `agents/harvester.md` (Importing a portable summary) |
 | `/harvest <path or name> [id]` | Write or merge a work summary from a repo | `agents/harvester.md` |
 | `/compose` | Update the master CV from summaries and facts | `agents/composer.md` |
 | `/tailor --profile <id>` / `--jd <file or text> [--profile <id>] [--market <id>]` | Build a role variant or a job-specific CV, with a gap report | `agents/tailor.md` |
@@ -56,6 +58,8 @@ Commands are available as Claude Code slash commands (`.claude/commands/`). Any 
 | `validate` | check every input against `schemas/` and the cross-file rules; writes digests |
 | `digest` | short summary digests in `summaries/.digests/` (read these before full summaries) |
 | `git-digest <repo> [--path --since --until --identity --run]` | read-only history digest of a repo for the harvester |
+| `harvest-prompt [--merge <id>] [--out <file>]` | writes the portable harvest prompt to `.cv-runs/harvest-prompt-<date>.md` |
+| `import-summary <file> [--apply]` | checks a portable summary (validate rules, secret scan, no code or paths) in a temp copy; `--apply` places it |
 | `refresh [cv] [--market --profile --out --check]` | regenerate the script-owned parts of a CV (header, entry lines, education, skills, languages) |
 | `market [cv] [--market <id>]` | write the other market versions of a CV |
 | `lint [cv] [--market --profile]`, `trace [cv] [--warn-only]`, `check` | CV rules, claim sources, both for every CV |
@@ -132,7 +136,9 @@ None yet (the CV is specified by specs/cv-spec.md and specs/tailoring-spec.md).
 - `/build`: Build a CV: Word, PDF, checks and previews for every market
 - `/compose`: Update the master CV from summaries and facts
 - `/doctor`: Check this laptop and explain how to fix problems
+- `/harvest-prompt`: Write a self-contained prompt to harvest a repo on another machine (portable harvest)
 - `/harvest`: Write or merge a work summary from a repo
+- `/import-summary`: Check and bring in a summary written on another machine (portable harvest)
 - `/import-template`: Make a template from a Word CV
 - `/improve`: Go through review findings with the user and apply the answers
 - `/job-change`: Start or leave a job

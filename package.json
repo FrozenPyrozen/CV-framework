@@ -31,6 +31,8 @@
     "backup": "tsx scripts/backup.ts",
     "restore": "tsx scripts/backup.ts --restore",
     "git-digest": "tsx scripts/git-digest.ts",
+    "harvest-prompt": "tsx scripts/harvest-prompt.ts",
+    "import-summary": "tsx scripts/import-summary.ts",
     "index": "tsx scripts/index.ts",
     "log-application": "tsx scripts/log-application.ts"
   },

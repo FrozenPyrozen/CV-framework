@@ -63,6 +63,7 @@ Run `npm test` and `npm run check`, plus `npm run build:all` when an export app 
 | B12 | 17 | `/import-template <docx> <name>` | a Word CV | a template whose test build goes to `.cv-runs/template-test-<name>/` and doesn't touch the real CV |
 | B13 | 22 | `/profile` | "moved to Poland, new phone +48…" | follow-up questions (work permit, B2B, time zone); the header and every variant change after `build:all`; sent CVs with the old details are listed |
 | B14 | 45 | `/job-change` (leaving) | the current job | a final harvest is offered first; `period.end` set; the summary remains the record |
+| B15 | 75 | `/harvest-prompt`, then `/import-summary <file>` | a repo on another machine; the summary written there from the prompt | the prompt holds the spec, tag list and identities but no other summaries or facts; the file fails import with code, local paths, URLs in `repos` or unknown sections; a new id lands in `summaries/`, an existing id in `.cv-runs/import/` and is merged by work-summary-spec 7 |
 
 ## C. Permanent end-to-end scenarios
 

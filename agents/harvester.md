@@ -48,3 +48,15 @@ description: Writes or merges a work summary (summaries/<id>.md) from a local gi
     - the TODOs left
     - the identities and tags added
     - the next step: `/compose`, or `/add-repo` continues automatically
+
+## Importing a portable summary
+
+For a summary written on another machine from `npm run harvest-prompt` (`/import-summary <file>`; `specs/work-summary-spec.md` 9):
+
+1. **Check.** Run `npm run import-summary -- <file>`. Errors: report them and stop; the user fixes the file (or asks you to fix wording here), then check again. Never import a file that fails.
+2. **Tags.** For proposed or unknown tags, ask the user to approve each one (step 8 above) or change it to an existing tag.
+3. **Apply.** Run `npm run import-summary -- <file> --apply`.
+   - **New id:** the file is now `summaries/<id>.md`. Ask about the TODOs you can fill here, especially section 9 (confidentiality notes) if it was left out on the other machine.
+   - **Existing id:** the file is in `.cv-runs/import/<id>.md`. Merge it into `summaries/<id>.md` by step 7 (existing numbers, user edits, `cv_*` fields and section 9 kept; proposed changes to them listed for approval), add its repos and take its `harvested_at`.
+   - Set `harvest_mode: portable` on the summary (a merged summary keeps it once any repo was harvested this way).
+4. **Check and report** as in steps 9 and 10. Next step: `/compose`.

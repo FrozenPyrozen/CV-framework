@@ -85,7 +85,12 @@ export function validateRepo(): Issue[] {
     if (fm.source === "git") {
       if (!fm.harvested_at) err(s.file, "source: git needs harvested_at");
       if (!fm.repos?.length) err(s.file, "source: git needs at least one repo");
-    } else if (fm.harvested_at != null) {
+    }
+    // Repo names only: no remote URLs or local paths (specs/work-summary-spec.md 2), wherever the summary was written.
+    for (const r of fm.repos ?? []) {
+      if (/[:/\\@]/.test(String(r?.name ?? ""))) err(s.file, `repos: "${r.name}" must be the repo name only, not a URL or path`);
+    }
+    if (fm.source !== "git" && fm.harvested_at != null) {
       err(s.file, `harvested_at must be null for source: ${fm.source}`);
     }
     for (const c of s.contributions) {

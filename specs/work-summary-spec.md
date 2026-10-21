@@ -7,7 +7,7 @@ A work summary is the **single source of truth for one job or project**, and the
 ## 1. File
 
 - One file per job or project: `summaries/<id>.md`.
-- `id` is lowercase-kebab, usually `<client>-<project>` (e.g. `syspro-saas-erp`; older ids such as `orion-mobile-clinical-ink` keep their form), suggested by `/harvest` and confirmed by the user. **It never changes once created**, because CV source comments refer to it.
+- `id` is lowercase-kebab, usually `<client>-<project>` (e.g. `acme-billing-portal`; older ids in another form keep it), suggested by `/harvest` and confirmed by the user. **It never changes once created**, because CV source comments refer to it.
 - Several repos for the same job go into one summary (`repos` list). A new job gets a new summary.
 
 ## 2. Front matter
@@ -15,26 +15,26 @@ A work summary is the **single source of truth for one job or project**, and the
 ```yaml
 ---
 schema_version: 1
-id: syspro-saas-erp
+id: acme-billing-portal
 source: git                        # git | cv | user
 # --- the job ---
-client: SYSPRO
+client: Acme Corp
 role: Senior Software Engineer
 engagement: full-time              # full-time | contract | freelance
 period: { start: 2025-12, end: present }
-domain: [ERP, SaaS]
+domain: [Billing, SaaS]
 team_size_led: 0
 counts_as_experience: true
 # --- harvesting ---
 repos:
-  - { name: saas-frontend-repo }
+  - { name: billing-web }
 author_identities: []
 harvested_at: 2026-09-30
 # --- how it appears in the CV ---
 show_in_cv: true
 cv_section: experience
 cv_order: 1
-cv_client_label: SYSPRO
+cv_client_label: Acme Corp
 cv_location: Remote
 show_dates_in_cv: true
 # cv_title_suffix: " (Contract)"   # optional; only when engagement is contract
@@ -59,11 +59,12 @@ cv_max_bullets: 8
 | `repos[].name` | for `source: git` | the repo's name, as a label of where the work happened. **No remote URLs** (access ends with the job, and they'd keep the employer's internal addresses) and **no local paths** (per laptop, in `framework.local.yaml`). |
 | `author_identities` | no | extra git identities for this summary's repos, added to `profile.yaml` `git_identities` |
 | `harvested_at` | for `source: git` | date of the last harvest; `null` otherwise |
+| `harvest_mode` | no | `local` (default: `/harvest` in this repo) or `portable` (written on another machine from a harvest prompt, section 9) |
 | `show_in_cv` | no | default true; false keeps the summary as a source (e.g. for the portfolio) but never shows it in a CV |
 | `cv_section` | yes | a section id from `cv_sections` in config (`experience`, `consulting` …) |
 | `cv_order` | no | position inside the section; default newest first |
 | `cv_client_label` | yes | what the CV shows instead of `client` (same value when nothing is hidden) |
-| `cv_location` | yes | e.g. `Remote`, `Kyiv, Ukraine (Hybrid)` |
+| `cv_location` | yes | e.g. `Remote`, `Berlin, Germany (Hybrid)` |
 | `show_dates_in_cv` | no | default from the section's `show_dates` |
 | `cv_title_suffix` | no | default derived from `engagement` (`contract` gives `display.contract_suffix`) |
 | `cv_emphasis` | no | points the CV entry must make clear, in its first bullets |
@@ -106,13 +107,13 @@ A section with nothing known yet contains `TODO (needs user input)`. **Never inv
 ```markdown
 ## 9. Confidentiality notes
 
-- term: Application Studio Platform
-- term: ASP
+- term: Project Falcon
+- term: PFX
   allow_in: []                     # optional: where the term may appear in a CV: job ids (inside that job's
                                    # title, detail line and bullets) and/or `summary` (the summary paragraph)
-- term: saas-frontend-repo
-- prefix: OR-                      # ticket prefixes
-- url_pattern: "*.syspro.internal"
+- term: billing-web
+- prefix: BIL-                    # ticket prefixes
+- url_pattern: "*.acme.internal"
 ```
 
 ## 4. Contributions
@@ -160,9 +161,22 @@ These apply to the harvester (`/harvest`, `/add-repo`):
 
 ## 8. Summaries built from the old CV (`source: cv`)
 
-For jobs that exist only as CV text (General Motors, Velas, OMO Systems, Thermo Fisher Scientific, Itjet, The Admasters):
+For jobs that exist only as CV text (older jobs whose repos are no longer accessible):
 
 - Each CV bullet becomes one contribution, in CV order, with its tags.
 - Front matter comes from the CV entry (role, client, location, dates). The employment type (`engagement`) is confirmed with the user, never inferred from a "(Contract)" label.
 - Numbers in bullets go to section 7 with source `cv`.
 - Every other section is `TODO (needs user input)`, to be enriched later with `/harvest` or `/add-experience`.
+
+## 9. Portable harvest (repo on a machine without this framework)
+
+When a repo can't be cloned to the laptop that holds this framework (for example a work laptop that must keep its code), the summary is written **on that machine** and only the summary comes back:
+
+1. **Prompt (here):** `npm run harvest-prompt -- [--merge <id>] [--out <file>]` writes one self-contained Markdown prompt: these harvesting and writing rules, the format of this spec, the official tag list, the user's git identities, plain `git` commands to replace `git-digest`, and, with `--merge`, the existing summary so numbering is kept. It contains no other summaries, facts or CVs.
+2. **Harvest (there):** in the repo on that machine, the user gives the prompt to any AI agent tool. The agent asks the user for what git can't know (as in section 6), writes **one file**, `<id>.md`, with `source: git`, `harvest_mode: portable` and `harvested_at`, and checks it against the prompt's self-check list.
+3. **Review and transfer:** the user reads the file before it leaves that machine. It follows the writing rules (section 5): own words, no code, copied internal text, internal URLs, secrets or local paths. **Follow your employer's rules on what may leave a work machine**; if section 9 (confidentiality notes) may not leave, write `TODO (needs user input)` there and fill it in here. Move the file by a channel the employer allows.
+4. **Import (here):** `npm run import-summary -- <file>` checks the file with the same rules as `validate` (schema, nine sections, numbering, tags, `repos` names only) plus the secret scan, without touching `summaries/`. With `--apply`, a new summary goes to `summaries/<id>.md`; for an existing id it goes to `.cv-runs/import/<id>.md`, and the harvester merges it by section 7 (`/import-summary`). Unknown tags are reported as proposals for the user to approve (they enter the tag list only through approval).
+5. **Then** the usual flow: `/compose`, `/variants`, `build:all`, `/review`.
+
+Rules: the prompt is generated, never edited by hand, so it always matches this spec and the tag list; it never carries another summary's confidentiality terms or hidden client names (`harvest-prompt` refuses, so this spec's examples stay made up); a portable summary is never trusted without `import-summary`; a portable merge follows section 7 exactly (existing numbers, user edits, `cv_*` fields and section 9 are kept).
+

@@ -68,6 +68,7 @@ Slash commands run in your AI agent tool (`.claude/commands/` for Claude Code; o
 | You want to … | Run |
 |---|---|
 | Add a repo's work to the CV (summary, CV, variants, build, review) | `/add-repo <path or repo name>` |
+| Add a repo that can't leave a work laptop (summary written there, brought back) | `/harvest-prompt`, then `/import-summary <file>` |
 | Update the CV after editing summaries or facts | `/compose`, then `/variants` |
 | Add experience that has no repo (interviews, audits …) | `/add-experience` |
 | Change phone, country, availability | `/profile` |
