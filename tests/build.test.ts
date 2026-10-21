@@ -125,3 +125,67 @@ test("build --market builds one market; a tailored CV gets only the default mark
   assert.match(t.out, /markets: worldwide/);
   assert.ok(!existsSync(join(dir, "cv/tailored/acme/markets")), "no Ukraine version for a tailored CV unless asked");
 });
+
+test("round 1 audit: per-entry pending list, --all with --entries-reviewed refused, jd-tags makes a tailored CV stale", () => {
+  const dir = tempRepo();
+  const V = "cv/variants/fullstack-react-node/cv.md";
+  assert.equal(run("build.ts", dir, [V, "--no-pdf"]).code, 0);
+  // Velas changes: the variant lists it; rewriting another entry (Thermo Fisher) keeps Velas listed.
+  edit(dir, "summaries/velas-wallet.md", "Developed the Velas blockchain wallet", "Developed the Velas blockchain wallet app");
+  assert.match(run("status.ts", dir).out, /entries to rewrite in variants: velas-wallet/);
+  edit(dir, V, "* Architected an **IoT healthcare** app", "* Architected an **IoT healthcare** application");
+  run("build.ts", dir, [V, "--no-pdf"]);
+  assert.match(run("status.ts", dir).out, /entries to rewrite in variants: velas-wallet/);
+  // --entries-reviewed works per CV, and is refused with --all.
+  const all = run("build.ts", dir, ["--all", "--no-pdf", "--entries-reviewed"]);
+  assert.equal(all.code, 2);
+  assert.match(all.out, /applies to one CV at a time/);
+  // A tailored CV depends on its jd-tags.yaml.
+  mkdirSync(join(dir, "cv/tailored/acme"), { recursive: true });
+  writeFileSync(join(dir, "cv/tailored/acme/cv.md"), readFileSync(join(dir, "cv/variants/react/cv.md"), "utf8")); // fits the react profile's limits
+  writeFileSync(join(dir, "cv/tailored/acme/jd-tags.yaml"), "profile: react\nrequired: [react]\n");
+  assert.equal(run("build.ts", dir, ["cv/tailored/acme/cv.md", "--no-pdf"]).code, 0);
+  writeFileSync(join(dir, "cv/tailored/acme/jd-tags.yaml"), "profile: react\nrequired: [react]\nheadline: Senior React Engineer\n");
+  assert.match(run("status.ts", dir).out, /cv\/tailored\/acme\/jd-tags\.yaml changed/);
+});
+
+test("build --no-pdf removes an outdated PDF so status and log-application never use it", () => {
+  const dir = tempRepo();
+  writeFileSync(join(dir, "cv/Kirill_Kohan_CV.pdf"), "%PDF-1.4 old");
+  const r = run("build.ts", dir, ["--no-pdf"]);
+  assert.equal(r.code, 0, r.out);
+  assert.match(r.out, /removed the outdated PDF/);
+  assert.ok(!existsSync(join(dir, "cv/Kirill_Kohan_CV.pdf")));
+});
+
+test("round 2 audit: clear one-line errors, build:all continues past a failing CV, profiles required", async () => {
+  const dir = tempRepo();
+  const r = run("render.ts", dir, ["--template", "nope"]);
+  assert.notEqual(r.code, 0);
+  assert.match(r.out, /render: template "nope" not found/);
+  assert.doesNotMatch(r.out, /at .*\.ts:\d+/); // no stack trace
+  const t = run("trace.ts", dir, ["cv/nope.md"]);
+  assert.match(t.out, /trace: file not found/);
+  // A variant without its profile: validate says so (and build:all would report that CV, not crash).
+  const { rmSync } = await import("node:fs");
+  rmSync(join(dir, "profiles/nodejs.yaml"));
+  assert.match(run("validate.ts", dir).out, /role profile "nodejs" not found/);
+  // A job ad must name its profile.
+  mkdirSync(join(dir, "cv/tailored/acme"), { recursive: true });
+  writeFileSync(join(dir, "cv/tailored/acme/jd-tags.yaml"), "required: [react]\n");
+  assert.match(run("validate.ts", dir).out, /jd-tags\.yaml: no profile/);
+});
+
+test("round 3 audit: a variant without its profile fails alone; check takes no file; invalid YAML names its file", async () => {
+  const { rmSync } = await import("node:fs");
+  const dir = tempRepo();
+  rmSync(join(dir, "profiles/nodejs.yaml"));
+  const r = run("build.ts", dir, ["--all", "--no-pdf"]);
+  assert.equal(r.code, 1);
+  assert.match(r.out, /FAILED validate: cv\/variants\/nodejs\/cv\.md: role profile "nodejs" not found/);
+  assert.match(r.out, /build: 4 of 5 CV\(s\) built; failed: cv\/variants\/nodejs\/cv\.md/);
+  assert.match(run("check.ts", dir, ["cv/nope.md"]).out, /check: checks every CV and takes no file/);
+  mkdirSync(join(dir, "cv/tailored/acme"), { recursive: true });
+  writeFileSync(join(dir, "cv/tailored/acme/jd-tags.yaml"), "profile: react\nrequired: [react\n");
+  assert.match(run("select.ts", dir, ["cv/tailored/acme", "--tags", "jd-tags.yaml"]).out, /cv\/tailored\/acme\/jd-tags\.yaml: invalid YAML/);
+});

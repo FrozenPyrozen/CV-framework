@@ -6,7 +6,7 @@ import { existsSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join, relative } from "node:path";
 import { parse as parseYaml, stringify } from "yaml";
 import { allTargets } from "./build.ts";
-import { entryHashes, hashSources, readState, sha } from "./lib/buildstate.ts";
+import { entryHashes, entryTextHashes, hashSources, readState, sha } from "./lib/buildstate.ts";
 import { profileIdForFile } from "./lib/cvmd.ts";
 import { masterCvPath } from "./lib/paths.ts";
 import { isMain, loadConfig, rootPath } from "./lib/repo.ts";
@@ -27,7 +27,7 @@ export function cvStatuses(): CvStatus[] {
     if (!rec) return { cv: rel(file), state: "never built", reasons: [] };
     const reasons: string[] = [];
     if (sha(file) !== rec.md_sha) reasons.push("the CV Markdown changed since the last build");
-    const now = hashSources(rec.template, profileIdForFile(file));
+    const now = hashSources(rec.template, profileIdForFile(file), file);
     for (const [p, h] of Object.entries(now)) {
       if (!(p in rec.sources)) reasons.push(`${p} was added`);
       else if (rec.sources[p] !== h) reasons.push(`${p} changed`);
@@ -35,9 +35,10 @@ export function cvStatuses(): CvStatus[] {
     for (const p of Object.keys(rec.sources)) if (!(p in now)) reasons.push(`${p} was removed`);
     if (rec.entries) {
       const cur = entryHashes();
-      const changed = Object.keys(cur).filter((id) => rec.entries![id] !== cur[id]);
+      const present = entryTextHashes(readFileSync(file, "utf8"));
+      const changed = Object.keys(cur).filter((id) => id in present && rec.entries![id] !== cur[id]);
       // Listed first: build keeps these hashes until an agent rewrites the CV (/variants, /compose).
-      if (changed.length) reasons.unshift(`${file === masterCvPath() ? "entries to update" : "entries to rewrite in variants"}: ${changed.join(", ")}`);
+      if (changed.length) reasons.unshift(`${file === masterCvPath() ? "entries to update" : file.includes(`/${loadConfig().output.tailored_dir.split("/").pop()}/`) ? "entries to rewrite in this tailored CV" : "entries to rewrite in variants"}: ${changed.join(", ")}`);
     }
     for (const [p, h] of Object.entries(rec.outputs)) {
       const abs = rootPath(p);
@@ -49,6 +50,13 @@ export function cvStatuses(): CvStatus[] {
 }
 
 interface Application { company: string; role?: string; pdf?: string; pdf_sha256?: string; acknowledged_sha256?: string; status?: string; date?: string }
+
+export function readApplications(): Application[] {
+  const p = rootPath(loadConfig().paths.facts, "applications.yaml");
+  if (!existsSync(p)) return [];
+  const doc = parseYaml(readFileSync(p, "utf8")) ?? [];
+  return Array.isArray(doc) ? doc : doc.applications ?? [];
+}
 
 export function applicationWarnings(ack?: string): string[] {
   const p = rootPath(loadConfig().paths.facts, "applications.yaml");
@@ -66,8 +74,16 @@ export function applicationWarnings(ack?: string): string[] {
     if (!a.pdf || !a.pdf_sha256 || ["rejected", "withdrawn"].includes(a.status ?? "")) continue;
     const abs = rootPath(a.pdf);
     const current = existsSync(abs) ? sha(abs) : undefined;
-    if (!current || current === a.pdf_sha256) continue;
-    if (ack && a.company.toLowerCase() === ack.toLowerCase()) { a.acknowledged_sha256 = current; changed = true; continue; }
+    if (!current) {
+      // The sent PDF is gone (rebuilt or deleted). Fine when an exact copy was kept (sent_copy) or --ack was given.
+      const keptCopy = (a as any).sent_copy && existsSync(rootPath((a as any).sent_copy));
+      if (keptCopy || a.acknowledged_sha256 === "missing") continue;
+      if (ack && (a.company ?? "").toLowerCase() === ack.toLowerCase()) { a.acknowledged_sha256 = "missing"; changed = true; console.log(`status: acknowledged that the PDF sent to ${a.company} is gone`); continue; }
+      out.push(`${a.company ?? "?"}: the PDF you sent (${a.pdf}) is missing and no copy was kept (log-application --keep-copy keeps one); acknowledge with npm run status -- --ack "${a.company}"`);
+      continue;
+    }
+    if (current === a.pdf_sha256) continue;
+    if (ack && (a.company ?? "").toLowerCase() === ack.toLowerCase()) { a.acknowledged_sha256 = current; changed = true; console.log(`status: acknowledged the changed PDF for ${a.company}`); continue; }
     if (a.acknowledged_sha256 === current) continue;
     out.push(`${a.company}${a.role ? ` (${a.role})` : ""} received an older version of ${a.pdf} on ${a.date ?? "?"}; acknowledge with npm run status -- --ack "${a.company}"`);
   }
@@ -79,15 +95,21 @@ if (isMain(import.meta.url)) {
   const { args } = parseArgs(process.argv.slice(2));
   const list = cvStatuses();
   for (const s of list) {
-    console.log(`${s.state === "up to date" ? "ok   " : s.state === "stale" ? "STALE" : "NEW  "}  ${s.cv}${s.state === "never built" ? " (never built)" : ""}`);
+    const noPdf = s.state === "up to date" && !Object.keys(readState()[s.cv]?.outputs ?? {}).some((o) => o.endsWith(".pdf"));
+    console.log(`${s.state === "up to date" ? "ok   " : s.state === "stale" ? "STALE" : "NEW  "}  ${s.cv}${s.state === "never built" ? " (never built)" : ""}${noPdf ? " (built without a PDF: --no-pdf)" : ""}`);
     for (const r of s.reasons.slice(0, 8)) console.log(`         ${r}`);
     if (s.reasons.length > 8) console.log(`         … ${s.reasons.length - 8} more`);
   }
   const warnings = applicationWarnings(args.ack as string | undefined);
+  if (args.ack && !readApplications().some((x) => (x.company ?? "").toLowerCase() === String(args.ack).toLowerCase())) console.log(`status: no application to "${args.ack}" in facts/applications.yaml; nothing acknowledged`);
   for (const w of warnings) console.log(`SENT   ${w}`);
   const todo = list.filter((s) => s.state !== "up to date");
   const rewrite = todo.some((s) => s.reasons.some((r) => r.startsWith("entries to rewrite") || r.startsWith("entries to update")));
+  const tailored = todo.filter((s) => s.cv.startsWith(`${loadConfig().output.tailored_dir}/`)).map((s) => s.cv);
   if (rewrite) console.log(`\nstatus: sources changed: run /compose for the master CV and /variants for role variants first (they rewrite the listed entries), then npm run build:all`);
-  else if (todo.length) console.log(`\nstatus: ${todo.length} CV(s) to rebuild: run npm run build:all (or npm run build -- <file>)`);
+  else if (todo.length > tailored.length) console.log(`\nstatus: ${todo.length - tailored.length} CV(s) to rebuild: run npm run build:all (or npm run build -- <file>)`);
+  else if (todo.length) console.log(`\nstatus: ${todo.length} job-specific CV(s) to rebuild:`);
   else console.log("\nstatus: everything is up to date");
+  // build:all skips job-specific CVs: name them.
+  for (const t of tailored) console.log(`        job-specific CV: /tailor to rewrite it if entries are listed, then npm run build -- ${t}`);
 }

@@ -8,6 +8,7 @@ import { isMain, loadConfig, rootPath } from "./lib/repo.ts";
 import { masterCvPath } from "./lib/paths.ts";
 
 if (isMain(import.meta.url)) {
+  if (process.argv.slice(2).some((a) => !a.startsWith("-"))) { console.error("check: checks every CV and takes no file; for one CV use npm run lint -- <file> and npm run trace -- <file>"); process.exit(2); }
   const targets = defaultLintTargets();
   const findings: Finding[] = [];
   const idx = buildSourceIndex();
@@ -22,8 +23,12 @@ if (isMain(import.meta.url)) {
         continue;
       }
     }
-    findings.push(...lintCv(t.file, loadContext({ market: t.market, cvFile: t.file })));
-    if (!t.market && existsSync(t.file)) findings.push(...traceCv(t.file, idx)); // market versions share the same sources
+    try {
+      findings.push(...lintCv(t.file, loadContext({ market: t.market, cvFile: t.file })));
+      if (!t.market && existsSync(t.file)) findings.push(...traceCv(t.file, idx)); // market versions share the same sources
+    } catch (e) {
+      findings.push({ level: "error", file: relative(rootPath(), t.file), message: (e as Error).message });
+    }
   }
   findings.push(...lintSummaries(loadContext()));
   printFindings(findings);

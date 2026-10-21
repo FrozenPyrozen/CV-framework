@@ -11,7 +11,7 @@ import { printIssues, validateRepo } from "./validate.ts";
 import {
   type Context, entryDetailLine, entryTitleLine, generateBlock, loadContext, sectionIdForHeading, wrapBlock,
 } from "./lib/cvmd.ts";
-import { cliPath, isMain, rootPath } from "./lib/repo.ts";
+import { cliPath, isMain, loadConfig, rootPath } from "./lib/repo.ts";
 import { masterCvPath } from "./lib/paths.ts";
 
 export interface RefreshResult { text: string; notes: string[] }
@@ -145,9 +145,22 @@ if (isMain(import.meta.url)) {
   if (errors.length) { printIssues(errors); console.log("\nrefresh: fix the validate errors first"); process.exit(1); }
   writeDigests();
   const ctx = loadContext({ market: args.market as string | undefined, profileId: args.profile as string | undefined, cvFile: file });
+  // The committed CV is written for the default market (plan 4.6): another market's version goes elsewhere.
+  if (!ctx.market.default && !args.out && !args.check && !file.includes(`/${loadConfig().output.markets_subdir}/`)) {
+    console.error(`refresh: --market ${ctx.market.id} would write that market's header into ${file.replace(rootPath() + "/", "")}; use npm run market, or pass --out <file>`);
+    process.exit(2);
+  }
   const before = readFileSync(file, "utf8");
   const { text, notes } = refreshText(before, ctx);
   for (const n of notes) console.log(`note   ${n}`);
+  // Report every line refresh replaced, so hand edits inside generated parts are never lost silently.
+  const kept = new Map<string, number>();
+  for (const l of text.split("\n")) kept.set(l, (kept.get(l) ?? 0) + 1);
+  for (const l of before.split("\n")) {
+    const n = kept.get(l) ?? 0;
+    if (n) { kept.set(l, n - 1); continue; }
+    if (l.trim() && !/^<!--/.test(l.trim())) console.log(`note   replaced: "${l.trim().slice(0, 90)}"`);
+  }
   if (args.check) {
     if (text !== before) { console.log(`refresh --check: ${file} differs from its sources; run npm run refresh`); process.exit(1); }
     console.log(`refresh --check: ${file} is up to date`);

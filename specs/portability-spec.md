@@ -12,7 +12,7 @@ The framework must run on any laptop. This spec defines what moves, how, and wha
 | Private files, not in git | `cv/tailored/` (job ads, tailored CV Markdown, `jd-tags.yaml`, gap reports; their built files are left out), `cv/sent/`, `facts/applications.yaml` | a backup (section 2), also inside a full archive |
 | Open items and pending answers | `docs/open-items.md` | git, like every other committed file. Nothing the framework needs lives only in an AI tool's memory on one laptop |
 | Per-laptop settings | `framework.local.yaml` (repo paths, backup folder, exporter order) | not moved as settings: each laptop writes its own from `framework.local.example.yaml`; a backup carries the old file only for reference (section 4) |
-| Recreated on each laptop | `node_modules/`, built files (`.docx`, `.pdf`, `pdf-check.md`, `preview/`, `markets/`, `selection.json`, `cv/.build-state.json`), `summaries/.digests/`, `.cv-runs/` | never moved: `npm ci`, `npm run validate` and `npm run build:all` recreate them |
+| Recreated on each laptop | `node_modules/`, built files (`.docx`, `.pdf`, `pdf-check.md`, `preview/`, `markets/`, `cv/.build-state.json`), `selection.json`, `summaries/.digests/`, `.cv-runs/` | never moved: `npm ci`, `npm run validate` and `npm run build:all` recreate them (`selection.json` by `npm run select`, which `/variants` and `/tailor` run) |
 | Archives | `backups/` | never inside another archive |
 
 **Never move `node_modules/`.** It holds native binaries built for one OS and CPU (`@napi-rs/canvas`); `npm ci` installs the right ones from `package-lock.json`.

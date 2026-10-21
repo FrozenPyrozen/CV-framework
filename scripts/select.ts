@@ -81,6 +81,9 @@ export function select(input: SelectionInput): Selection {
 
 if (isMain(import.meta.url)) {
   const { args, positional } = parseArgs(process.argv.slice(2));
+  // The CV folder is created on first use, but only where CVs live (a typo elsewhere would leave a stray folder).
+  const cfgS = loadConfig();
+  if (positional[0] && ![cfgS.output.variants_dir, cfgS.output.tailored_dir].some((d) => cliPath(positional[0]).startsWith(rootPath(d) + "/"))) { console.error(`select: ${positional[0]} is not under ${cfgS.output.variants_dir}/ or ${cfgS.output.tailored_dir}/`); process.exit(2); }
   if (!positional[0] || (!args.profile && !args.tags)) {
     console.error("usage: npm run select -- <cv-dir> [--profile <id>] [--tags <jd-tags.yaml>]   (at least one)");
     process.exit(2);
@@ -90,15 +93,21 @@ if (isMain(import.meta.url)) {
   if (args.tags) {
     // jd-tags.yaml usually sits in the CV folder: look there first, then relative to the repo root.
     const inDir = join(cliPath(positional[0]), args.tags as string);
-    input.jdTags = readYaml(existsSync(inDir) ? inDir : cliPath(args.tags as string));
+    const tagsFile = existsSync(inDir) ? inDir : cliPath(args.tags as string);
+    if (!existsSync(tagsFile)) { console.error(`select: tags file not found: ${args.tags} (looked in the CV folder and the repo root)`); process.exit(2); }
+    input.jdTags = readYaml(tagsFile);
   }
   // The profile: --profile, else the one jd-tags.yaml names (as refresh, lint and build read it).
   const profileId = (args.profile as string | undefined) ?? (input.jdTags as any)?.profile;
+  if (input.jdTags && !profileId) { console.error("select: the job ad names no role profile: add profile: <id> to jd-tags.yaml or pass --profile (specs/tailoring-spec.md 2)"); process.exit(2); }
   if (profileId) {
     const pf = rootPath(cfg.paths.profiles, `${profileId}.yaml`);
     if (!existsSync(pf)) { console.error(`select: role profile "${profileId}" not found (${cfg.paths.profiles}/${profileId}.yaml)`); process.exit(2); }
     input.profile = readYaml(pf);
   }
+  const known = new Set(cfg.tags);
+  const unknown = [...(input.jdTags?.required ?? []), ...(input.jdTags?.nice_to_have ?? [])].filter((t) => !known.has(t));
+  if (unknown.length) { console.error(`select: unknown tag(s) in ${args.tags}: ${unknown.join(", ")} (see tags in framework.config.yaml; propose new ones in new_tags_proposed)`); process.exit(2); }
   const sel = select(input);
   const dir = cliPath(positional[0]);
   mkdirSync(dir, { recursive: true });

@@ -295,9 +295,11 @@ test("refresh, market and lint use the variant's role profile (headline, skills 
 test("select reads --tags from the CV folder", () => {
   const dir = tempRepo();
   mkdirSync(join(dir, "cv/tailored/acme"), { recursive: true });
-  writeFileSync(join(dir, "cv/tailored/acme/jd-tags.yaml"), "required: [react-native]\nnice_to_have: [graphql]\n");
+  writeFileSync(join(dir, "cv/tailored/acme/jd-tags.yaml"), "profile: react-native\nrequired: [react-native]\nnice_to_have: [graphql]\n");
   const r = run("select.ts", dir, ["cv/tailored/acme", "--tags", "jd-tags.yaml"]);
   assert.equal(r.code, 0, r.out);
+  // Outside cv/variants/ and cv/tailored/, select refuses (no stray folders from typos).
+  assert.match(run("select.ts", dir, ["cv/acme-typo", "--profile", "react"]).out, /is not under cv\/variants\/ or cv\/tailored\//);
 });
 
 test("refresh reports hand-written text it replaces, and refuses to run on invalid sources", () => {
@@ -422,13 +424,14 @@ test("check skips a market copy older than its CV instead of linting stale text"
   assert.match(run("check.ts", dir).out, /Kirill_Kohan_CV_UA\.md: older than Kirill_Kohan_CV\.md; skipped/);
 });
 
-test("select without a role profile keeps each entry's cv_max_bullets; jd-tags.yaml can name the profile", () => {
+test("select: a job ad must name its profile; jd-tags.yaml can name it instead of --profile", () => {
   const dir = tempRepo();
   mkdirSync(join(dir, "cv/tailored/acme"), { recursive: true });
   writeFileSync(join(dir, "cv/tailored/acme/jd-tags.yaml"), "required: [react, typescript, architecture, testing, sdd]\nnice_to_have: [oidc, observability]\n");
-  assert.equal(run("select.ts", dir, ["cv/tailored/acme", "--tags", "jd-tags.yaml"]).code, 0);
-  let sel = JSON.parse(readFileSync(join(dir, "cv/tailored/acme/selection.json"), "utf8"));
-  assert.ok(sel.entries.find((e: any) => e.id === "syspro-saas-erp").bullets.length <= 8, "SYSPRO stays within cv_max_bullets: 8");
+  const none = run("select.ts", dir, ["cv/tailored/acme", "--tags", "jd-tags.yaml"]);
+  assert.equal(none.code, 2);
+  assert.match(none.out, /the job ad names no role profile/);
+  let sel: any;
   writeFileSync(join(dir, "cv/tailored/acme/jd-tags.yaml"), "profile: react-native\nrequired: [react-native]\n");
   assert.equal(run("select.ts", dir, ["cv/tailored/acme", "--tags", "jd-tags.yaml"]).code, 0);
   sel = JSON.parse(readFileSync(join(dir, "cv/tailored/acme/selection.json"), "utf8"));
@@ -447,6 +450,8 @@ test("validate checks a job ad's jd-tags.yaml (profile, tags, overrides) and the
   assert.match(r.out, /jd-tags\.yaml: .*react-nativ/);
   assert.match(r.out, /overrides: "velas-wallet#4\.99" doesn't resolve/);
   assert.match(r.out, /pdf_exporters: "keynote" isn't registered/);
+  writeFileSync(join(dir, "cv/tailored/acme/jd-tags.yaml"), "required: [react-native]\noverrides:\n  velas-wallet#5: { text: x }\n");
+  assert.match(run("validate.ts", dir).out, /overrides: "velas-wallet#5" \(a Stack line\) needs an existing summary and only \{ pin: true \}/);
   writeFileSync(join(dir, "cv/tailored/acme/jd-tags.yaml"), "required: [react-native]\nnew_tags_proposed: [mentoring]\n");
   assert.match(run("validate.ts", dir).out, /new_tags_proposed: "mentoring" is already in the tag list/);
 });
@@ -502,4 +507,47 @@ test("hide_headline_qualifier: master: a job-ad CV without a profile or headline
   assert.equal(run("market.ts", dir, ["cv/tailored/acme/cv.md"]).code, 0);
   const ua = readFileSync(join(dir, "cv/tailored/acme/markets/ukraine/Kirill_Kohan_CV_UA.md"), "utf8");
   assert.match(ua, /^\*\*Senior Software Engineer \/ Tech Lead \(Frontend and Mobile\)\*\*$/m);
+});
+
+test("round 1 audit: unsourced summary sentence, partial reattach, refresh guards, case-insensitive names", () => {
+  const dir = refreshed();
+  const V = "cv/variants/react/cv.md";
+  // A sentence added before a sourced one has no source of its own: trace error (a variant build fails).
+  edit(dir, V, /(blockchain products\.) (<!-- src:)/, "$1 Shipped Kubernetes operators. $2");
+  assert.match(run("trace.ts", dir, [V]).out, /1 sentence\(s\) without their own source/);
+  // reattach-src restores one comment dropped from the middle of the summary.
+  const dir2 = refreshed();
+  assert.equal(run("reattach-src.ts", dir2, [CV, "--save"]).code, 0);
+  edit(dir2, CV, /(blockchain products\.) <!-- src:[^>]*-->/, "$1");
+  assert.match(run("reattach-src.ts", dir2, [CV]).out, /1 source comment\(s\) restored/);
+  // refresh refuses to write another market's header into the default-market CV, and reports replaced lines.
+  const g = run("refresh.ts", dir2, [CV, "--market", "ukraine"]);
+  assert.equal(g.code, 2);
+  assert.match(g.out, /would write that market's header/);
+  edit(dir2, CV, "**Senior Software Engineer / Tech Lead (Frontend and Mobile)**", "**Principal Engineer**");
+  assert.match(run("refresh.ts", dir2, [CV]).out, /replaced: "\*\*Principal Engineer\*\*"/);
+  // Hidden client names and company names in the summary match in any case.
+  const dir3 = refreshed();
+  edit(dir3, CV, "Built core modules", "For clinical ink, built core modules at syspro");
+  const l = run("lint.ts", dir3, [CV]).out;
+  assert.match(l, /confidential term "Clinical Ink"/);
+  assert.match(l, /summary names "SYSPRO"/);
+  // Clear messages instead of stack traces.
+  assert.match(run("select.ts", dir3, ["cv/variants/react", "--tags", "nope.yaml"]).out, /tags file not found/);
+  assert.match(run("market.ts", dir3, ["--market", "mars"]).out, /unknown market "mars"/);
+  assert.match(run("render.ts", dir3, ["--template", "nope"]).out, /template "nope" not found/);
+});
+
+test("round 2 audit: abbreviations don't split sentences; empty summary; unknown tags in select", () => {
+  const dir = refreshed();
+  edit(dir, CV, "Built core modules of a schema-driven React 19 runtime", "Built core modules (e.g. React 19 and XState) of a schema-driven React 19 runtime");
+  assert.doesNotMatch(run("trace.ts", dir, [CV]).out, /without their own source/);
+  const dir2 = refreshed();
+  edit(dir2, CV, /# \*\*SUMMARY\*\*\n\n[^\n]+\n/, "# **SUMMARY**\n\n");
+  assert.match(run("lint.ts", dir2, [CV]).out, /the SUMMARY section is empty/);
+  mkdirSync(join(dir2, "cv/tailored/acme"), { recursive: true });
+  writeFileSync(join(dir2, "cv/tailored/acme/jd-tags.yaml"), "profile: react\nrequired: [react-nativ]\n");
+  const s = run("select.ts", dir2, ["cv/tailored/acme", "--tags", "jd-tags.yaml"]);
+  assert.equal(s.code, 2);
+  assert.match(s.out, /unknown tag\(s\) in jd-tags\.yaml: react-nativ/);
 });

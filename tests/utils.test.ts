@@ -182,3 +182,14 @@ test("backup --full: one plain zip with the repo bundle, private backup, manifes
   assert.ok(!existsSync(join(cv, "framework.local.yaml")));
   assert.ok(existsSync(join(cv, "framework.local.previous.yaml")));
 });
+
+test("status: a sent PDF that is missing is reported; build --no-pdf keeps a sent PDF", () => {
+  const dir = tempRepo();
+  mkdirSync(join(dir, "cv/markets/ukraine"), { recursive: true });
+  writeFileSync(join(dir, "cv/Kirill_Kohan_CV.pdf"), "%PDF-1.4 sent");
+  assert.equal(run("log-application.ts", dir, ["--company", "Acme", "--pdf", "cv/Kirill_Kohan_CV.pdf"]).code, 0);
+  const b = run("build.ts", dir, ["--no-pdf"]);
+  assert.match(b.out, /kept cv\/Kirill_Kohan_CV\.pdf: it was sent/);
+  rmSync(join(dir, "cv/Kirill_Kohan_CV.pdf"));
+  assert.match(run("status.ts", dir).out, /SENT\s+Acme: the PDF you sent \(cv\/Kirill_Kohan_CV\.pdf\) is missing/);
+});

@@ -89,7 +89,7 @@ Each entry is a list of `*` bullets (one level, no nesting).
 ## 6. Traceability
 
 - Every bullet ends with `<!-- src: <id> -->`, where `<id>` is a summary contribution (`syspro-saas-erp#4.2`), another summary section (`syspro-saas-erp#3`), or a fact id (`syspro-team-size`). Several ids are comma-separated: `<!-- src: syspro-saas-erp#4.1, syspro-speed -->`.
-- Every **summary paragraph** sentence ends with its own `src` comment (`trace` warns when sentences share one). Sentences built from calculated values or the profile cite them with pseudo-sources: `calc:years_experience`, `calc:team_size_led`, `profile` (e.g. `<!-- src: calc:years_experience, syspro-saas-erp#1 -->`).
+- Every **summary paragraph** sentence ends with its own `src` comment. A sentence followed by another sentence's comment counts as unsourced (`trace` error: the build fails for variants and tailored CVs, a warning for the master). Sentences built from calculated values or the profile cite them with pseudo-sources: `calc:years_experience`, `calc:team_size_led`, `profile` (e.g. `<!-- src: calc:years_experience, syspro-saas-erp#1 -->`).
 - **Generated blocks** (section 8) need no `src`.
 - `npm run trace` fails on a missing or unresolvable `src`. During `npm run build` of the master CV it is only a warning, so a hand-written bullet doesn't block the PDF. Fix it with `/add-experience`.
 - A claim that has no source must not be written. If the user wants it in the CV, it becomes a confirmed fact first.
@@ -101,7 +101,7 @@ Typed numbers that change over time are calculated, never guessed:
 | Value | Rule |
 |---|---|
 | Years of experience | from the earliest `period.start` of entries with `counts_as_experience: true`, rounded down, written as `N+ years` |
-| Largest team led | highest `team_size_led` across summaries and facts, written as `up to N engineers` or `a team of N <people>` (e.g. `led a team of 8 developers`) |
+| Largest team led | highest `team_size_led` across the entries shown in the CV (summaries without `show_in_cv: false`, and `cv_entry` items) and facts, written as `up to N engineers` or `a team of N <people>` (e.g. `led a team of 8 developers`) |
 | Present | `period.end: present` renders as `display.present_label` |
 
 Agents write the calculated value as plain text in the summary paragraph. `lint` fails when `N+ years` or `up to N engineers/developers` differs from the calculated value, or when "team of N … engineers/developers" (any wording around it) is larger than it.
@@ -145,7 +145,7 @@ Not allowed (lint fails): italics, tables, nested lists, numbered lists, images,
 - Terms listed in a summary's *Confidentiality notes* (internal project names, repo names, ticket ids such as `OR-`, `ENGAGE-`, `VEL-`, internal URLs) never appear in a CV's **rendered text** (what reaches Word, PDF and the reader).
 - HTML comments (`<!-- entry: … -->`, `<!-- src: … -->`, generated markers) are never rendered, so summary ids and source ids in them may contain such terms (e.g. `orion-mobile-clinical-ink`). The CV Markdown stays in the private repo; only the built files are sent.
 - When `cv_client_label` differs from `client`, the real client name never appears in the CV.
-- `lint` enforces this with a blocklist and secret scan. The confidentiality reviewer checks the meaning ("could a reader identify the client from this description?").
+- `lint` enforces this with a blocklist and secret scan. Hidden client names match in any case; other confidential terms are case-sensitive. The confidentiality reviewer checks the meaning ("could a reader identify the client from this description?").
 
 ## 12. How agents edit a CV
 

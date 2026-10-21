@@ -13,7 +13,7 @@
   why: "Dates started at a fixed left tab stop, so their right edges didn't line up; right-aligned dates end at the margin."
   found: "2026-10-15"
   set:
-    date_tab: { align: right, pos: 10720 }   # text width is 10800 twips; heading indent is 73
+    date_tab: { align: right, pos: 10800 }   # the right margin: text width is 10800 twips and headings start at 0 (was 10720 with the old 73 indent)
 - id: keep-last-bullets-together
   why: "The last bullet of an entry could be pushed alone to the top of the next page."
   found: "2026-10-15"

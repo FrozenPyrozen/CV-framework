@@ -20,7 +20,7 @@ description: Updates the master CV from the summaries and confirmed facts, one e
    - Run `npm run reattach-src -- <cv> --save` (snapshot before editing).
    - Run `npm run refresh -- <cv>`. It regenerates the header, entry title and detail lines (with their `<!-- entry: id -->` markers), education, skills and languages. **Never edit those parts by hand.**
    - Note its messages: entries missing from the CV, entries in the wrong section.
-   - Run `npm run status`: "entries to update" lists master-CV entries whose sources changed since the last build. They stay listed until the CV is edited; if one needs no text change, build with `--entries-reviewed`.
+   - Run `npm run status`: "entries to update" lists master-CV entries whose sources changed since the last build. Each stays listed until its own text in the CV changes; if one needs no text change, build the master alone with `npm run build -- <cv> --entries-reviewed`.
 2. **Plan the changes.** For each entry that needs work (new entry, new or changed contributions or facts, `cv_emphasis`, advisor change list), decide which bullets to add, update or remove. Leave every other entry exactly as it is.
 3. **Old sections without markers** (a CV written before the framework): move their bullets into the configured section (`cv_sections` heading), delete the old heading and its stray lines, and add the entry markers. `refresh` only reports these ("add to section …"); it doesn't move text.
 4. **New entries.** Add the entry block in its section, in the right order (`cv_order`, then newest first): the marker line `<!-- entry: <id> -->` followed by a placeholder `## **x**` and `### **x**`. `refresh` (step 7) fills the real lines. Then write its bullets.

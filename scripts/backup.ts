@@ -20,7 +20,7 @@ import { tmpdir } from "node:os";
 import { basename, dirname, join, relative } from "node:path";
 import { outputBaseName } from "./lib/paths.ts";
 import JSZip from "jszip";
-import { cliPath, isMain, loadConfig, loadLocalConfig, rootPath } from "./lib/repo.ts";
+import { cliPath, errorMessage, isMain, loadConfig, loadLocalConfig, rootPath } from "./lib/repo.ts";
 import { parseArgs } from "./refresh.ts";
 
 const MAGIC = Buffer.from("CVBK1"); // file format: MAGIC | salt(16) | iv(12) | tag(16) | ciphertext
@@ -201,7 +201,7 @@ export async function restore(archive: string, opts: { password?: string; force?
     const content = await entry.async("nodebuffer");
     if (existsSync(target)) {
       if (readFileSync(target).equals(content)) { res.skipped.push(`${entry.name} (identical)`); continue; }
-      if (statSync(target).mtime > entry.date && !opts.force) { res.conflicts.push(`${entry.name} (the local file is newer; kept it)`); continue; }
+      if (statSync(target).mtime > entry.date && !opts.force) { res.conflicts.push(`${relative(rootPath(), target)} (the local file is newer; kept it)`); continue; }
     }
     mkdirSync(dirname(target), { recursive: true });
     writeFileSync(target, content);
@@ -223,7 +223,7 @@ if (isMain(import.meta.url)) {
         console.log("  plain zip (it holds every summary): keep it on your own devices. Restore steps are in RESTORE.txt inside it.");
       } else {
         const r = await backup(o);
-        console.log(`backup: ${r.files} file(s) -> ${r.file}${r.file.endsWith(".enc") ? " (encrypted)" : " (not encrypted: set the password environment variable to encrypt)"}`);
+        console.log(`backup: ${r.files} file(s) -> ${r.file}${r.file.endsWith(".enc") ? " (encrypted)" : args["no-password"] ? " (not encrypted: --no-password)" : " (not encrypted: set the password environment variable to encrypt)"}`);
       }
     } else {
       // "npm run restore -- <archive>" runs "backup.ts --restore <archive>", so the archive may arrive as the flag's value.
@@ -235,7 +235,7 @@ if (isMain(import.meta.url)) {
       console.log(`\nrestore: ${r.written.length} restored, ${r.skipped.length} skipped, ${r.conflicts.length} conflict(s)${r.conflicts.length ? " (use --force to overwrite)" : ""}`);
     }
   } catch (e) {
-    console.error(`${mode}: ${(e as Error).message}`);
+    console.error(`${mode}: ${errorMessage(e)}`);
     process.exit(1);
   }
 }

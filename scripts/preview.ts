@@ -45,6 +45,7 @@ if (isMain(import.meta.url)) {
   const { args, positional } = parseArgs(process.argv.slice(2));
   if (!positional[0]) { console.error("usage: npm run preview -- <file.pdf> [--out <dir>] [--scale <n>]"); process.exit(2); }
   const pdf = cliPath(positional[0]);
+  if (!existsSync(pdf)) { console.error(`preview: file not found: ${positional[0]}`); process.exit(2); }
   const files = await renderPreviews(pdf, args.out ? cliPath(args.out as string) : undefined, args.scale ? Number(args.scale) : undefined);
   for (const f of files) console.log(`preview: ${f.replace(rootPath() + "/", "")}`);
 }

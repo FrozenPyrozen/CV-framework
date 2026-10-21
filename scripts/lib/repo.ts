@@ -1,7 +1,7 @@
 // Shared loader for the CV framework: config, summaries, facts, profile, skills and markets.
 // Every script reads inputs through this module, so file formats are parsed in one place.
 import { existsSync, readFileSync, readdirSync } from "node:fs";
-import { basename, dirname, join, resolve } from "node:path";
+import { relative, basename, dirname, join, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { parse as parseYaml } from "yaml";
 
@@ -10,7 +10,19 @@ export const ROOT = process.env.CV_ROOT ?? resolve(dirname(fileURLToPath(import.
 
 // True when the given module is the script being run (node/tsx <script>).
 export function isMain(metaUrl: string): boolean {
-  return !!process.argv[1] && metaUrl === pathToFileURL(resolve(process.argv[1])).href;
+  const main = !!process.argv[1] && metaUrl === pathToFileURL(resolve(process.argv[1])).href;
+  // Every script run from the command line reports a failure as one clear line (CV_DEBUG=1 shows the stack).
+  if (main && !process.listenerCount("uncaughtException")) {
+    const name = basename(process.argv[1]).replace(/\.ts$/, "");
+    const fail = (e: unknown) => {
+      console.error(`${name}: ${errorMessage(e)}`);
+      if (process.env.CV_DEBUG) console.error((e as Error)?.stack);
+      process.exit(1);
+    };
+    process.on("uncaughtException", fail);
+    process.on("unhandledRejection", fail);
+  }
+  return main;
 }
 
 // Paths given on the command line are relative to the repo root (CV_ROOT in tests).
@@ -23,7 +35,18 @@ export function rootPath(...parts: string[]): string {
 }
 
 export function readYaml<T = any>(path: string): T {
-  return parseYaml(readFileSync(path, "utf8")) as T;
+  const text = readFileSync(path, "utf8");
+  try {
+    return parseYaml(text) as T;
+  } catch (e) {
+    throw new Error(`${relative(ROOT, path)}: invalid YAML (${(e as Error).message.split("\n")[0]})`);
+  }
+}
+
+// One clear line for any error (missing files read as "file not found: <path>").
+export function errorMessage(e: unknown): string {
+  const err = e as NodeJS.ErrnoException;
+  return err?.code === "ENOENT" && err.path ? `file not found: ${relative(ROOT, err.path)}` : err?.message ?? String(e);
 }
 
 // ---------- config ----------

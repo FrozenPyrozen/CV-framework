@@ -181,6 +181,12 @@ export function validateRepo(): Issue[] {
     }
   }
 
+  // --- role variants need their profile (a variant folder without one can't be built) ---
+  const vdir = rootPath(cfg.output.variants_dir);
+  if (existsSync(vdir)) for (const d of readdirSync(vdir)) {
+    if (existsSync(join(vdir, d, "cv.md")) && !existsSync(rootPath(cfg.paths.profiles, `${d}.yaml`))) err(`${cfg.output.variants_dir}/${d}/cv.md`, `role profile "${d}" not found (${cfg.paths.profiles}/${d}.yaml); restore it or remove the variant folder`);
+  }
+
   // --- role profiles (plan 4.4, specs/tailoring-spec.md) ---
   const pdir = rootPath(cfg.paths.profiles);
   if (existsSync(pdir)) for (const f of readdirSync(pdir).filter((x) => x.endsWith(".yaml"))) {
@@ -200,7 +206,7 @@ export function validateRepo(): Issue[] {
     for (const src of Object.keys(p.overrides ?? {})) {
       const [id, num] = src.split("#");
       const s = summaries.find((x) => x.id === id);
-      const ok = num === "5" ? !!s && !!p.overrides[src]?.pin && !p.overrides[src]?.text
+      const ok = num === "5" ? !!s && !!p.overrides[src]?.pin && !p.overrides[src]?.text && !p.overrides[src]?.drop
         : num ? !!s?.contributions.some((c) => c.number === num) : confirmed.facts.some((x) => x.id === id);
       if (!ok) err(file, num === "5" ? `overrides: "${src}" (a Stack line) needs an existing summary and only { pin: true }` : `overrides: "${src}" doesn't resolve to a summary contribution or confirmed fact`);
     }
@@ -227,6 +233,8 @@ export function validateRepo(): Issue[] {
     const t = readYaml(f) ?? {};
     const file = `${cfg.output.tailored_dir}/${d}/jd-tags.yaml`;
     for (const key of ["required", "nice_to_have"]) unknownTags(t[key] ?? [], file, key);
+    // A job-specific CV starts from a role profile: profiles carry the emphasis pins (e.g. SYSPRO's SDD opening).
+    if (!t.profile) err(file, "no profile: name the role profile this CV starts from (profile: <id>), so its pins (cv_emphasis openings) apply");
     for (const tg of t.new_tags_proposed ?? []) if (tagSet.has(tg)) warn(file, `new_tags_proposed: "${tg}" is already in the tag list; use it in required or nice_to_have`);
     const rp = t.profile ? (existsSync(join(pdir, `${t.profile}.yaml`)) ? readYaml(join(pdir, `${t.profile}.yaml`)) : (err(file, `profile "${t.profile}" doesn't exist in ${cfg.paths.profiles}/`), undefined)) : undefined;
     const pins: Record<string, number> = {};
@@ -234,8 +242,8 @@ export function validateRepo(): Issue[] {
       const [id, num] = src.split("#");
       if (src in (t.overrides ?? {})) {
         const s = summaries.find((x) => x.id === id);
-        const ok = num === "5" ? !!s : num ? !!s?.contributions.some((c) => c.number === num) : confirmed.facts.some((x) => x.id === id);
-        if (!ok) err(file, `overrides: "${src}" doesn't resolve`);
+        const ok = num === "5" ? !!s && !!o?.pin && !o?.text && !o?.drop : num ? !!s?.contributions.some((c) => c.number === num) : confirmed.facts.some((x) => x.id === id);
+        if (!ok) err(file, num === "5" ? `overrides: "${src}" (a Stack line) needs an existing summary and only { pin: true }` : `overrides: "${src}" doesn't resolve`);
       }
       if (o?.pin && !src.endsWith("#5")) {
         const entry = num ? id : confirmed.facts.find((x) => x.id === id)?.entry;

@@ -23,7 +23,7 @@ function git(repo: string, args: string[]): string {
 
 export function readCommits(repo: string, opts: { since?: string; until?: string } = {}): Commit[] {
   const range = [...(opts.since ? [`--since=${opts.since}`] : []), ...(opts.until ? [`--until=${opts.until}`] : [])];
-  const raw = git(repo, ["log", "--all", "--no-merges", ...range, "--date=short", `--pretty=format:${REC}%H${SEP}%an${SEP}%ae${SEP}%ad${SEP}%s${SEP}%b${SEP}`, "--numstat"]);
+  const raw = git(repo, ["log", "--all", "--no-merges", ...range, "--date=short", `--pretty=format:${REC}%H${SEP}%an${SEP}%ae${SEP}%ad${SEP}%s${SEP}%b${SEP}`, "--numstat", "--no-renames"]);
   return raw.split(REC).filter((x) => x.trim()).map((chunk) => {
     const [hash, author, email, date, subject, body, rest] = chunk.split(SEP);
     const files = (rest ?? "").split("\n").map((l) => l.match(/^(\d+|-)\t(\d+|-)\t(.+)$/)).filter(Boolean)

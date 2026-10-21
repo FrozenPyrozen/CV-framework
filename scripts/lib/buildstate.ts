@@ -5,6 +5,7 @@ import { createHash } from "node:crypto";
 import { existsSync, readFileSync, readdirSync, statSync, writeFileSync } from "node:fs";
 import { join, relative } from "node:path";
 import { loadConfig, loadConfirmed, loadSummaries, rootPath } from "./repo.ts";
+import { parseCv } from "./cvmd.ts";
 
 export interface BuildRecord {
   built_at: string;
@@ -13,6 +14,7 @@ export interface BuildRecord {
   sources: Record<string, string>; // repo-relative path -> sha256
   outputs: Record<string, string>; // repo-relative path -> sha256 (docx, pdf, per market)
   entries?: Record<string, string>; // CV entry id -> hash of everything that entry is built from (R8, tailoring-spec 2.6)
+  entry_text?: Record<string, string>; // CV entry id -> hash of that entry's bullets in this CV (to see which entries an agent rewrote)
   exporters?: Record<string, string>; // repo-relative PDF path -> exporter that built it
 }
 export type BuildState = Record<string, BuildRecord>; // key: repo-relative CV Markdown path
@@ -36,7 +38,7 @@ export function writeRecord(cvFile: string, record: BuildRecord): void {
 }
 
 // Every input a CV is built from. Applications and per-laptop files are not sources.
-export function sourceFiles(template: string, profileId?: string): string[] {
+export function sourceFiles(template: string, profileId?: string, cvFile?: string): string[] {
   const cfg = loadConfig();
   const files: string[] = [rootPath("framework.config.yaml")];
   const addDir = (dir: string, ext: string) => {
@@ -55,6 +57,12 @@ export function sourceFiles(template: string, profileId?: string): string[] {
   }
   if (profileId) {
     const p = rootPath(cfg.paths.profiles, `${profileId}.yaml`);
+    if (existsSync(p)) files.push(p);
+  }
+  // A job-specific CV also depends on its job ad's tags (profile, headline, overrides).
+  const tdir = rootPath(cfg.output.tailored_dir) + "/";
+  if (cvFile && cvFile.startsWith(tdir)) {
+    const p = join(tdir, cvFile.slice(tdir.length).split("/")[0], "jd-tags.yaml");
     if (existsSync(p)) files.push(p);
   }
   return files;
@@ -77,6 +85,16 @@ export function entryHashes(): Record<string, string> {
   return out;
 }
 
-export function hashSources(template: string, profileId?: string): Record<string, string> {
-  return Object.fromEntries(sourceFiles(template, profileId).map((f) => [rel(f), sha(f)]));
+export function hashSources(template: string, profileId?: string, cvFile?: string): Record<string, string> {
+  return Object.fromEntries(sourceFiles(template, profileId, cvFile).map((f) => [rel(f), sha(f)]));
+}
+
+// Per-entry text of a CV (bullets with their sources), so a rebuild can tell which entries were rewritten.
+export function entryTextHashes(mdText: string): Record<string, string> {
+  const out: Record<string, string> = {};
+  for (const sec of parseCv(mdText).sections) for (const e of sec.entries) {
+    if (!e.id) continue;
+    out[e.id] = createHash("sha256").update(JSON.stringify(e.bullets.map((b) => [b.text, b.src]))).digest("hex").slice(0, 16);
+  }
+  return out;
 }

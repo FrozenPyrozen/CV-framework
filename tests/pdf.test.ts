@@ -37,7 +37,7 @@ test("pdf reports clearly when no exporter is available", () => {
   writeFileSync(join(dir, "x.docx"), "");
   const r = run("export-pdf.ts", dir, ["x.docx", "--exporter", "nope"]);
   assert.equal(r.code, 1);
-  assert.match(r.out, /no PDF exporter available \(nope: unknown exporter\)/);
+  assert.match(r.out, /no PDF exporter succeeded \(nope: unknown exporter\)/);
 });
 
 test("render applies the no-ligatures letter spacing to every run", async () => {

@@ -3,6 +3,7 @@
 // summary contribution (id#4.N), a summary section (id#N) or a confirmed fact id (specs/cv-spec.md 6).
 // Generated blocks, entry lines and section intro lines are exempt.
 // --warn-only: report but exit 0 (used by `build` for the master CV, plan 6).
+import { splitSentences } from "./lib/text.ts";
 import { readFileSync } from "node:fs";
 import { relative, resolve } from "node:path";
 import { SRC_RE, parseCv, stripComments } from "./lib/cvmd.ts";
@@ -52,7 +53,7 @@ function sentencePieces(raw: string): { text: string; src: string[] }[] {
   return pieces;
 }
 
-const sentenceCount = (t: string) => t.split(/(?<=[.!?])\s+(?=[A-Z])/).filter((x) => x.trim()).length;
+const sentenceCount = (t: string) => splitSentences(t).filter((x) => x.trim()).length;
 
 export function traceCv(file: string, idx = buildSourceIndex()): Finding[] {
   const f: Finding[] = [];
@@ -78,7 +79,9 @@ export function traceCv(file: string, idx = buildSourceIndex()): Finding[] {
       if (introLines.has(p.text.trim())) continue;
       for (const piece of sentencePieces(p.text)) {
         if (!piece.src.length) { add("error", `sentence without a source: "${piece.text.slice(0, 70)}"`, p.line); continue; }
-        if (sentenceCount(piece.text) > 1) add("warning", `${sentenceCount(piece.text)} sentences share one source comment; give each its own`, p.line);
+        // A sentence followed by another sentence's comment has no source of its own: an error, so an added claim
+        // can't slip in before a sourced sentence (build fails for variants and tailored CVs; a warning for the master).
+        if (sentenceCount(piece.text) > 1) add("error", `${sentenceCount(piece.text) - 1} sentence(s) without their own source before: "${piece.text.slice(0, 50)}"`, p.line);
         checkIds(piece.src, p.line);
       }
     }

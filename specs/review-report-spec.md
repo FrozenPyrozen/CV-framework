@@ -2,7 +2,7 @@
 
 Status: v1 · Applies to: every reviewer run (`/review`), one report per rubric in `reports/<YYYY-MM-DD-HHmm>/<rubric>.md`
 
-All rubrics in `specs/rubrics/` produce reports in this format, so the advisor (`/improve`), `status` and any AI tool can read them the same way.
+All rubrics in `specs/rubrics/` produce reports in this format, so the advisor (`/improve`), reviewers in later runs and any AI tool can read them the same way.
 
 ## Format
 

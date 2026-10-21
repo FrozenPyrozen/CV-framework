@@ -45,3 +45,8 @@ export function missingWords(expected: string[], actual: string[]): string[] {
   }
   return missing;
 }
+
+// Sentence boundaries in a summary paragraph: after . ! ? followed by a capital, but not after common abbreviations
+// ("e.g.", "i.e.", "etc.", "vs.") or initials ("U.S."), so "e.g. React" stays one sentence.
+export const SENTENCE_BREAK = /(?<!\b(?:e\.g|i\.e|etc|vs|approx|incl|[A-Z]\.[A-Z])\.)(?<=[.!?])\s+(?=[A-Z])/;
+export const splitSentences = (t: string) => t.split(SENTENCE_BREAK);

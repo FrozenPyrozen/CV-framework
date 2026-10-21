@@ -74,7 +74,7 @@ test("render applies the classic fixes: right-aligned dates, headings and bullet
   run("render.ts", dir);
   const d = await openDocx(join(dir, "cv/Kirill_Kohan_CV.docx"));
   const details = d.paragraphs.find((p) => paragraphText(p).startsWith("SYSPRO | Remote"))!;
-  assert.match(pPr(details), /<w:tab w:val="right" w:leader="none" w:pos="10720"\/>/);
+  assert.match(pPr(details), /<w:tab w:val="right" w:leader="none" w:pos="10800"\/>/);
   assert.match(pPr(details), /<w:keepNext w:val="1"\/>/);
   const isBullet = (p: string) => p.includes("<w:numPr>");
   const keeps = (p: string) => /<w:keepNext w:val="1"\/>/.test(pPr(p));

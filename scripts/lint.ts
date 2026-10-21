@@ -1,4 +1,4 @@
-// npm run lint [file] [--market <id>]
+// npm run lint [file] [--market <id>] [--profile <id>]
 // Mechanical checks from specs/cv-spec.md: supported Markdown, forbidden characters, filler words, length,
 // bold balance, generated parts up to date (header, entry lines, education, skills, languages), calculated
 // values, the confidentiality blocklist and the secret scan.
@@ -15,7 +15,7 @@ export interface Finding { level: "error" | "warning"; file: string; line?: numb
 
 // ---------- confidentiality and secrets (shared with summaries) ----------
 
-interface Blocklist { terms: { term: string; allowIn: string[]; from: string }[]; prefixes: string[]; urlPatterns: RegExp[] }
+interface Blocklist { terms: { term: string; allowIn: string[]; from: string; anyCase?: boolean }[]; prefixes: string[]; urlPatterns: RegExp[] }
 
 const escapeRe = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 const globToRe = (g: string) => new RegExp(g.split("*").map(escapeRe).join(".*"), "i");
@@ -30,7 +30,7 @@ export function buildBlocklist(summaries: Summary[], ctx: Context): Blocklist {
     }
   }
   // Hidden clients: the real client name must never appear when the CV label differs.
-  for (const e of ctx.entries) if (e.client && e.label !== e.client) bl.terms.push({ term: e.client, allowIn: [], from: `${e.id} (hidden client)` });
+  for (const e of ctx.entries) if (e.client && e.label !== e.client) bl.terms.push({ term: e.client, allowIn: [], from: `${e.id} (hidden client)`, anyCase: true });
   return bl;
 }
 
@@ -115,13 +115,14 @@ export function lintCv(file: string, ctx: Context, summaries = loadSummaries(ctx
 
   // Calculated values in the summary paragraph.
   const summary = sections.find((s) => s.heading.toUpperCase() === "SUMMARY");
+  if (summary && !summary.paragraphs.some((p) => stripComments(p.text).trim())) add("error", "the SUMMARY section is empty", summary.line);
   for (const p of summary?.paragraphs ?? []) {
     const visible = stripComments(p.text);
     for (const m of visible.matchAll(/(\d+)\+ years/g)) if (Number(m[1]) !== ctx.calculated.years_experience) add("error", `"${m[0]}" but the calculated value is ${ctx.calculated.years_experience}+ years`, p.line);
     for (const m of visible.matchAll(/up to (\d+) (?:developers|engineers)/gi)) if (Number(m[1]) !== ctx.calculated.team_size_led) add("error", `"${m[0]}" but the largest team led is ${ctx.calculated.team_size_led}`, p.line);
     // No company or client names in the summary paragraph (specs/cv-spec.md 4, decision summary-no-company-names).
     for (const label of new Set(ctx.entries.filter((e) => e.label !== "Various Clients").map((e) => e.label))) {
-      if (new RegExp(`(?<![\\w-])${escapeRe(label)}(?![\\w-])`).test(visible)) add("warning", `summary names "${label}": describe the work instead (decision summary-no-company-names)`, p.line);
+      if (new RegExp(`(?<![\\w-])${escapeRe(label)}(?![\\w-])`, "i").test(visible)) add("warning", `summary names "${label}": describe the work instead (decision summary-no-company-names)`, p.line);
     }
     for (const m of visible.matchAll(/\b(currently|previously|earlier)\b/gi)) add("warning", `summary says "${m[1]}": describe general experience without timing words (decision summary-no-company-names)`, p.line);
     for (const m of visible.matchAll(/team of (?:about |up to )?(\d+) (?:[\w-]+ ){0,3}(?:developers|engineers)/gi)) if (Number(m[1]) > ctx.calculated.team_size_led) add("error", `"${m[0]}" exceeds the largest team led (${ctx.calculated.team_size_led})`, p.line);
@@ -165,7 +166,8 @@ export function lintCv(file: string, ctx: Context, summaries = loadSummaries(ctx
     const visible = stripComments(raw);
     for (const t of bl.terms) {
       if (t.allowIn.includes(currentEntry)) continue;
-      if (new RegExp(`(?<![\\w-])${escapeRe(t.term)}(?![\\w-])`).test(visible)) add("error", `confidential term "${t.term}" (from ${t.from})`, i);
+      // Hidden client names match in any case ("clinical ink"); other terms are case-sensitive to avoid false hits on common words.
+      if (new RegExp(`(?<![\\w-])${escapeRe(t.term)}(?![\\w-])`, t.anyCase ? "i" : "").test(visible)) add("error", `confidential term "${t.term}" (from ${t.from})`, i);
     }
     for (const p of bl.prefixes) if (new RegExp(`(?<![\\w-])${escapeRe(p)}\\d`).test(visible)) add("error", `ticket id with prefix "${p}"`, i);
     for (const re of bl.urlPatterns) if (re.test(visible)) add("error", `internal address matching ${re.source}`, i); // URLs, git remotes, hostnames
@@ -238,6 +240,7 @@ if (isMain(import.meta.url)) {
     ? [{ file: cliPath(positional[0]), market: (args.market as string) ?? marketFromPath(cliPath(positional[0])) }]
     : defaultLintTargets();
   const findings: Finding[] = [];
+  if (args.market && !loadMarkets(loadConfig()).some((m) => m.market.id === args.market)) { console.error(`lint: unknown market "${args.market}" (see markets/*.yaml)`); process.exit(2); }
   for (const t of targets) findings.push(...lintCv(t.file, loadContext({ market: t.market, cvFile: t.file, profileId: args.profile as string | undefined })));
   if (!positional[0]) findings.push(...lintSummaries(loadContext()));
   printFindings(findings);

@@ -6,7 +6,7 @@ import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { loadContext } from "./lib/cvmd.ts";
 import { marketCvPath, masterCvPath } from "./lib/paths.ts";
-import { cliPath, isMain, loadMarkets, rootPath } from "./lib/repo.ts";
+import { cliPath, isMain, loadConfig, loadMarkets, rootPath } from "./lib/repo.ts";
 import { parseArgs, refreshText } from "./refresh.ts";
 
 export function writeMarketVersions(cvFile: string, only?: string): string[] {
@@ -26,6 +26,7 @@ export function writeMarketVersions(cvFile: string, only?: string): string[] {
 if (isMain(import.meta.url)) {
   const { args, positional } = parseArgs(process.argv.slice(2));
   const file = positional[0] ? cliPath(positional[0]) : masterCvPath();
+  if (args.market && !loadMarkets(loadConfig()).some((m) => m.market.id === args.market)) { console.error(`market: unknown market "${args.market}" (see markets/*.yaml)`); process.exit(2); }
   const written = writeMarketVersions(file, args.market as string | undefined);
   for (const w of written) console.log(`market: written ${w.replace(rootPath() + "/", "")}`);
   if (!written.length) console.log("market: no non-default markets to write");

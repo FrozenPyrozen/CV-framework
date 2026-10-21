@@ -79,6 +79,8 @@ Slash commands run in your AI agent tool (`.claude/commands/` for Claude Code; o
 | Record a CV you sent | `/log-application` |
 | Use another Word CV's look | `/import-template <file.docx> <name>` |
 
+A script that fails prints one line with the reason; run it with `CV_DEBUG=1` in front to see the full stack trace.
+
 All scripts and their flags are listed in `AGENTS.md`. The ones you'll use most:
 
 ```bash

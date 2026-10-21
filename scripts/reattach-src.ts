@@ -4,6 +4,7 @@
 // <!-- src: … --> comment, finds the most similar one in the previous version (same entry for bullets)
 // and copies its comment. The previous version is, in order: --from, the snapshot saved with --save,
 // or the file as committed in git (HEAD). Prints what it couldn't match.
+import { splitSentences } from "./lib/text.ts";
 import { execFileSync } from "node:child_process";
 import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, relative } from "node:path";
@@ -63,10 +64,12 @@ export function reattach(newText: string, oldText: string, skip: Set<string> = n
     for (let i = 0; i < parts.length; i++) {
       const part = parts[i];
       const hasSrc = i + 1 < parts.length && SRC_RE.test(parts[i + 1]);
-      if (SRC_RE.test(part) || hasSrc || !stripComments(part).trim()) { rebuilt.push(part); continue; }
-      // Text without a following src: split into sentences and match each.
-      const sentences = part.split(/(?<=[.!?])\s+(?=[A-Z])/);
-      rebuilt.push(sentences.map((sent) => {
+      if (SRC_RE.test(part) || !stripComments(part).trim()) { rebuilt.push(part); continue; }
+      // Split into sentences and match each one that has no comment of its own. When a comment follows the part,
+      // it belongs to the last sentence; earlier sentences lost theirs (one dropped comment in the middle).
+      const sentences = splitSentences(part);
+      rebuilt.push(sentences.map((sent, si) => {
+        if (hasSrc && si === sentences.length - 1) return sent;
         if (!sent.trim()) return sent;
         let best: (typeof oldSentences)[number] | undefined, score = 0;
         for (const o of oldSentences) if (!o.used) { const sc = similarity(sent, o.text); if (sc > score) { score = sc; best = o; } }
