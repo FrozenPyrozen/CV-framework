@@ -73,7 +73,9 @@ export async function renderDocx(markdown: string, outPath: string, templateName
     // rule_full_width: the drawn line under section headings spans the whole text width (margin to margin).
     if (f.set.rule_full_width) {
       const idx = styleMap.paragraphs.section_rule?.sample;
-      const width = styleMap.page ? (styleMap.page.width_twips - styleMap.page.margins_twips.left - styleMap.page.margins_twips.right) * 635 : undefined;
+      // Effective margins: the template's, overridden by any page_margins fix.
+      const m = Object.assign({}, styleMap.page?.margins_twips, ...fixes.map((x) => x.set.page_margins ?? {}));
+      const width = styleMap.page ? (styleMap.page.width_twips - m.left - m.right) * 635 : undefined;
       const old = idx !== undefined ? doc.paragraphs[idx].match(/<wp:extent cx="(\d+)"/)?.[1] : undefined;
       if (idx !== undefined && width && old) {
         const w = Number(old);

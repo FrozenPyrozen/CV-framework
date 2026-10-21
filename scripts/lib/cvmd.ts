@@ -2,6 +2,7 @@
 // and reading a CV's structure (sections, entries, bullets, source comments).
 import { existsSync } from "node:fs";
 import { basename, dirname, join, resolve } from "node:path";
+import { masterCvPath } from "./paths.ts";
 import {
   type Config, type CvEntry, type Market, loadConfig, loadConfirmed, loadEntries, loadMarkets, loadProfile,
   loadSkills, loadSummaries, readYaml, rootPath, sortEntries,
@@ -19,6 +20,7 @@ export interface Context {
   headline?: string; // role profile override
   skillsOrder?: string[]; // role profile override
   calculated: { years_experience: number; team_size_led: number };
+  isMaster?: boolean; // the master CV or one of its market versions (decided by path when the CV file is known)
 }
 
 // The role profile a CV file belongs to: cv/variants/<id>/... (also inside its markets/ subfolder),
@@ -35,6 +37,12 @@ export function variantIdForFile(cvFile: string, cfg = loadConfig()): string | u
   const variants = rootPath(cfg.output.variants_dir) + "/";
   const abs = resolve(cvFile);
   return abs.startsWith(variants) ? abs.slice(variants.length).split("/")[0] : undefined;
+}
+
+// The master CV (cv/<Name>_CV.md) or one of its market versions (cv/markets/<id>/…); not variants or tailored CVs.
+export function isMasterFile(cvFile: string, cfg = loadConfig()): boolean {
+  const abs = resolve(cvFile);
+  return abs === masterCvPath() || dirname(dirname(abs)) === rootPath(cfg.output.master_dir, cfg.output.markets_subdir);
 }
 
 // A job-specific CV's jd-tags.yaml may name the role profile it starts from and a headline fitting the job ad
@@ -66,6 +74,7 @@ export function loadContext(opts: { market?: string; headline?: string; profileI
     ...roleProfileFields(cfg, opts.profileId ?? (opts.cvFile ? profileIdForFile(opts.cvFile, cfg) : undefined),
       opts.headline ?? (opts.cvFile ? tailoredSettings(opts.cvFile, cfg).headline : undefined)),
     calculated: calculate(entries, confirmed.facts, new Date()),
+    isMaster: opts.cvFile ? isMasterFile(opts.cvFile, cfg) : undefined,
   };
 }
 
@@ -131,7 +140,7 @@ export function headerBlock(ctx: Context): string {
   // job-ad headline), or on every CV (markets/*.yaml header.hide_headline_qualifier).
   let headline: string = ctx.headline ?? profile.headline_default;
   const hide = market.header.hide_headline_qualifier ?? "none";
-  const isMaster = !ctx.roleProfile && ctx.headline === undefined;
+  const isMaster = ctx.isMaster ?? (!ctx.roleProfile && ctx.headline === undefined);
   if (hide === "all" || (hide === "master" && isMaster)) headline = headline.replace(/\s*\([^()]*\)\s*$/, "");
   const lines = [`# **${name}**`, `**${headline}**`];
 

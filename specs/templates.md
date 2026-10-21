@@ -72,7 +72,7 @@ Supported fix types (each fix has `id`, `why`, `found`, `set`):
 | `keep_last_bullets_together: N` | an entry's last N bullets stay together, so no bullet sits alone on a new page |
 | `paragraphs: { <type>: { indent_left, first_line, before, after, line } }` | indentation and spacing per paragraph type in twips (20 = 1 pt; `line: 240` = single spacing); overrides the Word style |
 | `first_after_section_heading: { before }` | space above whatever comes first under a section line, so every section starts with the same gap |
-| `rule_full_width: true` | the drawn line under section headings (`section_rule`) spans the whole text width, starting where headings start |
+| `rule_full_width: true` | the drawn line under section headings (`section_rule`) spans the whole text width (page width minus the effective left and right margins, after any `page_margins` fix); combine with `paragraphs: { section_rule: { indent_left: 0 } }` so it starts where headings start |
 | `page_margins: { top, bottom, left, right }` | page margins in twips (any of them), overriding the template's section settings |
 | `letter_spacing: N` | character spacing of N twentieths of a point on every run; `1` is invisible and stops Pages from forming fi/fl ligatures that some PDF readers extract wrongly |
 
@@ -116,5 +116,5 @@ Pages: N · pdf-check: pass/fail · Preview: preview/page-1.png …
 - Hyperlinks are created as new link entries from the URLs in the Markdown (profile links reach it through the generated header), never by reusing the template's own link ids.
 - Bold Markdown becomes bold text in the same font, size and color as the sample.
 - Dates in entry detail lines go after the sample's tab stop.
-- `fixes.yaml`: fixes that change sample paragraphs or the list definition (bullets, tabs, spacing, keep-with-next) are applied to the samples before filling; fixes that depend on the filled document (bullet groups, the first item under a section line, letter spacing) are applied after filling.
-- The current template, `classic`, is imported from `templates/classic/source.docx` (your previous CV) with `templates/classic/import-map.yaml`. Its look was then adjusted with the user on 2026-10-15 through `fixes.yaml` (aligned left edge, tighter spacing, right-aligned dates, headings and bullet groups kept together) and approved from all-page previews.
+- `fixes.yaml`: fixes that change sample paragraphs or the list definition (bullets, tabs, spacing, keep-with-next, `rule_full_width`) are applied to the samples before filling; `page_margins` changes the section properties; fixes that depend on the filled document (bullet groups, the first item under a section line, letter spacing) are applied after filling.
+- The current template, `classic`, is imported from `templates/classic/source.docx` (your previous CV) with `templates/classic/import-map.yaml`. Its look was then adjusted with the user through `fixes.yaml` and approved from all-page previews: on 2026-10-15 (aligned left edge, tighter spacing, right-aligned dates, headings and bullet groups kept together), 2026-10-16 (section lines aligned), 2026-10-20 (tighter header and sections) and 2026-10-21 (top margin 0.25 inch; the style map still records the template's original 580 twips).

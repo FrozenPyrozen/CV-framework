@@ -41,6 +41,9 @@ test("render produces the approved layout: same formatting per paragraph type, r
   assert.equal(texts[1], "Senior Software Engineer / Tech Lead (Frontend and Mobile)");
   assert.equal(texts[3], "+380 97 891 9783 | kiril.kohan@gmail.com | Portfolio");
   assert.ok(texts.includes("General Motors | RemoteJuly 2023 - November 2025"), "entry details with tab before dates");
+  assert.ok(texts.includes("SYSPRO | RemoteDecember 2025 - Present"), "the current job, dated, in Experience");
+  assert.match(pPr(d.paragraphs[0]), /<w:spacing [^>]*w:before="0"/, "no space above the name (tighter-header-and-sections)");
+  assert.match(pPr(d.paragraphs.find((p) => paragraphText(p) === "EXPERIENCE")!), /w:before="90"/, "4.5 pt above section headings");
   assert.ok(!texts.some((t) => /Team Leader \(Contract\)/.test(t)));
   const zip = await JSZip.loadAsync(readFileSync(out));
   const rels = await zip.file("word/_rels/document.xml.rels")!.async("string");

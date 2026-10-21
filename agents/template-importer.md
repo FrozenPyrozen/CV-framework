@@ -32,7 +32,7 @@ description: Turns a Word CV into a reusable template (templates/<name>/) by lab
    npm run preview -- $T/test.pdf
    ```
    Repeat with the Ukraine market version (`cv/markets/ukraine/…_UA.md`) if it exists, with `T=.cv-runs/template-test-<name>/ukraine`, so neither overwrites the other. Read `pdf-check.md` and look at every page in `$T/preview/` (alignment, spacing, orphaned headings, dates).
-6. **Fix the look** with `templates/<name>/fixes.yaml` (fix types in `specs/templates.md` 3): bullet indentation, keep-with-next, date tab, bullet groups, per-type spacing, letter spacing (keep `letter_spacing: 1` for Pages: it prevents fi/fl ligatures that some PDF readers misread). Rebuild until it's clean.
+6. **Fix the look** with `templates/<name>/fixes.yaml` (all fix types are in `specs/templates.md` 3, including `rule_full_width`, `page_margins` and `first_after_section_heading`), for example: bullet indentation, keep-with-next, date tab, bullet groups, per-type spacing, letter spacing (keep `letter_spacing: 1` for Pages: it prevents fi/fl ligatures that some PDF readers misread). Rebuild until it's clean.
 7. **Write `templates/<name>/import-report.md`** in the spec's format: paragraph types found, ATS warnings, test build result.
 8. **Ask for approval.**
    - Show the user every preview page (paths) and the PDF.

@@ -11,7 +11,7 @@
 | Area | What to check |
 |---|---|
 | Spelling | US spelling (`optimization`, `behavior`, `analyze`), technology names spelled correctly (`Node.js`, `TypeScript`, `GitHub`, `PostgreSQL`) |
-| Grammar | tense (past for bullets, present for the current job's summary sentence), agreement, articles |
+| Grammar | tense (past for bullets and the summary paragraph; no timing words such as "currently" or "previously", decision `summary-no-company-names`), agreement, articles |
 | Consistency | one form per term (`React Native`, not `RN`), company names as in summaries (`SYSPRO`), capitalization, date format, separators |
 | Duplicates | repeated skills, repeated bullets across entries, the same phrase used too often |
 | Style rules | no first person, no filler words (`cv-spec.md` section 4), bullet length, bold not covering whole sentences |

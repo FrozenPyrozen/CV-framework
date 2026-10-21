@@ -25,7 +25,7 @@ Sections appear in the order of `cv_sections` in `framework.config.yaml`, using 
 1. Header (generated, no heading)
 2. SUMMARY
 3. EXPERIENCE
-4. CONSULTING AND FREELANCE PROJECTS, with the section intro line from config when one is set under the heading
+4. CONSULTING AND FREELANCE PROJECTS, with the section intro line from config (when set) under the heading
 5. EDUCATION (generated)
 6. SKILLS (generated)
 7. LANGUAGES (generated)
@@ -166,6 +166,8 @@ The current decisions live in `facts/decisions.yaml`. At the time of writing:
 - The consulting section shows no dates, and the Clinical Ink and Velocity AI clients are hidden behind their labels.
 - All jobs are full-time, so no entry carries "(Contract)" except the consulting contracts (decision `all-full-time`).
 - SYSPRO work is presented as architecture-governed SDD, with AI agents implementing and reviewing code against the specifications under human review (decisions `sdd-not-vibe-coding`, `ai-agents-wording`).
+- The summary paragraph names no companies and uses past tense without timing words (`summary-no-company-names`).
+- The CV name stays "Kirill Kohan" for now (`keep-cv-name`); the 1,800+ ERP programs figure and the SYSPRO platform detail are OK to share (`keep-erp-programs-figure`); hidden clients keep their feature details, only their names are hidden (`hidden-client-details-ok`); numbers from the previous CV stay (`keep-previous-cv-metrics`).
 
 ## 14. Markets
 

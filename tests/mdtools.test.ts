@@ -25,6 +25,7 @@ test("refresh generates header, entry lines and blocks, and keeps every bullet",
   const after = readFileSync(join(dir, CV), "utf8");
   assert.match(after, /<!-- generated:header -->\n# \*\*Kirill Kohan\*\*/);
   assert.match(after, /<!-- entry: general-motors-navigation -->\n## \*\*Team Leader\*\*\n\n### \*\*General Motors \| Remote \| July 2023 - November 2025\*\*/);
+  assert.match(after, /<!-- entry: syspro-saas-erp -->\n## \*\*Senior Software Engineer\*\*\n\n### \*\*SYSPRO \| Remote \| December 2025 - Present\*\*/);
   assert.match(after, /### \*\*Clinical Trials Patient App \| Remote\*\*/); // consulting: no dates
   assert.match(after, /## \*\*Senior React Native Engineer \(Contract\)\*\*/); // real contract keeps label (worldwide)
   assert.doesNotMatch(after, /Team Leader \(Contract\)/);
@@ -452,8 +453,8 @@ test("validate checks a job ad's jd-tags.yaml (profile, tags, overrides) and the
 
 test("lint: team-size wording variants are checked; separators don't count as words", () => {
   const dir = refreshed();
-  edit(dir, CV, "Led a team of 8 engineers delivering", "Managed a team of 9 software engineers delivering");
-  assert.match(run("lint.ts", dir, [CV]).out, /team of 9 software engineers" exceeds the largest team led \(8\)/);
+  edit(dir, CV, "Led a team of 8 engineers delivering", "Managed a team of 9 senior frontend software engineers delivering");
+  assert.match(run("lint.ts", dir, [CV]).out, /team of 9 senior frontend software engineers" exceeds the largest team led \(8\)/);
 });
 
 test("lint word count ignores separators; select reports a missing profile clearly; local exporters are checked", () => {
@@ -491,4 +492,14 @@ test("lint warns when the summary paragraph names a company (decision summary-no
   const out = run("lint.ts", dir, [CV]).out;
   assert.match(out, /summary names "SYSPRO": describe the work instead/);
   assert.match(out, /summary says "currently": describe general experience without timing words/);
+});
+
+test("hide_headline_qualifier: master: a job-ad CV without a profile or headline keeps its qualifier", () => {
+  const dir = refreshed();
+  mkdirSync(join(dir, "cv/tailored/acme"), { recursive: true });
+  writeFileSync(join(dir, "cv/tailored/acme/cv.md"), readFileSync(join(dir, CV), "utf8"));
+  writeFileSync(join(dir, "cv/tailored/acme/jd-tags.yaml"), "required: [react]\n");
+  assert.equal(run("market.ts", dir, ["cv/tailored/acme/cv.md"]).code, 0);
+  const ua = readFileSync(join(dir, "cv/tailored/acme/markets/ukraine/Kirill_Kohan_CV_UA.md"), "utf8");
+  assert.match(ua, /^\*\*Senior Software Engineer \/ Tech Lead \(Frontend and Mobile\)\*\*$/m);
 });

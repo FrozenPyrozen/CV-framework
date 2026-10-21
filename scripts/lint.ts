@@ -124,7 +124,7 @@ export function lintCv(file: string, ctx: Context, summaries = loadSummaries(ctx
       if (new RegExp(`(?<![\\w-])${escapeRe(label)}(?![\\w-])`).test(visible)) add("warning", `summary names "${label}": describe the work instead (decision summary-no-company-names)`, p.line);
     }
     for (const m of visible.matchAll(/\b(currently|previously|earlier)\b/gi)) add("warning", `summary says "${m[1]}": describe general experience without timing words (decision summary-no-company-names)`, p.line);
-    for (const m of visible.matchAll(/team of (?:about |up to )?(\d+) (?:[\w-]+ )?(?:developers|engineers)/gi)) if (Number(m[1]) > ctx.calculated.team_size_led) add("error", `"${m[0]}" exceeds the largest team led (${ctx.calculated.team_size_led})`, p.line);
+    for (const m of visible.matchAll(/team of (?:about |up to )?(\d+) (?:[\w-]+ ){0,3}(?:developers|engineers)/gi)) if (Number(m[1]) > ctx.calculated.team_size_led) add("error", `"${m[0]}" exceeds the largest team led (${ctx.calculated.team_size_led})`, p.line);
   }
 
   // Section order (specs/cv-spec.md 2): enabled cv_sections in config order (or the role profile's include_sections).
