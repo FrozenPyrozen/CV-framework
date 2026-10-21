@@ -95,8 +95,8 @@ test("render: consistent left edge and spacing, lead-in lines stay with their bu
   for (const t of ["EXPERIENCE", "Senior Software Engineer", "SYSPRO", "National Aviation University"]) {
     assert.match(pPr(byText(t)), /<w:ind w:left="0"[^>]*w:firstLine="0"\/>/, `${t} starts at the margin`);
   }
-  assert.match(pPr(byText("Team Leader")), /w:before="20"/, "first item under a section line gets the small gap");
-  assert.match(pPr(byText("Technical Leader")), /w:before="80"/, "later job titles get the regular gap");
+  assert.match(pPr(byText("Senior Software Engineer")), /w:before="20"/, "first item under a section line gets the small gap");
+  assert.match(pPr(byText("Team Leader")), /w:before="80"/, "later job titles get the regular gap");
   const master = d.paragraphs.find((p) => paragraphText(p).includes("| 2020 - 2022"))!;
   assert.match(pPr(master), /<w:keepNext w:val="1"\/>/, "education line keeps with its Honors bullet");
 });

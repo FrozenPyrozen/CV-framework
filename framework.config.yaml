@@ -32,7 +32,7 @@ cv_sections:
     heading: CONSULTING AND FREELANCE PROJECTS
     enabled: true
     source: entries
-    # intro: Part-time contract and consulting work, alongside full-time roles   # TEMPORARILY off: SYSPRO (full-time) is in this section (decision syspro-in-consulting-temporary)
+    intro: Part-time contract and consulting work, alongside full-time roles
     show_dates: false
   - { id: education,  heading: EDUCATION,  enabled: true, source: profile.education }
   - { id: skills,     heading: SKILLS,     enabled: true, source: skills }

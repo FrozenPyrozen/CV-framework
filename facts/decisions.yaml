@@ -45,12 +45,6 @@ decisions:
     why: User confirmed on 2026-10-20 that the agents implemented and reviewed code, governed by the SDD process; replaces ai-review-agents-wording (2026-10-16), whose wording said less than the sources.
     matches: [AI coding agents, AI-written code, AI review agents, only as reviewers, AI agent wording]
 
-  - id: syspro-in-consulting-temporary
-    decision: For now, SYSPRO (full-time) is shown first in CONSULTING AND FREELANCE PROJECTS without dates, with its title unchanged and no "(Contract)" label. The section's intro line ("Part-time contract and consulting work, alongside full-time roles") is switched off meanwhile, because it would call a full-time job part-time.
-    date: "2026-10-20"
-    why: User's choice; temporary. To revert, set cv_section back to experience in summaries/syspro-saas-erp.md, restore the intro line in framework.config.yaml, run /compose and /variants (or move the entry block back), then npm run build:all.
-    matches: [SYSPRO in consulting, current job missing from Experience, no current role, gap after November 2025, SYSPRO without dates, missing intro line]
-
   - id: summary-no-company-names
     decision: The summary paragraph names no companies or clients (SYSPRO, General Motors, Itjet, Velas …) and says nothing about when things happened; it describes general experience in past tense ("built…", "led a team of 8…", "for an automotive manufacturer") with no "currently", "previously" or "earlier". Names and dates stay in the entries.
     date: "2026-10-20"

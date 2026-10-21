@@ -217,10 +217,10 @@ test("select scores by tags, applies limits, pins and drops", () => {
 test("lint reports entries out of order and a missing Stack line on the current job", () => {
   const dir = refreshed();
   assert.doesNotMatch(run("lint.ts", dir, [CV]).out, /out of order|no "Stack:" bullet/);
-  edit(dir, "summaries/designai-jira-plugin.md", "cv_order: 3", "cv_order: 0");
+  edit(dir, "summaries/designai-jira-plugin.md", "cv_order: 2", "cv_order: 0");
   edit(dir, CV, /\n\* Stack: \*\*React 19[^\n]*\n/, "\n");
   const r = run("lint.ts", dir, [CV]);
-  assert.match(r.out, /entries in CONSULTING AND FREELANCE PROJECTS are out of order: expected designai-jira-plugin, syspro-saas-erp, orion-mobile-clinical-ink, various-clients/);
+  assert.match(r.out, /entries in CONSULTING AND FREELANCE PROJECTS are out of order: expected designai-jira-plugin, orion-mobile-clinical-ink, various-clients/);
   assert.match(r.out, /current job syspro-saas-erp has no "Stack:" bullet/);
 });
 
