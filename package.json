@@ -33,6 +33,7 @@
     "git-digest": "tsx scripts/git-digest.ts",
     "harvest-prompt": "tsx scripts/harvest-prompt.ts",
     "import-summary": "tsx scripts/import-summary.ts",
+    "import-doc": "tsx scripts/import-doc.ts",
     "index": "tsx scripts/index.ts",
     "log-application": "tsx scripts/log-application.ts"
   },

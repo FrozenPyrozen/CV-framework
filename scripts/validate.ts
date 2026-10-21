@@ -12,6 +12,8 @@ import {
   isMain, SUMMARY_SECTIONS, loadConfig, loadConfirmed, loadDecisions, loadLocalConfig, loadMarkets, loadProfile, loadSkills, loadSummaries, readYaml, rootPath,
 } from "./lib/repo.ts";
 import { writeDigests } from "./digest.ts";
+import { DOC_REF, sourcesDir } from "./lib/sources.ts";
+import { createHash } from "node:crypto";
 
 export interface Issue { level: "error" | "warning"; file: string; message: string }
 
@@ -260,6 +262,32 @@ export function validateRepo(): Issue[] {
       if (limit && n > limit) err(file, `${n} pinned bullets for ${id}, but its limit is ${limit}`);
     }
   }
+
+  // --- imported documents (specs/sources-spec.md) and doc:<id> references ---
+  const srcDir = sourcesDir(cfg);
+  const srcIndex = `${srcDir}/index.yaml`;
+  let docIds = new Set<string>();
+  if (existsSync(rootPath(srcIndex))) {
+    const raw = readYaml(rootPath(srcIndex)) ?? {};
+    check("sources.schema.json", raw, srcIndex);
+    const seenDocs = new Set<string>();
+    for (const d of raw.documents ?? []) {
+      if (seenDocs.has(d.id)) err(srcIndex, `document id "${d.id}" appears more than once`);
+      seenDocs.add(d.id);
+      if (!d.file || !existsSync(rootPath(d.file))) err(srcIndex, `${d.id}: file ${d.file} is missing`);
+      else if (createHash("sha256").update(readFileSync(rootPath(d.file))).digest("hex") !== d.sha256) err(srcIndex, `${d.id}: ${d.file} changed since it was imported (sha256); import a new version under a new id`);
+      if (!d.text || !existsSync(rootPath(d.text))) err(srcIndex, `${d.id}: text ${d.text} is missing (npm run import-doc writes it)`);
+    }
+    docIds = seenDocs;
+  }
+  const docRefs = (text: string, file: string) => {
+    for (const m of text.matchAll(DOC_REF)) if (!docIds.has(m[1])) err(file, `doc:${m[1]} is not a document in ${srcIndex}`);
+  };
+  for (const s of summaries) {
+    docRefs(s.sections.map((x) => x.text).join("\n"), s.file);
+    for (const c of s.contributions) if (c.source && !/^doc:[a-z0-9-]+$/.test(c.source)) err(s.file, `contribution ${c.number}: Source must be "doc:<id>" (specs/sources-spec.md 4), got "${c.source}"`);
+  }
+  docRefs(readFileSync(rootPath(cfg.paths.facts, "confirmed.yaml"), "utf8"), "facts/confirmed.yaml");
 
   return issues;
 }

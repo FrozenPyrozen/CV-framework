@@ -96,7 +96,7 @@ The body may start with one optional `# Title` line, then always has these nine 
 | 4. My contributions | Numbered items (section 4 below). The CV cites these. |
 | 5. Technologies and frameworks | Grouped by category (language, UI, state, data, testing, CI/CD, cloud, AI and agents …), versions where known, each marked **hands-on** or **used by the project**. |
 | 6. Skills demonstrated | Each skill with the contribution numbers that prove it, e.g. `OpenID Connect (OIDC): 4.2, 4.3`. |
-| 7. Metrics and outcomes | Every number with its source (`git`, `user`, `dashboard`, `cv`; `cv` may be written "previous CV", optionally "confirmed by user <date>") and confidence (`exact`, `approximate`). |
+| 7. Metrics and outcomes | Every number with its source (`git`, `user`, `dashboard`, `cv`, `doc:<id>`; `cv` may be written "previous CV"; either may add "confirmed by user <date>") and confidence (`exact`, `approximate`). A `doc:<id>` number reaches the CV only once confirmed (`sources-spec.md` 4). |
 | 8. Portfolio material | Links, screenshots, demo notes, and what is safe to show publicly. May be `TODO (needs user input)`. |
 | 9. Confidentiality notes | Internal names, repo names, ticket prefixes and internal URL patterns (e.g. the repo host, `*dev.azure.com*<org>*`) that must never appear in a CV. `lint` reads this section to build its blocklist. Exceptions use `allow_in`. The host patterns stay even though no remote URLs are stored. |
 
@@ -132,12 +132,13 @@ Tags: react, typescript, micro-frontends, oidc, accessibility, storybook, testin
 - **Body:** what you built, why, and how, in your own words. Several sentences are fine; the CV shortens them.
 - **Result:** one line with the outcome, if any is known. Numbers must also appear in section 7 with their source.
 - **Tags:** one line, only tags from the tag list in `framework.config.yaml`. New tags are proposed to the user, never added silently.
+- **Source:** optional line after `Tags:`, only for a contribution taken from an imported document: `Source: doc:<id>` (`specs/sources-spec.md`). Without it, the summary's `source` applies.
 
 ## 5. Writing rules
 
 - **Your own words only.** Never copy source code, internal document text, commit messages verbatim, internal URLs, hostnames, tokens or credentials. Describe the work.
 - **No secrets.** `lint` scans summaries for tokens, keys and internal URLs.
-- **Facts only.** Everything must be supported by the repos, by the user, or (for `source: cv`) by the old CV text. Unknowns are `TODO (needs user input)`.
+- **Facts only.** Everything must be supported by the repos, by the user, by the old CV text (for `source: cv`) or by an imported document (`doc:<id>`, lowest precedence: `specs/sources-spec.md` 3). Unknowns are `TODO (needs user input)`.
 - **US English.**
 
 ## 6. Harvesting rules

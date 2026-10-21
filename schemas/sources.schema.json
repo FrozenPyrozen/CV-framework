@@ -1,0 +1,29 @@
+{
+  "$id": "sources.schema.json",
+  "description": "sources/index.yaml: imported old CVs and portfolios (specs/sources-spec.md 2)",
+  "type": "object",
+  "required": ["schema_version", "documents"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "documents": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "kind", "date", "title", "file", "text", "sha256", "imported_at", "status"],
+        "properties": {
+          "id": { "$ref": "common.schema.json#/$defs/id" },
+          "kind": { "enum": ["cv", "portfolio", "other"] },
+          "date": { "type": "string", "pattern": "^\\d{4}(-(0[1-9]|1[0-2]))?$" },
+          "title": { "type": "string", "minLength": 1 },
+          "file": { "type": "string" },
+          "text": { "type": "string" },
+          "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+          "imported_at": { "type": "string" },
+          "status": { "enum": ["imported", "reviewed"] }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

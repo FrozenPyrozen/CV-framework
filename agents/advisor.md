@@ -2,7 +2,7 @@
 
 description: Talks with the user, one topic at a time, to turn review findings, new experience, profile changes and job changes into confirmed facts, decisions and summary updates, then hands the changes to the composer.
 
-**Follows:** `specs/cv-spec.md`, `specs/work-summary-spec.md`, the report's rubric. **Never commits.**
+**Follows:** `specs/cv-spec.md`, `specs/work-summary-spec.md`, `specs/sources-spec.md` (`/import-docs`), the report's rubric. **Never commits.**
 
 **Open items:** read `docs/open-items.md` at the start of `/improve`, `/add-experience`, `/profile` and `/job-change`, and offer the items that fit. When the user answers one, record it as below and remove it from that file; when the user defers something ("I'll add it later"), add it there with the date. Never keep such items only in an AI tool's memory.
 
@@ -36,6 +36,18 @@ After writing, run `npm run validate`, then hand the change list to `agents/comp
 2. Ask follow-up questions: which job (an existing entry, or a new `cv_entry` for work without a repo), period, scale, results and numbers (only real ones), technologies.
 3. Write one fact per CV-worthy claim (with `entry` and `tags`), or a `cv_entry` plus its facts. Propose new tags if needed.
 4. Hand over to the composer to add the bullets.
+
+## `/import-docs <file…>`
+Old CVs, portfolios and similar documents fill gaps in the summaries, with the **lowest precedence** (`specs/sources-spec.md` 3): the user, then git, then the current summaries and CV, then documents, newest first.
+1. **Import.** For each file, ask when it was written (`--date`), its kind and a short id (e.g. `cv-2021-06`, `portfolio-2022`), then run `npm run import-doc -- <file> --date <…> --kind <…> --id <…> --title "<…>"`. An unreadable file (`.pages`, `.pptx`, a scan): ask the user to export a text PDF.
+2. **Map.** Read `sources/text/<id>.md` of every document not yet `reviewed`, newest first. Match each passage to a summary or `cv_entry` by company, product, dates and technologies. Collect jobs no summary covers.
+3. **Propose,** per summary, into `.cv-runs/import-docs-<date>/proposals.md` (shown to the user), grouped as:
+   - **gaps** it fills: `TODO` sections, work no contribution covers (a new contribution, next free number, `Source: doc:<id>`), technologies, portfolio material;
+   - **numbers:** section 7 lines with source `doc:<id>`; ask whether each is confirmed (only confirmed ones may reach the CV);
+   - **conflicts** with a higher source (dates, titles, team sizes, numbers, scope): the current value stays by default;
+   - **new jobs:** a new `source: cv` summary with `show_in_cv: false` unless the user decides otherwise.
+4. **Go through it with the user,** one summary at a time (How to ask). Apply what they approve in their own words; a conflict the user resolves in the document's favor is written as a user answer (`user, <date>`), not as `doc:<id>`. Internal names found go to section 9.
+5. **Finish.** Set `status: reviewed` in `sources/index.yaml` for every document fully gone through, run `npm run validate` and `npm run lint`, show the diff, and hand the changed summaries to the composer (`/compose`, then `/variants`).
 
 ## `/profile`
 1. The user describes a change ("moved to Poland, new phone +48…").

@@ -64,6 +64,7 @@ Run `npm test` and `npm run check`, plus `npm run build:all` when an export app 
 | B13 | 22 | `/profile` | "moved to Poland, new phone +48…" | follow-up questions (work permit, B2B, time zone); the header and every variant change after `build:all`; sent CVs with the old details are listed |
 | B14 | 45 | `/job-change` (leaving) | the current job | a final harvest is offered first; `period.end` set; the summary remains the record |
 | B15 | 75 | `/harvest-prompt`, then `/import-summary <file>` | a repo on another machine; the summary written there from the prompt | the prompt holds the spec, tag list and identities but no other summaries or facts; the file fails import with code, local paths, URLs in `repos` or unknown sections; a new id lands in `summaries/`, an existing id in `.cv-runs/import/` and is merged by work-summary-spec 7 |
+| B16 | 76 | `/import-docs <file>` | an older CV with more detail and one date that disagrees with a summary | the file and its text land in `sources/`; proposals per summary list gaps, numbers and the conflict; the conflicting date stays as in the summary; approved additions carry `doc:<id>`; unconfirmed `doc:` numbers stay out of the CV; `validate` passes; the document ends `reviewed` |
 
 ## C. Permanent end-to-end scenarios
 

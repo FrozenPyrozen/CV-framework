@@ -1,5 +1,5 @@
 // Test helpers: copy the repo's inputs into a temp folder and run a script there via CV_ROOT.
-import { cpSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
+import { cpSync, existsSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { spawnSync } from "node:child_process";
@@ -8,8 +8,8 @@ export const REPO = resolve(import.meta.dirname, "..");
 
 export function tempRepo(): string {
   const dir = mkdtempSync(join(tmpdir(), "cv-test-"));
-  for (const p of ["framework.config.yaml", "facts", "summaries", "schemas", "markets", "specs", "cv", "templates", "profiles"]) {
-    cpSync(join(REPO, p), join(dir, p), { recursive: true });
+  for (const p of ["framework.config.yaml", "facts", "summaries", "schemas", "markets", "specs", "cv", "templates", "profiles", "sources"]) {
+    if (existsSync(join(REPO, p))) cpSync(join(REPO, p), join(dir, p), { recursive: true });
   }
   return dir;
 }

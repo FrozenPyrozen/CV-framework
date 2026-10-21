@@ -45,11 +45,12 @@ CV/
 ├── package.json                   # scripts: build, build:all, render, pdf, pdf-check, preview, lint, trace,
 │                                  #          check, status, validate, index, template-import, test, doctor, refresh, market,
 │                                  #          backup, restore, digest, git-digest, select, reattach-src, typecheck,
-│                                  #          log-application
+│                                  #          log-application, harvest-prompt, import-summary, import-doc
 ├── tsconfig.json                  # TypeScript settings (type check only; scripts run with tsx)
 ├── specs/
 │   ├── cv-spec.md                 # CV structure and writing rules (seeded from this chat)
 │   ├── work-summary-spec.md       # summary template + front matter schema
+│   ├── sources-spec.md            # imported old CVs and portfolios: layout, precedence, what they may add (9d)
 │   ├── tailoring-spec.md          # how variants and tailored CVs may differ from the master
 │   ├── templates.md               # template import rules and style-map format
 │   ├── review-report-spec.md      # shared format for every reviewer report
@@ -76,6 +77,7 @@ CV/
 │   ├── skills.yaml                # the SKILLS section's only source (4.2b)
 │   ├── decisions.yaml             # choices you made about the CV (e.g. "no LinkedIn"), so reviewers stop re-raising them
 │   └── applications.yaml          # optional log: which CV/PDF went to which company and when (4.5)
+├── sources/                       # imported old CVs and portfolios: index.yaml, files/ (originals), text/ (extracted) (9d)
 ├── summaries/                     # one file per job/project, all following work-summary-spec
 │   └── .digests/                  # generated short digests (contributions + tags) read by composer/tailor (R10; git-ignored,
 │                                  # recreated by `npm run digest`)
@@ -114,6 +116,7 @@ CV/
 │   ├── git-digest.ts              # condenses a repo's history into a compact digest for the harvester (R9, R11)
 │   ├── harvest-prompt.ts          # builds the portable harvest prompt for a machine without this framework (9c)
 │   ├── import-summary.ts          # checks a summary written elsewhere and places it (9c)
+│   ├── import-doc.ts              # imports an old CV or portfolio into sources/ and extracts its text (9d)
 │   ├── digest.ts                  # writes summaries/.digests/ from summaries + facts (R10)
 │   ├── select.ts                  # deterministic bullet selection/ordering by profile or job-ad tags (R8)
 │   ├── reattach-src.ts            # re-attaches source comments after an agent edit (R7)
@@ -560,6 +563,7 @@ What the main rubrics must produce (taken from the reviews done in this chat):
 | `git-digest <repo-name> [--path <dir>] [--since] [--until] [--identity <name>] [--run <id>]` | read-only digest of a repo's history for the harvester (R9, R11), written to `.cv-runs/<run-id>/git-digest.md`: every commit author with matches to your identities marked, your commits by area (folder or package: counts, dates, lines, key commit messages), commits by others that credit you (`Co-authored-by`), and "possibly yours" commits and merges mentioning your names. Repo path from `--path` or `framework.local.yaml`; identities from `profile.yaml`, the summaries listing the repo, and `--identity`.  Renames count as deleted plus added lines (`--no-renames`), so moved files don't hide inside a rename. |
 | `harvest-prompt [--merge <id>] [--out <file>]` | writes `.cv-runs/harvest-prompt-<date>.md` (or `--out`): one self-contained prompt with the work-summary-spec rules and format, the tag list, your git identities, plain `git` commands for the history, and with `--merge` the existing summary to extend (9c) |
 | `import-summary <file> [--apply]` | checks a summary written elsewhere in a temporary copy of the repo (schema, sections, numbering, tags, repo names only, secret scan) without touching `summaries/`; `--apply` writes a new summary to `summaries/<id>.md`, or for an existing id to `.cv-runs/import/<id>.md` for the harvester to merge (9c) |
+| `import-doc <file> --date <YYYY-MM> [--kind --id --title]` | copies an old CV, portfolio or other document (`.docx`, `.pdf`, `.md`, `.txt`) to `sources/files/`, extracts its text to `sources/text/<id>.md` and lists it in `sources/index.yaml` (newest first); refuses a file already imported and a file with no extractable text; changes no summary (9d) |
 | `select <cv-dir> [--profile <id>] [--tags <file>]` (at least one) | deterministic bullet selection and ordering by tags, limits and overrides (scoring in `specs/tailoring-spec.md` 2). `--tags` is looked up in `<cv-dir>` first. Writes `selection.json` into `<cv-dir>`, which the tailor agent then words (R8).  Rejects tags that aren't in the config list, a job ad without a profile, and a folder outside `cv/variants/` or `cv/tailored/`. |
 | `reattach-src <file> [--save \| --from <old-file>]` | `--save` before editing stores a snapshot in `.cv-runs/snapshots/`. After editing, restores dropped source comments by matching each bullet (same entry) or summary sentence to the previous version: `--from`, else the snapshot (kept until the next `--save`), else git HEAD; fails with a clear message when none exists. Lists what it couldn't match (R7), skipping generated section intro lines. |
 | `doctor [--no-export]` | checks the environment and says how to fix each problem: Node version (`engines` in `package.json`), installed dependencies, the preview renderer, AI agent tools on the PATH, `framework.local.yaml`, repo paths (a repo with no local path is *info*: after a job ends that's normal; a path that doesn't exist is a warning), the backup folder, and the PDF exporters (unavailable fallbacks are only *info*). Unless `--no-export`, it renders and exports a tiny test document with the active exporter: this triggers the one-time macOS permission prompt while you're at the keyboard (R12) and checks that the template's fonts are embedded (R3). |
@@ -643,6 +647,7 @@ Dependencies: TypeScript (`typescript`, `@types/node`) run with `tsx`, `ajv` for
 | `/add-repo <repo-path \| repo-name>` | **The whole new-repo flow in one command:** `/harvest` (all 7 steps above), **pause for your approval of the summary**, then `/compose`, **pause for your approval of the CV diff**, then `/variants` (which ends with `build:all`) and `/review`. It ends with the `/status` summary and the review verdicts. Each stage can be resumed if you stop in the middle: progress is saved in a git-ignored `.cv-runs/<run-id>/state.json` (stage, repo, summary id, pending approvals), and `/add-repo --resume` continues the latest run. |
 | `/harvest-prompt [--merge <id>]` | For a repo that can't come to this laptop (9c): `npm run harvest-prompt` writes a self-contained prompt; you run it with any AI tool in that repo on the other machine, review the summary it writes, and bring the file back. |
 | `/import-summary <file>` | `npm run import-summary` checks the file with the same rules as `validate` and the secret scan; then the harvester asks about unknown tags and job details, adds a new summary or merges it into the existing one (work-summary-spec 7), and continues with `/compose` and `/variants`. |
+| `/import-docs <file…>` | Old CVs and portfolios as sources (9d): `import-doc` keeps each file and its text; the advisor proposes, per summary, the gaps it fills, its numbers (used in the CV only once confirmed) and its conflicts (the current value stays), goes through them with you, then hands over to the composer. |
 | `/compose` | Composer updates the master CV, then `npm run check` |
 | `/tailor --profile <id>` | Tailor builds `cv/variants/<id>/cv.md` from the profile, then `npm run build` on it |
 | `/tailor --jd <file \| pasted text> [--profile <id>] [--market <id>]` | Tailor builds `cv/tailored/<company-role>/` for one job, always starting from a role profile (`--profile`, or the closest one the tailor proposes and you confirm; recorded as `profile:` in `jd-tags.yaml`), then `npm run build`. Pasted job ad text is saved as `job-description.md` in that folder. |
@@ -801,6 +806,15 @@ Some repos can't leave the machine they live on (a work laptop), and this framew
 3. You review the file and move it by a channel your employer allows (the prompt reminds you: own words, no code, secrets or internal URLs; section 9 can stay `TODO` if internal names may not leave).
 4. Here: `/import-summary <file>` checks it with the same rules as `validate` plus the secret scan, then adds or merges it, and the usual `/compose`, `/variants`, `build:all` and `/review` follow.
 
+## 9d. Old CVs and portfolios as sources
+
+Older CVs and portfolios often hold more detail about past jobs than the summaries. They are imported into the repo and used to fill gaps (rules in `specs/sources-spec.md`):
+
+1. `/import-docs <file…>`: `npm run import-doc` copies each file to `sources/files/`, extracts its text to `sources/text/<id>.md` and lists it in `sources/index.yaml` with the date it was written.
+2. **Precedence:** your answers and confirmed facts, then git, then the current summaries and CV (the originals), then imported documents, newest first. A document only fills gaps; it never overrides anything above it.
+3. The advisor proposes, per summary: filled `TODO` sections, new contributions (`Source: doc:<id>`), technologies, portfolio material, numbers (section 7 `doc:<id>`; in the CV only once you confirm them) and conflicts (listed; the current value stays unless you say otherwise, and then it's recorded as your answer). Jobs no summary covers become `source: cv` summaries hidden from the CV until you decide.
+4. `validate` checks the index, that each original is unchanged (sha256), and that every `doc:<id>` names an imported document. Then `/compose`, `/variants`, `build:all`.
+
 ## 9b. Known risks and mitigations
 
 Problems expected when the flows actually run, found by simulating every flow against what happened in the 2026-10-15 chat. Each mitigation is part of the build step shown.
@@ -863,7 +877,7 @@ Problems expected when the flows actually run, found by simulating every flow ag
 
 ## 12. Coverage of the 2026-10-15 chat
 
-Every step done by hand in the chat, and the capability that repeats it. Rows 37 onward also log the build steps of section 8 (step 5: rows 37–42, step 6: 43–44, step 7: 46–47, step 8: 48–49, step 9: 50–52, step 10: 54, step 11: 55, step 12: 56–57, step 14: 61), the audits (58, 62, 71–74) and the changes you asked for (59–60, 63–70, 75).
+Every step done by hand in the chat, and the capability that repeats it. Rows 37 onward also log the build steps of section 8 (step 5: rows 37–42, step 6: 43–44, step 7: 46–47, step 8: 48–49, step 9: 50–52, step 10: 54, step 11: 55, step 12: 56–57, step 14: 61), the audits (58, 62, 71–74) and the changes you asked for (59–60, 63–70, 75–76).
 
 | # | What we did in the chat | Framework capability |
 |---|---|---|
@@ -942,3 +956,4 @@ Every step done by hand in the chat, and the capability that repeats it. Rows 37
 | 73 | Validation, round 2 of 3 (review of round-1 fixes, behavior on a scratch copy) | Every script reports failures as one clear line (`CV_DEBUG=1` shows the stack); `build:all` and `check` continue past one failing CV; `validate` flags a variant without its profile and a job ad without `profile:` (profiles carry the emphasis pins); `build --no-pdf` keeps a PDF that was sent, and `status` warns when a sent PDF is missing; entries absent from a CV never stay pending; a waited-out export lock isn't retried on every exporter; abbreviations ("e.g.", "U.S.") don't split sentences; `status` names job-specific CVs to rebuild, notes CVs built without a PDF and confirms `--ack`; `select` rejects unknown tags; an empty SUMMARY fails lint; `preview` and `pdf` check their input file |
 | 74 | Validation, round 3 of 3 (consistency pass, behavior retest) | A job ad always names its profile (the tailor proposes the closest one when `--profile` is missing); a missing sent PDF is fine when a copy was kept and can be acknowledged; plan rows for build, refresh, lint, status, validate, select and R6 brought in line; `CV_DEBUG=1` documented ; `build` fails only the CV whose own files have validate errors; `check` refuses a file argument; `select` refuses a job ad without a profile and folders outside `cv/variants/` and `cv/tailored/`; YAML and missing-file errors name the file |
 | 75 | Asked how to add a project whose repo can't come to this laptop | Portable harvest (section 9c, `specs/work-summary-spec.md` 9): `harvest-prompt` generates a self-contained prompt from the spec, tags and identities; the summary is written on the other machine (`harvest_mode: portable`) and checked here by `import-summary` with the same rules as `validate`; the harvester adds or merges it; commands `/harvest-prompt` and `/import-summary`; acceptance B15 |
+| 76 | Asked to import old CVs and portfolios and take information from them | Sources (section 9d, `specs/sources-spec.md`): originals and extracted text in `sources/`, `import-doc`, `/import-docs` in the advisor; precedence user > git > current summaries and CV > documents (newest first); documents fill gaps only, numbers need confirmation, conflicts keep the current value; contribution `Source: doc:<id>` lines; `validate` checks the index, file hashes and `doc:` references; composer and fact-check rules; acceptance B16 |

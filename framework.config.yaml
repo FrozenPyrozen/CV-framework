@@ -13,6 +13,7 @@ paths:
   templates: templates
   reports: reports
   runs: .cv-runs
+  sources: sources                 # imported old CVs and portfolios (specs/sources-spec.md)
 
 output:
   master_dir: cv

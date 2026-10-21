@@ -26,7 +26,7 @@ description: Updates the master CV from the summaries and confirmed facts, one e
 4. **New entries.** Add the entry block in its section, in the right order (`cv_order`, then newest first): the marker line `<!-- entry: <id> -->` followed by a placeholder `## **x**` and `### **x**`. `refresh` (step 7) fills the real lines. Then write its bullets.
 5. **Write bullets, one entry at a time.**
    - **Shape:** action, then technology, then outcome; a past-tense verb first; one achievement per bullet; about 45 words at most.
-   - **Numbers:** only from the source, never rounded up.
+   - **Numbers:** only from the source, never rounded up. A number whose only source is an imported document (`doc:<id>` in section 7) is used only once it says "confirmed by user" (`specs/sources-spec.md` 4).
    - **Bold:** key technologies and terms.
    - **Acronyms:** spelled out once with the acronym (e.g. "OpenID Connect (OIDC)").
    - **Emphasis first:** the points in `cv_emphasis` go into the first bullets of their entry. For SYSPRO this means architecture-governed SDD, not AI-generated code (decision `sdd-not-vibe-coding`).

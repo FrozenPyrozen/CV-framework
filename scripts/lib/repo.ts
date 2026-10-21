@@ -100,6 +100,7 @@ export interface Contribution {
   body: string;
   result?: string;
   tags: string[];
+  source?: string; // "doc:<id>" for a contribution taken from an imported document (specs/sources-spec.md 4)
 }
 
 export interface ConfidentialityRule {
@@ -160,13 +161,15 @@ export function parseSummary(text: string, file = "<memory>"): Summary {
       const rest = raw.slice(firstLine.length);
       const tagsLine = rest.match(/^Tags:\s*(.+)$/m);
       const resultLine = rest.match(/^Result:\s*(.+)$/m);
+      const sourceLine = rest.match(/^Source:\s*(.+)$/m);
       contributions.push({
         number: m[1],
         title: m[2].replace(/\s*\(removed\)\s*/i, "").trim(),
         removed,
-        body: rest.replace(/^Tags:.*$/m, "").replace(/^Result:.*$/m, "").trim(),
+        body: rest.replace(/^Tags:.*$/m, "").replace(/^Result:.*$/m, "").replace(/^Source:.*$/m, "").trim(),
         result: resultLine?.[1].trim(),
         tags: tagsLine ? tagsLine[1].split(",").map((t) => t.trim()).filter(Boolean) : [],
+        ...(sourceLine ? { source: sourceLine[1].trim() } : {}),
       });
     }
   }
