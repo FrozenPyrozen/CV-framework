@@ -42,6 +42,8 @@ categories:
       - { name: "Android (Java, Kotlin, Gradle)", tags: [android] }
       - { name: Native modules (iOS / Android), tags: [native-modules] }
       - { name: Realm (realm-js), tags: [realm, offline-first] }
+      - { name: MMKV, tags: [offline-first] }
+      - { name: Push notifications (Firebase Cloud Messaging), tags: [react-native, background-jobs] }
       - { name: SQLCipher, tags: [android, security] }
       - { name: Keychain, tags: [security, ios] }
       - { name: Fastlane, tags: [mobile-ci] }
@@ -50,7 +52,7 @@ categories:
   - id: state-and-data
     label: State and Data
     items:
-      - { name: "Redux (Redux Thunk, Redux Saga)", tags: [redux] }
+      - { name: "Redux (Redux Toolkit, Redux Thunk, Redux Saga, Redux Persist)", tags: [redux] }
       - { name: MobX, tags: [mobx] }
       - { name: Zustand, tags: [zustand] }
       - { name: XState, tags: [state-machines] }
@@ -59,6 +61,7 @@ categories:
       - { name: RxJS, tags: [rxjs] }
       - { name: REST APIs, tags: [rest-api] }
       - { name: GraphQL, tags: [graphql] }
+      - { name: Apollo Client, tags: [graphql] }
       - { name: WebSockets, tags: [websockets] }
 
   - id: backend-and-cloud
@@ -70,7 +73,7 @@ categories:
       - { name: PM2, tags: [node] }
       - { name: Nginx, tags: [node] }
       - { name: PostgreSQL, tags: [postgres] }
-      - { name: "Amazon Web Services (AWS: EC2, S3, RDS)", tags: [aws] }
+      - { name: "Amazon Web Services (AWS: EC2, S3, RDS, Amplify, AppSync, Cognito)", tags: [aws] }
       - { name: Microsoft Azure (Azure Blob Storage), tags: [azure] }
       - { name: Stripe, tags: [payments] }
       - { name: Docker, tags: [docker] }
@@ -116,6 +119,7 @@ categories:
       - { name: OpenTelemetry, tags: [observability] }
       - { name: Kibana, tags: [observability] }
       - { name: Bugsnag, tags: [observability] }
+      - { name: Sentry, tags: [observability] }
 
   - id: ai
     label: AI

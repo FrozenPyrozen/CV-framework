@@ -75,10 +75,10 @@ Tags: react-native, expo, typescript, javascript, android, healthcare
 
 ### 4.2 Library and documents module refactor to TypeScript with tests
 
-React Native app, February to March 2025, my largest feature there. Reworked the legacy study library flow: removed the old JavaScript library screen, document section container and library utility module (about 290 lines) and replaced them with a new TypeScript patient documents screen built from small components (document item, empty state, "view all" button). Moved the library utilities to TypeScript and greatly expanded their unit tests, added a large test for the new documents screen, and fixed the related snapshot, unit test and TypeScript pipeline failures. Wired up the navigation routes, updated the video screen to use the moved utilities, removed a route and screen that no longer existed, and updated the study reducer, the televisit hook and other consumers. Also updated the Babel and Prettier configuration, and addressed pull request review comments.
+React Native app, February to March 2025, my largest feature there. Reworked the legacy study library flow: removed the old JavaScript library screen, document section container and library utility module (about 290 lines) and replaced them with a new TypeScript patient documents screen built from small components (document item, empty state, "view all" button). Moved the library utilities to TypeScript and greatly expanded their unit tests, added a large test for the new documents screen, and fixed the related snapshot, unit test and TypeScript pipeline failures. Wired up the navigation routes, updated the video screen to use the moved utilities, removed a route and screen that no longer existed, and updated the study reducer, the televisit hook and other consumers. Also updated the Babel and Prettier configuration, and addressed pull request review comments. Splitting the legacy screen into small components following React best practices was meant to speed up the app (confirmed by user 2026-10-22; not measured).
 
 Result: about 1,000 lines of new tests (about 385 lines of utility unit tests and about 650 lines of screen tests).
-Tags: react-native, typescript, legacy-migration, testing, redux, code-quality
+Tags: react-native, typescript, legacy-migration, testing, redux, code-quality, performance
 
 ### 4.3 Safe-area migration enforced by an ESLint rule
 
@@ -121,6 +121,12 @@ React Native app:
 
 Tags: android, react-native, debugging, healthcare, offline-first
 
+### 4.7 React Native and Expo upgrade (team effort)
+
+React Native app, 2025. Worked with the team on upgrading the app to React Native 0.76 and Expo SDK 52 to improve app performance (confirmed by user 2026-10-22). The upgrade commits in this repository are by colleagues (January, February and April 2025); this records my part in that team effort, not sole ownership.
+
+Tags: react-native, expo, performance, legacy-migration
+
 ## 5. Technologies and frameworks
 
 React Native app (versions from the app's package manifest):
@@ -136,16 +142,24 @@ React Native app (versions from the app's package manifest):
 | Navigation | React Navigation 6 (native stack, bottom tabs, compat) | **hands-on** (route changes) |
 | Navigation | react-native-screens, react-native-tab-view, react-native-pager-view, react-native-drawer-layout | **used by the project** |
 | State | Redux 4.2.1, Redux Toolkit 2, React Redux 7 | **hands-on** (study reducer changes) |
-| State | Redux Saga, Redux Thunk, Redux Persist (with sensitive storage and encryption transform), Redux Offline | **used by the project** |
-| API and backend | Apollo Client 3, AWS AppSync, GraphQL, axios, apisauce, cross-fetch | **used by the project** |
-| API and backend | AWS SDK v3 (S3 with presigner, Cognito Identity Provider, Chime SDK Meetings), AWS Amplify 2.3, Amazon Cognito Identity | **used by the project** |
-| Storage and security | MMKV, AsyncStorage, Realm 12, react-native-sensitive-info, react-native-crypto-js, file system, blob and zip libraries | **used by the project** |
-| Notifications and background | Firebase app and messaging, react-native-push-notification, iOS push notifications, background fetch, in-call manager (televisit) | **used by the project** |
+| State | Redux Toolkit, Redux Saga, Redux Persist (with sensitive storage and encryption transform), Redux Offline | **hands-on** (confirmed by user 2026-10-22) |
+| State | Redux Thunk | **used by the project** |
+| API and backend | Apollo Client 3, GraphQL | **hands-on** (confirmed by user 2026-10-22) |
+| API and backend | AWS AppSync | **hands-on** (confirmed by user 2026-10-22) |
+| API and backend | axios, apisauce, cross-fetch | **used by the project** |
+| API and backend | AWS Amplify 2.3 | **hands-on** (confirmed by user 2026-10-22) |
+| API and backend | Amazon Cognito (Cognito Identity Provider, amazon-cognito-identity-js), AWS SDK v3 for S3 (with presigner) and Chime SDK Meetings (televisits) | **hands-on** (confirmed by user 2026-10-22) |
+| Storage and security | Realm 12 | **hands-on** (confirmed by user 2026-10-22) |
+| Storage and security | MMKV, AsyncStorage, react-native-sensitive-info | **hands-on** (confirmed by user 2026-10-22) |
+| Storage and security | react-native-crypto-js, file system, blob and zip libraries | **used by the project** |
+| Notifications and background | Firebase Cloud Messaging, react-native-push-notification, iOS push notifications, background fetch | **hands-on** (confirmed by user 2026-10-22) |
+| Notifications and background | in-call manager (televisit) | **used by the project** |
 | UI | react-native-safe-area-context 4.12 | **hands-on** |
 | UI | React Native Elements, Reanimated 3.16, Gesture Handler, react-native-svg (with transformer), WebView, react-native-pdf, render-html, expo-image, expo-camera, expo-video, date picker, modal, vector icons | **used by the project** |
 | i18n and utilities | i18next and react-i18next, expo-localization, react-native-localize, date-fns, moment (with timezone), lodash, mathjs, json-rules-engine, uuid, use-debounce | **used by the project** |
 | Internal packages | private calculation engine and front-end utilities, from a private npm registry on AWS CodeArtifact | **used by the project** |
-| Monitoring | Sentry for React Native, Reactotron (development), Expo Atlas | **used by the project** |
+| Monitoring | Sentry for React Native (logging and error monitoring) | **hands-on** (confirmed by user 2026-10-22) |
+| Monitoring | Reactotron (development), Expo Atlas | **used by the project** |
 | Testing | Jest 29 (jest-expo, ts-jest, babel-jest), unit and snapshot tests | **hands-on** |
 | Testing | React Native Testing Library (confirmed by user 2026-10-15) | **hands-on** |
 | Testing | redux-mock-store | **used by the project** |
@@ -182,6 +196,9 @@ Native Android app (from the commit history, not from a manifest):
 - Cross-platform layout and safe-area handling (iOS and Android): 4.3
 - Navigation: 4.2
 - Redux: 4.2
+- React Native and Expo upgrades (team effort): 4.7
+- Performance-minded refactoring of legacy screens: 4.2, 4.7
+- GraphQL with Apollo Client, AWS Amplify, AppSync and Cognito, Realm, MMKV, push notifications and Sentry: section 5 (confirmed by user 2026-10-22)
 - Jackson serialization debugging: 4.4
 - PendingIntent, alarm and notification handling: 4.4, 4.6
 - Jenkins CI build fixing: 4.4
