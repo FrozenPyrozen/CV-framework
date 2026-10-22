@@ -50,6 +50,8 @@ Senior software engineer and tech lead with 7+ years of experience building Reac
 
 * Owned the **system design** of the app's modular architecture so that new feature requests from product teams could be added without reworking existing modules. <!-- src: general-motors-navigation#4.4 -->
 
+* Fixed the map architecture for running several map instances (no shared global map reference or event listener) and designed a shared search architecture with normalized marker and search-result state. <!-- src: general-motors-navigation#4.11 -->
+
 * Defined the unit-testing strategy that reached 95% coverage and introduced an **Agile** delivery process, which reduced production bugs. <!-- src: general-motors-navigation#4.5 -->
 
 * Implemented in-car navigation features with the **HERE HNav / HNod SDK**, including route-deviation handling and a redesigned search UI. <!-- src: general-motors-navigation#4.6 -->
@@ -130,7 +132,7 @@ Senior software engineer and tech lead with 7+ years of experience building Reac
 
 * Doubled database performance for Fused by migrating **PostgreSQL** from EC2 to **AWS RDS** and optimizing slow SQL queries. <!-- src: itjet-fintech#4.4 -->
 
-* Set up **PostgreSQL** schema migrations with **node-pg-migrate** for RegiStart. <!-- src: itjet-fintech#4.5 -->
+* Built the RegiStart voter-registration MVP from sketches: a **React** and **Material UI** frontend, a **Node.js** backend with **Sequelize** and **PostgreSQL** on **AWS RDS**, **node-pg-migrate** migrations, and an algorithm that distributes students among organizers. <!-- src: itjet-fintech#4.14, itjet-fintech#4.5 -->
 
 * Built the automated monthly subscription flow for Fused with **Stripe**, **Node.js REST APIs** (**Express**, **Sequelize**), **React** and **React Native**. <!-- src: itjet-fintech#4.6 -->
 

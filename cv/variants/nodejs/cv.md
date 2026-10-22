@@ -88,13 +88,13 @@ Senior software engineer and tech lead with 7+ years of experience building Type
 
 ### **Itjet | Kyiv, Ukraine (Hybrid) | August 2019 - November 2020**
 
-* Built the automated monthly subscription flow for Fused with **Node.js REST APIs** (**Express**, **Sequelize**), **Stripe**, **React** and **React Native**. <!-- src: itjet-fintech#4.6 -->
+* Built the automated monthly subscription flow for Fused with **Node.js REST APIs** (**Express**, **Sequelize**), **Stripe**, **React** and **React Native**, then moved all payment logic to the web app with card-removal endpoints. <!-- src: itjet-fintech#4.6, itjet-fintech#4.15 -->
 
 * Built the Wink social app from scratch in **React Native** (Snapchat and phone sign-in, **push notifications**, **CI/CD**, image optimization on a **Node.js** backend); it reached more than 5 million registered users. <!-- src: itjet-fintech#4.8 -->
 
 * Doubled database performance for Fused by migrating **PostgreSQL** from EC2 to **AWS RDS** and optimizing slow SQL queries. <!-- src: itjet-fintech#4.4 -->
 
-* Set up **PostgreSQL** schema migrations with **node-pg-migrate** for RegiStart. <!-- src: itjet-fintech#4.5 -->
+* Built the RegiStart voter-registration MVP from sketches: a **React** and **Material UI** frontend, a **Node.js** backend with **Sequelize** and **PostgreSQL** on **AWS RDS**, **node-pg-migrate** migrations, and an algorithm that distributes students among organizers. <!-- src: itjet-fintech#4.14, itjet-fintech#4.5 -->
 
 * Doubled delivery speed by introducing **TypeScript** and an **Atomic Design** component library with automated tests (**Puppeteer, Jest, Cucumber**) for Aspiration, and by setting up **CI/CD** (Bitbucket Pipelines, **AWS EC2 / S3**) for RegiStart. <!-- src: itjet-fintech#4.3 -->
 
