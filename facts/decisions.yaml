@@ -92,3 +92,15 @@ decisions:
     date: "2026-10-15"
     why: User confirmed the employment type ("leave it as full-time for now"); a contract label is only allowed when true. Revisit if any of these was in fact a contract.
     matches: [short tenure, job hopping, contract label]
+
+  - id: itjet-client-names
+    decision: The Itjet entry names its client projects (Aspiration, RegiStart, Fused; Wink, Golfuture and Oroscopo are in the summary) in the CV; Itjet was a services company with several clients, not one fintech product.
+    date: "2026-10-22"
+    why: User confirmed the client split and that the client names may appear in the CV (portfolio import, doc:portfolio-2025-04).
+    matches: [Aspiration, RegiStart, Fused, Wink, client names, Itjet clients]
+
+  - id: portfolio-client-names
+    decision: The public portfolio may name General Motors, Thermo Fisher Scientific and the Itjet clients (Aspiration, RegiStart, Fused, Wink, Golfuture, Oroscopo), as the CV does, even though the April 2025 portfolio marked the GM and dosimeter apps "under NDA". Clinical Ink stays hidden (cv_client_label "Clinical Trials Patient App"), including its "Clinical inc" spelling.
+    date: "2026-10-22"
+    why: User said the clients may be named in the portfolio too (portfolio import, doc:portfolio-2025-04, question 3).
+    matches: [under NDA, General Motors, Thermo Fisher Scientific, client names in portfolio]

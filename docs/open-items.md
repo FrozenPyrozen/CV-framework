@@ -15,6 +15,9 @@ Kept in the repo (not in any AI tool's memory) so it travels to every laptop (`s
 | More skills | More detail on Styled Components, Redux Thunk, Keychain, React Testing Library and others | summaries' section 5, `facts/skills.yaml` | 2026-10-16 |
 | Playwright E2E at SYSPRO | Are there real Playwright end-to-end suites at SYSPRO, beyond Playwright as the Vitest Browser Mode provider? (react gap report) | `syspro-saas-erp` 4.9 | 2026-10-16 |
 | Portfolio and older CVs | You'll add the previous portfolio and older CVs; update the portfolio and take details from them | summaries (`source: cv`), portfolio material (section 8) | 2026-10-16 |
+| OMO leadership | The CV's "Team Leader, led and mentored a team of about 3 engineers" stays for now; the April 2025 portfolio said "tech lead for a sprint of the frontend team". You'll share more details | `omo-systems-smart-home` 4.5 and section 3 | 2026-10-22 |
+| GM details | The portfolio's description is used for now (phone companion app for owners, map team of 8: 6 React Native, 1 iOS, 1 Android); you'll share more | `general-motors-navigation` | 2026-10-22 |
+| HERE truck navigation vs General Motors | The portfolio (`doc:portfolio-2025-04`) shows the route-deviation, HNav / HNod and gRPC work as a separate HERE truck-navigation project; the CV has it under General Motors. Kept as the CV says for now; you'll give more context later | `general-motors-navigation` 4.6 and section 7, or a new summary; `.cv-runs/import-docs-2026-10-22/proposals.md` question 1 | 2026-10-22 |
 
 ## Questions from the first review (`reports/2026-10-16-1201/`)
 

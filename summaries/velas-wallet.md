@@ -27,15 +27,19 @@ cv_location: Remote
 
 The Velas blockchain wallet for web, mobile and desktop, with staking and token support on testnet and mainnet. The desktop app ships for macOS, Linux and Windows, and the app is also published on F-Droid and the Snapcraft store. Later work included a new cross-platform wallet built in React Native Web.
 
-TODO (needs user input): who uses the wallet, the business problem, and team size and organization context.
+An open-source, non-custodial, multi-language crypto wallet for the Velas, Ethereum, BNB Smart Chain (BSC), Heco and Bitcoin networks, available for web, mobile and desktop (doc:portfolio-2025-04, approved by user 2026-10-22).
+
+TODO (needs user input): team size and organization context.
 
 ## 2. Main features
 
-Staking with a staking list and staking rewards, token and asset management, and wallet and account creation (from the CV). TODO (needs user input)
+Staking with a staking list and staking rewards, token and asset management, and wallet and account creation (from the CV). Staking VLX and earning rewards, swapping tokens between networks through bridges, and sending and receiving crypto by QR code (doc:portfolio-2025-04, approved by user 2026-10-22).
 
 ## 3. My role and responsibilities
 
-Technical Leader. TODO (needs user input): ownership areas, leadership and process responsibilities, and key collaborators.
+Technical Leader. Owned performance work across the wallet, CI/CD builds and signing, end-to-end and unit test setup, store publishing, and the architecture of the new wallet (doc:portfolio-2025-04, approved by user 2026-10-22).
+
+TODO (needs user input): leadership (people led) and key collaborators.
 
 ## 4. My contributions
 
@@ -49,7 +53,7 @@ Tags: blockchain, react, react-native, node, typescript, mobx
 
 Optimized the staking list by moving filtering to the server and adding a Node RPC fallback.
 
-Result: the staking list loaded 12x faster and used 5x less mobile battery.
+Result: staking page loading went from 2 minutes to 5 seconds, and the list used 5x less mobile battery.
 Tags: performance, blockchain, node
 
 ### 4.3 Web3 provider failover
@@ -58,11 +62,11 @@ Added automatic Web3 provider failover for testnet and mainnet tokens, switching
 
 Tags: blockchain
 
-### 4.4 Desktop code signing and releases
+### 4.4 Code signing and releases
 
-Set up a GitHub Actions workflow for code signing and releases on macOS, Linux and Windows.
+Set up GitHub Actions workflows to build, sign and release the wallets: the desktop app on macOS, Linux and Windows, and the mobile app (mobile confirmed by user 2026-10-22).
 
-Result: the "untrusted source" warning on install was removed.
+Result: the "untrusted source" warning on desktop install was removed.
 Tags: ci-cd, security
 
 ### 4.5 F-Droid and Snapcraft publishing
@@ -98,13 +102,29 @@ Cached and optimized wallet and account creation in the Android wallet.
 Result: the first interaction with the Android wallet became 3x faster.
 Tags: performance, android, react-native
 
+### 4.10 Fewer re-renders and lighter API responses
+
+Removed unnecessary component re-renders to make the app faster and smoother. On the backend side, sped up responses by removing unused fields and adding filters and pagination.
+
+Tags: performance, react, react-native, rest-api, node
+Source: doc:portfolio-2025-04
+
+### 4.11 Mobile end-to-end and unit test setup
+
+Added end-to-end tests for the mobile wallet with Detox and set up unit tests with Jest.
+
+Tags: testing, e2e, react-native
+Source: doc:portfolio-2025-04
+
 ## 5. Technologies and frameworks
 
-- **Language:** TypeScript (hands-on)
-- **UI and mobile:** React (hands-on), React Native (hands-on), React Native Web (hands-on)
+- **Language:** TypeScript (hands-on), JavaScript and LiveScript in the legacy wallet code (hands-on, confirmed by user 2026-10-22, from doc:portfolio-2025-04)
+- **UI and mobile:** React (hands-on), React Native (hands-on), React Native Web (hands-on), Electron for the desktop wallet, Expo (ejected) and the React Native CLI (hands-on, confirmed by user 2026-10-22, from doc:portfolio-2025-04)
 - **State:** MobX (hands-on)
 - **Blockchain:** Web3.js (hands-on), Web3 providers (hands-on), Node RPC (hands-on)
 - **Backend:** Node.js (hands-on)
+- **Testing:** Detox for mobile E2E, Jest unit tests (hands-on, confirmed by user 2026-10-22, from doc:portfolio-2025-04)
+- **Networks:** Velas, Ethereum, BNB Smart Chain, Heco and Bitcoin, with cross-network bridges (used by the project, confirmed by user 2026-10-22, from doc:portfolio-2025-04)
 - **CI/CD and distribution:** GitHub Actions (hands-on), code signing for macOS, Linux and Windows (hands-on), F-Droid (hands-on), Snapcraft (hands-on)
 
 ## 6. Skills demonstrated
@@ -121,7 +141,7 @@ Tags: performance, android, react-native
 
 ## 7. Metrics and outcomes
 
-- Staking list loaded 12x faster (4.2). Source: cv. Confidence: exact.
+- Staking page loading went from 2 minutes to 5 seconds (4.2), replacing the previous CV's "12x faster". Source: user 2026-10-22 (doc:portfolio-2025-04 is right). Confidence: exact.
 - Staking list used 5x less mobile battery (4.2). Source: cv. Confidence: exact.
 - New users tripled after F-Droid and Snapcraft publishing (4.5). Source: cv. Confidence: exact.
 - User engagement grew 4x after the staking-rewards redesign (4.6). Source: cv. Confidence: exact.

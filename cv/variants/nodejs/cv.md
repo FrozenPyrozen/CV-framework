@@ -38,7 +38,7 @@ Senior software engineer and tech lead with 7+ years of experience building Type
 
 ### **General Motors | Remote | July 2023 - November 2025**
 
-* Led a team of 8 engineers delivering an automotive **React Native** app, working with stakeholders on scope and planning. After release, user engagement rose 20% and app crashes fell 15%. <!-- src: general-motors-navigation#4.1 -->
+* Led the map team of 8 engineers (6 React Native, 1 iOS, 1 Android) for the General Motors vehicle companion app, built in **React Native**, working with stakeholders on scope and planning. After release, user engagement rose 20% and app crashes fell 15%. <!-- src: general-motors-navigation#4.1 -->
 
 * Ran **code reviews** and set coding standards for the team, mentoring engineers on architecture and testing. <!-- src: general-motors-navigation#4.2 -->
 
@@ -53,9 +53,9 @@ Senior software engineer and tech lead with 7+ years of experience building Type
 
 * Developed the Velas **blockchain** wallet for web, mobile and desktop using **Node.js, TypeScript, React, React Native, MobX and Web3.js**. <!-- src: velas-wallet#4.1 -->
 
-* Set up a **GitHub Actions** workflow for code signing and releases on macOS, Linux and Windows, removing the "untrusted source" warning on install. <!-- src: velas-wallet#4.4 -->
+* Set up **GitHub Actions** workflows to build and sign the desktop (macOS, Linux, Windows) and mobile wallets, removing the "untrusted source" warning on desktop install. <!-- src: velas-wallet#4.4 -->
 
-* Made the staking list load 12x faster and use 5x less mobile battery by moving filtering to the server and adding a blockchain-node RPC fallback. <!-- src: velas-wallet#4.2 -->
+* Cut staking list loading from 2 minutes to 5 seconds and made it use 5x less mobile battery by moving filtering to the server and adding a blockchain-node RPC fallback. <!-- src: velas-wallet#4.2 -->
 
 * Redesigned the staking-rewards calculation on the **Node.js** backend for stability and speed; user engagement grew 4x afterward. <!-- src: velas-wallet#4.6 -->
 
@@ -79,7 +79,7 @@ Senior software engineer and tech lead with 7+ years of experience building Type
 
 ### **Thermo Fisher Scientific | Remote | November 2020 - April 2021**
 
-* Architected an **IoT healthcare** app from scratch using **React Native, TypeScript, Redux** and an offline-first **Realm** database, communicating with radiation dosimeters over Bluetooth. <!-- src: thermo-fisher-dosimeter#4.1 -->
+* Built an **IoT healthcare** app from scratch and designed its architecture with **React Native, TypeScript, Redux** and an offline-first **Realm** database, communicating with radiation dosimeters over Bluetooth. <!-- src: thermo-fisher-dosimeter#4.1 -->
 
 * Implemented a secure **OAuth 2.0** login flow and local storage of dosimeter data with efficient filtering. <!-- src: thermo-fisher-dosimeter#4.5 -->
 
@@ -88,15 +88,17 @@ Senior software engineer and tech lead with 7+ years of experience building Type
 
 ### **Itjet | Kyiv, Ukraine (Hybrid) | August 2019 - November 2020**
 
-* Built an automated monthly subscription flow with **Node.js REST APIs** (**Express**, **Sequelize**), **Stripe**, **React** and **React Native**. <!-- src: itjet-fintech#4.6 -->
+* Built the automated monthly subscription flow for Fused with **Node.js REST APIs** (**Express**, **Sequelize**), **Stripe**, **React** and **React Native**. <!-- src: itjet-fintech#4.6 -->
 
-* Doubled database performance by migrating **PostgreSQL** from EC2 to **AWS RDS** and optimizing slow SQL queries. <!-- src: itjet-fintech#4.4 -->
+* Built the Wink social app from scratch in **React Native** (Snapchat and phone sign-in, **push notifications**, **CI/CD**, image optimization on a **Node.js** backend); it reached more than 5 million registered users. <!-- src: itjet-fintech#4.8 -->
 
-* Set up **PostgreSQL** schema migrations with **node-pg-migrate**. <!-- src: itjet-fintech#4.5 -->
+* Doubled database performance for Fused by migrating **PostgreSQL** from EC2 to **AWS RDS** and optimizing slow SQL queries. <!-- src: itjet-fintech#4.4 -->
 
-* Doubled delivery speed by introducing **TypeScript** and an **Atomic Design** component library and by setting up **CI/CD** (Bitbucket Pipelines, **AWS EC2 / S3**) with automated tests (**Puppeteer, Jest, Cucumber**). <!-- src: itjet-fintech#4.3 -->
+* Set up **PostgreSQL** schema migrations with **node-pg-migrate** for RegiStart. <!-- src: itjet-fintech#4.5 -->
 
-* Containerized services with **Docker**, used **GraphQL** and built web features with **Next.js** with server-side rendering (SSR). <!-- src: itjet-fintech#4.7 -->
+* Doubled delivery speed by introducing **TypeScript** and an **Atomic Design** component library with automated tests (**Puppeteer, Jest, Cucumber**) for Aspiration, and by setting up **CI/CD** (Bitbucket Pipelines, **AWS EC2 / S3**) for RegiStart. <!-- src: itjet-fintech#4.3 -->
+
+* Containerized Fused services with **Docker**, and used **GraphQL** and built web features with **Next.js** with server-side rendering (SSR) for Aspiration. <!-- src: itjet-fintech#4.7 -->
 
 <!-- entry: admasters-ecommerce -->
 ## **Full-Stack Engineer and Team Leader**

@@ -75,7 +75,7 @@ Tags: react-native, expo, typescript, javascript, android, healthcare
 
 ### 4.2 Library and documents module refactor to TypeScript with tests
 
-React Native app, February to March 2025, my largest feature there. Reworked the legacy study library flow: removed the old JavaScript library screen, document section container and library utility module (about 290 lines) and replaced them with a new TypeScript patient documents screen built from small components (document item, empty state, "view all" button). Moved the library utilities to TypeScript and greatly expanded their unit tests, added a large test for the new documents screen, and fixed the related snapshot, unit test and TypeScript pipeline failures. Wired up the navigation routes, updated the video screen to use the moved utilities, removed a route and screen that no longer existed, and updated the study reducer, the televisit hook and other consumers. Also updated the Babel and Prettier configuration, and addressed pull request review comments. Splitting the legacy screen into small components following React best practices was meant to speed up the app (confirmed by user 2026-10-22; not measured).
+React Native app, February to March 2025, my largest feature there. Reworked the legacy study library flow: removed the old JavaScript library screen, document section container and library utility module (about 290 lines) and replaced them with a new TypeScript patient documents screen built from small components (document item, empty state, "view all" button). Moved the library utilities to TypeScript and greatly expanded their unit tests, added a large test for the new documents screen, and fixed the related snapshot, unit test and TypeScript pipeline failures. Wired up the navigation routes, updated the video screen to use the moved utilities, removed a route and screen that no longer existed, and updated the study reducer, the televisit hook and other consumers. Also updated the Babel and Prettier configuration, and addressed pull request review comments. Splitting the legacy screen into small components following React best practices was meant to speed up the app (confirmed by user 2026-10-22; not measured). The refactor and the new unit tests raised test coverage; it was not full coverage, as the April 2025 portfolio (doc:portfolio-2025-04) said (corrected by user 2026-10-22: git is right).
 
 Result: about 1,000 lines of new tests (about 385 lines of utility unit tests and about 650 lines of screen tests).
 Tags: react-native, typescript, legacy-migration, testing, redux, code-quality, performance
@@ -156,7 +156,8 @@ React Native app (versions from the app's package manifest):
 | Notifications and background | in-call manager (televisit) | **used by the project** |
 | UI | react-native-safe-area-context 4.12 | **hands-on** |
 | UI | React Native Elements, Reanimated 3.16, Gesture Handler, react-native-svg (with transformer), WebView, react-native-pdf, render-html, expo-image, expo-camera, expo-video, date picker, modal, vector icons | **used by the project** |
-| i18n and utilities | i18next and react-i18next, expo-localization, react-native-localize, date-fns, moment (with timezone), lodash, mathjs, json-rules-engine, uuid, use-debounce | **used by the project** |
+| i18n | i18next and react-i18next | **hands-on** (confirmed by user 2026-10-22, from doc:portfolio-2025-04) |
+| i18n and utilities | expo-localization, react-native-localize, date-fns, moment (with timezone), lodash, mathjs, json-rules-engine, uuid, use-debounce | **used by the project** |
 | Internal packages | private calculation engine and front-end utilities, from a private npm registry on AWS CodeArtifact | **used by the project** |
 | Monitoring | Sentry for React Native (logging and error monitoring) | **hands-on** (confirmed by user 2026-10-22) |
 | Monitoring | Reactotron (development), Expo Atlas | **used by the project** |
@@ -167,6 +168,7 @@ React Native app (versions from the app's package manifest):
 | Code quality | Prettier 3 (with import sorting), Babel configuration | **hands-on** (configuration updates) |
 | Code quality | Husky 9, lint-staged, tsc-files, patch-package | **used by the project** |
 | Build and release | EAS Build (profiles: development, preview, early, valid, hotfix, defect, legacy, production), environment and build-config scripts run with ts-node, EAS build hooks, CodeArtifact login | **used by the project** |
+| Build and release | Bitbucket Pipelines | **used by the project** (confirmed by user 2026-10-22, from doc:portfolio-2025-04) |
 
 Native Android app (from the commit history, not from a manifest):
 
@@ -245,6 +247,7 @@ TODO (needs user input)
 - url_pattern: "*ClinicalInk*"
 - term: Clinical Ink
 - term: Clinicalink
+- term: Clinical inc                # the spelling in doc:portfolio-2025-04
 - term: Orion
 - term: orion-mobile
 - term: Lumiere

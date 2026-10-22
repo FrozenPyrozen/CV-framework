@@ -10,7 +10,7 @@ Kyiv, Ukraine (Remote) | Open to B2B contract or full-time employment | Working 
 
 # **SUMMARY**
 
-Senior software engineer and tech lead with 7+ years of experience building React, React Native, Node.js and TypeScript applications for enterprise resource planning (ERP) SaaS, automotive, healthcare and clinical trials, fintech and blockchain products. <!-- src: calc:years_experience, profile, syspro-saas-erp#1, general-motors-navigation#1, orion-mobile-clinical-ink#1, thermo-fisher-dosimeter#1, itjet-fintech#1, velas-wallet#1 --> Built core modules of a schema-driven React 19 runtime that renders 1,800+ ERP programs from data-model definitions. <!-- src: syspro-saas-erp#4.1 --> Led a team of 8 engineers delivering in-car navigation features for an automotive manufacturer on the HERE SDK. <!-- src: general-motors-navigation#4.1, general-motors-navigation#4.6, calc:team_size_led --> Experienced in micro-frontend architecture, OpenID Connect (OIDC), OpenTelemetry observability, test automation, native Android migrations and generative AI integrations, delivered through architecture-governed specification-driven development (SDD). <!-- src: syspro-saas-erp#4.2, syspro-saas-erp#4.6, syspro-saas-erp#4.7, syspro-saas-erp#4.8, syspro-saas-erp#4.9, orion-mobile-clinical-ink#4.4, designai-jira-plugin#4.1 -->
+Senior software engineer and tech lead with 7+ years of experience building React, React Native, Node.js and TypeScript applications for enterprise resource planning (ERP) SaaS, automotive, healthcare and clinical trials, fintech and blockchain products. <!-- src: calc:years_experience, profile, syspro-saas-erp#1, general-motors-navigation#1, orion-mobile-clinical-ink#1, thermo-fisher-dosimeter#1, itjet-fintech#1, velas-wallet#1 --> Built core modules of a schema-driven React 19 runtime that renders 1,800+ ERP programs from data-model definitions. <!-- src: syspro-saas-erp#4.1 --> Led a team of 8 engineers building the HERE SDK map features of an automotive manufacturer's vehicle companion app. <!-- src: general-motors-navigation#4.1, general-motors-navigation#4.6, calc:team_size_led --> Experienced in micro-frontend architecture, OpenID Connect (OIDC), OpenTelemetry observability, test automation, native Android migrations and generative AI integrations, delivered through architecture-governed specification-driven development (SDD). <!-- src: syspro-saas-erp#4.2, syspro-saas-erp#4.6, syspro-saas-erp#4.7, syspro-saas-erp#4.8, syspro-saas-erp#4.9, orion-mobile-clinical-ink#4.4, designai-jira-plugin#4.1 -->
 
 # **EXPERIENCE**
 
@@ -42,7 +42,7 @@ Senior software engineer and tech lead with 7+ years of experience building Reac
 
 ### **General Motors | Remote | July 2023 - November 2025**
 
-* Led a team of 8 engineers delivering an automotive **React Native** app, working with stakeholders on scope and planning. After release, user engagement rose 20% and app crashes fell 15%. <!-- src: general-motors-navigation#4.1 -->
+* Led the map team of 8 engineers (6 React Native, 1 iOS, 1 Android) for the General Motors vehicle companion app, built in **React Native**, working with stakeholders on scope and planning. After release, user engagement rose 20% and app crashes fell 15%. <!-- src: general-motors-navigation#4.1 -->
 
 * Ran **code reviews** and set coding standards for the team, mentoring engineers on architecture and testing. <!-- src: general-motors-navigation#4.2 -->
 
@@ -67,11 +67,11 @@ Senior software engineer and tech lead with 7+ years of experience building Reac
 
 * Developed the Velas **blockchain** wallet for web, mobile and desktop using **React, React Native, Node.js, TypeScript, MobX and Web3.js**. <!-- src: velas-wallet#4.1 -->
 
-* Made the staking list load 12x faster and use 5x less mobile battery by moving filtering to the server and adding a blockchain-node RPC fallback. <!-- src: velas-wallet#4.2 -->
+* Cut staking list loading from 2 minutes to 5 seconds and made it use 5x less mobile battery by moving filtering to the server and adding a blockchain-node RPC fallback. <!-- src: velas-wallet#4.2 -->
 
 * Added automatic **Web3 provider** failover for testnet and mainnet tokens, switching when the active provider was slow or unreachable. <!-- src: velas-wallet#4.3 -->
 
-* Set up a **GitHub Actions** workflow for code signing and releases on macOS, Linux and Windows, removing the "untrusted source" warning on install. <!-- src: velas-wallet#4.4 -->
+* Set up **GitHub Actions** workflows to build and sign the desktop (macOS, Linux, Windows) and mobile wallets, removing the "untrusted source" warning on desktop install. <!-- src: velas-wallet#4.4 -->
 
 * Published the app on **F-Droid** and the **Snapcraft** store, which tripled the number of new users. <!-- src: velas-wallet#4.5 -->
 
@@ -103,7 +103,7 @@ Senior software engineer and tech lead with 7+ years of experience building Reac
 
 ### **Thermo Fisher Scientific | Remote | November 2020 - April 2021**
 
-* Architected an **IoT healthcare** app from scratch using **React Native, TypeScript, Redux** and an offline-first **Realm** database, communicating with radiation dosimeters over Bluetooth. <!-- src: thermo-fisher-dosimeter#4.1 -->
+* Built an **IoT healthcare** app from scratch and designed its architecture with **React Native, TypeScript, Redux** and an offline-first **Realm** database, communicating with radiation dosimeters over Bluetooth. <!-- src: thermo-fisher-dosimeter#4.1 -->
 
 * Rewrote legacy native libraries to use **MQTT over TLS** with client certificates on iOS and Android, making data transfer 30% faster. <!-- src: thermo-fisher-dosimeter#4.2 -->
 
@@ -120,19 +120,21 @@ Senior software engineer and tech lead with 7+ years of experience building Reac
 
 ### **Itjet | Kyiv, Ukraine (Hybrid) | August 2019 - November 2020**
 
-* Built a reusable **React Native Web** signup flow shared by the native mobile and web apps of a fintech product (Forbes top 10), which made building new flows 3x faster. <!-- src: itjet-fintech#4.1 -->
+* Built a reusable **React Native Web** signup flow shared by the native mobile and web apps of Aspiration, a fintech product (Forbes top 10), which made building new flows 3x faster. <!-- src: itjet-fintech#4.1 -->
 
-* Integrated **A/B testing** so the marketing team could analyze user engagement. <!-- src: itjet-fintech#4.2 -->
+* Built the Wink social app from scratch in **React Native** (Snapchat and phone sign-in, **push notifications**, **CI/CD**, image optimization on a **Node.js** backend); it reached more than 5 million registered users. <!-- src: itjet-fintech#4.8 -->
 
-* Doubled delivery speed by introducing **TypeScript**, building an **Atomic Design** component library (**design system**) and setting up **CI/CD** (Bitbucket Pipelines, AWS EC2 / S3) with automated tests (**Puppeteer, Jest, Cucumber**). <!-- src: itjet-fintech#4.3 -->
+* Integrated **A/B testing** for Aspiration so its marketing team could analyze user engagement. <!-- src: itjet-fintech#4.2 -->
 
-* Doubled database performance by migrating **PostgreSQL** from EC2 to **AWS RDS** and optimizing slow SQL queries. <!-- src: itjet-fintech#4.4 -->
+* Doubled delivery speed by introducing **TypeScript** and an **Atomic Design** component library (**design system**) with automated tests (**Puppeteer, Jest, Cucumber**) for Aspiration, and by setting up **CI/CD** (Bitbucket Pipelines, AWS EC2 / S3) for RegiStart. <!-- src: itjet-fintech#4.3 -->
 
-* Set up **PostgreSQL** schema migrations with **node-pg-migrate**. <!-- src: itjet-fintech#4.5 -->
+* Doubled database performance for Fused by migrating **PostgreSQL** from EC2 to **AWS RDS** and optimizing slow SQL queries. <!-- src: itjet-fintech#4.4 -->
 
-* Built an automated monthly subscription flow with **Stripe**, **Node.js REST APIs** (**Express**, **Sequelize**), **React** and **React Native**. <!-- src: itjet-fintech#4.6 -->
+* Set up **PostgreSQL** schema migrations with **node-pg-migrate** for RegiStart. <!-- src: itjet-fintech#4.5 -->
 
-* Built web features with **Next.js** with server-side rendering (SSR) and **GraphQL**, and containerized services with **Docker**. <!-- src: itjet-fintech#4.7 -->
+* Built the automated monthly subscription flow for Fused with **Stripe**, **Node.js REST APIs** (**Express**, **Sequelize**), **React** and **React Native**. <!-- src: itjet-fintech#4.6 -->
+
+* Built web features for Aspiration with **Next.js** with server-side rendering (SSR) and **GraphQL**, and containerized Fused services with **Docker**. <!-- src: itjet-fintech#4.7 -->
 
 <!-- entry: admasters-ecommerce -->
 ## **Full-Stack Engineer and Team Leader**

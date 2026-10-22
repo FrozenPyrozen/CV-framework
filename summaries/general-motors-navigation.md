@@ -25,25 +25,25 @@ cv_location: Remote
 
 ## 1. Project overview
 
-An automotive React Native app with in-car navigation features built on the HERE SDK. The work also included a reusable map library packaged as a React Native micro-frontend and used in several company products, and a passenger second-screen feature for a luxury car brand. The team had 8 developers.
+A vehicle companion app for General Motors owners: from their phone, drivers control and check their car, for example by starting the engine remotely or checking tire pressure, for gas and electric vehicles across the Chevrolet, Buick, GMC and Cadillac brands. Inside it, a reusable map feature (map display, search, a bottom drawer, markers and EV charging stations) ships as a React Native micro-frontend built on the HERE SDK and is reused by several company products. The map team had 8 developers: 6 React Native, 1 iOS and 1 Android. It worked with the UI team, the backend teams for the EV and gas vehicle services and the location-based services, and with HERE as the vendor of the map SDK and APIs (doc:portfolio-2025-04; the user confirmed on 2026-10-22 that the portfolio is the more detailed description for now). The work also included in-car navigation features on the HERE SDK and a passenger second-screen feature for a luxury car brand (from the CV).
 
-TODO (needs user input): who uses the app, the business problem, and the wider organization context.
+TODO (needs user input): the wider organization context; more detail the user will add later.
 
 ## 2. Main features
 
-In-car navigation, including route-deviation handling and search (from the CV). TODO (needs user input)
+In-car navigation, including route-deviation handling and search (from the CV). Remote vehicle control and status from the phone (for example remote engine start and tire pressure), for gas and electric vehicles; a map with search, a bottom drawer, markers and EV charging stations (doc:portfolio-2025-04).
 
 ## 3. My role and responsibilities
 
 Team Leader of a team of 8 developers. Worked with stakeholders on scope and planning, ran code reviews, set coding standards, and mentored developers on architecture and testing. Owned the system design of the app's modular architecture, defined the unit-testing strategy, and introduced an Agile delivery process.
 
-TODO (needs user input): key collaborators.
+Led the map team and coordinated its dependencies with the UI team, the backend teams (EV and gas vehicle services, location-based services) and the HERE SDK and API vendor teams: set scope, deadlines and priorities, ran planning, removed blockers, defined the integration strategy and set up test automation (doc:portfolio-2025-04).
 
 ## 4. My contributions
 
 ### 4.1 Team leadership and delivery
 
-Led a team of 8 developers delivering an automotive React Native app, and worked with stakeholders on scope and planning.
+Led the map team of 8 developers (6 React Native, 1 iOS, 1 Android) of the General Motors vehicle companion app for car owners, built in React Native, and worked with stakeholders on scope and planning (team split and app type from doc:portfolio-2025-04, confirmed as the current description by user 2026-10-22).
 
 Result: after release, user engagement rose 20% and app crashes fell 15%.
 Tags: leadership, react-native, automotive
@@ -92,16 +92,38 @@ Implemented a passenger second-screen feature for a luxury car brand.
 
 Tags: automotive, react-native
 
+### 4.9 Delivery and testing process for nested apps
+
+Created and documented the process for delivering and testing the map feature inside the host app. The chain had three levels: the host app, a reusable feature app, and a map provider app built in React Native with native iOS and Android code and the HERE SDK.
+
+Tags: ci-cd, testing, micro-frontends, react-native
+Source: doc:portfolio-2025-04
+
+### 4.10 Migrating the reusable feature app into the host app
+
+At the client's request, changed the architecture so the reusable feature app moved into the host app, with the map provider app still separate. Planned how to move all of its logic and components into the host app's patterns: clean architecture, domain-driven design, abstract services and pure components.
+
+Tags: architecture, micro-frontends, react-native, legacy-migration
+Source: doc:portfolio-2025-04
+
+### 4.11 Map architecture fixes for multiple map instances
+
+During the migration, fixed weak points that slowed integration and caused bugs. Map instances no longer shared one global reference, and each map got its own event listener, because a single global listener had caused bugs when several maps ran at once. Separated the map-specific logic into the map provider, designed the architecture for a complex search feature reused on several screens, and normalized the state that stores markers and search results.
+
+Tags: architecture, react-native, here-sdk, redux, debugging
+Source: doc:portfolio-2025-04
+
 ## 5. Technologies and frameworks
 
 - **Language:** TypeScript (hands-on)
 - **Mobile and UI:** React Native (hands-on), Storybook (hands-on), Figma (hands-on), Styled Components (hands-on, confirmed by user 2026-10-16)
-- **Maps and navigation:** HERE SDK, HERE HNav / HNod SDK (hands-on)
-- **Architecture:** React Native micro-frontends (hands-on)
-- **State and data:** Redux Saga (hands-on), RxJS (hands-on)
+- **Maps and navigation:** HERE SDK, HERE HNav / HNod SDK (hands-on), HERE API (hands-on, confirmed by user 2026-10-22, from doc:portfolio-2025-04)
+- **Architecture:** React Native micro-frontends (hands-on), clean architecture and domain-driven design (hands-on, confirmed by user 2026-10-22, from doc:portfolio-2025-04)
+- **State and data:** Redux Saga (hands-on), Redux Toolkit (hands-on, confirmed by user 2026-10-22, from doc:portfolio-2025-04), RxJS (hands-on)
 - **Backend:** Node.js (hands-on)
-- **Testing:** unit testing (hands-on), Detox for E2E (hands-on)
-- **CI/CD:** Fastlane (hands-on), Bitrise (hands-on)
+- **Testing:** unit testing with Jest (hands-on; Jest confirmed by user 2026-10-22, from doc:portfolio-2025-04), Detox for E2E (hands-on), BrowserStack device testing (hands-on, confirmed by user 2026-10-22, from doc:portfolio-2025-04)
+- **CI/CD:** Fastlane (hands-on), Bitrise (hands-on), Azure and Azure Pipelines (used by the project, confirmed by user 2026-10-22, from doc:portfolio-2025-04)
+- **Native code:** native iOS and Android modules of the map provider (used by the project; built by the team's iOS and Android developers)
 - **Monitoring:** Bugsnag (hands-on), Kibana (hands-on)
 - **AI:** voice AI assistant (hands-on, proof of concept)
 

@@ -27,23 +27,27 @@ cv_location: Remote
 
 An IoT healthcare mobile app for iOS and Android that communicates with radiation dosimeters over Bluetooth, stores dosimeter data offline-first in Realm, and transfers data over MQTT.
 
-TODO (needs user input): who uses the app, the business problem, and team size and organization context.
+Medical staff who work with radiation use the app to track their dose and prevent overexposure. The app reads radiation dosimeters over Bluetooth and sends the data to an IoT server over MQTT (doc:portfolio-2025-04, approved by user 2026-10-22).
+
+TODO (needs user input): team size and organization context.
 
 ## 2. Main features
 
-Bluetooth connection to radiation dosimeters, secure login, local storage and filtering of dosimeter data, and dosimeter firmware updates (from the CV). TODO (needs user input)
+Bluetooth connection to radiation dosimeters, secure login, local storage and filtering of dosimeter data, and dosimeter firmware updates (from the CV). Three roles (user, admin, superuser); syncing many dosimeters at once, with a main screen showing sync progress, sync errors and sync time; details of the current or last sync; a sync history stored locally and filterable by date range, wearer, errors and ID; profile, settings and a logs screen for superusers; secure values kept in the device keychain (doc:portfolio-2025-04, approved by user 2026-10-22).
 
 ## 3. My role and responsibilities
 
-Software Engineer. Architected the app from scratch and took part in a team-wide performance effort.
+Software Engineer (not an architect role). Built the app from scratch and designed its overall architecture (confirmed by user 2026-10-22), and took part in a team-wide performance effort.
 
-TODO (needs user input): ownership areas and key collaborators.
+Built the API layer between the screens and the backend (REST, MQTT and Bluetooth), the OAuth 2.0 login, MQTT integration, background jobs on Android and iOS, native modules and the Realm database setup with filtering. Fixed and rewrote React Native and native libraries where needed. Took part in project meetings and code reviews, and suggested UI improvements (doc:portfolio-2025-04, approved by user 2026-10-22).
+
+TODO (needs user input): key collaborators.
 
 ## 4. My contributions
 
 ### 4.1 App architecture from scratch
 
-Architected an IoT healthcare app from scratch using React Native, TypeScript, Redux and an offline-first Realm database. The app communicates with radiation dosimeters over Bluetooth.
+Built an IoT healthcare app from scratch and designed its architecture, as a software engineer rather than in an architect role (confirmed by user 2026-10-22), using React Native, TypeScript, Redux and an offline-first Realm database. The app communicates with radiation dosimeters over Bluetooth.
 
 Tags: architecture, react-native, typescript, redux, realm, offline-first, iot
 
@@ -56,7 +60,7 @@ Tags: mqtt, security, native-modules, ios, android, iot
 
 ### 4.3 BLE communication accuracy
 
-Improved the accuracy of Bluetooth Low Energy (BLE) communication with the dosimeter, built on react-native-ble-plx, by reworking the buffer-reading logic.
+Improved the accuracy of Bluetooth Low Energy (BLE) communication with the dosimeter, built on react-native-ble-plx, by reworking the buffer-reading logic, and improved the dosimeter data parsing so data is no longer overwritten (doc:portfolio-2025-04, approved by user 2026-10-22).
 
 Tags: ble, iot
 
@@ -79,6 +83,20 @@ Optimized rendering and offline data access in Realm as part of a team-wide perf
 Result: the app became 20% faster.
 Tags: performance, realm, offline-first
 
+### 4.7 Test-driven development and code reviews
+
+Worked test-first (TDD), covered the code with unit tests, and reviewed teammates' code.
+
+Tags: testing, code-review
+Source: doc:portfolio-2025-04
+
+### 4.8 Concurrent sync of many dosimeters
+
+Built the sync flow that reads many dosimeters at the same time and shows progress, errors and timing for each sync, with a sync history filterable by date range, wearer, errors and ID (built by the user, confirmed 2026-10-22).
+
+Tags: iot, ble, react-native, realm
+Source: doc:portfolio-2025-04
+
 ## 5. Technologies and frameworks
 
 - **Language:** TypeScript (hands-on)
@@ -87,6 +105,7 @@ Tags: performance, realm, offline-first
 - **Data:** Realm, offline-first (hands-on)
 - **Connectivity:** Bluetooth Low Energy (BLE) (hands-on), react-native-ble-plx (hands-on, confirmed by user 2026-10-22), MQTT over TLS with client certificates (hands-on)
 - **Authentication:** OAuth 2.0 (hands-on)
+- **Libraries and tools:** Redux Saga, React Navigation, react-native-keychain, react-native-app-auth (OAuth 2.0), a React Native MQTT library, Formik, AsyncStorage, react-native-fs, REST API (hands-on, confirmed by user 2026-10-22, from doc:portfolio-2025-04); Fastlane, ESLint and Husky (used by the project, confirmed by user 2026-10-22, from doc:portfolio-2025-04)
 
 ## 6. Skills demonstrated
 
