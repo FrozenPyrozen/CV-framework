@@ -55,16 +55,16 @@ Key collaborators: TODO (needs user input)
 
 ### 4.1 Jira Forge app for AI design generation, built from scratch
 
-Built the Atlassian Forge app that starts AI design generation from a Jira issue. Set up the plugin project and its manifest, created the Custom UI project with React and TypeScript, and built the generate-design action and automatic Jira subtask creation for the result, including fixes to routes and errors. Converted the resolver to TypeScript on Node.js, separated the API utilities, improved resolver error handling, and replaced nested-string error handling with a shared error utility. Added a design creation popup.
+Built the Atlassian Forge app that starts AI design generation from a Jira issue. Set up the plugin project and its manifest with Forge UI Kit (May 22, 2025), then moved it to the Forge Custom UI approach, a separate React and TypeScript app rendered inside Jira (May 28, 2025; confirmed by user 2026-10-22), and built the generate-design action and automatic Jira subtask creation for the result, including fixes to routes and errors. Converted the resolver to TypeScript on Node.js, separated the API utilities, improved resolver error handling, and replaced nested-string error handling with a shared error utility. Added a design creation popup.
 
 Result: users can start design generation from a Jira ticket and get a subtask that tracks the result.
 Tags: jira-forge, react, typescript, node, generative-ai
 
 ### 4.2 Design generation form with multiple inputs
 
-Built the design generation form in the Jira issue panel: a design description field and a website URL field (with minimum rows), image upload with a preview container (fixed preview heights, fewer re-renders on hover, fixed spacing), PRD upload and user-flow upload built on a reusable file-upload component, an MCP server URL input, and design system selection. Added form validation, including a way past the large-image error.
+Built the design generation form in the Jira issue panel with Atlaskit components (form, text field, text area, select, button, modal dialog, heading, image, badge and layout primitives; confirmed by user 2026-10-22): a design description field and a website URL field (with minimum rows), image upload with a preview container (fixed preview heights, fewer re-renders on hover, fixed spacing), PRD upload and user-flow upload built on a reusable file-upload component, an MCP server URL input, and design system selection. Added form validation, including a way past the large-image error.
 
-Tags: react, typescript, jira-forge, mcp, generative-ai
+Tags: react, typescript, jira-forge, mcp, generative-ai, design-systems
 
 ### 4.3 Direct uploads to Azure Blob Storage
 
@@ -75,7 +75,7 @@ Tags: azure, jira-forge, typescript
 
 ### 4.4 Project tooling, quality gates and documentation
 
-Added ESLint, TypeScript and a pre-commit ESLint hook to the plugin project, and enabled Atlassian design styling and design tokens. Fixed a SonarQube TypeScript error and moved type packages to development dependencies. Updated the plugin README and the Jira plugin deployment guide, removing the now-unneeded backend instructions, and formatted the Azure DevOps pull request template.
+Added ESLint, TypeScript and a pre-commit ESLint hook to the plugin project, and enabled Atlassian design styling and design tokens, with the Atlaskit design-system ESLint plugin. Fixed a SonarQube TypeScript error and moved type packages to development dependencies. Updated the plugin README and the Jira plugin deployment guide, removing the now-unneeded backend instructions, and formatted the Azure DevOps pull request template.
 
 Tags: code-quality, typescript, design-systems
 
@@ -85,14 +85,17 @@ Tags: code-quality, typescript, design-systems
 |---|---|---|
 | Language | TypeScript | **hands-on** |
 | UI | React | **hands-on** |
-| UI | Atlassian design tokens and styling | **hands-on** |
+| UI | Atlaskit (Atlassian Design System): form, textfield, textarea, select, button, modal-dialog, heading, image, badge, primitives, css-reset | **hands-on** (confirmed by user 2026-10-22) |
+| UI | Atlassian design tokens (@atlaskit/tokens) and styling | **hands-on** |
+| UI | React 18 with Create React App (react-scripts) for the Custom UI static app | **hands-on** (confirmed by user 2026-10-22) |
 | UI | Styled Components | **hands-on** (confirmed by user 2026-10-16) |
-| Platform | Atlassian Forge (Custom UI and resolvers, environment variables, CLI deploy and install) | **hands-on** |
+| Platform | Atlassian Forge (UI Kit at the start, then Custom UI; resolvers, environment variables, CLI deploy and install) | **hands-on** |
+| Platform | @forge/bridge (Custom UI to resolver and Jira calls) | **hands-on** (confirmed by user 2026-10-22) |
 | Platform | Jira API (read and write access to work items) | **hands-on** |
 | Backend runtime | Node.js 22 (Forge resolver) | **hands-on** |
-| Cloud | Azure Blob Storage | **hands-on** |
+| Cloud | Azure Blob Storage with the Azure Storage Blob SDK (@azure/storage-blob) | **hands-on** |
 | AI | MCP server URL as a design input | **hands-on** (UI input only) |
-| Code quality | ESLint, pre-commit hook | **hands-on** |
+| Code quality | ESLint with typescript-eslint, eslint-plugin-react and the Atlaskit design-system plugin, pre-commit hook | **hands-on** (plugins confirmed by user 2026-10-22) |
 | Code quality | SonarQube | **hands-on** (fixed a reported error) |
 | Process | Azure DevOps pull requests | **hands-on** (PR template) |
 | Product backend | API, agents and design-generation pipelines | **used by the project** |

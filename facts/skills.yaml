@@ -26,6 +26,7 @@ categories:
       - { name: Web accessibility (WCAG), tags: [accessibility] }
       - { name: Web performance optimization, tags: [performance] }
       - { name: KendoReact, tags: [kendo] }
+      - { name: Atlaskit (Atlassian Design System), tags: [design-systems, jira-forge] }
       - { name: Storybook, tags: [storybook] }
       - { name: CSS Modules, tags: [html-css] }
       - { name: Styled Components, tags: [html-css] }
@@ -141,7 +142,7 @@ categories:
       - { name: MQTT, tags: [mqtt, iot] }
       - { name: Blockchain, tags: [blockchain] }
       - { name: Web3.js, tags: [blockchain] }
-      - { name: Atlassian Jira Forge, tags: [jira-forge] }
+      - { name: "Atlassian Jira Forge (UI Kit, Custom UI)", tags: [jira-forge] }
 
   - id: leadership
     label: Leadership and Methodologies
