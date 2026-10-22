@@ -65,6 +65,10 @@ categories:
     label: Backend and Cloud
     items:
       - { name: Node.js, tags: [node] }
+      - { name: Express, tags: [node, rest-api] }
+      - { name: Sequelize, tags: [node, postgres] }
+      - { name: PM2, tags: [node] }
+      - { name: Nginx, tags: [node] }
       - { name: PostgreSQL, tags: [postgres] }
       - { name: "Amazon Web Services (AWS: EC2, S3, RDS)", tags: [aws] }
       - { name: Microsoft Azure (Azure Blob Storage), tags: [azure] }
@@ -129,6 +133,7 @@ categories:
       - { name: "HERE SDK (HNav, HNod, HERE API)", tags: [here-sdk, automotive] }
       - { name: IoT, tags: [iot] }
       - { name: Bluetooth Low Energy (BLE), tags: [ble, iot] }
+      - { name: react-native-ble-plx, tags: [ble, react-native] }
       - { name: MQTT, tags: [mqtt, iot] }
       - { name: Blockchain, tags: [blockchain] }
       - { name: Web3.js, tags: [blockchain] }

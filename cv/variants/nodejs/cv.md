@@ -88,7 +88,7 @@ Senior software engineer and tech lead with 7+ years of experience building Type
 
 ### **Itjet | Kyiv, Ukraine (Hybrid) | August 2019 - November 2020**
 
-* Built an automated monthly subscription flow with **Node.js REST APIs**, **Stripe**, **React** and **React Native**. <!-- src: itjet-fintech#4.6 -->
+* Built an automated monthly subscription flow with **Node.js REST APIs** (**Express**, **Sequelize**), **Stripe**, **React** and **React Native**. <!-- src: itjet-fintech#4.6 -->
 
 * Doubled database performance by migrating **PostgreSQL** from EC2 to **AWS RDS** and optimizing slow SQL queries. <!-- src: itjet-fintech#4.4 -->
 
@@ -167,7 +167,7 @@ National Aviation University | Ukraine | 2016 - 2020
 <!-- generated:skills -->
 **Languages:** JavaScript (ES6+), TypeScript, HTML5, CSS3, SCSS
 
-**Backend and Cloud:** Node.js, PostgreSQL, Amazon Web Services (AWS: EC2, S3, RDS), Microsoft Azure (Azure Blob Storage), Stripe, Docker
+**Backend and Cloud:** Node.js, Express, Sequelize, PM2, Nginx, PostgreSQL, Amazon Web Services (AWS: EC2, S3, RDS), Microsoft Azure (Azure Blob Storage), Stripe, Docker
 
 **DevOps and Observability:** CI/CD, Azure DevOps, Azure Pipelines, GitHub Actions, Bitbucket Pipelines, Jenkins, Git, ESLint, Prettier, Husky, SonarQube, OpenTelemetry, Kibana, Bugsnag
 
@@ -185,7 +185,7 @@ National Aviation University | Ukraine | 2016 - 2020
 
 **Leadership and Methodologies:** Team leadership (up to 8 engineers), Mentoring, Code review, System design, Software architecture, Architecture decision records (ADR), Technology stack selection, Technical interviewing, Technical audits, Effort estimation, Presales, Agile, Specification-driven development (SDD), Figma, Jira
 
-**Domain and SDKs:** ERP, Clinical trials (eCOA), HERE SDK (HNav, HNod, HERE API), IoT, Bluetooth Low Energy (BLE), MQTT, Blockchain, Web3.js, Atlassian Jira Forge
+**Domain and SDKs:** ERP, Clinical trials (eCOA), HERE SDK (HNav, HNod, HERE API), IoT, Bluetooth Low Energy (BLE), react-native-ble-plx, MQTT, Blockchain, Web3.js, Atlassian Jira Forge
 <!-- /generated:skills -->
 
 # **LANGUAGES**

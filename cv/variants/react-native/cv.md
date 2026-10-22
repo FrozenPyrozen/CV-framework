@@ -91,7 +91,7 @@ Senior React Native engineer and tech lead with 7+ years of experience building 
 
 * Implemented a secure **OAuth 2.0** login flow and local storage of dosimeter data with efficient filtering. <!-- src: thermo-fisher-dosimeter#4.5 -->
 
-* Improved the accuracy of **Bluetooth Low Energy (BLE)** communication with the dosimeter by reworking the buffer-reading logic. <!-- src: thermo-fisher-dosimeter#4.3 -->
+* Improved the accuracy of **Bluetooth Low Energy (BLE)** communication with the dosimeter (**react-native-ble-plx**) by reworking the buffer-reading logic. <!-- src: thermo-fisher-dosimeter#4.3 -->
 
 <!-- entry: itjet-fintech -->
 ## **Full-Stack Engineer**
@@ -102,7 +102,7 @@ Senior React Native engineer and tech lead with 7+ years of experience building 
 
 * Doubled database performance by migrating **PostgreSQL** from EC2 to **AWS RDS** and optimizing slow SQL queries. <!-- src: itjet-fintech#4.4 -->
 
-* Built an automated monthly subscription flow with **Stripe**, **Node.js REST APIs**, **React** and **React Native**. <!-- src: itjet-fintech#4.6 -->
+* Built an automated monthly subscription flow with **Stripe**, **Node.js REST APIs** (**Express**, **Sequelize**), **React** and **React Native**. <!-- src: itjet-fintech#4.6 -->
 
 <!-- entry: admasters-ecommerce -->
 ## **Full-Stack Engineer and Team Leader**
@@ -189,7 +189,7 @@ National Aviation University | Ukraine | 2016 - 2020
 
 **Frontend:** React 19, React.js, Next.js, Server-side rendering (SSR), Micro-frontends, Schema-driven UI, Design systems, Web accessibility (WCAG), Web performance optimization, KendoReact, Storybook, CSS Modules, Styled Components, Atomic Design, Vite, Monorepo (npm workspaces)
 
-**Backend and Cloud:** Node.js, PostgreSQL, Amazon Web Services (AWS: EC2, S3, RDS), Microsoft Azure (Azure Blob Storage), Stripe, Docker
+**Backend and Cloud:** Node.js, Express, Sequelize, PM2, Nginx, PostgreSQL, Amazon Web Services (AWS: EC2, S3, RDS), Microsoft Azure (Azure Blob Storage), Stripe, Docker
 
 **Authentication and Security:** OAuth 2.0, OpenID Connect (OIDC), Zero-trust architecture, SSL certificate pinning, PII redaction
 
@@ -197,7 +197,7 @@ National Aviation University | Ukraine | 2016 - 2020
 
 **Leadership and Methodologies:** Team leadership (up to 8 engineers), Mentoring, Code review, System design, Software architecture, Architecture decision records (ADR), Technology stack selection, Technical interviewing, Technical audits, Effort estimation, Presales, Agile, Specification-driven development (SDD), Figma, Jira
 
-**Domain and SDKs:** ERP, Clinical trials (eCOA), HERE SDK (HNav, HNod, HERE API), IoT, Bluetooth Low Energy (BLE), MQTT, Blockchain, Web3.js, Atlassian Jira Forge
+**Domain and SDKs:** ERP, Clinical trials (eCOA), HERE SDK (HNav, HNod, HERE API), IoT, Bluetooth Low Energy (BLE), react-native-ble-plx, MQTT, Blockchain, Web3.js, Atlassian Jira Forge
 <!-- /generated:skills -->
 
 # **LANGUAGES**

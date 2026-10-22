@@ -76,7 +76,7 @@ Tags: postgres, node
 
 ### 4.6 Automated monthly subscription
 
-Built an automated monthly subscription flow with Stripe, Node.js REST APIs, React and React Native.
+Built an automated monthly subscription flow with Stripe, Node.js REST APIs (Express, Sequelize), React and React Native.
 
 Tags: payments, node, rest-api, react, react-native
 
@@ -90,10 +90,10 @@ Tags: nextjs, ssr, graphql, docker
 
 - **Language:** TypeScript (hands-on)
 - **Frontend and mobile:** React (hands-on), React Native (hands-on), React Native Web (hands-on), Next.js with SSR (hands-on), Atomic Design component library (hands-on)
-- **API:** Node.js REST APIs (hands-on), GraphQL (hands-on)
-- **Data:** PostgreSQL (hands-on), node-pg-migrate (hands-on)
+- **API:** Node.js REST APIs (hands-on), Express (hands-on, confirmed by user 2026-10-22), GraphQL (hands-on)
+- **Data:** PostgreSQL (hands-on), node-pg-migrate (hands-on), Sequelize ORM (hands-on, confirmed by user 2026-10-22)
 - **Payments:** Stripe (hands-on)
-- **Cloud and infrastructure:** AWS EC2, S3 and RDS (hands-on), Docker (hands-on)
+- **Cloud and infrastructure:** AWS EC2, S3 and RDS (hands-on), Docker (hands-on), PM2 process manager and Nginx for running and serving the Node.js services (hands-on, confirmed by user 2026-10-22)
 - **CI/CD:** Bitbucket Pipelines (hands-on)
 - **Testing:** Puppeteer (hands-on), Jest (hands-on), Cucumber (hands-on), React Testing Library (hands-on, confirmed by user 2026-10-16)
 - **Styling, state and security:** Styled Components, Redux Thunk, Keychain (hands-on, confirmed by user 2026-10-16)

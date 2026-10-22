@@ -88,7 +88,7 @@ Senior software engineer and tech lead with 7+ years of experience building **Re
 
 ### **Itjet | Kyiv, Ukraine (Hybrid) | August 2019 - November 2020**
 
-* Built an automated monthly subscription flow with **Stripe**, **Node.js REST APIs**, **React** and **React Native**. <!-- src: itjet-fintech#4.6 -->
+* Built an automated monthly subscription flow with **Stripe**, **Node.js REST APIs** (**Express**, **Sequelize**), **React** and **React Native**. <!-- src: itjet-fintech#4.6 -->
 
 * Doubled delivery speed by introducing **TypeScript**, building an **Atomic Design** component library (**design system**) and setting up **CI/CD** (Bitbucket Pipelines, AWS EC2 / S3) with automated tests (**Puppeteer, Jest, Cucumber**). <!-- src: itjet-fintech#4.3 -->
 
@@ -173,7 +173,7 @@ National Aviation University | Ukraine | 2016 - 2020
 
 **Frontend:** React 19, React.js, Next.js, Server-side rendering (SSR), Micro-frontends, Schema-driven UI, Design systems, Web accessibility (WCAG), Web performance optimization, KendoReact, Storybook, CSS Modules, Styled Components, Atomic Design, Vite, Monorepo (npm workspaces)
 
-**Backend and Cloud:** Node.js, PostgreSQL, Amazon Web Services (AWS: EC2, S3, RDS), Microsoft Azure (Azure Blob Storage), Stripe, Docker
+**Backend and Cloud:** Node.js, Express, Sequelize, PM2, Nginx, PostgreSQL, Amazon Web Services (AWS: EC2, S3, RDS), Microsoft Azure (Azure Blob Storage), Stripe, Docker
 
 **State and Data:** Redux (Redux Thunk, Redux Saga), MobX, Zustand, XState, TanStack Query, TanStack Router, RxJS, REST APIs, GraphQL, WebSockets
 
@@ -189,7 +189,7 @@ National Aviation University | Ukraine | 2016 - 2020
 
 **Leadership and Methodologies:** Team leadership (up to 8 engineers), Mentoring, Code review, System design, Software architecture, Architecture decision records (ADR), Technology stack selection, Technical interviewing, Technical audits, Effort estimation, Presales, Agile, Specification-driven development (SDD), Figma, Jira
 
-**Domain and SDKs:** ERP, Clinical trials (eCOA), HERE SDK (HNav, HNod, HERE API), IoT, Bluetooth Low Energy (BLE), MQTT, Blockchain, Web3.js, Atlassian Jira Forge
+**Domain and SDKs:** ERP, Clinical trials (eCOA), HERE SDK (HNav, HNod, HERE API), IoT, Bluetooth Low Energy (BLE), react-native-ble-plx, MQTT, Blockchain, Web3.js, Atlassian Jira Forge
 <!-- /generated:skills -->
 
 # **LANGUAGES**

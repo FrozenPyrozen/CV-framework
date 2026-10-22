@@ -56,7 +56,7 @@ Tags: mqtt, security, native-modules, ios, android, iot
 
 ### 4.3 BLE communication accuracy
 
-Improved the accuracy of Bluetooth Low Energy (BLE) communication with the dosimeter by reworking the buffer-reading logic.
+Improved the accuracy of Bluetooth Low Energy (BLE) communication with the dosimeter, built on react-native-ble-plx, by reworking the buffer-reading logic.
 
 Tags: ble, iot
 
@@ -85,7 +85,7 @@ Tags: performance, realm, offline-first
 - **Mobile:** React Native (hands-on), native iOS and Android libraries (hands-on), cross-platform background jobs (hands-on)
 - **State:** Redux (hands-on)
 - **Data:** Realm, offline-first (hands-on)
-- **Connectivity:** Bluetooth Low Energy (BLE) (hands-on), MQTT over TLS with client certificates (hands-on)
+- **Connectivity:** Bluetooth Low Energy (BLE) (hands-on), react-native-ble-plx (hands-on, confirmed by user 2026-10-22), MQTT over TLS with client certificates (hands-on)
 - **Authentication:** OAuth 2.0 (hands-on)
 
 ## 6. Skills demonstrated
