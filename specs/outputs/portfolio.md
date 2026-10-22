@@ -80,6 +80,21 @@ Blocks (`<!-- generated:… -->`) are written by `npm run refresh`, never by the
 - **PDF:** one per size, exported through the PDF exporters in order (Pages, Word, LibreOffice; plan 6.1).
 - **Pages (`.pages`):** saved through Pages when it is installed (the Pages exporter already drives it), for editing by hand. A hand edit is never the source: changes go back into the summaries or `portfolio.md`.
 
+## 5a. Reference layout (the current portfolio, `doc:portfolio-2025-04`)
+
+The current portfolio (Pages, April 2025, 16 A4 pages) is the visual reference for the first template, `templates/portfolio-classic/`. Its content is a source (`sources/`, imported 2026-10-22); its layout is recorded here because the Pages file is a **free-form page layout** (88 positioned text boxes and floating images, no flowing paragraphs), which the paragraph-based template importer (`templates.md`) can't take over directly. The template is therefore rebuilt as a flowing Word document with the same look:
+
+| Part | Look |
+|---|---|
+| Page | A4 portrait |
+| Cover | a coral-red banner (`#F46B75`) with the links line (DIN Condensed Bold, small caps look), the title "My Portfolio" (Superclarendon Bold, 42 pt, white, centered) and the name (Superclarendon, white) |
+| Project title | Superclarendon Bold, about 16 pt, teal (`#077482`), centered, one project per page |
+| Intro and body | Charter Roman, 14 pt (some 12 pt), left-aligned |
+| Images | a row of phone screenshots or one or two wide screenshots under the intro, centered |
+| Section labels | "Responsibilities", "Technologies and frameworks": Avenir Next Medium, teal (`#077482`) |
+
+The fonts are macOS system fonts: the PDF is exported through Pages (first in `pdf_exporters`), which embeds them; Word on Windows and LibreOffice would substitute them, so `pdf-check`'s embedded-font check matters here. Content issues found in that portfolio (client names the CV hides, informal wording, typos) are handled through `/import-docs`, never copied.
+
 ## 6. Checks (`build:portfolio` fails on errors)
 
 | Check | What |

@@ -10,7 +10,8 @@ Old CVs, portfolios and similar documents often say more about past jobs than th
 sources/
 ├── index.yaml          # one entry per document (section 2)
 ├── files/<id>.<ext>    # the original file, unchanged
-└── text/<id>.md        # its text, extracted by import-doc (never edited by hand)
+├── text/<id>.md        # its text, extracted by import-doc (never edited by hand)
+└── media/<id>/         # images extracted from the document (.pages), linked from its text
 ```
 
 The originals are private and stay in the private repo, in git, like `facts/` and `summaries/`.
@@ -29,9 +30,10 @@ documents:
     sha256: "…"                  # of the original; validate checks it
     imported_at: 2026-10-21
     status: imported             # imported | reviewed (every proposal from it went through with the user)
+    media: sources/media/cv-2021-06   # optional: extracted images
 ```
 
-Accepted files: `.docx`, `.pdf`, `.md`, `.txt`. Other formats (`.doc`, `.pages`, `.pptx`, `.key`) are exported to PDF first. The same file (by `sha256`) is imported only once.
+Accepted files: `.docx`, `.pdf`, `.md`, `.txt`, and `.pages` on macOS with Pages: Pages exports it to Word, and pandoc (when installed) turns that into Markdown with headings, lists, links, captions and images (`media/<id>/`, listed as `media:` in the index). Other formats (`.doc`, `.pptx`, `.key`) are exported to PDF first. The same file (by `sha256`) is imported only once.
 
 ## 3. Precedence
 

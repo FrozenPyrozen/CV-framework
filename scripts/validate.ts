@@ -277,6 +277,7 @@ export function validateRepo(): Issue[] {
       if (!d.file || !existsSync(rootPath(d.file))) err(srcIndex, `${d.id}: file ${d.file} is missing`);
       else if (createHash("sha256").update(readFileSync(rootPath(d.file))).digest("hex") !== d.sha256) err(srcIndex, `${d.id}: ${d.file} changed since it was imported (sha256); import a new version under a new id`);
       if (!d.text || !existsSync(rootPath(d.text))) err(srcIndex, `${d.id}: text ${d.text} is missing (npm run import-doc writes it)`);
+      if (d.media && !existsSync(rootPath(d.media))) err(srcIndex, `${d.id}: media folder ${d.media} is missing`);
     }
     docIds = seenDocs;
   }

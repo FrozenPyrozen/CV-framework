@@ -1,8 +1,10 @@
 // Imported documents (specs/sources-spec.md): the index in sources/index.yaml and text extraction for
-// .docx, .pdf, .md and .txt files.
+// .docx, .pdf, .md, .txt and (on macOS with Pages) .pages files.
 import JSZip from "jszip";
-import { existsSync, readFileSync } from "node:fs";
-import { extname } from "node:path";
+import { spawnSync } from "node:child_process";
+import { cpSync, existsSync, mkdtempSync, readFileSync, readdirSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { extname, join } from "node:path";
 import { loadConfig, readYaml, rootPath } from "./repo.ts";
 
 export interface SourceDoc {
@@ -15,6 +17,7 @@ export interface SourceDoc {
   sha256: string;
   imported_at: string;
   status: "imported" | "reviewed";
+  media?: string; // folder with the images extracted from the document (.pages through pandoc)
 }
 
 export const sourcesDir = (cfg = loadConfig()) => cfg.paths.sources ?? "sources";
@@ -29,13 +32,54 @@ export function loadSources(cfg = loadConfig()): { schema_version: 1; documents:
 // doc:<id> references in any text (summary bodies, section 7, facts' source fields).
 export const DOC_REF = /\bdoc:([a-z0-9]+(?:-[a-z0-9]+)*)/g;
 
-export const EXTRACTABLE = [".docx", ".pdf", ".md", ".txt"];
+export const EXTRACTABLE = [".docx", ".pdf", ".md", ".txt", ".pages"];
 
 const decode = (s: string) =>
   s.replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&apos;/g, "'").replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(Number(n))).replace(/&amp;/g, "&");
 
-export async function extractText(file: string): Promise<string> {
+// A .pages file is exported to Word by Pages (macOS), then turned into Markdown by pandoc when it's installed, keeping
+// headings, lists, links, captions and images (written to mediaDir, linked as mediaLink/<name>); without pandoc,
+// the Word text is extracted as for any .docx.
+const PAGES_TO_DOCX = `
+on run argv
+  set inF to POSIX file (item 1 of argv)
+  set outF to POSIX file (item 2 of argv)
+  with timeout of 600 seconds
+    tell application "Pages"
+      set d to open inF
+      export d to outF as Microsoft Word
+      close d saving no
+    end tell
+  end timeout
+end run`;
+
+export const hasPandoc = () => spawnSync("pandoc", ["--version"], { encoding: "utf8" }).status === 0;
+
+async function pagesToText(file: string, media?: { dir: string; link: string }): Promise<string> {
+  if (process.platform !== "darwin" || !existsSync("/Applications/Pages.app")) throw new Error(`${file}: reading .pages needs Pages on macOS; export it to PDF or Word first`);
+  const tmp = mkdtempSync(join(tmpdir(), "cv-pages-"));
+  try {
+    const docx = join(tmp, "doc.docx");
+    const r = spawnSync("osascript", ["-e", PAGES_TO_DOCX, file, docx], { encoding: "utf8", timeout: 660_000 });
+    if (r.status !== 0 || !existsSync(docx)) throw new Error(`Pages couldn't export ${file} to Word: ${(r.stderr || r.error?.message || "").trim()}`);
+    if (!hasPandoc()) return await extractText(docx);
+    const p = spawnSync("pandoc", ["doc.docx", "-t", "gfm", "--wrap=none", "--extract-media=media"], { cwd: tmp, encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
+    if (p.status !== 0) throw new Error(`pandoc failed on the Word export of ${file}: ${p.stderr.trim()}`);
+    let md = p.stdout;
+    const imgs = join(tmp, "media", "media");
+    if (media && existsSync(imgs) && readdirSync(imgs).length) {
+      cpSync(imgs, media.dir, { recursive: true });
+      md = md.replaceAll("media/media/", `${media.link}/`);
+    }
+    return md;
+  } finally {
+    rmSync(tmp, { recursive: true, force: true });
+  }
+}
+
+export async function extractText(file: string, media?: { dir: string; link: string }): Promise<string> {
   const ext = extname(file).toLowerCase();
+  if (ext === ".pages") return pagesToText(file, media);
   if (ext === ".md" || ext === ".txt") return readFileSync(file, "utf8");
   if (ext === ".docx") {
     const zip = await JSZip.loadAsync(readFileSync(file));

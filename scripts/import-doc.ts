@@ -3,8 +3,9 @@
 // sources/files/<id>.<ext>, extracts its text to sources/text/<id>.md and adds it to sources/index.yaml. It changes no
 // summary: /import-docs (agents/advisor.md) proposes what the document adds, with the lowest precedence.
 import { createHash } from "node:crypto";
-import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { basename, extname, relative } from "node:path";
+import { copyFileSync, cpSync, existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { basename, extname, join, relative } from "node:path";
 import { stringify } from "yaml";
 import { EXTRACTABLE, extractText, loadSources, sourcesDir, type SourceDoc } from "./lib/sources.ts";
 import { cliPath, isMain, loadConfig, rootPath } from "./lib/repo.ts";
@@ -20,7 +21,7 @@ export const suggestId = (file: string, date: string) => {
 export async function importDoc(file: string, opts: { date: string; kind?: string; id?: string; title?: string; today?: string }): Promise<SourceDoc> {
   if (!existsSync(file)) throw new Error(`file not found: ${file}`);
   const ext = extname(file).toLowerCase();
-  if (!EXTRACTABLE.includes(ext)) throw new Error(`${basename(file)}: ${ext || "no extension"} can't be read; export it to PDF first (accepted: ${EXTRACTABLE.join(", ")})`);
+  if (!EXTRACTABLE.includes(ext)) throw new Error(`${basename(file)}: ${ext || "no extension"} can't be read; export it to PDF first (accepted: ${EXTRACTABLE.join(", ")}; .pages needs Pages on macOS)`);
   if (!/^\d{4}(-(0[1-9]|1[0-2]))?$/.test(opts.date ?? "")) throw new Error(`--date must be YYYY-MM or YYYY (when the document was written), got "${opts.date ?? ""}"`);
   const kind = opts.kind ?? (/portfolio/i.test(basename(file)) ? "portfolio" : /\b(cv|resume|résumé)\b|_cv/i.test(basename(file)) ? "cv" : undefined);
   if (!kind || !["cv", "portfolio", "other"].includes(kind)) throw new Error(`--kind must be cv, portfolio or other${kind ? `, got "${kind}"` : " (can't tell from the file name)"}`);
@@ -35,16 +36,22 @@ export async function importDoc(file: string, opts: { date: string; kind?: strin
   if (same) throw new Error(`this file is already imported as "${same.id}"`);
   if (index.documents.some((d) => d.id === id)) throw new Error(`id "${id}" is already used in ${dir}/index.yaml; pass another --id`);
 
-  const text = await extractText(file); // before anything is written: an unreadable file leaves no trace
-  if (text.replace(/<!-- page \d+ -->/g, "").trim().length < 50) throw new Error(`${basename(file)}: almost no text could be extracted (a scanned PDF?); export a text version or type the content into /add-experience`);
+  // Images (from .pages) go to a temporary folder first: an unreadable file leaves no trace in sources/.
+  const mediaTmp = mkdtempSync(join(tmpdir(), "cv-media-"));
+  const text = await extractText(file, { dir: mediaTmp, link: `../media/${id}` });
+  if (text.replace(/<!-- page \d+ -->/g, "").replace(/!\[[^\]]*\]\([^)]*\)|<img[^>]*>/g, "").trim().length < 50) { rmSync(mediaTmp, { recursive: true, force: true }); throw new Error(`${basename(file)}: almost no text could be extracted (a scanned PDF?); export a text version or type the content into /add-experience`); }
+  const hasMedia = readdirSync(mediaTmp).length > 0;
   const doc: SourceDoc = {
     id, kind: kind as SourceDoc["kind"], date: opts.date, title: opts.title ?? basename(file, ext),
     file: `${dir}/files/${id}${ext}`, text: `${dir}/text/${id}.md`, sha256,
     imported_at: opts.today ?? new Date().toISOString().slice(0, 10), status: "imported",
+    ...(hasMedia ? { media: `${dir}/media/${id}` } : {}),
   };
   mkdirSync(rootPath(dir, "files"), { recursive: true });
   mkdirSync(rootPath(dir, "text"), { recursive: true });
   copyFileSync(file, rootPath(doc.file));
+  if (doc.media) cpSync(mediaTmp, rootPath(doc.media), { recursive: true });
+  rmSync(mediaTmp, { recursive: true, force: true });
   writeFileSync(rootPath(doc.text), `<!-- extracted from ${doc.file} by npm run import-doc on ${doc.imported_at}; regenerated, never edited -->\n\n${text}`);
   index.documents.push(doc);
   index.documents.sort((a, b) => b.date.localeCompare(a.date) || a.id.localeCompare(b.id)); // newest first: the precedence order

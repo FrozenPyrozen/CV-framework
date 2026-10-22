@@ -25,9 +25,9 @@ test("import-doc refuses the same file twice, unreadable types, a missing date a
   const dir = tempRepo();
   assert.equal(importCv(dir).code, 0);
   assert.match(importCv(dir, ["--id", "other"]).out, /already imported as "cv-2025-10"/);
-  const pages = join(dir, "old.pages");
-  writeFileSync(pages, "x");
-  assert.match(run("import-doc.ts", dir, [pages, "--date", "2020", "--kind", "cv"]).out, /export it to PDF first/);
+  const keynote = join(dir, "old.key");
+  writeFileSync(keynote, "x");
+  assert.match(run("import-doc.ts", dir, [keynote, "--date", "2020", "--kind", "cv"]).out, /export it to PDF first/);
   const md = join(dir, "portfolio.md");
   writeFileSync(md, "# Portfolio\n");
   assert.match(run("import-doc.ts", dir, [md, "--kind", "portfolio"]).out, /--date must be YYYY-MM or YYYY/);
@@ -76,4 +76,13 @@ test("a doc: reference to an imported document passes", () => {
   edit(dir, "summaries/velas-wallet.md", /^(Tags: .*)$/m, "$1\nSource: doc:cv-2025-10");
   const r = run("validate.ts", dir);
   assert.equal(r.code, 0, r.out);
+});
+
+test("import-doc names what .pages needs when Pages can't be used, and leaves no trace", { skip: process.platform === "darwin" }, () => {
+  const dir = tempRepo();
+  const f = join(dir, "old.pages");
+  writeFileSync(f, "x");
+  const r = run("import-doc.ts", dir, [f, "--date", "2020", "--kind", "portfolio"]);
+  assert.match(r.out, /needs Pages on macOS/);
+  assert.ok(!existsSync(join(dir, "sources/index.yaml")));
 });

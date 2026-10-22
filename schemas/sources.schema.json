@@ -19,7 +19,8 @@
           "text": { "type": "string" },
           "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
           "imported_at": { "type": "string" },
-          "status": { "enum": ["imported", "reviewed"] }
+          "status": { "enum": ["imported", "reviewed"] },
+          "media": { "type": "string" }
         },
         "additionalProperties": false
       }

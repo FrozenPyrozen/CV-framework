@@ -1,0 +1,13 @@
+# Imported documents (specs/sources-spec.md). Newest first; lower precedence than summaries and facts.
+schema_version: 1
+documents:
+  - id: portfolio-2025-04
+    kind: portfolio
+    date: 2025-04
+    title: Portfolio, April 2025
+    file: sources/files/portfolio-2025-04.pages
+    text: sources/text/portfolio-2025-04.md
+    sha256: b7b9a51a61b79dcc8d894723bc830ba5d87e2de9650a2f7a323201a2a8c93fff
+    imported_at: 2026-10-22
+    status: imported
+    media: sources/media/portfolio-2025-04
