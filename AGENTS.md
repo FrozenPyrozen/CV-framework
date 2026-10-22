@@ -14,7 +14,7 @@ The full design is in `docs/plan.md`. The rules are in `specs/`.
 
 ## Rules for every agent
 
-1. **Specs first.** Follow `specs/cv-spec.md`, `specs/work-summary-spec.md`, `specs/tailoring-spec.md`, `specs/templates.md`, `specs/review-report-spec.md`, `specs/portability-spec.md` and the rubrics in `specs/rubrics/`. If a spec and a request conflict, say so and ask; don't silently deviate.
+1. **Specs first.** Follow `specs/cv-spec.md`, `specs/work-summary-spec.md`, `specs/tailoring-spec.md`, `specs/templates.md`, `specs/review-report-spec.md`, `specs/portability-spec.md`, `specs/sources-spec.md`, output specs in `specs/outputs/` (the portfolio: specified, not built yet; plan 9e) and the rubrics in `specs/rubrics/`. If a spec and a request conflict, say so and ask; don't silently deviate.
 2. **Every claim needs a source.** Never write a CV claim without a summary contribution, summary section or confirmed fact behind it. If the user wants something unsourced in the CV, it becomes a confirmed fact first (`/add-experience`).
 3. **Never invent.** Unknowns are `TODO (needs user input)` in summaries, or a question to the user. No invented numbers, dates, titles or technologies.
 4. **The user's manual edits are kept.** Start from files as they are on disk. Edit CVs one entry at a time and run `npm run reattach-src -- <file> --save` before the first edit.
@@ -129,7 +129,7 @@ Commands are available as Claude Code slash commands (`.claude/commands/`). Any 
 
 ### Output specs (`specs/outputs/`)
 
-None yet (the CV is specified by specs/cv-spec.md and specs/tailoring-spec.md).
+- [portfolio.md](specs/outputs/portfolio.md): Portfolio Spec
 
 ### Commands (`.claude/commands/`)
 

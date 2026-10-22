@@ -65,6 +65,7 @@ Run `npm test` and `npm run check`, plus `npm run build:all` when an export app 
 | B14 | 45 | `/job-change` (leaving) | the current job | a final harvest is offered first; `period.end` set; the summary remains the record |
 | B15 | 75 | `/harvest-prompt`, then `/import-summary <file>` | a repo on another machine; the summary written there from the prompt | the prompt holds the spec, tag list and identities but no other summaries or facts; the file fails import with code, local paths, URLs in `repos` or unknown sections; a new id lands in `summaries/`, an existing id in `.cv-runs/import/` and is merged by work-summary-spec 7 |
 | B16 | 76 | `/import-docs <file>` | an older CV with more detail and one date that disagrees with a summary | the file and its text land in `sources/`; proposals per summary list gaps, numbers and the conflict; the conflicting date stays as in the summary; approved additions carry `doc:<id>`; unconfirmed `doc:` numbers stay out of the CV; `validate` passes; the document ends `reviewed` |
+| B17 | 77 | `/portfolio`, then `npm run build:portfolio -- --size all` (after plan 9e P6; not runnable yet) | two summaries opted in with public-confirmed images | `portfolio/portfolio.md` with sources on every sentence; `.docx`, `.pages` and A4 and Letter PDFs; no hidden client names or section 9 terms; unconfirmed images and numbers left out; spellcheck clean; `status` marks it stale after a summary change |
 
 ## C. Permanent end-to-end scenarios
 

@@ -74,6 +74,7 @@ Supported fix types (each fix has `id`, `why`, `found`, `set`):
 | `first_after_section_heading: { before }` | space above whatever comes first under a section line, so every section starts with the same gap |
 | `rule_full_width: true` | the drawn line under section headings (`section_rule`) spans the whole text width (page width minus the effective left and right margins, after any `page_margins` fix); combine with `paragraphs: { section_rule: { indent_left: 0 } }` so it starts where headings start |
 | `page_margins: { top, bottom, left, right }` | page margins in twips (any of them), overriding the template's section settings |
+| `sizes: { a4: { page_margins }, letter: { page_margins } }` | (portfolio templates, planned in plan 9e P4) the page sizes a template is built in, each with its margins; one output per size |
 | `letter_spacing: N` | character spacing of N twentieths of a point on every run; `1` is invisible and stops Pages from forming fi/fl ligatures that some PDF readers extract wrongly |
 
 ## 4. Import (`/import-template <file> <name>`)

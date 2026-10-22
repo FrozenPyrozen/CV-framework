@@ -129,7 +129,7 @@ Part-time contract and consulting work, alongside full-time roles
 
 ### **Generative AI Jira Plugin | Remote**
 
-* Built an **Atlassian Jira Forge** app from scratch with **Node.js** resolvers in **TypeScript** and a **React** UI, starting with Forge UI Kit and moving to **Forge Custom UI**. The app starts **generative AI** design creation from a Jira issue and adds a Jira subtask for the result. <!-- src: designai-jira-plugin#4.1 -->
+* Built an **Atlassian Jira Forge** app from scratch with **Node.js** resolvers in **TypeScript** and a **React** UI (Forge UI Kit first, then **Forge Custom UI**). The app starts **generative AI** design creation from a Jira issue and adds a subtask for the result. <!-- src: designai-jira-plugin#4.1 -->
 
 * Built the design generation form with multiple inputs: design description, reference images with preview, product requirements document (PRD) and user-flow uploads, website URL, **MCP (Model Context Protocol)** server URL and design-system selection, using **Atlaskit** components, a reusable file-upload component and form validation. <!-- src: designai-jira-plugin#4.2 -->
 

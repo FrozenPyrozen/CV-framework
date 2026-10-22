@@ -55,7 +55,7 @@ CV/
 │   ├── templates.md               # template import rules and style-map format
 │   ├── review-report-spec.md      # shared format for every reviewer report
 │   ├── portability-spec.md        # moving to another laptop: backup, full archive, restore, remotes
-│   ├── outputs/                   # (created when first needed) specs for future output types (portfolio.md, linkedin.md, cover-letter.md); the CV's
+│   ├── outputs/                   # specs for further output types: portfolio.md (specified, 9e); later linkedin.md, cover-letter.md; the CV's
 │   │                              # output specs are cv-spec.md and tailoring-spec.md
 │   └── rubrics/
 │       ├── ats.md                 # AI ATS screener rubric (+ job-ad match mode)
@@ -78,6 +78,7 @@ CV/
 │   ├── decisions.yaml             # choices you made about the CV (e.g. "no LinkedIn"), so reviewers stop re-raising them
 │   └── applications.yaml          # optional log: which CV/PDF went to which company and when (4.5)
 ├── sources/                       # imported old CVs and portfolios: index.yaml, files/ (originals), text/ (extracted) (9d)
+├── portfolio/                     # (phase P2, 9e) portfolio.md, assets/<summary-id>/ images; built .docx/.pages/PDFs git-ignored
 ├── summaries/                     # one file per job/project, all following work-summary-spec
 │   └── .digests/                  # generated short digests (contributions + tags) read by composer/tailor (R10; git-ignored,
 │                                  # recreated by `npm run digest`)
@@ -815,6 +816,21 @@ Older CVs and portfolios often hold more detail about past jobs than the summari
 3. The advisor proposes, per summary: filled `TODO` sections, new contributions (`Source: doc:<id>`), technologies, portfolio material, numbers (section 7 `doc:<id>`; in the CV only once you confirm them) and conflicts (listed; the current value stays unless you say otherwise, and then it's recorded as your answer). Jobs no summary covers become `source: cv` summaries hidden from the CV until you decide.
 4. `validate` checks the index, that each original is unchanged (sha256), and that every `doc:<id>` names an imported document. Then `/compose`, `/variants`, `build:all`.
 
+## 9e. Portfolio (specified, built in phases)
+
+The portfolio is a second output of the same sources: a multi-page document (cover, a page or more per project, skills, contact) behind a **public link**. Rules are in `specs/outputs/portfolio.md`; it reuses the CV pipeline (Markdown → Word template → PDF exporters → checks) and adds images, several page sizes, `.pages` output, public-only confidentiality and a dictionary spell check.
+
+| Phase | What | Needs |
+|---|---|---|
+| P1 | Summary fields `show_in_portfolio`, `portfolio_order`, `portfolio_label`, `portfolio_max_items` and the structured section 8 (images, links, demos, each `public: yes, confirmed by user <date>`) in the schema and `validate`; `/portfolio-material` with the advisor to fill section 8 and opt projects in | nothing |
+| P2 | Import your current portfolio: `/import-docs` for its content (sources, 9d) and `/import-template` for its layout (`templates/portfolio-<name>/`, new paragraph types: cover title, intro, project title, project meta, section label, caption, image) | your Pages or Word file and its PDF |
+| P3 | `agents/portfolio.md` and `/portfolio`: writes `portfolio/portfolio.md` with a source on every sentence; `refresh` writes its generated blocks; `status` tracks it | P1, P2 |
+| P4 | Renderer: images (scaled to the content width, captions), page sizes per template (`sizes: { a4, letter }`), `build:portfolio [--size a4\|letter\|all]`: `.docx`, `.pages` (through Pages), one PDF per size, `pdf-check` and previews per size | P2, P3 |
+| P5 | `npm run spellcheck`: a dictionary spell check (US English) with the project word list `facts/dictionary.txt`, for the portfolio **and** the CV (today spelling is checked only by the proofreading reviewer and `checks.spelling_variants`) | nothing |
+| P6 | Portfolio checks and reviews: image checks (exists, public-confirmed, at least 1200 px wide, none unused), `lint` as for the CV except that section 9 terms are allowed only with `allow_in: [portfolio]` (job-id and `summary` exceptions don't apply); the phone number left out unless decided otherwise, `/review --portfolio` (proofreading, fact-check, confidentiality with public rules, layout); acceptance scenario B17 | P4 |
+
+P1 and P5 can start now; P2 waits for your files.
+
 ## 9b. Known risks and mitigations
 
 Problems expected when the flows actually run, found by simulating every flow against what happened in the 2026-10-15 chat. Each mitigation is part of the build step shown.
@@ -869,7 +885,7 @@ Problems expected when the flows actually run, found by simulating every flow ag
 ## 11. Out of scope for now
 
 - **PDF input for `/import-template`:** Word input works; PDF input (planned in section 6.4) is deferred until you need a template from a PDF CV.
-- **Portfolio output:** the summaries already collect what it needs (section 4.1). The portfolio spec, agent and renderer come once you share your portfolio format.
+- **Portfolio output:** specified (`specs/outputs/portfolio.md`, section 9e); the template, agent and renderer are built in phases P2–P6 once you share your portfolio as Pages or Word and PDF.
 - Cover-letter agent (the format leaves room to add it later).
 - Pulling history from remote GitHub or Azure DevOps (local clones only, while you have access).
 - A fully code-driven pipeline (Agent SDK CLI). It can wrap the same `agents/*.md` later.
@@ -877,7 +893,7 @@ Problems expected when the flows actually run, found by simulating every flow ag
 
 ## 12. Coverage of the 2026-10-15 chat
 
-Every step done by hand in the chat, and the capability that repeats it. Rows 37 onward also log the build steps of section 8 (step 5: rows 37–42, step 6: 43–44, step 7: 46–47, step 8: 48–49, step 9: 50–52, step 10: 54, step 11: 55, step 12: 56–57, step 14: 61), the audits (58, 62, 71–74) and the changes you asked for (59–60, 63–70, 75–76).
+Every step done by hand in the chat, and the capability that repeats it. Rows 37 onward also log the build steps of section 8 (step 5: rows 37–42, step 6: 43–44, step 7: 46–47, step 8: 48–49, step 9: 50–52, step 10: 54, step 11: 55, step 12: 56–57, step 14: 61), the audits (58, 62, 71–74) and the changes you asked for (59–60, 63–70, 75–77).
 
 | # | What we did in the chat | Framework capability |
 |---|---|---|
@@ -957,3 +973,4 @@ Every step done by hand in the chat, and the capability that repeats it. Rows 37
 | 74 | Validation, round 3 of 3 (consistency pass, behavior retest) | A job ad always names its profile (the tailor proposes the closest one when `--profile` is missing); a missing sent PDF is fine when a copy was kept and can be acknowledged; plan rows for build, refresh, lint, status, validate, select and R6 brought in line; `CV_DEBUG=1` documented ; `build` fails only the CV whose own files have validate errors; `check` refuses a file argument; `select` refuses a job ad without a profile and folders outside `cv/variants/` and `cv/tailored/`; YAML and missing-file errors name the file |
 | 75 | Asked how to add a project whose repo can't come to this laptop | Portable harvest (section 9c, `specs/work-summary-spec.md` 9): `harvest-prompt` generates a self-contained prompt from the spec, tags and identities; the summary is written on the other machine (`harvest_mode: portable`) and checked here by `import-summary` with the same rules as `validate`; the harvester adds or merges it; commands `/harvest-prompt` and `/import-summary`; acceptance B15 |
 | 76 | Asked to import old CVs and portfolios and take information from them | Sources (section 9d, `specs/sources-spec.md`): originals and extracted text in `sources/`, `import-doc`, `/import-docs` in the advisor; precedence user > git > current summaries and CV > documents (newest first); documents fill gaps only, numbers need confirmation, conflicts keep the current value; contribution `Source: doc:<id>` lines; `validate` checks the index, file hashes and `doc:` references; composer and fact-check rules; acceptance B16 |
+| 77 | Asked to handle the portfolio like the CV: generate it, convert it to Markdown, Pages and PDF in several sizes, keep it updated, check spelling, use templates | `specs/outputs/portfolio.md` and section 9e: a document-style, public portfolio from the same summaries; opt-in projects and public-confirmed material (structured section 8); portfolio templates with page sizes; `.docx`, `.pages` and a PDF per size; stricter public confidentiality; a dictionary spell check for the portfolio and the CV; staleness through `status`; built in phases P1–P6, P2 after you provide your current portfolio files |
