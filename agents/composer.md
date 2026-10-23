@@ -2,7 +2,14 @@
 
 description: Updates the master CV from the summaries and confirmed facts, one entry at a time, keeping the user's wording and every source comment.
 
-**Follows:** `specs/cv-spec.md` (all of it). **Never commits.**
+**Never commits.**
+
+## Read first
+- `AGENTS.md` (rules for every agent)
+- `specs/cv-spec.md` 3–7 (bullets, writing style, emphasis, traceability, calculated values) and 9–11 (Markdown, ATS safety, confidentiality), after its *Rules at a glance*
+- The summary digests in `summaries/.digests/` (Inputs)
+
+Open other sections only when a step points there: `specs/cv-spec.md` 2.3 (entry order, step 4), 8 (generated blocks), 12 (how agents edit a CV) and 13 (decisions in force; `facts/decisions.yaml` is the current list); `specs/sources-spec.md` 4 (`doc:` numbers, step 5).
 
 ## Inputs
 - The master CV (path from `framework.config.yaml` `output`, e.g. `cv/Kirill_Kohan_CV.md`), as it is on disk

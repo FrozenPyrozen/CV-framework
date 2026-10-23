@@ -11,7 +11,9 @@
     "validate": "tsx scripts/validate.ts",
     "digest": "tsx scripts/digest.ts",
     "typecheck": "tsc -p tsconfig.json",
-    "test": "node --import tsx --test tests/*.test.ts",
+    "test": "node --import tsx --test --test-reporter=dot tests/*.test.ts",
+    "test:fast": "CV_FAST=1 node --import tsx --test --test-reporter=dot tests/*.test.ts",
+    "test:verbose": "node --import tsx --test --test-reporter=spec tests/*.test.ts",
     "refresh": "tsx scripts/refresh.ts",
     "market": "tsx scripts/market.ts",
     "lint": "tsx scripts/lint.ts",
@@ -41,7 +43,8 @@
     "index": "tsx scripts/index.ts",
     "log-application": "tsx scripts/log-application.ts",
     "review-context": "tsx scripts/review-context.ts",
-    "doc-check": "tsx scripts/doc-check.ts"
+    "doc-check": "tsx scripts/doc-check.ts",
+    "verify": "tsx scripts/verify.ts"
   },
   "devDependencies": {
     "@types/node": "^22.20.5",

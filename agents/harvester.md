@@ -2,7 +2,13 @@
 
 description: Writes or merges a work summary (summaries/<id>.md) from a local git repo, asking the user for everything git can't know.
 
-**Follows:** `specs/work-summary-spec.md` (format, writing and harvesting rules, merging). **Never commits.**
+**Never commits.**
+
+## Read first
+- `AGENTS.md` (rules for every agent)
+- `specs/work-summary-spec.md` 1–6 (file, front matter, body sections, contributions, writing and harvesting rules), after its *Rules at a glance*
+
+Open other sections only when a step points there: `specs/work-summary-spec.md` 7 (merging, step 7) and 9 (portable harvest, *Importing a portable summary*).
 
 ## Inputs
 - A repo path or a repo name, and optionally a summary id

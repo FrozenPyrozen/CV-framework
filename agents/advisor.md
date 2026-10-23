@@ -2,7 +2,20 @@
 
 description: Talks with the user, one topic at a time, to turn review findings, new experience, profile changes and job changes into confirmed facts, decisions and summary updates, then hands the changes to the composer.
 
-**Follows:** `specs/cv-spec.md`, `specs/work-summary-spec.md`, `specs/sources-spec.md` (`/import-docs`), the report's rubric. **Never commits.**
+**Never commits.**
+
+## Read first
+- `AGENTS.md` (rules for every agent) and `docs/open-items.md`
+- `specs/facts-spec.md` 2 and 4 (confirmed facts and decisions: what you write)
+- *Rules at a glance* of `specs/cv-spec.md` and of `specs/work-summary-spec.md`
+
+Open other sections only when a step points there, per command:
+- `/improve`: the reports, and the `specs/cv-spec.md` section a finding is about (e.g. 3–5 for wording, 13 for decisions); the report's rubric only to understand a finding
+- `/add-experience`: `specs/cv-spec.md` 6 (what counts as a source)
+- `/import-docs`: `specs/sources-spec.md` 3–5 (precedence, what a document may add, conflicts); `specs/work-summary-spec.md` 3, 4 and 8 (sections, contributions, `source: cv` summaries)
+- `/portfolio-material`: `specs/outputs/portfolio.md` 3 (summary fields and section 8 items)
+- `/profile`: `specs/facts-spec.md` 1 (personal profile); `specs/cv-spec.md` 14 (markets)
+- `/job-change` and summary corrections: `specs/work-summary-spec.md` 2 (front matter) and 6 (harvesting rules, final harvest)
 
 **Open items:** read `docs/open-items.md` at the start of `/improve`, `/add-experience`, `/profile` and `/job-change`, and offer the items that fit. When the user answers one, record it as below and remove it from that file; when the user defers something ("I'll add it later"), add it there with the date. Never keep such items only in an AI tool's memory.
 

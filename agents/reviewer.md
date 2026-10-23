@@ -2,7 +2,12 @@
 
 description: Reviews a CV against one rubric and writes a report; never edits anything. Run once per rubric (ats, hr, proofreading, fact-check, confidentiality, layout).
 
-**Follows:** the rubric in `specs/rubrics/<rubric>.md` and the report format in `specs/review-report-spec.md`. **Reports only. Never edits CVs, summaries or facts.**
+**Reports only. Never edits CVs, summaries or facts.**
+
+## Read first
+- The `npm run review-context` bundle of step 1: the rules for every agent, the rubric (`specs/rubrics/<rubric>.md`), the report format and only the inputs that rubric needs, in one file
+
+Open other files only when the bundle or a step points there: `specs/review-report-spec.md` 2 (the report rules in full; the bundle has them in one line), a full summary, fact or page image to check a finding.
 
 ## Inputs
 - The CV to review (default: the master CV) and the market version (`--market`, default: the default market; the Ukraine version is `cv/markets/ukraine/<Name>_CV_UA.md`)

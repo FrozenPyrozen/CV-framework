@@ -2,6 +2,19 @@
 
 Status: v1 (built, plan 9e P1–P6; the `portfolio-classic` template approved 2026-10-23) · Applies to: `portfolio/`, written by the portfolio agent (`/portfolio`), built by `npm run build:portfolio`
 
+## Rules at a glance
+
+The essentials, each stated in full in the section named. Agents that only need these can stop here.
+
+- The portfolio is public: projects are opted in (`show_in_portfolio`), and only section 8 items with `public: yes, confirmed by user <date>` reach it (section 3); when in doubt, leave it out and ask (section 8).
+- Every sentence carries a source comment; nothing the sources don't support; `doc:<id>` numbers only once confirmed (section 1).
+- Each page: a generated title and screenshots; the agent writes the description, **Responsibilities** (prose) and **Technologies and frameworks** (section 4).
+- No dates or periods; a page fits one page with its screenshots, and `portfolio check` warns above `checks.portfolio_max_project_words` (section 4).
+- Generated blocks and `<!-- project: … -->` markers are written by `npm run portfolio -- refresh`, never by hand (section 4).
+- Hidden clients stay hidden; a section 9 term appears only with `allow_in: [portfolio]`; no phone number without decision `portfolio-show-phone` (sections 1 and 6).
+- Only stale projects are rewritten; the rest keep their wording (section 7).
+- The portfolio never says more than the summaries (section 8).
+
 The portfolio is a second **output** of the same sources as the CV (plan section 2, "Sources and outputs are separate"): a multi-page **document** with a cover and a page or more per project, shared through a **public link**. It is built like the CV: Markdown first, then Word through an imported template, then PDF, with the same checks. Its content and look come from the published portfolio, `doc:portfolio-2025-09` (imported 2026-10-23), and the April 2025 Pages file, `doc:portfolio-2025-04` (section 5a).
 
 ## 1. Sources

@@ -2,6 +2,19 @@
 
 Status: v1 · Applies to: role variants (`cv/variants/<profile>/`) and job-specific CVs (`cv/tailored/<company-role>/`)
 
+## Rules at a glance
+
+The essentials, each stated in full in the section named. Agents that only need these can stop here.
+
+- Every `cv-spec.md` rule still applies (section 1); a tailored CV changes emphasis, order and length, never adds a claim without a source (section 3).
+- A job ad always builds on a role profile; its requirements go to `required`, its duties and nice-to-haves to `nice_to_have` in `jd-tags.yaml`; new tags need approval (section 2, step 1).
+- `npm run select` chooses and orders the bullets (`selection.json`); the agent never changes the selection or reorders bullets, and puts disagreements in the gap report (sections 2 and 3).
+- A bullet starts from the master CV's wording for the same source id and is only shortened or re-emphasized, with details from the same source only; every `src` comment is kept (section 2, step 3).
+- Every entry stays listed; over `max_words`, shorten the wording first, then propose drops in the gap report for the user to decide (section 2, step 4).
+- Lasting changes for a variant go in the profile's `overrides`; variant files are rebuilt, never edited by hand (section 4).
+- On a rebuild only the entries `npm run status` lists are rewritten; the rest are copied unchanged (section 2, step 6).
+- The gap report never suggests claiming something that isn't true (section 5).
+
 A tailored CV is the master CV adapted to a type of role (a **profile**) or to one **job ad**. It may change emphasis, order and length. It may never add a claim without a source.
 
 ## 1. Inputs

@@ -1,6 +1,6 @@
 # Workflows (commands)
 
-Open this file to find which agent file and scripts a workflow follows. Commands are Claude Code slash commands (`.claude/commands/`); any other tool runs the same workflow by following the agent file and the scripts listed. Each command file points to an agent definition (or one of its sections) or runs scripts, and never holds rules of its own. Script details: `docs/scripts.md`.
+Open this file to find which agent file and scripts a workflow follows. Commands are Claude Code slash commands (`.claude/commands/`); any other tool runs the same workflow by following the agent file and the scripts listed. Each command file points to an agent definition (or one of its sections) or runs scripts, and never holds rules of its own. Script details: `docs/scripts.md`. Every workflow that changes files ends with `npm run verify -- --fast` while iterating and `npm run verify` before handing back.
 
 | Command | What happens | Follow |
 |---|---|---|

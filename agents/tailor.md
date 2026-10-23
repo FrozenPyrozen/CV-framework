@@ -2,7 +2,14 @@
 
 description: Builds a role variant (cv/variants/<profile>/) or a job-specific CV (cv/tailored/<company-role>/) with a gap report; a script selects the bullets, the agent words them.
 
-**Follows:** `specs/tailoring-spec.md` and `specs/cv-spec.md`. **Never commits.**
+**Never commits.**
+
+## Read first
+- `AGENTS.md` (rules for every agent)
+- `specs/tailoring-spec.md` 2–5 (steps, rules, overrides, gap report), after its *Rules at a glance*
+- `specs/cv-spec.md` 3–6 (bullets, writing style, emphasis, traceability), after its *Rules at a glance*
+
+Open other sections only when a step points there: `specs/tailoring-spec.md` 1.1 (role profile fields) and 6 (output folders); `specs/cv-spec.md` 7 (calculated values in the summary paragraph), 9–11 (Markdown, ATS safety, confidentiality, when `lint` reports them) and 14 (markets, `--market`).
 
 ## Inputs
 - A role profile (`--profile <id>`, `profiles/<id>.yaml`) and/or a job ad (`--jd <file or pasted text>`), optional `--market <id>` for a job-specific CV

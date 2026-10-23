@@ -2,7 +2,14 @@
 
 description: Writes the public portfolio's text (portfolio/portfolio.md) from the opted-in summaries, one project at a time, with a source on every sentence; the scripts write everything else.
 
-**Follows:** `specs/outputs/portfolio.md` (all of it), the writing rules of `specs/cv-spec.md` (sections 4 and 6), `specs/sources-spec.md` 4 for `doc:` numbers. **Never commits.**
+**Never commits.**
+
+## Read first
+- `AGENTS.md` (rules for every agent)
+- `specs/outputs/portfolio.md` 1, 4 and 8 (sources, page structure, rules), after its *Rules at a glance*
+- `specs/cv-spec.md` 4 and 6 (writing style, traceability)
+
+Open other sections only when a step points there: `specs/outputs/portfolio.md` 3 (summary fields and public section 8 items), 6 (what each check does, when one fails) and 7 (which projects to rewrite); `specs/sources-spec.md` 4 (`doc:` numbers).
 
 ## Inputs
 - `portfolio/portfolio.md` as it is on disk (created by `npm run portfolio -- refresh`)

@@ -3,6 +3,7 @@ import { constants, cpSync, existsSync, mkdtempSync, readFileSync, rmSync, write
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { spawnSync } from "node:child_process";
+import assert from "node:assert/strict";
 
 export const REPO = resolve(import.meta.dirname, "..");
 
@@ -35,4 +36,29 @@ export function run(script: string, dir: string, args: string[] = []) {
     encoding: "utf8",
   });
   return { code: r.status, out: (r.stdout ?? "") + (r.stderr ?? "") };
+}
+
+// The master CV and its Ukraine copy, as paths inside a temp repo.
+export const CV = "cv/Kirill_Kohan_CV.md";
+export const UA = "cv/markets/ukraine/Kirill_Kohan_CV_UA.md";
+
+// A temp repo with the master CV refreshed.
+export function refreshed(): string {
+  const dir = tempRepo();
+  const r = run("refresh.ts", dir);
+  assert.equal(r.code, 0, r.out);
+  return dir;
+}
+
+// Portable harvest: a copy of the velas-wallet summary under another id, as a file to import (optionally changed).
+export const sample = (dir: string, id: string, change: (t: string) => string = (t) => t) => {
+  const text = readFileSync(join(dir, "summaries/velas-wallet.md"), "utf8").replace(/^id: .*$/m, `id: ${id}`);
+  const f = join(dir, `${id}-incoming.md`);
+  writeFileSync(f, change(text));
+  return f;
+};
+
+// Options for a slow test that drives Pages, LibreOffice or a full backup zip: `npm run test:fast` (CV_FAST=1) skips it.
+export function slow(options: { skip?: string | false; timeout?: number } = {}) {
+  return { ...options, skip: options.skip || (process.env.CV_FAST ? "fast mode (npm run test:fast)" : false) };
 }

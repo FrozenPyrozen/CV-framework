@@ -14,12 +14,12 @@ The full design is in `docs/plan.md`. The rules are in `specs/`.
 
 ## Rules for every agent
 
-1. **Specs first.** Follow the specs in `specs/` (`cv-spec.md`, `work-summary-spec.md`, `facts-spec.md`, `tailoring-spec.md`, `templates.md`, `review-report-spec.md`, `portability-spec.md`, `sources-spec.md`, `outputs/portfolio.md`) and the rubrics in `specs/rubrics/`. If a spec and a request conflict, say so and ask; don't silently deviate.
+1. **Specs first.** Follow the specs in `specs/` (`cv-spec.md`, `work-summary-spec.md`, `facts-spec.md`, `tailoring-spec.md`, `templates.md`, `review-report-spec.md`, `portability-spec.md`, `sources-spec.md`, `outputs/portfolio.md`) and the rubrics in `specs/rubrics/`; read the sections your agent's *Read first* list names (and a spec's *Rules at a glance*), opening others only when a step points there. If a spec and a request conflict, say so and ask; don't silently deviate.
 2. **Every claim needs a source.** Never write a CV claim without a summary contribution, summary section or confirmed fact behind it. If the user wants something unsourced in the CV, it becomes a confirmed fact first (`/add-experience`).
 3. **Never invent.** Unknowns are `TODO (needs user input)` in summaries, or a question to the user. No invented numbers, dates, titles or technologies.
 4. **The user's manual edits are kept.** Start from files as they are on disk. Edit CVs one entry at a time and run `npm run reattach-src -- <file> --save` before the first edit.
 5. **Never commit.** Leave changes uncommitted, show a diff and a short change log. The user reviews and commits.
-6. **Every AI step ends with a deterministic check.** After changing summaries, facts or profiles: `npm run validate`. After changing a CV: `npm run reattach-src -- <file>`, then `npm run check` (every CV; it takes no file) or `npm run build -- <file>` for one CV. After changing code, config or docs: `npm run doc-check`. Report failures; don't hide them.
+6. **Every AI step ends with a deterministic check.** After a change: `npm run verify -- --fast` while iterating, `npm run verify` before handing back. After editing a CV, run `npm run reattach-src -- <file>` first; `npm run build -- <file>` builds one CV. Report failures; don't hide them.
 7. **Confidentiality.** The repo is local or on a private remote only. Summaries describe work in your own words: no source code, copied internal documents, internal URLs or secrets. Terms in a summary's *Confidentiality notes* never appear in a CV (lint enforces it).
 8. **Employment type is a fact.** `engagement` records the real employment type; "(Contract)" appears only when it's true (decision `all-full-time`).
 9. **Decisions in `facts/decisions.yaml` are settled.** Follow them; reviewers list matching findings as *Decided*.

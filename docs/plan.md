@@ -25,7 +25,7 @@ Every step done by hand in the 2026-10-15 chat maps to a framework capability (`
 - **Employer confidentiality.** The repo stays local or on a *private* remote only. Summaries describe your work in your own words: no source code, no copied internal document text, no internal URLs, no secrets. The harvester spec and lint enforce this.
 - **Summaries are the lasting record.** Access to employer and client repos ends with the job, so a summary must stand on its own: it names the repos it came from but stores no remote URLs, and the last harvest happens before you leave (`/job-change`).
 - **Agents never commit.** Every agent leaves its changes uncommitted and shows a diff. You review and commit, and git history is the undo.
-- **Every AI step ends with a deterministic check.** Agents finish by running `validate` (after changing summaries, facts or profiles) or `check`/`build` (after changing a CV), and report failures instead of hiding them.
+- **Every AI step ends with a deterministic check.** Agents run `npm run verify -- --fast` while iterating and `npm run verify` (validate, doc-check, index --check, check, status, tests) before handing back, plus `build` for a CV they changed, and report failures instead of hiding them.
 - **Reviewers only write reports.** You decide what to change.
 - **Your manual edits are kept.** You can edit any CV Markdown by hand at any time. Agents always start from the file as it is on disk, show a diff of their changes, and never revert your edits silently.
 

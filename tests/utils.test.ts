@@ -6,7 +6,7 @@ import { existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, 
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import JSZip from "jszip";
-import { run, tempRepo } from "./helpers.ts";
+import { run, slow, tempRepo } from "./helpers.ts";
 import { decrypt, encrypt } from "../scripts/backup.ts";
 import { areaOf, matcher } from "../scripts/git-digest.ts";
 
@@ -143,7 +143,7 @@ test("doctor: a summary repo without a local path is info, not a warning", () =>
   assert.doesNotMatch(r.out, /warn\s+repos with no local path/);
 });
 
-test("backup --full: one plain zip with the repo bundle, private backup, manifest and restore steps; restore from it", async () => {
+test("backup --full: one plain zip with the repo bundle, private backup, manifest and restore steps; restore from it", slow(), async () => {
   const { spawnSync } = await import("node:child_process");
   const dir = tempRepo();
   const sh = (cwd: string, ...a: string[]) => spawnSync(a[0], a.slice(1), { cwd, encoding: "utf8" });

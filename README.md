@@ -95,6 +95,7 @@ npm run build -- [cv] [--market ukraine] [--no-pdf]   # one CV
 npm run check                                         # lint + source trace for every CV
 npm run validate                                      # all inputs against schemas/
 npm test                                              # the framework's own tests
+npm run verify                                        # validate, doc-check, check, status and tests in one go
 ```
 
 ## How it stays truthful

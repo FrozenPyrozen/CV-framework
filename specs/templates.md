@@ -2,6 +2,17 @@
 
 Status: v1 · Applies to: `templates/<name>/`, `npm run template-import`, `/import-template`, `npm run render`
 
+## Rules at a glance
+
+The essentials, each stated in full in the section named. Agents that only need these can stop here.
+
+- A template holds formatting only; content always comes from the CV Markdown. Someone else's name, contacts and text are never saved, and their file is never copied into the repo (section 4.1).
+- The template-importer labels paragraph types in `import-map.yaml`; `npm run template-import` builds `template.docx` and `style-map.yaml` from it (sections 2 and 4).
+- Required CV types: `name`, `contact_line`, `section_heading`, `entry_title`, `entry_details`, `bullet`, `body`; optional types fall back as listed; portfolio templates have their own types (section 2).
+- Rendering problems are fixed in `fixes.yaml`, each fix with `id`, `why`, `found` and `set` (section 3).
+- ATS risks (columns, text boxes, layout tables, header-only contacts, icons, unusual fonts) go in `import-report.md`, with a one-column alternative offered (section 4.1).
+- The test build goes to its own folder, never over the real CV's outputs; `approved: true` only after the user approves the previews, and `build:all` refuses an unapproved template (section 4.1).
+
 A template defines how a CV looks in Word and PDF. Content always comes from the CV Markdown, and the template contributes only formatting.
 
 ## 1. Folder
@@ -88,7 +99,7 @@ Supported fix types (each fix has `id`, `why`, `found`, `set`):
 | Word (`.docx`) | `npm run template-import -- <file.docx> <name>` lists every paragraph (index, style, list/drawing/tab flags, text). The template-importer agent labels the types in `templates/<name>/import-map.yaml` (paragraph index per type, plus `keep`, `jc`, `size`, `bold`, `date_tab`), then `npm run template-import -- <file.docx> <name> --map templates/<name>/import-map.yaml` builds `template.docx` and `style-map.yaml`. One sample per type is kept and all other content removed. |
 | PDF (not built yet; planned after `build` works end to end) | Extract fonts, sizes, colors, positions, margins and line spacing with `pdfjs-dist`. The agent compares them with a page preview, and the template is rebuilt as a new Word file with the `docx` npm package. Fine details may differ, and `import-report.md` lists them. |
 
-### Rules
+### 4.1 Rules
 
 1. **Only formatting is kept.** Someone else's name, contacts and text are never saved, and their file is never copied into the repo. (Your own old CV may be kept as `source.docx`.)
 2. **ATS warnings** in `import-report.md`: multi-column layouts, text boxes, layout tables, contact details only in header or footer, icons instead of words, image-only text, unusual fonts. When any apply, a one-column variant is offered.
@@ -96,7 +107,7 @@ Supported fix types (each fix has `id`, `why`, `found`, `set`):
 4. **Test build:** the master CV (and its other market versions) is rendered with the new template into `.cv-runs/template-test-<name>/`, exported, checked with `pdf-check` and previewed (all pages), without touching the real CV's outputs or build record. The user approves, then `approved: true` and `approved_at` are set and `reference-preview.png` saved from that test build.
 5. An unapproved template can be built with `--template <name>`, but `build:all` refuses it.
 
-### `import-report.md` format
+### 4.2 `import-report.md` format
 
 ```markdown
 # Import report: <name>

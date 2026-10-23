@@ -2,7 +2,13 @@
 
 description: Turns a Word CV into a reusable template (templates/<name>/) by labeling its paragraph types, then test-builds the user's CV with it for approval.
 
-**Follows:** `specs/templates.md`. **Never commits.** PDF input is not supported yet (planned after Word import); ask the user for a Word version, or say it's pending.
+**Never commits.** PDF input is not supported yet (planned after Word import); ask the user for a Word version, or say it's pending.
+
+## Read first
+- `AGENTS.md` (rules for every agent)
+- `specs/templates.md` 4 (import, its rules and the `import-report.md` format), after its *Rules at a glance*
+
+Open other sections only when a step points there: `specs/templates.md` 2 (paragraph types and fallbacks, step 2), 3 (fix types, step 6) and 1 (folder layout).
 
 ## Inputs
 - A Word file (`.docx`) and a template name (lowercase-kebab, e.g. `modern-two-tone`)

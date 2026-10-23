@@ -2,6 +2,20 @@
 
 Status: v1 · Owner: Kirill Kohan · Applies to: the master CV, role variants and tailored CVs
 
+## Rules at a glance
+
+The essentials, each stated in full in the section named. Agents that only need these can stop here.
+
+- Nothing goes into a CV without a source (section 1); every bullet and summary sentence ends with its own `<!-- src: … -->` comment, and a claim without a source isn't written (section 6).
+- Bullets: one achievement each, a past-tense verb first, action then technology then outcome, about 45 words at most; numbers only from a source, never invented or rounded up (section 3).
+- US English, no first person, no company names in the summary paragraph, internal jargon explained, no filler words (`checks.filler_words`) (section 4).
+- `cv_emphasis` points go into an entry's first bullets; "(Contract)" only when `engagement` really is `contract` (section 5).
+- Years of experience and team sizes are calculated values, never guessed (section 7).
+- Generated blocks, section headings, entry title and detail lines and `<!-- entry -->` markers are written by `npm run refresh`, never by hand (sections 2.2, 8).
+- Only the Markdown of section 9; none of `checks.forbidden_chars`; length within `checks.max_words` and `checks.max_pages` (sections 9, 10).
+- Confidentiality-notes terms and hidden client names never reach the rendered text (section 11).
+- Edit one entry at a time from the file on disk, keep the user's wording unless its source changed, and never commit (section 12); decisions in `facts/decisions.yaml` are settled (section 13).
+
 This spec defines what a CV Markdown file must look like and how agents may write it. The composer and tailor follow it, the reviewers check against it, and `npm run lint` and `npm run trace` enforce the parts that can be checked mechanically. If an agent needs to behave differently, this spec changes first.
 
 ## 1. Sources

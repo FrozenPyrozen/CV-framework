@@ -3,7 +3,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { run, tempRepo } from "./helpers.ts";
+import { run, slow, tempRepo } from "./helpers.ts";
 import { markdownVisibleText, missingWords, normalizeText, tokens } from "../scripts/lib/text.ts";
 import { withLock } from "../scripts/lib/lock.ts";
 import { openDocx } from "../scripts/lib/docx.ts";
@@ -53,7 +53,7 @@ test("render applies the no-ligatures letter spacing to every run", async () => 
 
 const pagesAvailable = process.platform === "darwin" && existsSync("/Applications/Pages.app");
 
-test("Pages export + pdf-check: worldwide and Ukraine pass; a tampered Markdown fails", { skip: !pagesAvailable && "needs Pages (macOS)", timeout: 240_000 }, () => {
+test("Pages export + pdf-check: worldwide and Ukraine pass; a tampered Markdown fails", slow({ skip: !pagesAvailable && "needs Pages (macOS)", timeout: 240_000 }), () => {
   const dir = tempRepo();
   assert.equal(run("refresh.ts", dir).code, 0);
   assert.equal(run("market.ts", dir).code, 0);

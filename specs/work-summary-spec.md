@@ -2,6 +2,20 @@
 
 Status: v1 · Applies to: `summaries/*.md`, written by the harvester, `/add-experience`, `/job-change` and by hand
 
+## Rules at a glance
+
+The essentials, each stated in full in the section named. Agents that only need these can stop here.
+
+- One summary per job or project, `summaries/<id>.md`; the id never changes once created (section 1).
+- `engagement` is the real employment type; `repos` holds repo names only, never remote URLs or local paths (section 2).
+- The body has the nine numbered `##` sections, in order; a section with nothing known is `TODO (needs user input)`, never invented content (section 3).
+- Contributions are `### 4.N`, numbered by importance; numbers never change once used (a removed one stays as `(removed)`); each has a `Tags:` line with tags from the config list only (section 4).
+- Every number in a `Result:` line is also in section 7 with its source and confidence (section 4).
+- Your own words only: no code, copied internal text or commit messages, internal URLs, hostnames or secrets (section 5).
+- Section 9 lists internal names, repo names, ticket prefixes and URL patterns that never appear in a CV (sections 3, 3.1).
+- Job details come from the user, never guessed; new tags, skills and identities need the user's approval (section 6).
+- A re-harvest keeps existing numbers, user edits, filled TODOs, `cv_*` fields and section 9 (section 7).
+
 A work summary is the **single source of truth for one job or project**, and the **lasting record** of it: access to the repos usually ends with the job, so everything worth keeping must be in the summary before you leave (see the final harvest in section 6). The CV, role variants, tailored CVs and the public portfolio are built from it. It is richer than any one output needs.
 
 ## 1. File

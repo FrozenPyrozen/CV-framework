@@ -4,7 +4,7 @@ Status: v1 · Applies to: every reviewer run (`/review`), one report per rubric 
 
 All rubrics in `specs/rubrics/` produce reports in this format, so the advisor (`/improve`), reviewers in later runs and any AI tool can read them the same way.
 
-## Format
+## 1. Format
 
 ```markdown
 ---
@@ -35,7 +35,7 @@ One or two sentences: the overall answer to the rubric's question.
 - <finding that matches an entry in facts/decisions.yaml>: <decision id>
 ```
 
-## Rules
+## 2. Rules
 
 - **Severity:** `high` (likely to cause rejection, a false claim, a confidentiality leak or a broken file), `medium` (weakens the CV noticeably), `low` (polish).
 - **Findings are ranked**: high first, then by expected impact.
