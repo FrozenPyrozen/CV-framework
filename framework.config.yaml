@@ -66,6 +66,7 @@ checks:
   max_pages: 4
   max_words: 2200
   max_bullet_words: 45
+  portfolio_max_pages: 40            # page limit of each portfolio PDF (specs/outputs/portfolio.md 6)
   contacts_on_page_1: true
   export_timeout_s: 60
   forbidden_chars: ["→", "·", "•", "—", "–"]

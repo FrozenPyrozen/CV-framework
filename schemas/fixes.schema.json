@@ -21,7 +21,8 @@
           "first_after_section_heading": { "type": "object", "required": ["before"], "properties": { "before": { "type": "integer" } }, "additionalProperties": false },
           "letter_spacing": { "type": "integer" },
           "rule_full_width": { "const": true },
-          "page_margins": { "type": "object", "properties": { "top": { "type": "integer", "minimum": 0 }, "bottom": { "type": "integer", "minimum": 0 }, "left": { "type": "integer", "minimum": 0 }, "right": { "type": "integer", "minimum": 0 } }, "additionalProperties": false, "minProperties": 1 }
+          "page_margins": { "type": "object", "properties": { "top": { "type": "integer", "minimum": 0 }, "bottom": { "type": "integer", "minimum": 0 }, "left": { "type": "integer", "minimum": 0 }, "right": { "type": "integer", "minimum": 0 } }, "additionalProperties": false, "minProperties": 1 },
+          "sizes": { "type": "object", "description": "portfolio templates: the page sizes they are built in (specs/outputs/portfolio.md 5)", "additionalProperties": { "type": "object", "required": ["width_twips", "height_twips"], "properties": { "width_twips": { "type": "integer", "minimum": 1 }, "height_twips": { "type": "integer", "minimum": 1 }, "page_margins": { "type": "object", "properties": { "top": { "type": "integer", "minimum": 0 }, "bottom": { "type": "integer", "minimum": 0 }, "left": { "type": "integer", "minimum": 0 }, "right": { "type": "integer", "minimum": 0 } }, "additionalProperties": false } }, "additionalProperties": false } }
         },
         "additionalProperties": false,
         "minProperties": 1

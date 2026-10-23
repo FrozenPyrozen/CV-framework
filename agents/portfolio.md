@@ -43,7 +43,7 @@ description: Writes the public portfolio's text (portfolio/portfolio.md) from th
    - **Numbers:** only from the source; a `doc:<id>` number only once "confirmed by user".
    - **Public:** use the project's `portfolio_label` (default `cv_client_label`), never a hidden client's name, a section 9 term (unless `allow_in: [portfolio]`), ticket ids or internal URLs; images and links come only from the generated block.
 4. **Check.** Run `npm run portfolio -- check` (sources, confidentiality, secrets, spelling; it also records which summary state each project was written from) and fix every error. A project whose sources changed but needs no new text: `npm run portfolio -- check --projects-reviewed`. A real new word: add it to `facts/dictionary.txt` and say so.
-5. **Report** per project (written, rewritten, unchanged), the diff and the next step (the portfolio build with Word, Pages and PDF output comes with plan 9e P4; until then `portfolio/portfolio.md` is the portfolio).
+5. **Report** per project (written, rewritten, unchanged), the diff and the next step: `npm run build:portfolio` (Word, PDF and previews for A4 and Letter, and a `.pages` copy), then look at the previews in `portfolio/preview/`.
 
 ## Never
 - Write or change generated blocks, markers, images or links by hand.

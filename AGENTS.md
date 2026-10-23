@@ -66,6 +66,8 @@ Commands are available as Claude Code slash commands (`.claude/commands/`). Any 
 | `import-doc <file> --date <YYYY-MM> [--kind --id --title]` | keeps an old CV or portfolio (`.docx`, `.pdf`, `.md`, `.txt`, `.pages` on macOS) in `sources/` with its extracted text, images and index entry; changes no summary |
 | `spellcheck [file…] [--list]` | dictionary spelling check of CVs and the portfolio with `facts/dictionary.txt`; also run by `build` and `check` |
 | `portfolio refresh \| check [--projects-reviewed]` | writes the portfolio's generated parts; checks its sources, confidentiality and spelling and records state for `status` |
+| `build:portfolio [--size a4\|letter\|all] [--no-pdf] [--no-pages]` | builds the portfolio: Word and PDF per size, PDF check, previews, `.pages` |
+| `portfolio-template` | generates `templates/portfolio-classic` |
 | `refresh [cv] [--market --profile --out --check]` | regenerate the script-owned parts of a CV (header, entry lines, education, skills, languages) |
 | `market [cv] [--market <id>]` | write the other market versions of a CV |
 | `lint [cv] [--market --profile]`, `trace [cv] [--warn-only]`, `check` | CV rules, claim sources, both for every CV |
@@ -131,6 +133,7 @@ Commands are available as Claude Code slash commands (`.claude/commands/`). Any 
 ### Templates (`templates/`)
 
 - `classic` (default): approved, fonts Cambria, Arial
+- `portfolio-classic`: not approved, fonts Rockwell, DIN Condensed, Charter, Avenir Next Medium
 
 ### Output specs (`specs/outputs/`)
 

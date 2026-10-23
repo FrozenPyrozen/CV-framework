@@ -1,0 +1,8 @@
+# Renderer fixes and page sizes for the portfolio template (specs/templates.md 3, specs/outputs/portfolio.md 5).
+- id: page-sizes
+  why: "The portfolio is built in A4 and Letter; each size gets its own page size and margins."
+  found: "2026-10-23"
+  set:
+    sizes:
+      a4: { width_twips: 11906, height_twips: 16838, page_margins: { top: 1134, bottom: 1134, left: 1134, right: 1134 } }
+      letter: { width_twips: 12240, height_twips: 15840, page_margins: { top: 1080, bottom: 1080, left: 1080, right: 1080 } }

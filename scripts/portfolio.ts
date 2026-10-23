@@ -193,12 +193,12 @@ export function recordPortfolio(file: string, reviewed = false): void {
   writeRecord(file, { built_at: new Date().toISOString(), template: "", md_sha: hash(text), sources: {}, outputs: prev?.outputs ?? {}, entries, entry_text: texts });
 }
 
-export interface PortfolioStatus { exists: boolean; toWrite: string[]; toRewrite: string[]; notInFile: string[]; changedSinceCheck: boolean; neverChecked: boolean; generatedStale: boolean }
+export interface PortfolioStatus { exists: boolean; toWrite: string[]; toRewrite: string[]; notInFile: string[]; changedSinceCheck: boolean; neverChecked: boolean; generatedStale: boolean; neverBuilt: boolean; builtOutdated: boolean }
 
 export function portfolioStatus(): PortfolioStatus {
   const file = portfolioPath();
   const projects = portfolioProjects();
-  if (!existsSync(file)) return { exists: false, toWrite: [], toRewrite: [], notInFile: projects.map((p) => p.id), changedSinceCheck: false, neverChecked: true, generatedStale: false };
+  if (!existsSync(file)) return { exists: false, toWrite: [], toRewrite: [], notInFile: projects.map((p) => p.id), changedSinceCheck: false, neverChecked: true, generatedStale: false, neverBuilt: true, builtOutdated: false };
   const text = readFileSync(file, "utf8");
   const parsed = parsePortfolio(text);
   const rec = readState()[rel(file)];
@@ -211,6 +211,9 @@ export function portfolioStatus(): PortfolioStatus {
     neverChecked: !rec,
     // profile.yaml, skills.yaml, section 8 items or titles changed: the generated parts differ from what refresh writes
     generatedStale: refreshPortfolio().text !== text,
+    // build:portfolio records the Markdown it was built from (outputs["portfolio/portfolio.md#built"]).
+    neverBuilt: !rec?.outputs?.[`${rel(file)}#built`],
+    builtOutdated: !!rec?.outputs?.[`${rel(file)}#built`] && rec.outputs[`${rel(file)}#built`] !== hash(text),
   };
 }
 

@@ -1,6 +1,6 @@
 # Portfolio Spec
 
-Status: v0 (P1 summary fields, P2 content import, P3 agent and text checks, P5 spell check built; template and renderer (P4) and the remaining checks and reviews (P6) not yet: plan 9e) · Applies to: `portfolio/`, written by the portfolio agent (`/portfolio`), built by `npm run build:portfolio`
+Status: v0 (P1–P5 built: summary fields, content import, agent and text checks, template, renderer and build, spell check; image size checks and reviews (P6) not yet: plan 9e) · Applies to: `portfolio/`, written by the portfolio agent (`/portfolio`), built by `npm run build:portfolio`
 
 The portfolio is a second **output** of the same sources as the CV (plan section 2, "Sources and outputs are separate"): a multi-page **document** with a cover and a page or more per project, shared through a **public link**. It is built like the CV: Markdown first, then Word through an imported template, then PDF, with the same checks. Building starts once the user provides the current portfolio as Pages or Word and PDF (plan 9e, phase P2).
 
@@ -21,11 +21,10 @@ Every sentence carries a source comment (`<!-- src: <id>#<section> -->`), as in 
 portfolio/
 ├── portfolio.md                 # the source Markdown (agent-written parts + generated blocks)
 ├── assets/<summary-id>/         # images: screenshots, diagrams, photos (PNG, JPEG, SVG); in git
-├── <Name>_Portfolio.docx        # built (git-ignored)
-├── <Name>_Portfolio.pages       # built with Pages when available (git-ignored)
-├── <Name>_Portfolio_<size>.pdf  # one PDF per page size: A4, Letter (git-ignored)
-├── pdf-check-<size>.md, preview/<size>/   # checks and page previews (git-ignored)
-└── spellcheck.md                # spelling report (git-ignored)
+├── <Name>_Portfolio_<SIZE>.docx # built, one per page size: A4, LETTER (git-ignored)
+├── <Name>_Portfolio_<SIZE>.pdf  # one PDF per page size (git-ignored)
+├── <Name>_Portfolio.pages       # built from the A4 file with Pages when available (git-ignored)
+└── pdf-check-<size>.md, preview/<size>/   # PDF checks and page previews (git-ignored)
 ```
 
 ## 3. Summary fields (in `schemas/summary.schema.json` since phase P1)
@@ -74,10 +73,11 @@ Only items with `public: yes, confirmed by user <date>` reach the portfolio. A s
 ## 5. Formats and page sizes
 
 - **Markdown** is the source and is readable on its own (images as relative links).
-- **Word (`.docx`)** from the portfolio template (`templates/portfolio-<name>/`: imported with `/import-template` from a flowing Pages or Word file, or rebuilt as a flowing document when the original is a free-form layout, as for `portfolio-classic`, section 5a). The style map gains the portfolio's paragraph types: cover title, intro, project title, project meta, section label, body, list item, caption, image.
-- **Page sizes:** a portfolio template lists the sizes it supports in its `fixes.yaml`: `sizes: { a4: { page_margins: {…} }, letter: { page_margins: {…} } }`, extending the existing `page_margins` fix (`templates.md`). The renderer sets the page size and margins per size and scales images to the content width. Default: A4 and Letter.
+- **Word (`.docx`)** from a portfolio template (`templates/portfolio-<name>/`, style map `kind: portfolio`): imported with `/import-template` from a flowing Pages or Word file, or generated when the original is a free-form layout, as `portfolio-classic` is (`npm run portfolio-template`, section 5a). Its paragraph types: `cover_title`, `cover_name`, `cover_contact` (the banner), `headline`, `intro`, `project_title` (each project starts a new page), `project_meta`, `section_label`, `body`, `list_item`, `image`, `caption`, `section_heading` (skills starts a new page, contact doesn't), `skills_line`, `contact_line` (`templates.md` 2). One Word file per size.
+- **Images:** PNG and JPEG are embedded as they are; other formats (TIFF from Pages, GIF, WebP) are converted to PNG (macOS `sips`). Each image fits the content width and at most 45% of the page height, keeping its aspect ratio.
+- **Page sizes:** a portfolio template lists the sizes it supports in its `fixes.yaml`: `sizes: { a4: { page_margins: {…} }, letter: { page_margins: {…} } }`, extending the existing `page_margins` fix (`templates.md`). The renderer sets the page size and margins per size. Default: A4 and Letter (`npm run build:portfolio -- --size a4|letter|all`).
 - **PDF:** one per size, exported through the PDF exporters in order (Pages, Word, LibreOffice; plan 6.1).
-- **Pages (`.pages`):** saved through Pages when it is installed (the Pages exporter already drives it), for editing by hand. A hand edit is never the source: changes go back into the summaries or `portfolio.md`.
+- **Pages (`.pages`):** saved from the A4 Word file through Pages when it is installed, for editing by hand. A hand edit is never the source: changes go back into the summaries or `portfolio.md`.
 
 ## 5a. Reference layout (the current portfolio, `doc:portfolio-2025-04`)
 
@@ -87,7 +87,9 @@ The current portfolio (Pages, April 2025, 16 A4 pages) is the visual reference f
 |---|---|
 | Page | A4 portrait |
 | Cover | a coral-red banner (`#F46B75`) with the links line (DIN Condensed Bold, small caps look), the title "My Portfolio" (Superclarendon Bold, 42 pt, white, centered) and the name (Superclarendon, white) |
-| Project title | Superclarendon Bold, about 16 pt, teal (`#077482`), centered, one project per page |
+
+In `portfolio-classic` the Superclarendon titles become **Rockwell Bold**, the closest slab serif: Pages doesn't apply Superclarendon to text that comes from a Word file under any name (tested 2026-10-23, it falls back to Times), while Rockwell, Charter, Avenir Next and DIN Condensed are kept and embedded. The headline sits under the banner. `doctor` checks that the template's fonts are installed.
+| Project title | Superclarendon Bold (Rockwell Bold in the template), about 16 pt, teal (`#077482`), centered, one project per page |
 | Intro and body | Charter Roman, 14 pt (some 12 pt), left-aligned |
 | Images | a row of phone screenshots or one or two wide screenshots under the intro, centered |
 | Section labels | "Responsibilities", "Technologies and frameworks": Avenir Next Medium, teal (`#077482`) |
@@ -96,7 +98,7 @@ The fonts are macOS system fonts: the PDF is exported through Pages (first in `p
 
 ## 6. Checks
 
-`npm run portfolio -- check` (now, plan 9e P3) runs the text checks; `npm run build:portfolio` (P4, P6) adds the rest and fails on any error.
+`npm run portfolio -- check` runs the text checks; `npm run build:portfolio` runs it first, then the output checks, and fails on any error (plan 9e P3, P4; P6 adds the image size checks and reviews).
 
 | Check | Where | What |
 |---|---|---|
@@ -104,14 +106,14 @@ The fonts are macOS system fonts: the PDF is exported through Pages (first in `p
 | confidentiality | `portfolio check` | the CV's lint rules (every summary's section 9 terms, hidden client names in any case, ticket prefixes, internal addresses, secrets, URLs other than profile links and public link items), with one difference: a term's `allow_in` job ids and `summary` **don't apply** here; only `allow_in: [portfolio]` lets a term appear in the portfolio (`work-summary-spec.md` 3.1) |
 | generated parts | `portfolio check` (warning), `status` | the generated parts match what `refresh` writes now |
 | `spellcheck` | `portfolio check`, `spellcheck` | dictionary spelling (US English) with `facts/dictionary.txt`; unknown words fail until fixed or added. The same check runs on the CV |
-| images | `build:portfolio` (P6) | every image exists, is public-confirmed in its summary's section 8, and is at least 1200 px wide; nothing in `assets/` is unused |
-| `pdf-check` | `build:portfolio` (P4) | per size: every Markdown word appears in the PDF, fonts are embedded, the page count is within `checks.portfolio_max_pages` |
-| `preview` | `build:portfolio` (P4) | page images per size, to look at before sharing |
+| images | `validate`, `refresh`, the renderer; size and unused files in P6 | every image exists and is public-confirmed in its summary's section 8 (`validate`; `refresh` writes only public items; the renderer warns about a missing file); at least 1200 px wide and nothing unused in `assets/` come with P6 |
+| `pdf-check` | `build:portfolio` | per size: every Markdown word appears in the PDF (image lines excepted), the template's fonts are embedded, no garbled text, no phone number unless decision `portfolio-show-phone`, the page count is within `checks.portfolio_max_pages` (40); written to `pdf-check-<size>.md` |
+| `preview` | `build:portfolio` | page images per size in `preview/<size>/`, to look at before sharing; the template is approved (`approved: true`) only after the user has looked at them |
 | reviewers | `/review --portfolio` (P6) | proofreading, fact-check, confidentiality (public rules) and layout rubrics; reports follow `review-report-spec.md` with `cv: portfolio/portfolio.md` |
 
 ## 7. Updates
 
-- `npm run status` lists the portfolio: projects to write (placeholders), projects to rewrite (what the project was written from changed: summary sections 1–5 and 7, its public section 8 items, role, label, period or `portfolio_max_items`; recorded by each passing `portfolio check`), generated parts out of date (`profile.yaml`, `skills.yaml`, images or titles changed: `npm run portfolio -- refresh`) and changes not yet checked. The template and outputs join with P4.
+- `npm run status` lists the portfolio: projects to write (placeholders), projects to rewrite (what the project was written from changed: summary sections 1–5 and 7, its public section 8 items, role, label, period or `portfolio_max_items`; recorded by each passing `portfolio check`), generated parts out of date (`profile.yaml`, `skills.yaml`, images or titles changed: `npm run portfolio -- refresh`), changes not yet checked, and Word, Pages and PDF files older than `portfolio.md` (`npm run build:portfolio`).
 - A project whose sources changed but whose text still fits: `npm run portfolio -- check --projects-reviewed`.
 - `/portfolio` rewrites only the stale projects and keeps the wording of the rest (`cv-spec.md` 12, same rule).
 - A new project appears only after `show_in_portfolio: true` is set with the user.

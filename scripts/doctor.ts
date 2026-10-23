@@ -3,9 +3,10 @@
 // Node version, dependencies, AI agent tools, framework.local.yaml and repo paths, PDF exporters, previews,
 // and (unless --no-export) a tiny real export with the active exporter, which triggers the one-time macOS
 // permission prompt while you're at the keyboard and checks that the template's fonts get embedded.
+import { homedir } from "node:os";
 import { hasPandoc } from "./lib/sources.ts";
 import { spawnSync } from "node:child_process";
-import { existsSync, mkdirSync, readFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { parse as parseYaml } from "yaml";
 import { EXPORTERS } from "./exporters/index.ts";
@@ -92,6 +93,16 @@ export async function runDoctor(opts: { export?: boolean } = {}): Promise<Check[
     } catch (e) {
       add("fail", `test export failed: ${(e as Error).message}`, "if macOS asked for permission, allow it and run npm run doctor again");
     }
+  }
+  // Portfolio template fonts (plan 9e P4): installed on this laptop? (macOS font folders)
+  const ptm = rootPath(cfg.paths.templates, "portfolio-classic", "style-map.yaml");
+  if (process.platform === "darwin" && existsSync(ptm)) {
+    const dirs = ["/System/Library/Fonts", "/System/Library/Fonts/Supplemental", "/Library/Fonts", join(homedir(), "Library/Fonts")];
+    const files = dirs.flatMap((d) => (existsSync(d) ? readdirSync(d) : [])).map((f) => f.toLowerCase().replace(/\s+/g, ""));
+    const fonts = (parseYaml(readFileSync(ptm, "utf8")).fonts ?? []) as string[];
+    const missing = fonts.filter((f) => !files.some((x) => x.startsWith(f.split(" ").slice(0, 2).join("").toLowerCase())));
+    if (missing.length) add("warn", `portfolio template fonts not found on this laptop: ${missing.join(", ")}`, "install them, or the portfolio PDF falls back to other fonts (pdf-check fails)");
+    else add("ok", `portfolio template fonts installed: ${fonts.join(", ")}`);
   }
   return out;
 }

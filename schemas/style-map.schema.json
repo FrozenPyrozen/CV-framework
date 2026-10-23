@@ -2,25 +2,162 @@
   "$id": "style-map.schema.json",
   "title": "templates/<name>/style-map.yaml (specs/templates.md 2)",
   "type": "object",
-  "required": ["schema_version", "name", "approved", "fonts", "links", "paragraphs"],
+  "required": [
+    "schema_version",
+    "name",
+    "approved",
+    "fonts",
+    "links",
+    "paragraphs"
+  ],
   "properties": {
-    "schema_version": { "const": 1 },
-    "name": { "$ref": "common.schema.json#/$defs/id" },
-    "approved": { "type": "boolean" },
-    "approved_at": { "type": "string" },
-    "page": { "type": "object" },
-    "fonts": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
-    "links": { "type": "object", "properties": { "color": { "type": "string" }, "underline": { "type": "boolean" } }, "additionalProperties": false },
+    "schema_version": {
+      "const": 1
+    },
+    "name": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "approved": {
+      "type": "boolean"
+    },
+    "approved_at": {
+      "type": "string"
+    },
+    "page": {
+      "type": "object"
+    },
+    "fonts": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "links": {
+      "type": "object",
+      "properties": {
+        "color": {
+          "type": "string"
+        },
+        "underline": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
     "paragraphs": {
       "type": "object",
-      "required": ["name", "contact_line", "section_heading", "entry_title", "entry_details", "bullet", "body"],
-      "propertyNames": { "enum": ["name", "headline", "contact_line", "header_rule", "section_heading", "section_rule", "entry_title", "entry_details", "bullet", "body", "section_intro", "education_line", "skills_line"] },
       "additionalProperties": {
-        "type": "object", "required": ["sample"],
-        "properties": { "sample": { "type": "integer", "minimum": 0 }, "keep": { "type": "boolean" }, "bold": { "type": "boolean" }, "date_tab": { "type": "boolean" } },
+        "type": "object",
+        "required": [
+          "sample"
+        ],
+        "properties": {
+          "sample": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "keep": {
+            "type": "boolean"
+          },
+          "bold": {
+            "type": "boolean"
+          },
+          "date_tab": {
+            "type": "boolean"
+          }
+        },
         "additionalProperties": false
       }
+    },
+    "kind": {
+      "enum": [
+        "cv",
+        "portfolio"
+      ],
+      "description": "cv (default) or portfolio (specs/outputs/portfolio.md 5); decides the paragraph types"
     }
   },
-  "additionalProperties": false
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "portfolio"
+          }
+        },
+        "required": [
+          "kind"
+        ]
+      },
+      "then": {
+        "properties": {
+          "paragraphs": {
+            "required": [
+              "cover_title",
+              "project_title",
+              "section_label",
+              "body",
+              "list_item",
+              "image",
+              "caption",
+              "section_heading"
+            ],
+            "propertyNames": {
+              "enum": [
+                "cover_title",
+                "cover_name",
+                "cover_contact",
+                "headline",
+                "intro",
+                "project_title",
+                "project_meta",
+                "section_label",
+                "body",
+                "list_item",
+                "image",
+                "caption",
+                "section_heading",
+                "skills_line",
+                "contact_line"
+              ]
+            }
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "paragraphs": {
+            "required": [
+              "name",
+              "contact_line",
+              "section_heading",
+              "entry_title",
+              "entry_details",
+              "bullet",
+              "body"
+            ],
+            "propertyNames": {
+              "enum": [
+                "name",
+                "headline",
+                "contact_line",
+                "header_rule",
+                "section_heading",
+                "section_rule",
+                "entry_title",
+                "entry_details",
+                "bullet",
+                "body",
+                "section_intro",
+                "education_line",
+                "skills_line"
+              ]
+            }
+          }
+        }
+      }
+    }
+  ]
 }

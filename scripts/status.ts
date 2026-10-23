@@ -114,6 +114,7 @@ if (isMain(import.meta.url)) {
     if (ps.notInFile.length) portfolioTodo.push(`projects not in the file yet: ${ps.notInFile.join(", ")} (npm run portfolio -- refresh)`);
     if (ps.toWrite.length) portfolioTodo.push(`projects to write: ${ps.toWrite.join(", ")} (/portfolio)`);
     if (ps.toRewrite.length) portfolioTodo.push(`projects to rewrite (their summaries changed): ${ps.toRewrite.join(", ")} (/portfolio)`);
+    if (!ps.neverChecked && !ps.toWrite.length && ps.builtOutdated) portfolioTodo.push("Word, Pages and PDF files are older than portfolio.md: npm run build:portfolio");
     if (ps.neverChecked) portfolioTodo.push("never checked: npm run portfolio -- check");
     else if (ps.changedSinceCheck) portfolioTodo.push("changed since the last check: npm run portfolio -- check");
   }

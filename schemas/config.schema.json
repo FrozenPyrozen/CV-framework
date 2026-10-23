@@ -38,7 +38,7 @@
       "required": ["max_pages", "max_words", "forbidden_chars", "export_timeout_s"],
       "properties": {
         "max_pages": { "type": "integer", "minimum": 1 }, "max_words": { "type": "integer", "minimum": 100 },
-        "max_bullet_words": { "type": "integer", "minimum": 5 }, "contacts_on_page_1": { "type": "boolean" },
+        "max_bullet_words": { "type": "integer", "minimum": 5 }, "portfolio_max_pages": { "type": "integer", "minimum": 1 }, "contacts_on_page_1": { "type": "boolean" },
         "export_timeout_s": { "type": "integer", "minimum": 5 },
         "forbidden_chars": { "type": "array", "items": { "type": "string" } },
         "filler_words": { "type": "array", "items": { "type": "string" } },

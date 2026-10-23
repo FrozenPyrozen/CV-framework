@@ -109,3 +109,38 @@ test("portfolio refresh drops a project that is no longer opted in and keeps the
   assert.match(md, /Itjet text\./);
   assert.doesNotMatch(md, /project: velas-wallet/);
 });
+
+// P4: the portfolio template, renderer and build (without PDF export, so no Pages is needed).
+import JSZip from "jszip";
+import { existsSync } from "node:fs";
+
+test("build:portfolio --no-pdf: one Word file per size with its page size, the public images and the template fonts; no phone", async () => {
+  const dir = tempRepo();
+  optIn(dir);
+  run("portfolio.ts", dir, ["refresh"]);
+  write(dir, "Apps for fintech and fitness clients. <!-- src: itjet-fintech#1 -->", "**What I built**\n\n* Built the RegiStart MVP. <!-- src: itjet-fintech#4.14 -->");
+  const r = run("build-portfolio.ts", dir, ["--no-pdf", "--no-pages"]);
+  assert.equal(r.code, 0, r.out);
+  for (const [size, w, h] of [["A4", 11906, 16838], ["LETTER", 12240, 15840]] as const) {
+    const f = join(dir, `portfolio/Kirill_Kohan_Portfolio_${size}.docx`);
+    assert.ok(existsSync(f), size);
+    const zip = await JSZip.loadAsync(readFileSync(f));
+    const xml = await zip.file("word/document.xml")!.async("string");
+    assert.match(xml, new RegExp(`<w:pgSz w:w="${w}" w:h="${h}"/>`));
+    assert.equal(Object.keys(zip.files).filter((n) => n.startsWith("word/media/") && !n.endsWith("/")).length, 2);
+    assert.match(xml, /w:ascii="Rockwell"/);
+    assert.match(xml, /My Portfolio/);
+    assert.doesNotMatch(xml.replace(/\D/g, ""), /380978919783/);
+  }
+});
+
+test("the CV renderer refuses a portfolio template; a portfolio style map needs its paragraph types", () => {
+  const dir = tempRepo();
+  const r = run("render.ts", dir, ["--template", "portfolio-classic", "--out", join(dir, "x.docx")]);
+  assert.notEqual(r.code, 0);
+  assert.match(r.out, /is a portfolio template/);
+  edit(dir, "templates/portfolio-classic/style-map.yaml", /  image:\n    sample: 10\n/, "");
+  const v = run("validate.ts", dir);
+  assert.equal(v.code, 1);
+  assert.match(v.out, /must have required property 'image'/);
+});

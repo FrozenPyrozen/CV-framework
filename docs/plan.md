@@ -1,6 +1,6 @@
 # CV Agent Framework: Plan
 
-Status: steps 1–12 and 14 done (section 8; step 12 by full archive on this Mac, its private-file round trip still to rerun once a tailored or sent CV exists); left: step 13 (new laptop + new repo, on the new laptop); agent replay due. Since then: portable harvest (9c) and sources (9d) built, the portfolio specified, its content imported (P2), its summary fields (P1), the portfolio agent and text checks (P3) and the spell check (P5) built (9e) · 2026-10-23
+Status: steps 1–12 and 14 done (section 8; step 12 by full archive on this Mac, its private-file round trip still to rerun once a tailored or sent CV exists); left: step 13 (new laptop + new repo, on the new laptop); agent replay due. Since then: portable harvest (9c) and sources (9d) built, the portfolio specified, its content imported (P2), its summary fields (P1), the portfolio agent and text checks (P3), template, renderer and build (P4) and the spell check (P5) built (9e) · 2026-10-23
 
 ## 1. Goal
 
@@ -96,7 +96,7 @@ CV/
 │   ├── sent/                      # optional exact copies of PDFs you sent (git-ignored, included in backups; 4.5)
 │   └── .build-state.json          # per built CV: template, CV Markdown hash, source, output and per-entry hashes (local, git-ignored)
 ├── templates/
-│   └── <name>/                    # one folder per template; "classic" = your previous CV
+│   └── <name>/                    # one folder per template; "classic" = your previous CV; "portfolio-classic" = the portfolio (9e P4)
 │       ├── source.docx            # the original file the template was imported from (own CVs only)
 │       ├── import-map.yaml        # the agent's paragraph labels for template-import
 │       ├── template.docx          # styles only, sample content removed (an input, so committed)
@@ -126,6 +126,7 @@ CV/
 │   ├── build.ts                   # build and build:all: validate -> digest -> refresh -> lint -> trace -> markets -> docx -> pdf -> pdf-check -> preview
 │   ├── render.ts                  # npm run render: Markdown -> .docx (picks the template and output name)
 │   ├── renderers/docx.ts          # template-driven Word renderer
+│   ├── renderers/portfolio-docx.ts # the portfolio's Word renderer: portfolio templates, images, page sizes (9e P4)
 │   ├── lib/docx.ts                # .docx zip and XML helpers
 │   ├── exporters/                 # pages.ts, word.ts, libreoffice.ts; index.ts (registry), types.ts
 │   ├── export-pdf.ts              # npm run pdf: runs exporters in config order, under the lock, with a timeout
@@ -143,6 +144,8 @@ CV/
 │   ├── log-application.ts         # records a sent CV in facts/applications.yaml (4.5)
 │   ├── spellcheck.ts              # dictionary spelling check of CVs and the portfolio (9e P5)
 │   ├── portfolio.ts               # portfolio refresh (generated parts) and check (sources, confidentiality, spelling) (9e P3)
+│   ├── portfolio-template.ts      # generates templates/portfolio-classic (9e P4)
+│   ├── build-portfolio.ts         # build:portfolio: check, Word and PDF per size, pdf-check, previews, .pages (9e P4)
 │   ├── lib/buildstate.ts          # build records: source/output hashes
 │   ├── lib/sources.ts             # imported documents: the sources index and text extraction (.docx, .pdf, .md, .txt, .pages) (9d)
 │   ├── validate.ts                # JSON Schema validation of all inputs
@@ -576,6 +579,8 @@ What the main rubrics must produce (taken from the reviews done in this chat):
 | `import-doc <file> --date <YYYY-MM> [--kind --id --title]` | copies an old CV, portfolio or other document (`.docx`, `.pdf`, `.md`, `.txt`, and `.pages` on macOS through Pages and pandoc, keeping its images in `sources/media/<id>/`) to `sources/files/`, extracts its text to `sources/text/<id>.md` and lists it in `sources/index.yaml` (newest first); refuses a file already imported and a file with no extractable text; changes no summary (9d) |
 | `spellcheck [file…] [--list]` | dictionary spelling check (US English from `spelling`) of the master CV, variants, job-specific CVs and `portfolio/portfolio.md`, with cspell's bundled English, software-term and company dictionaries and `facts/dictionary.txt`; ignores comments, URLs, emails and inline code; unknown words are errors (also in `build` and `check`); `--list` prints each unknown word once to review additions (9e P5) |
 | `portfolio refresh \| check [--projects-reviewed]` | `refresh` writes `portfolio/portfolio.md`'s generated parts (cover without phone or self-link, project title lines, public images and links, skills, contact), keeps the agent's text, adds placeholders for new projects and drops projects no longer opted in; `check` enforces sources (a project cites only itself), confidentiality (only `allow_in: [portfolio]` passes a section 9 term), secrets and spelling, and records which summary state each project was written from (9e P3) |
+| `build:portfolio [--size a4\|letter\|all] [--template <name>] [--no-pdf] [--no-pages]` | `portfolio check` (fails on errors), then per size a Word file from the portfolio template, a PDF through the exporters, a PDF check (every word, template fonts embedded, no phone, `checks.portfolio_max_pages`) and previews; a `.pages` copy from the A4 file; records the outputs so `status` says when they're older than `portfolio.md` (9e P4) |
+| `portfolio-template [--name portfolio-classic]` | generates the portfolio template (sample paragraphs, style map `kind: portfolio`, A4 and Letter sizes) with the look of the April 2025 portfolio; keeps `approved: true` only while the samples are unchanged (9e P4) |
 | `select <cv-dir> [--profile <id>] [--tags <file>]` (at least one) | deterministic bullet selection and ordering by tags, limits and overrides (scoring in `specs/tailoring-spec.md` 2). `--tags` is looked up in `<cv-dir>` first. Writes `selection.json` into `<cv-dir>`, which the tailor agent then words (R8). An override's `also` makes one bullet cite several contributions (`src` lists them all).  Rejects tags that aren't in the config list, a job ad without a profile, and a folder outside `cv/variants/` or `cv/tailored/`. |
 | `reattach-src <file> [--save \| --from <old-file>]` | `--save` before editing stores a snapshot in `.cv-runs/snapshots/`. After editing, restores dropped source comments by matching each bullet (same entry) or summary sentence to the previous version: `--from`, else the snapshot (kept until the next `--save`), else git HEAD; fails with a clear message when none exists. Lists what it couldn't match (R7), skipping generated section intro lines. |
 | `doctor [--no-export]` | checks the environment and says how to fix each problem: Node version (`engines` in `package.json`), installed dependencies, the preview renderer, AI agent tools on the PATH, `framework.local.yaml`, repo paths (a repo with no local path is *info*: after a job ends that's normal; a path that doesn't exist is a warning), the backup folder, and the PDF exporters (unavailable fallbacks are only *info*). Unless `--no-export`, it renders and exports a tiny test document with the active exporter: this triggers the one-time macOS permission prompt while you're at the keyboard (R12) and checks that the template's fonts are embedded (R3). |
@@ -649,7 +654,7 @@ To make your CV look like an existing Word or PDF CV, run `/import-template <fil
 
 Your current template is the first one imported (`templates/classic/`). Rebuilding today's CV through it must match the current `.docx`, which tests the importer.
 
-Dependencies: TypeScript (`typescript`, `@types/node`) run with `tsx`, `cspell-lib` for the dictionary spell check, (optional, outside npm) `pandoc` for turning `.pages` imports into Markdown with images (without it, `import-doc` keeps the Word text only), `ajv` for schema validation, `jszip` for reading and writing `.docx`, `yaml` for front matter and facts, `pdfjs-dist` for PDF text extraction, `docx` for rebuilding templates from PDF samples (installed together with PDF import, which is deferred), `@napi-rs/canvas` for rendering PDF pages to images (prebuilt, no system libraries). Backups use `jszip` plus Node's built-in `crypto` (AES-256-GCM), so password-protected backups work the same on macOS, Windows and Linux with no extra packages. LibreOffice and `pdftoppm` are optional (no longer needed for previews). No Python, since your Homebrew Python's XML parser is currently broken.
+Dependencies: TypeScript (`typescript`, `@types/node`) run with `tsx`, `cspell-lib` for the dictionary spell check, (macOS) `sips` for converting portfolio images, (optional, outside npm) `pandoc` for turning `.pages` imports into Markdown with images (without it, `import-doc` keeps the Word text only), `ajv` for schema validation, `jszip` for reading and writing `.docx`, `yaml` for front matter and facts, `pdfjs-dist` for PDF text extraction, `docx` for rebuilding templates from PDF samples (installed together with PDF import, which is deferred), `@napi-rs/canvas` for rendering PDF pages to images (prebuilt, no system libraries). Backups use `jszip` plus Node's built-in `crypto` (AES-256-GCM), so password-protected backups work the same on macOS, Windows and Linux with no extra packages. LibreOffice and `pdftoppm` are optional (no longer needed for previews). No Python, since your Homebrew Python's XML parser is currently broken.
 
 ## 7. Workflows (commands)
 
@@ -871,11 +876,11 @@ The portfolio is a second output of the same sources: a multi-page document (cov
 | P1 (**done 2026-10-23**) | Summary fields `show_in_portfolio`, `portfolio_order`, `portfolio_label`, `portfolio_max_items` and the structured section 8 (images, links, demos, each `public: yes, confirmed by user <date>`) in the schema and `validate`; `/portfolio-material` with the advisor to fill section 8 and opt projects in | nothing |
 | P2 | Import your current portfolio: `/import-docs` for its content (sources, 9d; **content imported 2026-10-22** as `doc:portfolio-2025-04`) and its layout as the template `templates/portfolio-classic/`. The Pages file is a free-form layout (text boxes), so the template is rebuilt as a flowing Word document with the recorded look (`specs/outputs/portfolio.md` 5a) instead of `/import-template`; new paragraph types: cover title, intro, project title, project meta, section label, body, list item, caption, image | provided 2026-10-22 |
 | P3 (**done 2026-10-23**) | `agents/portfolio.md` and `/portfolio`: writes `portfolio/portfolio.md` with a source on every sentence; `refresh` writes its generated blocks; `status` tracks it | P1, P2 |
-| P4 | Renderer: images (scaled to the content width, captions), page sizes per template (`sizes: { a4, letter }`), `build:portfolio [--size a4\|letter\|all]`: `.docx`, `.pages` (through Pages), one PDF per size, `pdf-check` and previews per size | P2, P3 |
+| P4 (**done 2026-10-23**) | Renderer: images (scaled to the content width, captions), page sizes per template (`sizes: { a4, letter }`), `build:portfolio [--size a4\|letter\|all]`: `.docx`, `.pages` (through Pages), one PDF per size, `pdf-check` and previews per size | P2, P3 |
 | P5 (**done 2026-10-23**) | `npm run spellcheck`: a dictionary spell check (US English) with the project word list `facts/dictionary.txt`, for the portfolio **and** the CV, in `build` and `check` (cspell-lib with bundled English, software-term and company dictionaries) | nothing |
 | P6 | Portfolio checks and reviews: image checks (exists, public-confirmed, at least 1200 px wide, none unused), `lint` as for the CV except that section 9 terms are allowed only with `allow_in: [portfolio]` (job-id and `summary` exceptions don't apply); the phone number left out unless decided otherwise, `/review --portfolio` (proofreading, fact-check, confidentiality with public rules, layout); acceptance scenario B17 | P4 |
 
-P1, P2 (content), P3 and P5 are done; next is P4 (renderer and the `portfolio-classic` template), then P6. Until P4, `portfolio/portfolio.md` is the portfolio.
+P1–P5 are done (P4: the generated `portfolio-classic` template with Rockwell titles, since Pages won't apply Superclarendon to Word text; `build:portfolio`); next is P6, and approving the template after looking at real previews.
 
 ## 10. Decisions
 
@@ -898,7 +903,7 @@ P1, P2 (content), P3 and P5 are done; next is P4 (renderer and the `portfolio-cl
 ## 11. Out of scope for now
 
 - **PDF input for `/import-template`:** Word input works; PDF input (planned in section 6.4) is deferred until you need a template from a PDF CV.
-- **Portfolio output:** specified (`specs/outputs/portfolio.md`, section 9e); the April 2025 portfolio's content is imported (P2, 2026-10-22). P1, P3 and P5 are done (2026-10-23); next the template and renderer (P4), then P6.
+- **Portfolio output:** specified (`specs/outputs/portfolio.md`, section 9e); the April 2025 portfolio's content is imported (P2, 2026-10-22). P1–P5 are done (2026-10-23); next P6 (image size checks, reviews) and approving the portfolio template.
 - Cover-letter agent (the format leaves room to add it later).
 - Pulling history from remote GitHub or Azure DevOps (local clones only, while you have access).
 - A fully code-driven pipeline (Agent SDK CLI). It can wrap the same `agents/*.md` later.
@@ -906,7 +911,7 @@ P1, P2 (content), P3 and P5 are done; next is P4 (renderer and the `portfolio-cl
 
 ## 12. Coverage of the 2026-10-15 chat
 
-Every step done by hand in the chat, and the capability that repeats it. Rows 37 onward also log the build steps of section 8 (step 5: rows 37–42, step 6: 43–44, step 7: 46–47, step 8: 48–49, step 9: 50–52, step 10: 54, step 11: 55, step 12: 56–57, step 14: 61), the audits (58, 62, 71–74) and the changes you asked for (59–60, 63–70, 75–81).
+Every step done by hand in the chat, and the capability that repeats it. Rows 37 onward also log the build steps of section 8 (step 5: rows 37–42, step 6: 43–44, step 7: 46–47, step 8: 48–49, step 9: 50–52, step 10: 54, step 11: 55, step 12: 56–57, step 14: 61), the audits (58, 62, 71–74) and the changes you asked for (59–60, 63–70, 75–82).
 
 | # | What we did in the chat | Framework capability |
 |---|---|---|
@@ -991,3 +996,4 @@ Every step done by hand in the chat, and the capability that repeats it. Rows 37
 | 79 | Asked whether plan, specs and logic match the day's changes | Variant choices made by hand (Wink everywhere, RegiStart MVP, Fused payments, the clinical-trials upgrade and Stack line, dropped bullets) recorded as profile `overrides`, so `/variants` keeps them (its next run also re-selects the other bullets with the contributions the portfolio import added); new override field `also` (one bullet citing two contributions; `select` doesn't pick those again; `validate` checks them); composer rule for Stack lines on older jobs (decision `orion-stack-line`); `import-doc` docs list `.pages`; portfolio image paths from `sources/media/`; open items and the `keep-previous-cv-metrics` exception updated |
 | 80 | Asked to continue the portfolio (P1, P5) and keep plan and specs aligned | P1: summary fields `show_in_portfolio`, `portfolio_order`, `portfolio_label`, `portfolio_max_items` in the schema; section 8 items parsed and checked by `validate` (public format, image exists and is an image, caption, link URL and label; `portfolio_label` can't name a hidden client); `/portfolio-material`. P5: `npm run spellcheck` (cspell-lib, bundled dictionaries plus `facts/dictionary.txt`), part of `build` and `check`; the CVs had no typos, 18 real words seeded |
 | 81 | Asked to go on with the plan (P3) and keep plan and specs aligned | `npm run portfolio -- refresh` (generated cover without phone or self-link, project titles, public images and links, skills, contact; placeholders; drops opted-out projects) and `check` (sources owned by the project, confidentiality with only `allow_in: [portfolio]`, secrets, spelling; records state); `status` lists the portfolio; `agents/portfolio.md` and `/portfolio`; portfolio spec sections 1, 4, 6 and 7 rewritten to match; acceptance B20 |
+| 82 | Asked to go on with the plan (P4) and keep plan and specs aligned | `npm run portfolio-template` generates `templates/portfolio-classic` (style map `kind: portfolio`, sizes A4 and Letter; Rockwell Bold for the Superclarendon titles, which Pages won't apply to Word text); the portfolio renderer (images embedded, TIFF converted, each project and the skills on a new page); `npm run build:portfolio` (check, Word and PDF per size, PDF check, previews, `.pages`); `status` flags outputs older than `portfolio.md`; `doctor` checks the portfolio fonts; `checks.portfolio_max_pages`; the CV renderer refuses portfolio templates; portfolio spec 2, 5, 5a and 6 and templates spec 2 and 3 updated |

@@ -33,6 +33,7 @@ export function loadTemplate(name: string, cfg: Config = loadConfig()) {
 export async function renderDocx(markdown: string, outPath: string, templateName: string): Promise<RenderResult> {
   const cfg = loadConfig();
   const { dir, styleMap, fixes } = loadTemplate(templateName, cfg);
+  if ((styleMap as any).kind === "portfolio") throw new Error(`template "${templateName}" is a portfolio template; CVs use a CV template (e.g. ${cfg.default_template})`);
   const doc = await openDocx(join(dir, "template.docx"));
   const warnings: string[] = [];
   const sample = (type: string): string | undefined => {

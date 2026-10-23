@@ -36,6 +36,8 @@
     "import-doc": "tsx scripts/import-doc.ts",
     "spellcheck": "tsx scripts/spellcheck.ts",
     "portfolio": "tsx scripts/portfolio.ts",
+    "portfolio-template": "tsx scripts/portfolio-template.ts",
+    "build:portfolio": "tsx scripts/build-portfolio.ts",
     "index": "tsx scripts/index.ts",
     "log-application": "tsx scripts/log-application.ts"
   },
