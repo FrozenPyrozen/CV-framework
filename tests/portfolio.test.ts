@@ -60,7 +60,7 @@ const optIn = (d: string) => {
     const p = join(d, "summaries", f);
     // Itjet as one page (its portfolio_projects and the screenshots' project keys removed): the older tests below.
     let t = readFileSync(p, "utf8").replace(/^show_in_portfolio: true.*$/m, f === "itjet-fintech.md" ? "show_in_portfolio: true" : "show_in_portfolio: false");
-    if (f === "itjet-fintech.md") t = t.replace(/^portfolio_projects:[^\n]*\n(?:  - [^\n]*\n)+/m, "").replace(/^- image: \.\.\/sources\/media\/portfolio-2025-09\/[^\n]*\n(?:  [^\n]*\n)*/gm, "").replace(/^  project: [\w-]+\n/gm, "");
+    if (f === "itjet-fintech.md") t = t.replace(/^portfolio_projects:[^\n]*\n(?:  - [^\n]*\n)+/m, "").replace(/^- image: \.\.\/sources\/media\/(?:portfolio-2025-09\/|portfolio-2025-04\/image(?:8|9|10)\.tif)[^\n]*\n(?:  [^\n]*\n)*/gm, "").replace(/^  project: [\w-]+\n/gm, "");
     writeFileSync(p, t);
   }
 };

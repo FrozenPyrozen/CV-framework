@@ -101,7 +101,7 @@ Tags: payments, node, rest-api, react, react-native
 
 ### 4.7 Next.js, GraphQL and Docker
 
-Built web features with Next.js and server-side rendering and used GraphQL for Aspiration, and containerized services with Docker for Fused (client split confirmed by user 2026-10-22).
+Built web features with Next.js and server-side rendering and used GraphQL for Aspiration, and containerized services with Docker for Fused and RegiStart (client split confirmed by user 2026-10-22; RegiStart added by user 2026-10-23).
 
 Tags: nextjs, ssr, graphql, docker
 
@@ -262,20 +262,20 @@ Source: doc:portfolio-2025-04
   caption: Fused mobile app, screen 4
   project: fused
   public: yes, confirmed by user 2026-10-23
-- image: ../sources/media/portfolio-2025-09/p14-1.png
-  caption: Wink, screen 1
+- image: ../sources/media/portfolio-2025-04/image8.tif
+  caption: Wink, swiping through profiles
   project: wink
   public: yes, confirmed by user 2026-10-23
 - image: ../sources/media/portfolio-2025-09/p14-3.png
-  caption: Wink, screen 2
+  caption: Wink, chats
   project: wink
   public: yes, confirmed by user 2026-10-23
-- image: ../sources/media/portfolio-2025-09/p14-5.png
-  caption: Wink, screen 3
+- image: ../sources/media/portfolio-2025-04/image9.tif
+  caption: Wink, settings
   project: wink
   public: yes, confirmed by user 2026-10-23
-- image: ../sources/media/portfolio-2025-09/p14-7.png
-  caption: Wink, screen 4
+- image: ../sources/media/portfolio-2025-04/image10.tif
+  caption: Wink, the user's profile
   project: wink
   public: yes, confirmed by user 2026-10-23
 - image: ../sources/media/portfolio-2025-09/p15-1.png

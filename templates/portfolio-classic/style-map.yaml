@@ -2,7 +2,7 @@
 schema_version: 1
 name: portfolio-classic
 kind: portfolio
-approved: false   # set only after the user approves the previews of npm run build:portfolio
+approved: true    # approved by the user 2026-10-23 after the previews of npm run build:portfolio
 page:
   width_twips: 11906
   height_twips: 16838

@@ -146,7 +146,7 @@ I built a generative AI Jira plugin with Jira Forge Custom UI, Atlaskit and Type
 
 **Technologies and frameworks**
 
-JavaScript, Node.js, TypeScript, React, Jira, Atlaskit, Forge Custom UI. <!-- src: doc:portfolio-2025-09 -->
+JavaScript, Node.js, TypeScript, React, Jira, Atlaskit, Forge Custom UI, Docker. <!-- src: doc:portfolio-2025-09, designai-jira-plugin#5 -->
 
 <!-- project: orion-mobile-clinical-ink -->
 
@@ -286,7 +286,7 @@ I developed the MVP of the frontend from scratch based on sketches with React an
 
 **Technologies and frameworks**
 
-React, Redux, TypeScript, AWS (EC2, S3, RDS), CI/CD with Bitbucket Pipelines, PostgreSQL, Sequelize, node-pg-migrate, Formik, Material UI, Nginx, PM2, Jira. <!-- src: doc:portfolio-2025-09 -->
+React, Redux, TypeScript, AWS (EC2, S3, RDS), CI/CD with Bitbucket Pipelines, PostgreSQL, Sequelize, node-pg-migrate, Formik, Material UI, Nginx, PM2, Docker, Jira. <!-- src: doc:portfolio-2025-09, itjet-fintech#4.7 -->
 
 <!-- project: itjet-fintech/fused -->
 
@@ -327,13 +327,13 @@ React Native, React, React Router, React Navigation, Node.js, Sequelize, Postgre
 Users like or dislike other users by swiping right or left for gems (the in-game currency), get notifications when someone likes them, and change their profile settings. <!-- src: doc:portfolio-2025-09 --> They earn gems through actions such as sharing the app link with friends, claiming a daily prize and leaving a review on Google Play. <!-- src: doc:portfolio-2025-09 --> The app was published on Google Play and the App Store and reached more than 5 million registered users. <!-- src: doc:portfolio-2025-09, itjet-fintech#4.8 -->
 
 <!-- generated:media-itjet-fintech/wink -->
-![Wink, screen 1](../sources/media/portfolio-2025-09/p14-1.png)
+![Wink, swiping through profiles](../sources/media/portfolio-2025-04/image8.tif)
 
-![Wink, screen 2](../sources/media/portfolio-2025-09/p14-3.png)
+![Wink, chats](../sources/media/portfolio-2025-09/p14-3.png)
 
-![Wink, screen 3](../sources/media/portfolio-2025-09/p14-5.png)
+![Wink, settings](../sources/media/portfolio-2025-04/image9.tif)
 
-![Wink, screen 4](../sources/media/portfolio-2025-09/p14-7.png)
+![Wink, the user's profile](../sources/media/portfolio-2025-04/image10.tif)
 <!-- /generated:media-itjet-fintech/wink -->
 
 **Responsibilities**

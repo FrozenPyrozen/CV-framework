@@ -123,6 +123,24 @@ decisions:
     why: User said to show the project names both in the CV and the portfolio (closes the open item "HERE truck navigation vs General Motors").
     matches: [HERE Technologies, truck navigation app, car navigation PoC, HERE vs General Motors]
 
+  - id: playwright-browser-mode-only
+    decision: At SYSPRO, Playwright is only the browser provider under Vitest Browser Mode; the CV doesn't claim Playwright end-to-end suites there.
+    date: "2026-10-23"
+    why: User answered the open question (no real Playwright E2E suites at SYSPRO).
+    matches: [Playwright E2E at SYSPRO, Playwright end-to-end, Playwright gap]
+
+  - id: sdd-summary-sentence
+    decision: The CV summary's last sentence ("…delivered through architecture-governed specification-driven development (SDD)") stays as it is.
+    date: "2026-10-23"
+    why: User said it's fine (review 2026-10-23-1349 question "SDD in the summary").
+    matches: [SDD in the summary, SDD sentence too broad, delivered through SDD]
+
+  - id: syspro-portfolio-two-pages
+    decision: The SYSPRO project may run to two pages in the portfolio (four screenshots in two rows); every other project keeps one page.
+    date: "2026-10-23"
+    why: User said two pages are fine for SYSPRO (after the screenshots were added).
+    matches: [SYSPRO two pages, portfolio project over one page, SYSPRO page break]
+
   - id: direct-employment
     decision: SYSPRO, General Motors and Thermo Fisher Scientific employed the user directly (no services company in between).
     date: "2026-10-23"

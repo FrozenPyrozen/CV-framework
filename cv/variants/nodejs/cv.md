@@ -98,7 +98,7 @@ Senior software engineer and tech lead with 7+ years of experience building Type
 
 * Doubled delivery speed for Aspiration by introducing **TypeScript** and an **Atomic Design** component library with automated tests (**Puppeteer, Jest, Cucumber**), and set up **CI/CD** (Bitbucket Pipelines, **AWS EC2 / S3**) for RegiStart. <!-- src: itjet-fintech#4.3 -->
 
-* Containerized Fused services with **Docker**, and used **GraphQL** and built web features with **Next.js** with server-side rendering (SSR) for Aspiration. <!-- src: itjet-fintech#4.7 -->
+* Containerized Fused and RegiStart services with **Docker**, and used **GraphQL** and built web features with **Next.js** with server-side rendering (SSR) for Aspiration. <!-- src: itjet-fintech#4.7 -->
 
 <!-- entry: admasters-ecommerce -->
 ## **Full-Stack Engineer and Team Leader**

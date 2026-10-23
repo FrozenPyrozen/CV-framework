@@ -133,7 +133,7 @@ Commands are available as Claude Code slash commands (`.claude/commands/`). Any 
 ### Templates (`templates/`)
 
 - `classic` (default): approved, fonts Cambria, Arial
-- `portfolio-classic`: not approved, fonts DIN Condensed, Rockwell, Charter, Avenir Next Medium
+- `portfolio-classic`: approved, fonts DIN Condensed, Rockwell, Charter, Avenir Next Medium
 
 ### Output specs (`specs/outputs/`)
 

@@ -102,7 +102,7 @@ Tags: code-quality, typescript, design-systems
 | Code quality | SonarQube | **hands-on** (fixed a reported error) |
 | Process | Azure DevOps pull requests | **hands-on** (PR template) |
 | Product backend | API, agents and design-generation pipelines | **used by the project** |
-| Deployment | Docker, Helm | **used by the project** |
+| Deployment | Docker (**hands-on**, confirmed by user 2026-10-23), Helm | Docker hands-on; Helm **used by the project** |
 
 ## 6. Skills demonstrated
 

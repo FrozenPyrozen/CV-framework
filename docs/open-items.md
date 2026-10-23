@@ -8,15 +8,8 @@ Kept in the repo (not in any AI tool's memory) so it travels to every laptop (`s
 
 | Item | What you said | Where it goes | Since |
 |---|---|---|---|
-| iOS native work | Created iOS native modules and rewrote existing logic for iOS; project not named yet | the right summary or a confirmed fact; closes the iOS gap in the react-native gap report | 2026-10-16 |
-| Backend after 2023 | More recent production backend work, not described yet | a summary or fact; closes the backend-depth gap in the nodejs and full-stack gap reports | 2026-10-16 |
-| GraphQL | Also used on the clinical-trials app and other projects | `orion-mobile-clinical-ink` (today "used by the project"; hands-on only if it was) and other summaries | 2026-10-16 |
-| Docker on the Jira plugin | Used Docker there | `designai-jira-plugin` section 5 (today "used by the project") | 2026-10-16 |
 | More skills | More detail on Styled Components, Redux Thunk, Keychain, React Testing Library and others | summaries' section 5, `facts/skills.yaml` | 2026-10-16 |
-| Playwright E2E at SYSPRO | Are there real Playwright end-to-end suites at SYSPRO, beyond Playwright as the Vitest Browser Mode provider? (react gap report) | `syspro-saas-erp` 4.9 | 2026-10-16 |
-| Smarty sheets on Aspiration signup | The published portfolio lists "Smarty sheets" among the Aspiration signup technologies; you'll check whether it is SmartyStreets (the address API). Left out of the portfolio until then | `itjet-fintech` section 5 and the portfolio's aspiration-signup page | 2026-10-23 |
-| Older CVs | The April 2025 portfolio is imported (`doc:portfolio-2025-04`, proposals gone through on 2026-10-22); older CVs are still to come | `/import-docs`, summaries | 2026-10-16 |
-| Portfolio screenshots | 13 screenshots from `doc:portfolio-2025-04` still to sort (GM 4, HERE truck navigation 2, Clinical Ink 3, OMO 1, Wink 3): which are public | summaries' section 8 | 2026-10-22 |
+| Smarty sheets on Aspiration signup | The published portfolio lists "Smarty sheets" among the Aspiration signup technologies; you think it could be a CSS-in-JS styling library (2026-10-23), not confirmed; SmartyStreets (the address API) is the other reading. Left out of the portfolio until then | `itjet-fintech` section 5 and the portfolio's aspiration-signup page | 2026-10-23 |
 | OMO leadership | The CV's "Team Leader, led and mentored a team of about 3 engineers" stays for now; the April 2025 portfolio said "tech lead for a sprint of the frontend team". You'll share more details | `omo-systems-smart-home` 4.5 and section 3 | 2026-10-22 |
 | GM details | The portfolio's description is used for now (phone companion app for owners, map team of 8: 6 React Native, 1 iOS, 1 Android); you'll share more | `general-motors-navigation` | 2026-10-22 |
 
@@ -26,13 +19,13 @@ Kept in the repo (not in any AI tool's memory) so it travels to every laptop (`s
 |---|---|---|
 | Velas leadership | What did "Technical Leader" cover? Did you lead people, and how many? (asked again 2026-10-23: later) | ats-1, hr-5; 2026-10-23-1349 ats-1, hr-7 |
 
-## Questions from the review of 2026-10-23 (`reports/2026-10-23-1349/`)
+## Parked (you said: not for now, 2026-10-23; the advisor doesn't ask about these until you bring them back)
 
-| Item | Question | Source |
-|---|---|---|
-| SDD in the summary | The summary's last sentence says the listed experience was "delivered through architecture-governed SDD", which also covers the Android migrations and the generative AI integration (contracts without SDD). Limit SDD to the current job? | fact-check-3 |
+| Item | What you said | Where it goes | Since |
+|---|---|---|---|
+| Older CVs | The April 2025 portfolio is imported (`doc:portfolio-2025-04`, proposals gone through on 2026-10-22); older CVs are still to come | `/import-docs`, summaries | 2026-10-16 |
 
-## Interview preparation (answers only; the CV doesn't change)
+## Interview preparation (answers only; the CV doesn't change) (parked 2026-10-23: not for now)
 
 | Topic | Question | Source |
 |---|---|---|
