@@ -6,7 +6,7 @@ source: cv
 client: General Motors
 role: Team Leader
 engagement: full-time
-period: { start: 2023-07, end: 2025-11 }
+period: { start: 2023-07, end: 2025-12 }   # end confirmed by user 2026-10-23 (overlaps the SYSPRO start in December 2025)
 domain: [Automotive, Navigation]
 team_size_led: 8
 counts_as_experience: true

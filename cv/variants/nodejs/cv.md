@@ -36,7 +36,7 @@ Senior software engineer and tech lead with 7+ years of experience building Type
 <!-- entry: general-motors-navigation -->
 ## **Team Leader**
 
-### **General Motors | Remote | July 2023 - November 2025**
+### **General Motors | Remote | July 2023 - December 2025**
 
 * Led the map team of 8 engineers (6 React Native, 1 iOS, 1 Android) for the General Motors vehicle companion app, built in **React Native**, working with stakeholders on scope and planning. After release, user engagement rose 20% and app crashes fell 15%. <!-- src: general-motors-navigation#4.1 -->
 
