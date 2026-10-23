@@ -176,7 +176,7 @@ Not allowed (lint fails): italics, tables, nested lists, numbered lists, images,
 The current decisions live in `facts/decisions.yaml`. At the time of writing:
 
 - No LinkedIn or GitHub link in the header (they are stored in the profile with `show: false` and can come back).
-- Keep the current length of the master CV (about 2,000 words). Role variants follow their profile's `max_pages` and `max_words`.
+- Keep the current length of the master CV (within `checks.max_words`, 3 to 4 pages). Role variants follow their profile's `max_pages` and `max_words`.
 - Keep the Google Drive portfolio link.
 - Keep the job title step from Team Leader (General Motors) to Senior Software Engineer (SYSPRO).
 - The consulting section shows no dates, and the Clinical Ink and Velocity AI clients are hidden behind their labels.

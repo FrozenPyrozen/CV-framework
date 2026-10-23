@@ -46,15 +46,15 @@ test("composer --entry: the Read first spec sections, the entry's CV lines, summ
 
 test("composer without --entry takes the entries status lists, and an open item rides along", () => {
   const dir = repo();
-  const none = run("agent-context.ts", dir, ["composer"]);
-  assert.equal(none.code, 0, none.out);
-  assert.match(none.out, /0 entries in scope/);
+  const before = run("agent-context.ts", dir, ["composer"]);
+  assert.equal(before.code, 0, before.out);
+  assert.doesNotMatch(bundle(dir, before.out), /Entries in scope: [^\n]*admasters-ecommerce/); // in scope only after its summary changes
   edit(dir, "summaries/admasters-ecommerce.md", /^(### 4\.1 .*)$/m, "$1 (renamed)");
   const r = run("agent-context.ts", dir, ["composer"]);
   assert.equal(r.code, 0, r.out);
   const b = bundle(dir, r.out);
-  assert.match(b, /Entries in scope: admasters-ecommerce \(status: sources changed\)/);
-  assert.match(b, /Unchanged \(copy as they are\): syspro-saas-erp \(lines \d+–\d+\)/);
+  assert.match(b, /Entries in scope: [^\n]*admasters-ecommerce \(status: sources changed\)/);
+  assert.match(b, /Unchanged \(copy as they are\): [^\n]*syspro-saas-erp \(lines \d+–\d+\)/);
   assert.match(b, /Open items[^\n]*\n- Admasters stack:/);
 });
 
@@ -72,7 +72,7 @@ test("tailor: the role profile, the selection, master wording and only the selec
   // The gap-report template inside 5 is kept as written and doesn't end the section; 6 isn't on the list.
   assert.match(b, /^### 5\. Gap report[^\n]*\n[\s\S]*^## Strong evidence$[\s\S]*^## Selection disagreements$/m);
   assert.doesNotMatch(b, /^### 6\. Output/m);
-  assert.match(b, /Entries in scope: velas-wallet \(selection changed\)/);
+  assert.match(b, /Entries in scope: [^\n]*velas-wallet \(selection changed\)/);
   assert.match(b, /Role profile \(`profiles\/react\.yaml`\)/);
   assert.match(b, /### Master CV wording \(`cv\/Kirill_Kohan_CV\.md` lines/);
   const contribs = [...b.matchAll(/^#### (velas-wallet#4\.\d+) /gm)].map((m) => m[1]).sort();

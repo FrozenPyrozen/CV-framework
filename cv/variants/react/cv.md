@@ -10,7 +10,7 @@ Kyiv, Ukraine (Remote) | Open to B2B contract or full-time employment | Working 
 
 # **SUMMARY**
 
-Senior React engineer and frontend tech lead with 7+ years of experience building React, React Native and TypeScript applications for enterprise resource planning (ERP) software-as-a-service (SaaS), automotive, healthcare, fintech and blockchain products. <!-- src: calc:years_experience, profile, syspro-saas-erp#1, general-motors-navigation#1, thermo-fisher-dosimeter#1, itjet-fintech#1, velas-wallet#1 --> Built core modules of a schema-driven React 19 runtime that renders 1,800+ ERP programs from data-model definitions inside a secure micro-frontend architecture. <!-- src: syspro-saas-erp#4.1 --> Delivered it through architecture-governed specification-driven development (SDD), working with the lead architect on platform architecture and owning the frontend technology stack. <!-- src: syspro-saas-erp#4.2, syspro-architecture-scope, syspro-tech-stack-ownership --> Led a team of 8 engineers on a React Native automotive app, setting coding standards, running code reviews and owning its modular architecture. <!-- src: general-motors-navigation#4.1, general-motors-navigation#4.2, general-motors-navigation#4.4, calc:team_size_led --> Experienced in OpenID Connect (OIDC) authentication, XState and Zustand state management, OpenTelemetry observability and component testing with Vitest. <!-- src: syspro-saas-erp#4.7, syspro-saas-erp#4.5, syspro-saas-erp#4.8, syspro-saas-erp#4.9 -->
+Senior React engineer and frontend tech lead with 7+ years of experience building React, React Native and TypeScript applications for enterprise resource planning (ERP) software-as-a-service (SaaS), automotive, healthcare, fintech and blockchain products. <!-- src: calc:years_experience, profile, syspro-saas-erp#1, general-motors-navigation#1, thermo-fisher-dosimeter#1, itjet-fintech#1, velas-wallet#1 --> Built core modules of a schema-driven React 19 runtime that renders 1,800+ ERP programs inside a secure micro-frontend architecture. <!-- src: syspro-saas-erp#4.1 --> Delivered it through architecture-governed specification-driven development (SDD), working with the lead architect on platform architecture and owning the frontend technology stack. <!-- src: syspro-saas-erp#4.2, syspro-architecture-scope, syspro-tech-stack-ownership --> Led a team of 8 engineers on a React Native automotive app, setting coding standards, running code reviews and owning its modular architecture. <!-- src: general-motors-navigation#4.1, general-motors-navigation#4.2, general-motors-navigation#4.4, calc:team_size_led --> Experienced in OpenID Connect (OIDC) authentication, XState and Zustand state management, OpenTelemetry observability and component testing with Vitest. <!-- src: syspro-saas-erp#4.7, syspro-saas-erp#4.5, syspro-saas-erp#4.8, syspro-saas-erp#4.9 -->
 
 # **EXPERIENCE**
 
@@ -40,18 +40,17 @@ Senior React engineer and frontend tech lead with 7+ years of experience buildin
 
 ### **General Motors | Remote | July 2023 - December 2025**
 
-* Led the map team of 8 engineers (6 React Native, 1 iOS, 1 Android) for the General Motors vehicle companion app, built in **React Native**, working with stakeholders on scope and planning. After release, user engagement rose 20% and app crashes fell 15%. <!-- src: general-motors-navigation#4.1 -->
+* Led the map team of 8 engineers (6 React Native, 1 iOS, 1 Android) for the General Motors vehicle companion app in **React Native**, working with stakeholders on scope and planning; after release, user engagement rose 20% and crashes fell 15%. <!-- src: general-motors-navigation#4.1 -->
 
 * Ran **code reviews** and set coding standards for the team, mentoring engineers on architecture and testing. <!-- src: general-motors-navigation#4.2 -->
 
-* At the client's request, changed the architecture to move a reusable feature app into the host app, and planned the move of its logic and components to the host's patterns: **clean architecture**, **domain-driven design**, abstract services and pure components. <!-- src: general-motors-navigation#4.10 -->
+* At the client's request, moved a reusable feature app into the host app and planned moving its logic and components to the host's **clean architecture** and **domain-driven design** patterns. <!-- src: general-motors-navigation#4.10 -->
 
-* Created and documented the delivery and testing process for the map feature across three nested apps: the host app, a reusable feature app and a **React Native** map provider app with native code and the **HERE SDK**. <!-- src: general-motors-navigation#4.9 -->
+* Created and documented the delivery and testing process for the map feature across three nested apps, down to a **React Native** map provider app with native code and the **HERE SDK**. <!-- src: general-motors-navigation#4.9 -->
 
-* Owned the **system design** of the app's modular architecture so that new feature requests from product teams could be added without reworking existing modules. <!-- src: general-motors-navigation#4.4 -->
+* Owned the **system design** of the modular app architecture, so product teams' new features were added without reworking existing modules. <!-- src: general-motors-navigation#4.4 -->
 
 * Defined the unit-testing strategy that reached 95% coverage and introduced an **Agile** delivery process, which reduced production bugs. <!-- src: general-motors-navigation#4.5 -->
-
 <!-- entry: velas-wallet -->
 ## **Technical Leader**
 
@@ -121,42 +120,70 @@ Senior React engineer and frontend tech lead with 7+ years of experience buildin
 
 # **CONSULTING AND FREELANCE PROJECTS**
 
-Part-time contract and consulting work, alongside full-time roles
+Contract, consulting and project work
+
+<!-- entry: navigation-poc -->
+## **Senior Software Engineer**
+
+### **HERE Technologies | Remote**
+
+* Reworked the voice assistant's client integration for a car navigation proof of concept in **React** and **RxJS**, adding text input alongside voice and processing, completion and error states. <!-- src: navigation-poc#4.1, navigation-poc#1 -->
+
+* Implemented a passenger second-screen feature in **React** for a luxury car brand, showing live trip data. <!-- src: navigation-poc#4.3 -->
+
+* Implemented brand-specific day and night **themes** and shared cockpit layouts across PoC variants. <!-- src: navigation-poc#4.7 -->
+
+* Made a **React** and **TypeScript** demo control panel configuration-driven, with schema-validated demo definitions loaded outside the bundle, so demos changed without a rebuild. <!-- src: navigation-poc#4.10 -->
+
+* Built driver warning cards and extended their **Android** service contracts for confirming, rejecting and dismissing warnings. <!-- src: navigation-poc#4.2 -->
+
+* Added route-progress markers with clustering and migrated assisted-driving status icons and notifications. <!-- src: navigation-poc#4.4 -->
+
+<!-- entry: navigation-statistics -->
+## **Senior Software Engineer**
+
+### **HERE Technologies | Remote**
+
+* Propagated route-change reasons through the guidance flow of a **truck navigation app** in **TypeScript** and **RxJS**, covering dynamic routing, route restoration and parking approach. <!-- src: navigation-statistics#4.1 -->
+
+* Separated developer diagnostics from core guidance services, updating **Protocol Buffers** contracts and keeping older operations backward compatible. <!-- src: navigation-statistics#4.2 -->
+
+* Adapted the **React** diagnostic display and developer menu to the new service boundaries. <!-- src: navigation-statistics#4.3 -->
+
+* Added and repaired **Jest** tests for route-change reasons across guidance, route edits and parking approach. <!-- src: navigation-statistics#4.4 -->
 
 <!-- entry: orion-mobile-clinical-ink -->
 ## **Senior React Native Engineer (Contract)**
 
 ### **Clinical Trials Patient App | Remote**
 
-* Refactored the legacy documents library screen from JavaScript into small **TypeScript** components to speed up the app, and added ~1,000 lines of **Jest** and **React Native Testing Library** tests. <!-- src: orion-mobile-clinical-ink#4.2 -->
+* Refactored the legacy documents library screen from JavaScript into small **TypeScript** components for speed, adding ~1,000 lines of **Jest** and **React Native Testing Library** tests. <!-- src: orion-mobile-clinical-ink#4.2 -->
 
-* Developed and maintained a patient-facing **clinical trial** mobile app for electronic clinical outcome assessment (**eCOA**) built with **React Native, Expo and TypeScript**, and its native **Android (Java / Kotlin)** counterpart. <!-- src: orion-mobile-clinical-ink#4.1 -->
+* Developed a patient-facing **clinical trial** app for electronic clinical outcome assessment (**eCOA**) in **React Native, Expo and TypeScript**, and its native **Android (Java / Kotlin)** counterpart. <!-- src: orion-mobile-clinical-ink#4.1 -->
 
-* Worked with the team on upgrading the app to **React Native 0.76** and **Expo SDK 52** to improve app performance. <!-- src: orion-mobile-clinical-ink#4.7 -->
-
+* Worked with the team on upgrading the app to **React Native 0.76** and **Expo SDK 52** to improve performance. <!-- src: orion-mobile-clinical-ink#4.7 -->
 <!-- entry: designai-jira-plugin -->
 ## **Full-Stack Engineer (Contract)**
 
 ### **Generative AI Jira Plugin | Remote**
 
-* Created the design generation form with multiple inputs: design description, reference images with preview, product requirements document (PRD) and user-flow uploads, website URL, **MCP (Model Context Protocol)** server URL and design-system selection, using **Atlaskit** components, a reusable file-upload component and form validation. <!-- src: designai-jira-plugin#4.2 -->
+* Created the **Atlaskit** design generation form: description, reference images, product requirements document (PRD) and user-flow uploads, website URL, **MCP (Model Context Protocol)** server URL and design-system selection. <!-- src: designai-jira-plugin#4.2 -->
 
-* Built an **Atlassian Jira Forge** app from scratch with **React, TypeScript** and **Node.js** resolvers, starting with Forge UI Kit and moving to **Forge Custom UI**. The app started **generative AI** design generation from a Jira issue and added a Jira subtask for the result. <!-- src: designai-jira-plugin#4.1 -->
+* Built an **Atlassian Jira Forge** app from scratch with **React**, **TypeScript** and **Node.js** resolvers (Forge UI Kit, then **Forge Custom UI**) that started **generative AI** design generation from a Jira issue and tracked the result in a subtask. <!-- src: designai-jira-plugin#4.1 -->
 
-* Added ESLint, TypeScript and a pre-commit lint hook, enabled Atlassian design tokens, and fixed a **SonarQube** TypeScript error. <!-- src: designai-jira-plugin#4.4 -->
+* Added ESLint, TypeScript and a pre-commit lint hook, enabled Atlassian design tokens, and fixed a **SonarQube** error. <!-- src: designai-jira-plugin#4.4 -->
 
-* Moved file handling to direct **Azure Blob Storage** uploads, removing the app's dependency on the backend and letting larger images work. <!-- src: designai-jira-plugin#4.3 -->
+* Moved file handling to direct **Azure Blob Storage** uploads, removing the app's backend dependency and allowing larger images. <!-- src: designai-jira-plugin#4.3 -->
 
-* Transferred image data to Azure Blob Storage in chunks to work around Atlassian Forge's file upload limits. <!-- src: jira-blob-chunks -->
-
+* Sent image data to Azure Blob Storage in chunks to work around Atlassian Forge's file upload limits. <!-- src: jira-blob-chunks -->
 <!-- entry: various-clients -->
 ## **Software Engineering Consultant**
 
 ### **Various Clients | Remote**
 
-* Conducted senior-level **technical interviews** for **React, React Native, JavaScript and TypeScript** roles for enterprise clients, with technical questions and coding assignments. <!-- src: consulting-interviews -->
+* Conducted senior-level **technical interviews** for **React, React Native, JavaScript and TypeScript** roles at enterprise clients, with coding assignments. <!-- src: consulting-interviews -->
 
-* Led scaling and optimization engagements for client teams, reducing operational costs by up to 50% through refactoring core apps, adding caching and writing unit tests. <!-- src: consulting-optimization -->
+* Led scaling and optimization work for client teams, cutting operational costs by up to 50% through refactoring, caching and unit tests. <!-- src: consulting-optimization -->
 
 # **EDUCATION**
 

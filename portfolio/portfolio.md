@@ -62,19 +62,19 @@ I created and documented the process for delivering and testing our apps inside 
 
 React Native, HERE SDK, HERE API, Redux Toolkit, TypeScript, React Hooks, Git, Azure, Azure Pipelines, Jest, BrowserStack, domain-driven design, clean architecture. <!-- src: doc:portfolio-2025-09 -->
 
-<!-- project: general-motors-navigation/navigation -->
+<!-- project: navigation-statistics -->
 
-<!-- generated:project-general-motors-navigation/navigation -->
+<!-- generated:project-navigation-statistics -->
 ## **Automotive navigation app under NDA for HERE Technologies (React Native, React, Node.js, Android)**
-<!-- /generated:project-general-motors-navigation/navigation -->
+<!-- /generated:project-navigation-statistics -->
 
 HERE's customer, a package delivery company, builds on HERE solutions (HNod, HNav, HERE SDK, HERE API). <!-- src: doc:portfolio-2025-09 --> I worked on a customizable Android app built with JavaScript tools (Node.js, React Native, React) and Android tools (Kotlin, Java), connected through gRPC. <!-- src: doc:portfolio-2025-09 --> It is a navigation app for large-truck drivers, installed on the driver's tablet and based on HERE maps. <!-- src: doc:portfolio-2025-09 --> Drivers see the route to their destination and set their truck's parameters, such as width and height, to see the restrictions that apply to it. <!-- src: doc:portfolio-2025-09 --> The app can be extended with custom logic and features through service packages connected to the HERE bundler (gRPC), which add menu items, screens, pop-ups and routing logic with React Native, React and Node.js. <!-- src: doc:portfolio-2025-09 --> In short, the project consists of the HNod library, service packages and an Android native or web app. <!-- src: doc:portfolio-2025-09 -->
 
-<!-- generated:media-general-motors-navigation/navigation -->
+<!-- generated:media-navigation-statistics -->
 ![Navigation app, route view](../sources/media/portfolio-2025-04/image2.jpeg)
 
 ![Navigation app, search](../sources/media/portfolio-2025-04/image3.jpeg)
-<!-- /generated:media-general-motors-navigation/navigation -->
+<!-- /generated:media-navigation-statistics -->
 
 **Responsibilities**
 
@@ -84,17 +84,17 @@ I was responsible for handling route deviations, when a truck driver leaves the 
 
 JavaScript, TypeScript, Node.js, gRPC, React Native, React, custom HERE solutions (HNod library, HERE bundler (gRPC), HERE runner, HERE API, HERE SDK, HNav library), RxJS, Jest, GitLab pipelines. <!-- src: doc:portfolio-2025-09 -->
 
-<!-- project: general-motors-navigation/poc -->
+<!-- project: navigation-poc -->
 
-<!-- generated:project-general-motors-navigation/poc -->
+<!-- generated:project-navigation-poc -->
 ## **Car navigation PoC under NDA (Node.js, React)**
-<!-- /generated:project-general-motors-navigation/poc -->
+<!-- /generated:project-navigation-poc -->
 
 This proof of concept (PoC) is an automotive app that showed the possibilities of new HERE technology in Volkswagen AG cars (Audi, Porsche, Volkswagen and others) and integrated features such as the Hugo AI assistant, Level 3 automated driving (L3) interaction, advanced driver-assistance systems (ADAS), the Kurviger route planner, the operational design domain (ODD), custom themes and layout support. <!-- src: doc:portfolio-2025-09 -->
 
-<!-- generated:media-general-motors-navigation/poc -->
+<!-- generated:media-navigation-poc -->
 ![Car navigation PoC on the head unit](../sources/media/portfolio-2025-09/p04-1.png)
-<!-- /generated:media-general-motors-navigation/poc -->
+<!-- /generated:media-navigation-poc -->
 
 **Responsibilities**
 

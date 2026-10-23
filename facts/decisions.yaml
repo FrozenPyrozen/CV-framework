@@ -52,9 +52,9 @@ decisions:
     matches: [company names in summary, summary names employers, employer not named in summary, current role not stated in summary, timing words in summary]
 
   - id: keep-length
-    decision: Keep the master CV's current length (about 2,000 words, 3 to 4 pages); don't trim older roles there. Role variants follow their profile's max_pages and max_words and shrink less relevant roles by design.
+    decision: Keep the master CV's current length (about 2,300 words, within checks.max_words; 3 to 4 pages); don't trim older roles there. Role variants follow their profile's max_pages and max_words and shrink less relevant roles by design.
     date: "2026-10-15"
-    why: User's choice; AI screeners don't penalize length. Scoped to the master CV on 2026-10-16.
+    why: User's choice; AI screeners don't penalize length. Scoped to the master CV on 2026-10-16. checks.max_words raised from 2,200 to 2,320 on 2026-10-23 for the two HERE Technologies consulting entries (user).
     matches: [CV too long, trim older roles, page count]
 
   - id: keep-portfolio-link
@@ -118,9 +118,9 @@ decisions:
     matches: [voice AI proof of concept, passenger second screen, luxury car brand, unreleased GM work]
 
   - id: gm-project-names
-    decision: The CV and the portfolio name the projects of the General Motors period. The truck navigation app for HERE Technologies and the car navigation PoC stay in the General Motors entry, named as projects (CV bullets 4.6 and 4.7), and are separate pages in the portfolio.
+    decision: The CV and the portfolio name the HERE Technologies projects. The truck navigation app and the car navigation PoC are two consulting entries for HERE Technologies (navigation-statistics, navigation-poc), no longer bullets of the General Motors entry, and separate pages in the portfolio.
     date: "2026-10-23"
-    why: User said to show the project names both in the CV and the portfolio (closes the open item "HERE truck navigation vs General Motors").
+    why: User said to show the project names both in the CV and the portfolio (closes the open item "HERE truck navigation vs General Motors"); later the same day, after the portable harvest of those repos, the user moved them to the consulting section (the work began as a GM project and continued in the HERE team).
     matches: [HERE Technologies, truck navigation app, car navigation PoC, HERE vs General Motors]
 
   - id: playwright-browser-mode-only

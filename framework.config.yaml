@@ -34,7 +34,7 @@ cv_sections:
     heading: CONSULTING AND FREELANCE PROJECTS
     enabled: true
     source: entries
-    intro: Part-time contract and consulting work, alongside full-time roles
+    intro: Contract, consulting and project work
     show_dates: false
   - { id: education,  heading: EDUCATION,  enabled: true, source: profile.education }
   - { id: skills,     heading: SKILLS,     enabled: true, source: skills }
@@ -64,7 +64,7 @@ header:
 
 checks:
   max_pages: 4
-  max_words: 2200
+  max_words: 2320
   max_bullet_words: 45
   portfolio_max_pages: 40            # page limit of each portfolio PDF (specs/outputs/portfolio.md 6)
   portfolio_max_project_words: 420   # one page per project with its screenshots, as on the published portfolio (up to about 400 words)

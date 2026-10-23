@@ -89,7 +89,7 @@ facts:
     engagement: freelance
     period: { start: 2017-01, end: present }
     cv_section: consulting
-    cv_order: 3
+    cv_order: 5
     show_dates_in_cv: false
     counts_as_experience: false
     source: user + previous CV
@@ -98,7 +98,7 @@ facts:
   - id: gm-poc-build-3x
     fact: On the car navigation PoC, a script that replaced manual build steps made the build 3x faster.
     source: user, 2026-10-23 (from doc:portfolio-2025-09)
-    entry: general-motors-navigation
+    entry: navigation-poc   # moved from general-motors-navigation with the PoC (user 2026-10-23)
     tags: [build-tooling, delivery-speed]
 
   - id: dosimeter-10-screens

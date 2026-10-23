@@ -10,7 +10,7 @@ Kyiv, Ukraine (Remote) | Open to B2B contract or full-time employment | Working 
 
 # **SUMMARY**
 
-Senior React Native engineer and tech lead with 7+ years of experience building React Native, React and TypeScript apps for automotive, healthcare and clinical trials, Internet of Things (IoT), fintech, blockchain and enterprise resource planning (ERP) products. <!-- src: calc:years_experience, profile, general-motors-navigation#1, orion-mobile-clinical-ink#1, thermo-fisher-dosimeter#1, omo-systems-smart-home#1, itjet-fintech#1, velas-wallet#1, syspro-saas-erp#1 --> Led a team of 8 engineers building the HERE SDK map features of an automotive React Native companion app; after release, user engagement rose 20% and app crashes fell 15%. <!-- src: general-motors-navigation#4.1, general-motors-navigation#4.3, general-motors-navigation#4.6, calc:team_size_led --> Built an offline-first IoT healthcare app on Android and iOS with Realm from scratch, with Bluetooth Low Energy (BLE), MQTT over Transport Layer Security (TLS) and background-job features. <!-- src: thermo-fisher-dosimeter#4.1, thermo-fisher-dosimeter#4.2, thermo-fisher-dosimeter#4.3, thermo-fisher-dosimeter#4.4 --> Made mobile apps measurably faster: a 3x faster first interaction in an Android wallet, staking page loading cut from 2 minutes to 5 seconds with 5x less battery use, and 30% faster device data transfer in the IoT app. <!-- src: velas-wallet#4.9, velas-wallet#4.2, thermo-fisher-dosimeter#4.2 --> Also worked in native Android (Java / Kotlin), including an Android 14 (SDK 34) migration, and released a wallet app on F-Droid and Snapcraft. <!-- src: orion-mobile-clinical-ink#4.1, orion-mobile-clinical-ink#4.4, velas-wallet#4.5 --> Built core modules of a schema-driven React 19 runtime that renders 1,800+ ERP programs through architecture-governed specification-driven development (SDD). <!-- src: syspro-saas-erp#4.1, syspro-saas-erp#4.2 -->
+Senior React Native engineer and tech lead with 7+ years of experience building React Native, React and TypeScript apps for automotive, healthcare and clinical trials, Internet of Things (IoT), fintech, blockchain and enterprise resource planning (ERP) products. <!-- src: calc:years_experience, profile, general-motors-navigation#1, orion-mobile-clinical-ink#1, thermo-fisher-dosimeter#1, omo-systems-smart-home#1, itjet-fintech#1, velas-wallet#1, syspro-saas-erp#1 --> Led a team of 8 engineers building the HERE SDK map features of an automotive React Native companion app; after release, user engagement rose 20% and crashes fell 15%. <!-- src: general-motors-navigation#4.1, general-motors-navigation#4.3, calc:team_size_led --> Built an offline-first IoT healthcare app on Android and iOS with Realm from scratch, with Bluetooth Low Energy (BLE), MQTT over Transport Layer Security (TLS) and background-job features. <!-- src: thermo-fisher-dosimeter#4.1, thermo-fisher-dosimeter#4.2, thermo-fisher-dosimeter#4.3, thermo-fisher-dosimeter#4.4 --> Made mobile apps measurably faster: a 3x faster first interaction in an Android wallet, staking page loading cut from 2 minutes to 5 seconds with 5x less battery use, and 30% faster device data transfer in the IoT app. <!-- src: velas-wallet#4.9, velas-wallet#4.2, thermo-fisher-dosimeter#4.2 --> Also worked in native Android (Java / Kotlin), including an Android 14 migration, and released a wallet app on F-Droid and Snapcraft. <!-- src: orion-mobile-clinical-ink#4.1, orion-mobile-clinical-ink#4.4, velas-wallet#4.5 --> Built core modules of a schema-driven React 19 runtime that renders 1,800+ ERP programs through architecture-governed specification-driven development (SDD). <!-- src: syspro-saas-erp#4.1, syspro-saas-erp#4.2 -->
 
 # **EXPERIENCE**
 
@@ -32,20 +32,19 @@ Senior React Native engineer and tech lead with 7+ years of experience building 
 
 ### **General Motors | Remote | July 2023 - December 2025**
 
-* Led the map team of 8 engineers (6 React Native, 1 iOS, 1 Android) for the General Motors vehicle companion app, built in **React Native**, working with stakeholders on scope and planning. After release, user engagement rose 20% and app crashes fell 15%. <!-- src: general-motors-navigation#4.1 -->
+* Led the map team of 8 engineers (6 React Native, 1 iOS, 1 Android) for the General Motors vehicle companion app in **React Native**, working with stakeholders on scope and planning; after release, user engagement rose 20% and crashes fell 15%. <!-- src: general-motors-navigation#4.1 -->
 
 * Led development of a reusable map library on the **HERE SDK**, packaged as a **React Native micro-frontend** and integrated into several company products. <!-- src: general-motors-navigation#4.3 -->
 
-* Owned the **system design** of the app's modular architecture so that new feature requests from product teams could be added without reworking existing modules. <!-- src: general-motors-navigation#4.4 -->
+* Owned the **system design** of the modular app architecture, so product teams' new features were added without reworking existing modules. <!-- src: general-motors-navigation#4.4 -->
 
-* Implemented in-car navigation features with the **HERE navigation SDK**, including route-deviation handling on the **truck navigation app for HERE Technologies**, and a redesigned search UI. <!-- src: general-motors-navigation#4.6 -->
+* Created and documented the delivery and testing process for the map feature across three nested apps, down to a **React Native** map provider app with native **iOS** and **Android** code and the **HERE SDK**. <!-- src: general-motors-navigation#4.9 -->
 
-* Implemented a passenger second-screen feature for a luxury car brand. <!-- src: general-motors-navigation#4.8 -->
+* At the client's request, moved a reusable feature app into the host app and planned moving its logic and components to the host's **clean architecture** and **domain-driven design** patterns. <!-- src: general-motors-navigation#4.10 -->
 
-* Created and documented the delivery and testing process for the map feature across three nested apps: the host app, a reusable feature app and a **React Native** map provider app with native **iOS** and **Android** code and the **HERE SDK**. <!-- src: general-motors-navigation#4.9 -->
+* Fixed the map architecture for running several map instances (no shared global map reference or event listener) and designed a shared search architecture with normalized marker and search-result state. <!-- src: general-motors-navigation#4.11 -->
 
 * Stack: **React Native, TypeScript, Node.js, Redux Saga, RxJS, Storybook, Detox** (E2E), **Fastlane, Bitrise** (CI/CD), **Bugsnag, Kibana** (monitoring), **Figma**. <!-- src: general-motors-navigation#5 -->
-
 <!-- entry: velas-wallet -->
 ## **Technical Leader**
 
@@ -121,46 +120,70 @@ Senior React Native engineer and tech lead with 7+ years of experience building 
 
 # **CONSULTING AND FREELANCE PROJECTS**
 
-Part-time contract and consulting work, alongside full-time roles
+Contract, consulting and project work
+
+<!-- entry: navigation-poc -->
+## **Senior Software Engineer**
+
+### **HERE Technologies | Remote**
+
+* Reworked the voice assistant's client integration for a car navigation proof of concept in **React** and **RxJS**, adding text input alongside voice and processing, completion and error states. <!-- src: navigation-poc#4.1, navigation-poc#1 -->
+
+* Built driver warning cards and extended their **Android** service contracts for confirming, rejecting and dismissing warnings. <!-- src: navigation-poc#4.2 -->
+
+* Implemented a passenger second-screen feature in **React** for a luxury car brand, showing live trip data. <!-- src: navigation-poc#4.3 -->
+
+* Integrated curvy-route controls into the PoC and added a route-curviness slider to a **Kotlin** reference app. <!-- src: navigation-poc#4.5 -->
+
+* Connected electric-vehicle data to the **TypeScript** UI through **Android** model and protocol updates, and maintained navigation SDK versions. <!-- src: navigation-poc#4.8 -->
+
+* Updated build and SDK preparation scripts; a script replacing manual build steps made the build **3x faster**. <!-- src: navigation-poc#4.9, gm-poc-build-3x -->
+
+<!-- entry: navigation-statistics -->
+## **Senior Software Engineer**
+
+### **HERE Technologies | Remote**
+
+* Implemented in-car navigation features for a **truck navigation app** with the **HERE navigation SDK**, including route-deviation handling and a redesigned search UI. <!-- src: navigation-statistics#4.5 -->
+
+* Propagated route-change reasons through the guidance flow in **TypeScript** and **RxJS**, covering dynamic routing, route restoration and parking approach. <!-- src: navigation-statistics#4.1 -->
 
 <!-- entry: orion-mobile-clinical-ink -->
 ## **Senior React Native Engineer (Contract)**
 
 ### **Clinical Trials Patient App | Remote**
 
-* Worked with the team on upgrading the app to **React Native 0.76** and **Expo SDK 52** to improve app performance. <!-- src: orion-mobile-clinical-ink#4.7 -->
+* Worked with the team on upgrading the app to **React Native 0.76** and **Expo SDK 52** to improve performance. <!-- src: orion-mobile-clinical-ink#4.7 -->
 
 * Migrated the app to **react-native-safe-area-context** across all screens and enforced it with an **ESLint** rule, fixing layout overlaps on iOS and Android. <!-- src: orion-mobile-clinical-ink#4.3 -->
 
 * Investigated production crashes and fixed patient-facing bugs (login, PIN, task scheduling, document loading), adding targeted diagnostic logging. <!-- src: orion-mobile-clinical-ink#4.6 -->
 
-* Developed and maintained a patient-facing **clinical trial** mobile app for electronic clinical outcome assessment (**eCOA**) built with **React Native, Expo and TypeScript**, and its native **Android (Java / Kotlin)** counterpart. <!-- src: orion-mobile-clinical-ink#4.1 -->
+* Developed a patient-facing **clinical trial** app for electronic clinical outcome assessment (**eCOA**) in **React Native, Expo and TypeScript**, and its native **Android (Java / Kotlin)** counterpart. <!-- src: orion-mobile-clinical-ink#4.1 -->
 
-* Refactored the legacy documents library screen from JavaScript into small **TypeScript** components to speed up the app, and added ~1,000 lines of **Jest** and **React Native Testing Library** tests. <!-- src: orion-mobile-clinical-ink#4.2 -->
+* Refactored the legacy documents library screen from JavaScript into small **TypeScript** components for speed, adding ~1,000 lines of **Jest** and **React Native Testing Library** tests. <!-- src: orion-mobile-clinical-ink#4.2 -->
 
 * Migrated the native Android app to **Android 14 (SDK 34)**: Gradle 8, Java 17, alarm and notification changes, and **Jenkins** CI build fixes. <!-- src: orion-mobile-clinical-ink#4.4 -->
 
 * Stack: **React Native, Expo, TypeScript, Apollo Client, GraphQL, AWS Amplify, AppSync, Cognito, Redux Toolkit, Redux Saga, Realm, MMKV, Firebase Cloud Messaging, Sentry, Jest**. <!-- src: orion-mobile-clinical-ink#5 -->
-
 <!-- entry: designai-jira-plugin -->
 ## **Full-Stack Engineer (Contract)**
 
 ### **Generative AI Jira Plugin | Remote**
 
-* Built an **Atlassian Jira Forge** app from scratch with **React, TypeScript** and **Node.js** resolvers, starting with Forge UI Kit and moving to **Forge Custom UI**. The app started **generative AI** design generation from a Jira issue and added a Jira subtask for the result. <!-- src: designai-jira-plugin#4.1 -->
+* Built an **Atlassian Jira Forge** app from scratch with **React**, **TypeScript** and **Node.js** resolvers (Forge UI Kit, then **Forge Custom UI**) that started **generative AI** design generation from a Jira issue and tracked the result in a subtask. <!-- src: designai-jira-plugin#4.1 -->
 
-* Created the design generation form with multiple inputs: design description, reference images with preview, product requirements document (PRD) and user-flow uploads, website URL, **MCP (Model Context Protocol)** server URL and design-system selection, using **Atlaskit** components, a reusable file-upload component and form validation. <!-- src: designai-jira-plugin#4.2 -->
-
+* Created the **Atlaskit** design generation form: description, reference images, product requirements document (PRD) and user-flow uploads, website URL, **MCP (Model Context Protocol)** server URL and design-system selection. <!-- src: designai-jira-plugin#4.2 -->
 <!-- entry: various-clients -->
 ## **Software Engineering Consultant**
 
 ### **Various Clients | Remote**
 
-* Conducted senior-level **technical interviews** for **React, React Native, JavaScript and TypeScript** roles for enterprise clients, with technical questions and coding assignments. <!-- src: consulting-interviews -->
+* Conducted senior-level **technical interviews** for **React, React Native, JavaScript and TypeScript** roles at enterprise clients, with coding assignments. <!-- src: consulting-interviews -->
 
-* Led scaling and optimization engagements for client teams, reducing operational costs by up to 50% through refactoring core apps, adding caching and writing unit tests. <!-- src: consulting-optimization -->
+* Led scaling and optimization work for client teams, cutting operational costs by up to 50% through refactoring, caching and unit tests. <!-- src: consulting-optimization -->
 
-* Audited legacy **React Native** codebases to identify the critical parts that needed updating (outdated framework versions, deprecated native libraries, platform requirements) and prepared prioritized upgrade plans with **effort estimates**. <!-- src: consulting-audits -->
+* Audited legacy **React Native** codebases for outdated framework versions, deprecated native libraries and platform requirements, and prepared prioritized upgrade plans with **effort estimates**. <!-- src: consulting-audits -->
 
 * Led **React Native** version upgrades and legacy library migrations for client mobile apps. <!-- src: consulting-rn-upgrades -->
 

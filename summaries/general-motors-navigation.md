@@ -18,10 +18,8 @@ harvested_at: null
 show_in_cv: true
 show_in_portfolio: true   # all jobs, decided by user 2026-10-23
 portfolio_order: 2
-portfolio_projects:                # the three pages of the published portfolio (user 2026-10-23: keep its structure)
+portfolio_projects:                # the HERE navigation and PoC pages moved to navigation-statistics and navigation-poc (user 2026-10-23)
   - { id: companion, title: "Car management app for General Motors (React Native)" }
-  - { id: navigation, title: "Automotive navigation app under NDA for HERE Technologies (React Native, React, Node.js, Android)" }
-  - { id: poc, title: "Car navigation PoC under NDA (Node.js, React)" }
 cv_section: experience
 cv_client_label: General Motors
 cv_location: Remote
@@ -80,21 +78,27 @@ Defined the unit-testing strategy for the app and introduced an Agile delivery p
 Result: unit-test coverage reached 95%, and production bugs fell by 50%.
 Tags: testing, agile, leadership
 
-### 4.6 In-car navigation features (truck navigation app for HERE Technologies)
+### 4.6 In-car navigation features (truck navigation app for HERE Technologies) (removed)
 
 Implemented in-car navigation features with the HERE HNav / HNod SDK, including route-deviation handling on the truck navigation app for HERE Technologies, and a redesigned search UI (project name confirmed for the CV and portfolio by user 2026-10-23, decision gm-project-names).
 
+Moved to `navigation-statistics` 4.5 (user 2026-10-23: a HERE consulting entry).
+
 Tags: here-sdk, automotive, react-native
 
-### 4.7 Car navigation PoC
+### 4.7 Car navigation PoC (removed)
 
 Built the car navigation PoC (proof of concept), an in-car navigation app that combined search, routing, guidance and a voice AI assistant able to build routes and find places from spoken requests.
 
+Moved to `navigation-poc` 4.11 (user 2026-10-23: a HERE consulting entry).
+
 Tags: here-sdk, automotive, voice-ai
 
-### 4.8 Passenger second screen
+### 4.8 Passenger second screen (removed)
 
 Implemented a passenger second-screen feature for a luxury car brand.
+
+Moved to `navigation-poc` 4.3 (user 2026-10-23: the passenger screen was part of the car navigation PoC).
 
 Tags: automotive, react-native
 
@@ -140,11 +144,10 @@ Source: doc:portfolio-2025-04
 - Mentoring: 4.2
 - System design and software architecture: 4.2, 4.4
 - Micro-frontends: 4.3
-- HERE SDK and in-car navigation: 4.3, 4.6, 4.7
-- React Native: 4.1, 4.3, 4.4, 4.6, 4.8
+- HERE SDK: 4.3
+- React Native: 4.1, 4.3, 4.4
 - Testing strategy: 4.2, 4.5
 - Agile: 4.5
-- Voice AI: 4.7
 
 ## 7. Metrics and outcomes
 
@@ -153,7 +156,6 @@ Source: doc:portfolio-2025-04
 - App crashes fell 15% after release (4.1). Source: cv. Confidence: exact.
 - Unit-test coverage reached 95% (4.5). Source: cv. Confidence: exact.
 - Production bugs reduced by 50% after the testing strategy and Agile process (4.5). Source: previous CV, confirmed by user 2026-10-15. Confidence: exact.
-- Navigation features also used HERE "service packages" (4.6). Source: previous CV, confirmed by user 2026-10-15. Confidence: exact.
 
 ## 8. Portfolio material
 
@@ -172,18 +174,6 @@ Source: doc:portfolio-2025-04
 - image: ../sources/media/portfolio-2025-04/image3.png
   caption: Car management app, place details
   project: companion
-  public: yes, confirmed by user 2026-10-23
-- image: ../sources/media/portfolio-2025-04/image2.jpeg
-  caption: Navigation app, route view
-  project: navigation
-  public: yes, confirmed by user 2026-10-23
-- image: ../sources/media/portfolio-2025-04/image3.jpeg
-  caption: Navigation app, search
-  project: navigation
-  public: yes, confirmed by user 2026-10-23
-- image: ../sources/media/portfolio-2025-09/p04-1.png
-  caption: Car navigation PoC on the head unit
-  project: poc
   public: yes, confirmed by user 2026-10-23
 
 TODO (needs user input)

@@ -17,7 +17,7 @@ harvested_at: null
 # --- how it appears in the CV ---
 show_in_cv: true
 show_in_portfolio: true   # all jobs, decided by user 2026-10-23
-portfolio_order: 8
+portfolio_order: 10
 portfolio_projects:                # one page per client, as on the published portfolio (user 2026-10-23)
   - { id: aspiration-signup, title: "Aspiration signup (React Native Web)" }
   - { id: aspiration-web, title: "Aspiration banking web app (React)" }

@@ -248,7 +248,7 @@ export function reviewContext(opts: Options): { file: string; text: string } {
       "Length and page count are judged against these (decision `keep-length` covers the master CV only); shorter older roles are by design.", "",
       yamlBlock(pick(["headline", "max_words", "max_pages", "include_sections", "max_bullets_per_entry", "min_bullets_per_entry", "entry_max_bullets"])));
   }
-  if (master && (rubric === "ats" || rubric === "hr")) section("Length", "Master CV: decision `keep-length` applies (about 2,000 words, 3 to 4 pages is intended).");
+  if (master && (rubric === "ats" || rubric === "hr")) section("Length", `Master CV: decision \`keep-length\` applies (up to ${cfg.checks?.max_words} words, \`checks.max_words\`; 3 to 4 pages is intended).`);
 
   // ---------- job ad, gap report ----------
   if (!portfolio && (profileId || tailored) && ["ats", "hr", "fact-check"].includes(rubric)) {

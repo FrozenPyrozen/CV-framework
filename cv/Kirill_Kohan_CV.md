@@ -10,7 +10,7 @@ Kyiv, Ukraine (Remote) | Open to B2B contract or full-time employment | Working 
 
 # **SUMMARY**
 
-Senior software engineer and tech lead with 7+ years of experience building React, React Native, Node.js and TypeScript applications for enterprise resource planning (ERP) software-as-a-service (SaaS), automotive, healthcare and clinical trials, fintech and blockchain products. <!-- src: calc:years_experience, profile, syspro-saas-erp#1, general-motors-navigation#1, orion-mobile-clinical-ink#1, thermo-fisher-dosimeter#1, itjet-fintech#1, velas-wallet#1 --> Core contributor to a schema-driven React 19 runtime that renders 1,800+ ERP programs without per-screen frontend code. <!-- src: syspro-saas-erp#4.1 --> Led a team of 8 engineers building the HERE SDK map features of an automotive manufacturer's vehicle companion app. <!-- src: general-motors-navigation#4.1, general-motors-navigation#4.3, general-motors-navigation#4.6, calc:team_size_led --> Experienced in micro-frontend architecture, OpenID Connect (OIDC), test automation and native Android migrations, delivered through architecture-governed specification-driven development (SDD). <!-- src: syspro-saas-erp#4.2, syspro-saas-erp#4.6, syspro-saas-erp#4.7, syspro-saas-erp#4.9, orion-mobile-clinical-ink#4.4 -->
+Senior software engineer and tech lead with 7+ years of experience building React, React Native, Node.js and TypeScript applications for enterprise resource planning (ERP) software-as-a-service (SaaS), automotive, healthcare and clinical trials, fintech and blockchain products. <!-- src: calc:years_experience, profile, syspro-saas-erp#1, general-motors-navigation#1, orion-mobile-clinical-ink#1, thermo-fisher-dosimeter#1, itjet-fintech#1, velas-wallet#1 --> Core contributor to a schema-driven React 19 runtime that renders 1,800+ ERP programs without per-screen frontend code. <!-- src: syspro-saas-erp#4.1 --> Led a team of 8 engineers building the HERE SDK map features of an automotive manufacturer's vehicle companion app. <!-- src: general-motors-navigation#4.1, general-motors-navigation#4.3, calc:team_size_led --> Experienced in micro-frontend architecture, OpenID Connect (OIDC), test automation and native Android migrations, delivered through architecture-governed specification-driven development (SDD). <!-- src: syspro-saas-erp#4.2, syspro-saas-erp#4.6, syspro-saas-erp#4.7, syspro-saas-erp#4.9, orion-mobile-clinical-ink#4.4 -->
 
 # **EXPERIENCE**
 
@@ -53,12 +53,6 @@ Senior software engineer and tech lead with 7+ years of experience building Reac
 * Fixed the map architecture for running several map instances (no shared global map reference or event listener) and designed a shared search architecture with normalized marker and search-result state. <!-- src: general-motors-navigation#4.11 -->
 
 * Defined the unit-testing strategy that reached 95% coverage and introduced an **Agile** delivery process, which reduced production bugs. <!-- src: general-motors-navigation#4.5 -->
-
-* Implemented in-car navigation features with the **HERE navigation SDK**, including route-deviation handling on the **truck navigation app for HERE Technologies**, and a redesigned search UI. <!-- src: general-motors-navigation#4.6 -->
-
-* Built the **car navigation PoC** (proof of concept), combining search, routing, guidance and a **voice AI assistant** that builds routes and finds places from speech. <!-- src: general-motors-navigation#4.7 -->
-
-* Implemented a passenger second-screen feature for a luxury car brand. <!-- src: general-motors-navigation#4.8 -->
 
 * Stack: **React Native, TypeScript, Node.js, Redux Saga, RxJS, Storybook, Detox** (E2E), **Fastlane, Bitrise** (CI/CD), **Bugsnag, Kibana** (monitoring), **Figma**. <!-- src: general-motors-navigation#5 -->
 
@@ -153,7 +147,35 @@ Senior software engineer and tech lead with 7+ years of experience building Reac
 
 # **CONSULTING AND FREELANCE PROJECTS**
 
-Part-time contract and consulting work, alongside full-time roles
+Contract, consulting and project work
+
+<!-- entry: navigation-poc -->
+## **Senior Software Engineer**
+
+### **HERE Technologies | Remote**
+
+* Built the **car navigation PoC** (proof of concept): search, routing, guidance and a **voice AI assistant** that builds routes and finds places from speech. <!-- src: navigation-poc#4.11 -->
+
+* Reworked the voice assistant's client integration in **React** and **RxJS**, adding text input alongside voice and presenting processing, completion and error states. <!-- src: navigation-poc#4.1 -->
+
+* Implemented a passenger second-screen feature for a luxury car brand, showing live trip data. <!-- src: navigation-poc#4.3 -->
+
+* Built driver warning cards and extended their service contracts with the **Android** layer for confirming, rejecting and dismissing warnings. <!-- src: navigation-poc#4.2 -->
+
+* Added a route-curviness slider to a **Kotlin** reference app. <!-- src: navigation-poc#4.5 -->
+
+* Updated build and SDK preparation scripts; a script replacing manual build steps made the build **3x faster**. <!-- src: navigation-poc#4.9, gm-poc-build-3x -->
+
+<!-- entry: navigation-statistics -->
+## **Senior Software Engineer**
+
+### **HERE Technologies | Remote**
+
+* Propagated route-change reasons through the guidance flow of a **truck navigation app** in **TypeScript** and **RxJS**, covering dynamic routing, route restoration and parking approach. <!-- src: navigation-statistics#4.1 -->
+
+* Implemented in-car navigation features with the **HERE navigation SDK**, including route-deviation handling and a redesigned search UI. <!-- src: navigation-statistics#4.5 -->
+
+* Separated developer diagnostics from core guidance services, updating **Protocol Buffers** contracts while keeping older operations backward compatible. <!-- src: navigation-statistics#4.2 -->
 
 <!-- entry: orion-mobile-clinical-ink -->
 ## **Senior React Native Engineer (Contract)**

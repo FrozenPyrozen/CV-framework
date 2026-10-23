@@ -19,10 +19,10 @@ harvested_at: "2026-10-15"
 # --- how it appears in the CV ---
 show_in_cv: true
 show_in_portfolio: true   # all jobs, decided by user 2026-10-23
-portfolio_order: 5
+portfolio_order: 7
 portfolio_title: "Clinical trial app under NDA (React Native, React, Android)"
 cv_section: consulting
-cv_order: 1
+cv_order: 3
 cv_client_label: Clinical Trials Patient App
 cv_location: Remote
 ---

@@ -3,7 +3,8 @@
 Built: 2026-10-23 · Profile: react-native · Job ad: no
 
 ## Strong evidence
-- **React Native:** General Motors map team, HERE SDK library as a React Native micro-frontend, in-car navigation and the delivery and testing process for nested apps (`general-motors-navigation#4.1`, `#4.3`, `#4.4`, `#4.6`, `#4.9`); Velas wallet (`velas-wallet#4.1`, `#4.10`); Thermo Fisher Scientific (`thermo-fisher-dosimeter#4.1`, `#4.4`, `#4.8`); Wink, 5M+ registered users, and Golfuture built from scratch, Oroscopo features (`itjet-fintech#4.8`, `#4.9`, `#4.10`); Clinical Trials Patient App, including the React Native 0.76 and Expo SDK 52 upgrade (`orion-mobile-clinical-ink#4.1`, `#4.3`, `#4.6`, `#4.7`); consulting audits, upgrades and interviews (`consulting-audits`, `consulting-rn-upgrades`, `consulting-interviews`).
+- **React Native:** General Motors map team, HERE SDK library as a React Native micro-frontend, modular architecture, multi-instance map and shared search architecture, and the delivery and testing process for nested apps (`general-motors-navigation#4.1`, `#4.3`, `#4.4`, `#4.9`, `#4.10`, `#4.11`); Velas wallet (`velas-wallet#4.1`, `#4.10`); Thermo Fisher Scientific (`thermo-fisher-dosimeter#4.1`, `#4.4`, `#4.8`); Wink, 5M+ registered users, and Golfuture built from scratch, Oroscopo features (`itjet-fintech#4.8`, `#4.9`, `#4.10`); Clinical Trials Patient App, including the React Native 0.76 and Expo SDK 52 upgrade (`orion-mobile-clinical-ink#4.1`, `#4.3`, `#4.6`, `#4.7`); consulting audits, upgrades and interviews (`consulting-audits`, `consulting-rn-upgrades`, `consulting-interviews`).
+- **HERE Technologies navigation work (new consulting entries):** voice assistant client integration in React and RxJS, driver warnings with Android service contracts, passenger second screen, a Kotlin reference-app slider, electric-vehicle data over Android, and a build script that made the build 3x faster (`navigation-poc#4.1`, `#4.2`, `#4.3`, `#4.5`, `#4.8`, `#4.9`, `gm-poc-build-3x`); truck navigation app features with the HERE navigation SDK and route-change reasons (`navigation-statistics#4.5`, `#4.1`).
 - **Android:** native Android (Java / Kotlin) and the Android 14 (SDK 34) migration (`orion-mobile-clinical-ink#4.1`, `#4.4`), SQLCipher and SSL certificate pinning only in the Skills list (`#4.5` is dropped by the profile, so the summary no longer names them), Android biometrics fix (`omo-systems-smart-home#4.4`), 3x faster first interaction (`velas-wallet#4.9`).
 - **Native libraries:** patched react-native-vlcplayer for video stream issues (`omo-systems-smart-home#4.6`) and an Android biometrics library (`#4.4`); rewrote legacy native libraries for MQTT over TLS (`thermo-fisher-dosimeter#4.2`).
 - **Offline-first, IoT and BLE:** Realm, MQTT over TLS, background jobs and concurrent sync of many dosimeters (`thermo-fisher-dosimeter#4.1`, `#4.2`, `#4.4`, `#4.6`, `#4.8`), BLE in the summary (`#4.3`), smart-home IoT app (`omo-systems-smart-home#4.1`).
@@ -21,11 +22,19 @@ Built: 2026-10-23 · Profile: react-native · Job ad: no
 | Recent mobile work at the current job | SYSPRO is web-only (React 19), so its Stack line is dropped in this variant (profile override `syspro-saas-erp#5`); the latest mobile work is General Motors (to December 2025) and the clinical-trials contract | Nothing to add; be ready to explain the move to web in interviews |
 
 ## Selection disagreements
-- **General Motors:** `#4.9` (delivery and testing process for nested apps) replaces `#4.2` (code reviews and standards). For a tech-lead profile `#4.2` is stronger; `#4.8` (passenger second screen, no outcome) would be the better one to drop.
+- **General Motors:** `#4.6` and `#4.8` moved to the HERE entries (now `navigation-statistics#4.5` and `navigation-poc#4.3`), so `#4.10` and `#4.11` fill the entry. `#4.2` (code reviews and standards) is still not selected; for a tech-lead profile it is stronger than `#4.11`. The summary's team-of-8 sentence no longer cites `#4.6`; its HERE SDK map features rest on `#4.3`.
 - **OMO Systems:** `#4.6` (patched react-native-vlcplayer, no outcome) now ranks first in the entry, above the core smart-home app (`#4.1`).
 - **Thermo Fisher Scientific:** `#4.8` (concurrent dosimeter sync) replaces `#4.3` (BLE buffer-reading accuracy); BLE still appears in the summary.
 - **Velas:** `#4.8` (React Native Web wallet from scratch) drops out for `#4.10` (fewer re-renders, lighter API responses, no number).
 - **Itjet `#4.4`** (PostgreSQL to AWS RDS) and **Velas `#4.6`** (Node.js staking-rewards backend) are backend work picked for their performance tag; less relevant to mobile roles.
 - **Clinical Trials:** the crash-fixing bullet (`#4.6`) no longer cites `#4.4`, which has its own bullet (tailoring-spec 2, step 3).
-- **Length:** about 1,786 of 1,800 words; any new bullet needs a drop elsewhere. The summary now names each performance result with its project (Android wallet, staking page, IoT app).
+- **Length (needs a decision):** the HERE entries add 8 bullets. After shortening the wording (the in-scope entries, the summary, the new bullets) the variant is at **1,912 of 1,800 words** (112 over). Unchanged entries were copied as they are. Proposed profile change, not applied (the user decides), saving about 123 words to about 1,789:
+  ```yaml
+  entry_max_bullets:
+    navigation-poc: 4               # keeps #4.1, #4.2, #4.3, #4.5; drops #4.8 (electric-vehicle data) and #4.9 (build script, 3x), ~35 words
+    general-motors-navigation: 5    # drops #4.11 (multi-instance map and search architecture), ~29 words
+    orion-mobile-clinical-ink: 5    # drops #4.4 (Android 14 migration; still named in the summary), ~23 words
+    various-clients: 2              # keeps interviews and optimization; drops consulting-audits and consulting-rn-upgrades, ~36 words
+  ```
+  If the 3x build result matters more than the Kotlin slider, use `navigation-poc#4.5: { drop: true }` with `navigation-poc: 4` instead (the limit then keeps `#4.8`, so also drop `#4.8`). The summary names each performance result with its project (Android wallet, staking page, IoT app).
 - **Clinical Trials:** `#4.5` (SQLCipher and SSL certificate pinning) stays dropped by the profile; if those keywords matter for a role, un-drop it and drop a lower bullet instead.

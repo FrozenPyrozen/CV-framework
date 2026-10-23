@@ -22,4 +22,4 @@ entry_max_bullets:
 min_bullets_per_entry: 2
 include_sections: [summary, experience, consulting, education, skills, languages]
 max_pages: 3
-max_words: 1800
+max_words: 1920   # raised from 1,800 for the two HERE Technologies consulting entries (user 2026-10-23)

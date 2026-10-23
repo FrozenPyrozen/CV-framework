@@ -52,7 +52,7 @@ test("portfolio refresh drops a project that is no longer opted in and keeps the
   const dir = tempRepo();
   optIn(dir);
   edit(dir, "summaries/velas-wallet.md", "show_in_portfolio: false", "show_in_portfolio: true");
-  edit(dir, "summaries/velas-wallet.md", /^portfolio_order: \d+$/m, "portfolio_order: 9"); // after Itjet, so write() fills Itjet first
+  edit(dir, "summaries/velas-wallet.md", /^portfolio_order: \d+$/m, "portfolio_order: 11"); // after Itjet, so write() fills Itjet first
   run("portfolio.ts", dir, ["refresh"]);
   write(dir, "Intro. <!-- src: itjet-fintech#1 -->", "Itjet text. <!-- src: itjet-fintech#1 -->");
   edit(dir, "summaries/velas-wallet.md", "show_in_portfolio: true", "show_in_portfolio: false");

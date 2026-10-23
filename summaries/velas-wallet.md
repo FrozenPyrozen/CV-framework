@@ -17,7 +17,7 @@ harvested_at: null
 # --- how it appears in the CV ---
 show_in_cv: true
 show_in_portfolio: true   # all jobs, decided by user 2026-10-23
-portfolio_order: 3
+portfolio_order: 5
 portfolio_title: "Velas Wallet (React, React Native, Electron)"
 cv_section: experience
 cv_client_label: Velas
