@@ -38,7 +38,7 @@ test("render produces the approved layout: same formatting per paragraph type, r
   const d = await openDocx(out);
   const texts = d.paragraphs.map(paragraphText);
   assert.equal(texts[0], "Kirill Kohan");
-  assert.equal(texts[1], "Senior Software Engineer / Tech Lead (Frontend and Mobile)");
+  assert.equal(texts[1], "Senior Software Engineer / Tech Lead");
   assert.equal(texts[3], "+380 97 891 9783 | kiril.kohan@gmail.com | Portfolio");
   assert.ok(texts.includes("General Motors | RemoteJuly 2023 - December 2025"), "entry details with tab before dates");
   assert.ok(texts.includes("SYSPRO | RemoteDecember 2025 - Present"), "the current job, dated, in Experience");

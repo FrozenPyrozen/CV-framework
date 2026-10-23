@@ -1,7 +1,7 @@
 <!-- generated:header -->
 # **Kirill Kohan**
 
-**Senior Software Engineer / Tech Lead (Frontend and Mobile)**
+**Senior Software Engineer / Tech Lead**
 
 Kyiv, Ukraine (Remote) | Open to B2B contract or full-time employment | Working hours overlap with EU, UK and US time zones
 

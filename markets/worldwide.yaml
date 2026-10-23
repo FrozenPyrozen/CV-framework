@@ -8,5 +8,6 @@ header:
   show_availability: true
   engagement_types: [b2b-contract, full-time]   # must be a subset of profile.yaml work.engagement_types
   show_time_zone_overlap: true
+  hide_headline_qualifier: master    # "Senior Software Engineer / Tech Lead"; variants keep their parentheses (user, 2026-10-23)
 entries:
   show_contract_suffix: true                    # "(Contract)" only on entries whose engagement is contract

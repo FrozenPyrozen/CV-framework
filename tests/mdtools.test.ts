@@ -483,7 +483,7 @@ test("market hide_headline_qualifier: master drops the master CV's (…) qualifi
   run("market.ts", dir);
   const ua = readFileSync(join(dir, "cv/markets/ukraine/Kirill_Kohan_CV_UA.md"), "utf8");
   assert.match(ua, /^\*\*Senior Software Engineer \/ Tech Lead\*\*$/m);
-  assert.match(readFileSync(join(dir, CV), "utf8"), /^\*\*Senior Software Engineer \/ Tech Lead \(Frontend and Mobile\)\*\*$/m);
+  assert.match(readFileSync(join(dir, CV), "utf8"), /^\*\*Senior Software Engineer \/ Tech Lead\*\*$/m); // worldwide hides it too
   run("market.ts", dir, ["cv/variants/react-native/cv.md"]);
   const rn = readFileSync(join(dir, "cv/variants/react-native/markets/ukraine/Kirill_Kohan_CV_React_Native_UA.md"), "utf8");
   assert.match(rn, /^\*\*Senior React Native Engineer \/ Tech Lead \(Mobile\)\*\*$/m);
@@ -524,7 +524,7 @@ test("round 1 audit: unsourced summary sentence, partial reattach, refresh guard
   const g = run("refresh.ts", dir2, [CV, "--market", "ukraine"]);
   assert.equal(g.code, 2);
   assert.match(g.out, /would write that market's header/);
-  edit(dir2, CV, "**Senior Software Engineer / Tech Lead (Frontend and Mobile)**", "**Principal Engineer**");
+  edit(dir2, CV, "**Senior Software Engineer / Tech Lead**", "**Principal Engineer**");
   assert.match(run("refresh.ts", dir2, [CV]).out, /replaced: "\*\*Principal Engineer\*\*"/);
   // Hidden client names and company names in the summary match in any case.
   const dir3 = refreshed();
