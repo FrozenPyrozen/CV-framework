@@ -79,7 +79,9 @@ export function entryHashes(): Record<string, string> {
   for (const s of loadSummaries(cfg)) {
     // Every section a CV can cite: 1 (overview, summary paragraph), 3 (role), 5 (Stack line), 7 (metrics).
     const cited = [1, 3, 5, 7].map((n) => s.sections.find((x) => x.number === n)?.text.trim() ?? "");
-    out[s.id] = h([s.frontMatter, s.contributions, facts.filter((f) => f.entry === s.id), cited]);
+    // Portfolio-only fields (show_in_portfolio, portfolio_*) don't change a CV entry (specs/outputs/portfolio.md 3).
+    const fm = Object.fromEntries(Object.entries(s.frontMatter).filter(([k]) => k !== "show_in_portfolio" && !k.startsWith("portfolio_")));
+    out[s.id] = h([fm, s.contributions, facts.filter((f) => f.entry === s.id), cited]);
   }
   for (const e of entries) out[e.id] = h([e, facts.filter((f) => f.entry === e.id)]);
   return out;

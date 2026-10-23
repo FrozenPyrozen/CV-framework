@@ -10,6 +10,7 @@ export function normalizeText(s: string): string {
     .replace(/[\u2010-\u2015\u2212]/g, "-")
     .replace(/\u00A0/g, " ")
     .replace(/(\w)-\s*\n\s*(\w)/g, "$1-$2") // a hyphen at a line end is a real one (CVs don't use automatic hyphenation)
+    .replace(/(\w)\/\s*\n\s*(\w)/g, "$1/$2") // a line can also break after a slash ("CI/" + "CD")
     .replace(/\s+/g, " ")
     .trim();
 }

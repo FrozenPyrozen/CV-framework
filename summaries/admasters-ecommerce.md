@@ -16,6 +16,8 @@ author_identities: []
 harvested_at: null
 # --- how it appears in the CV ---
 show_in_cv: true
+show_in_portfolio: false  # not in the April 2025 portfolio (user 2026-10-23: its projects plus SYSPRO and the Jira plugin)
+portfolio_title: "E-commerce sites and landing pages (Next.js)"
 cv_section: experience
 cv_client_label: The Admasters
 cv_location: "Kyiv, Ukraine (Hybrid)"

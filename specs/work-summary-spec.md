@@ -69,7 +69,7 @@ cv_max_bullets: 8
 | `cv_title_suffix` | no | default derived from `engagement` (`contract` gives `display.contract_suffix`) |
 | `cv_emphasis` | no | points the CV entry must make clear, in its first bullets |
 | `cv_max_bullets` | no | limit for this entry in the master CV |
-| `show_in_portfolio`, `portfolio_order`, `portfolio_label`, `portfolio_max_items` | no | the public portfolio (`specs/outputs/portfolio.md` 3); in the schema since portfolio phase P1 |
+| `show_in_portfolio`, `portfolio_order`, `portfolio_title`, `portfolio_label`, `portfolio_max_items` | no | the public portfolio (`specs/outputs/portfolio.md` 3); in the schema since portfolio phase P1 |
 
 **Rule for optional fields:** if missing, the default applies; if set, it wins.
 

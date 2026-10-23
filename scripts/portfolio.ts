@@ -12,7 +12,7 @@ import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
 import { readState, writeRecord } from "./lib/buildstate.ts";
-import { formatPeriod, headerBlock, loadContext, skillsBlock, stripComments, wrapBlock, type Context } from "./lib/cvmd.ts";
+import { headerBlock, loadContext, skillsBlock, stripComments, wrapBlock, type Context } from "./lib/cvmd.ts";
 import { isMain, loadConfig, loadDecisions, loadSummaries, rootPath, type Summary } from "./lib/repo.ts";
 import { buildBlocklist, printFindings, secretFindings, type Finding } from "./lint.ts";
 import { parseArgs } from "./refresh.ts";
@@ -34,11 +34,31 @@ export function portfolioProjects(summaries = loadSummaries()): Summary[] {
     .sort((a, b) => (a.frontMatter.portfolio_order ?? 999) - (b.frontMatter.portfolio_order ?? 999) || String(b.frontMatter.period?.start).localeCompare(String(a.frontMatter.period?.start)));
 }
 
-// What a project page is written from: sections 1–5 and 7, the public section 8 items and the portfolio fields.
-export function projectSourceHash(s: Summary): string {
+// Portfolio pages: one per opted-in summary, or one per entry of its `portfolio_projects` (a job with several
+// products, like the Itjet client projects in the April 2025 portfolio). Page ids: "<summary-id>" or
+// "<summary-id>/<project-id>".
+export interface PortfolioPage { id: string; summary: Summary; key?: string; title: string; label: string; role: string }
+export function portfolioPages(summaries = loadSummaries()): PortfolioPage[] {
+  return portfolioProjects(summaries).flatMap((s): PortfolioPage[] => {
+    const fm = s.frontMatter;
+    const base = { summary: s, role: String(fm.role), label: String(fm.portfolio_label ?? fm.cv_client_label) };
+    const subs = (fm.portfolio_projects ?? []) as { id: string; title: string; label?: string }[];
+    if (!subs.length) return [{ ...base, id: s.id, title: String(fm.portfolio_title ?? fm.role) }];
+    return subs.map((p) => ({ ...base, id: `${s.id}/${p.id}`, key: p.id, title: p.title, label: p.label ?? base.label }));
+  });
+}
+export const pageSummaryId = (pageId: string) => pageId.split("/")[0];
+
+// What a page is written from: sections 1–5 and 7, its public section 8 items and the portfolio fields.
+export function projectSourceHash(page: PortfolioPage): string {
+  const s = page.summary;
   const used = s.sections.filter((x) => [1, 2, 3, 4, 5, 7].includes(x.number)).map((x) => x.text).join("\n");
-  const fm = s.frontMatter;
-  return hash(JSON.stringify([used, s.portfolio.filter((i) => i.isPublic), fm.role, fm.portfolio_label ?? fm.cv_client_label, fm.period, fm.portfolio_max_items]));
+  return hash(JSON.stringify([used, pageItems(page), page.role, page.label, page.title, s.frontMatter.portfolio_max_items]));
+}
+
+// The section 8 items of a page: those with its `project:` key, or (a single-page summary) those without one.
+export function pageItems(page: PortfolioPage) {
+  return page.summary.portfolio.filter((i) => i.isPublic && (page.key ? i.project === page.key : !i.project));
 }
 
 const showPhone = () => (loadDecisions()?.decisions ?? []).some((d: any) => d.id === "portfolio-show-phone");
@@ -54,14 +74,22 @@ function coverBlock(ctx: Context): string {
   return [`# **${PORTFOLIO_TITLE}**`, name.replace(/^# /, "## "), headline, kept].join("\n\n");
 }
 
-function projectTitleBlock(s: Summary, ctx: Context): string {
-  const fm = s.frontMatter;
-  return [`## **${fm.role}**`, `### **${fm.portfolio_label ?? fm.cv_client_label}${ctx.cfg.display.field_separator}${formatPeriod(fm.period, ctx.cfg)}**`].join("\n\n");
+// Title (the product and its main technologies, as in the April 2025 portfolio), then the client label and role.
+// No dates: the portfolio shows projects, not a timeline (the CV has the dates).
+function projectTitleBlock(page: PortfolioPage, ctx: Context): string {
+  return [`## **${page.title}**`, `### **${page.label}${ctx.cfg.display.field_separator}${page.role}**`].join("\n\n");
 }
 
-function mediaBlock(s: Summary): string {
+// The project's text splits after its product paragraph (before the first section label such as **Responsibilities**),
+// where the images go, as in the April 2025 portfolio.
+function splitIntro(text: string): [string, string] {
+  const i = text.search(/^\*\*[^*]+\*\*\s*$/m);
+  return i < 0 ? [text.trim(), ""] : [text.slice(0, i).trim(), text.slice(i).trim()];
+}
+
+function mediaBlock(page: PortfolioPage): string {
   const out: string[] = [];
-  for (const it of s.portfolio.filter((i) => i.isPublic)) {
+  for (const it of pageItems(page)) {
     if (it.kind === "image") out.push(`![${it.caption}](${it.value})`, `*${it.caption}*`);
     if (it.kind === "link") out.push(`[${it.label}](${it.value})`);
     if (it.kind === "demo") out.push(`Demo: ${it.value}`);
@@ -79,9 +107,9 @@ const BLOCK = (name: string) => new RegExp(`<!-- generated:${name} -->[\\s\\S]*?
 export function parsePortfolio(text: string): { intro: string; projects: Map<string, string> } {
   const projects = new Map<string, string>();
   const body = text.replace(BLOCK("portfolio-cover"), "").replace(BLOCK("skills"), "").replace(BLOCK("contact"), "");
-  const parts = body.split(/^<!-- project: ([\w-]+) -->$/m);
+  const parts = body.split(/^<!-- project: ([\w/-]+) -->$/m);
   const intro = parts[0].trim();
-  for (let i = 1; i < parts.length; i += 2) projects.set(parts[i], parts[i + 1].replace(BLOCK(`project-${parts[i]}`), "").replace(BLOCK(`media-${parts[i]}`), "").trim());
+  for (let i = 1; i < parts.length; i += 2) projects.set(parts[i], parts[i + 1].replace(BLOCK(`project-${parts[i]}`), "").replace(BLOCK(`media-${parts[i]}`), "").replace(/\n{3,}/g, "\n\n").trim());
   return { intro, projects };
 }
 
@@ -89,13 +117,17 @@ export function refreshPortfolio(): { text: string; added: string[]; removed: st
   const ctx = loadContext();
   const file = portfolioPath();
   const old = existsSync(file) ? parsePortfolio(readFileSync(file, "utf8")) : { intro: "", projects: new Map<string, string>() };
-  const projects = portfolioProjects();
+  const projects = portfolioPages();
   const ids = projects.map((p) => p.id);
   const added = ids.filter((id) => !old.projects.has(id));
   const removed = [...old.projects.keys()].filter((id) => !ids.includes(id));
   const parts = [wrapBlock("portfolio-cover", coverBlock(ctx)), old.intro || INTRO_PLACEHOLDER];
   for (const p of projects) {
-    parts.push(`<!-- project: ${p.id} -->`, wrapBlock(`project-${p.id}`, projectTitleBlock(p, ctx)), wrapBlock(`media-${p.id}`, mediaBlock(p)), old.projects.get(p.id) || PLACEHOLDER);
+    const text = old.projects.get(p.id);
+    const media = wrapBlock(`media-${p.id}`, mediaBlock(p));
+    if (!text) { parts.push(`<!-- project: ${p.id} -->`, wrapBlock(`project-${p.id}`, projectTitleBlock(p, ctx)), media, PLACEHOLDER); continue; }
+    const [intro, rest] = splitIntro(text);
+    parts.push(`<!-- project: ${p.id} -->`, wrapBlock(`project-${p.id}`, projectTitleBlock(p, ctx)), ...(intro ? [intro] : []), media, ...(rest ? [rest] : []));
   }
   parts.push(wrapBlock("skills", ["## **Skills**", skillsBlock(ctx)].join("\n\n")), wrapBlock("contact", contactBlock(ctx)));
   return { text: parts.join("\n\n") + "\n", added, removed };
@@ -110,6 +142,7 @@ export async function checkPortfolio(file = portfolioPath()): Promise<Finding[]>
   const ctx = loadContext();
   const summaries = loadSummaries();
   const opted = new Set(portfolioProjects(summaries).map((s) => s.id));
+  const pages = new Set(portfolioPages(summaries).map((p) => p.id));
   const idx = buildSourceIndex();
   const lines = text.split("\n");
   const bl = buildBlocklist(summaries, ctx);
@@ -118,12 +151,12 @@ export async function checkPortfolio(file = portfolioPath()): Promise<Finding[]>
   // Images: each one shown must be a public item of its own project (refresh writes only those; this catches hand edits).
   let owner = "";
   lines.forEach((raw, i) => {
-    const pm = raw.match(/^<!-- project: ([\w-]+) -->$/);
+    const pm = raw.match(/^<!-- project: ([\w/-]+) -->$/);
     if (pm) owner = pm[1];
     const im = raw.match(/^!\[[^\]]*\]\(([^)]+)\)$/);
     if (!im) return;
-    const s = summaries.find((x) => x.id === owner);
-    if (!s?.portfolio.some((it) => it.kind === "image" && it.isPublic && it.value === im[1])) add("error", `image ${im[1]} isn't a public item of ${owner || "any project"}'s section 8`, i + 1);
+    const page = portfolioPages(summaries).find((p) => p.id === owner);
+    if (!page || !pageItems(page).some((it) => it.kind === "image" && it.value === im[1])) add("error", `image ${im[1]} isn't a public item of ${owner || "any project"}'s section 8`, i + 1);
   });
   // Files in portfolio/assets/ that no summary's section 8 lists (kept in git for nothing).
   const assets = rootPath(loadConfig().paths.portfolio ?? "portfolio", "assets");
@@ -146,7 +179,7 @@ export async function checkPortfolio(file = portfolioPath()): Promise<Finding[]>
         if (!res.ok) add("error", `source "${id}" doesn't resolve`, para.line);
         else if (id === "profile" || id.startsWith("calc:")) { if (project) add("error", `source "${id}" belongs in the intro, not in a project`, para.line); }
         else if (!opted.has(res.entry ?? owner)) add("error", `source "${id}" is from a project that isn't in the portfolio (show_in_portfolio)`, para.line);
-        else if (project && (res.entry ?? owner) !== project) add("error", `source "${id}" belongs to ${res.entry ?? owner}, not to this project (${project})`, para.line);
+        else if (project && (res.entry ?? owner) !== pageSummaryId(project)) add("error", `source "${id}" belongs to ${res.entry ?? owner}, not to this project (${project})`, para.line);
       }
     }
     para = null;
@@ -156,8 +189,8 @@ export async function checkPortfolio(file = portfolioPath()): Promise<Finding[]>
     if (/^<!-- generated:/.test(raw)) { flush(); inBlock = true; return; }
     if (/^<!-- \/generated:/.test(raw)) { inBlock = false; return; }
     if (inBlock) return;
-    const pm = raw.match(/^<!-- project: ([\w-]+) -->$/);
-    if (pm) { flush(); project = pm[1]; if (!opted.has(project)) add("error", `project ${project} isn't opted in (show_in_portfolio): run npm run portfolio -- refresh`, ln); return; }
+    const pm = raw.match(/^<!-- project: ([\w/-]+) -->$/);
+    if (pm) { flush(); project = pm[1]; if (!pages.has(project)) add("error", `project ${project} isn't a portfolio page (show_in_portfolio, portfolio_projects): run npm run portfolio -- refresh`, ln); return; }
     if (raw.includes("TODO(/portfolio)")) { add("error", `${project || "intro"}: not written yet (run /portfolio)`, ln); return; }
     const visible = stripComments(raw);
     // Confidentiality: the portfolio is public. Only allow_in: [portfolio] lets a section 9 term through.
@@ -178,6 +211,12 @@ export async function checkPortfolio(file = portfolioPath()): Promise<Finding[]>
     if (para) para.text += " " + raw; else para = { text: raw, line: ln };
   });
   flush();
+  // Length: one page per project with its screenshots (checks.portfolio_max_project_words, specs/outputs/portfolio.md 4).
+  const maxWords = (loadConfig().checks as any).portfolio_max_project_words ?? 300;
+  for (const [id, t] of parsePortfolio(text).projects) {
+    const n = (stripComments(t).match(/[\p{L}\p{N}][\p{L}\p{N}'.+#/-]*/gu) ?? []).length;
+    if (n > maxWords && !t.includes("TODO(/portfolio)")) add("warning", `${id}: ${n} words (about ${maxWords} fit one page with the screenshots, checks.portfolio_max_project_words); shorten it`);
+  }
   // Generated parts are refresh's: compare with what refresh would write now.
   if (refreshPortfolio().text !== text) add("warning", "generated parts or the project list are out of date: run npm run portfolio -- refresh");
   // Secrets and foreign URLs: only profile links and public link items may appear.
@@ -202,11 +241,11 @@ export function recordPortfolio(file: string, reviewed = false): void {
   const text = readFileSync(file, "utf8");
   const texts = projectTexts(text);
   const entries: Record<string, string> = {};
-  for (const s of portfolioProjects()) {
-    const now = projectSourceHash(s);
-    const was = prev?.entries?.[s.id];
-    const rewritten = prev?.entry_text?.[s.id] !== texts[s.id];
-    entries[s.id] = !was || was === now || rewritten || reviewed ? now : was;
+  for (const page of portfolioPages()) {
+    const now = projectSourceHash(page);
+    const was = prev?.entries?.[page.id];
+    const rewritten = prev?.entry_text?.[page.id] !== texts[page.id];
+    entries[page.id] = !was || was === now || rewritten || reviewed ? now : was;
   }
   writeRecord(file, { built_at: new Date().toISOString(), template: "", md_sha: hash(text), sources: {}, outputs: prev?.outputs ?? {}, entries, entry_text: texts });
 }
@@ -215,7 +254,7 @@ export interface PortfolioStatus { exists: boolean; toWrite: string[]; toRewrite
 
 export function portfolioStatus(): PortfolioStatus {
   const file = portfolioPath();
-  const projects = portfolioProjects();
+  const projects = portfolioPages();
   if (!existsSync(file)) return { exists: false, toWrite: [], toRewrite: [], notInFile: projects.map((p) => p.id), changedSinceCheck: false, neverChecked: true, generatedStale: false, neverBuilt: true, builtOutdated: false };
   const text = readFileSync(file, "utf8");
   const parsed = parsePortfolio(text);

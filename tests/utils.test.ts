@@ -193,3 +193,8 @@ test("status: a sent PDF that is missing is reported; build --no-pdf keeps a sen
   rmSync(join(dir, "cv/Kirill_Kohan_CV.pdf"));
   assert.match(run("status.ts", dir).out, /SENT\s+Acme: the PDF you sent \(cv\/Kirill_Kohan_CV\.pdf\) is missing/);
 });
+
+test("tokens rejoin a word broken after a slash at a line end (CI/ + CD)", async () => {
+  const { tokens } = await import("../scripts/lib/text.ts");
+  assert.deepEqual(tokens("set up CI/\nCD pipelines"), ["set", "up", "ci/cd", "pipelines"]);
+});

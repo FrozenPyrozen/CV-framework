@@ -16,29 +16,20 @@ description: Writes the public portfolio's text (portfolio/portfolio.md) from th
 
 1. **Prepare.** Run `npm run validate`, then `npm run portfolio -- refresh` (writes the cover, project title lines, public images and links, skills and contact; adds a placeholder for a new project, drops projects no longer opted in). Run `npm run status` for the projects to write or rewrite. **Never edit inside `<!-- generated:… -->` blocks or the `<!-- project: … -->` markers.** No project opted in: stop and suggest `/portfolio-material`.
 2. **Intro** (replaces `TODO(/portfolio): write the intro paragraph`): two or three sentences on who you are and the kind of products in the portfolio, each ending with `<!-- src: … -->` (an opted-in summary's section, `profile` or `calc:years_experience`).
-3. **Each project to write or rewrite** (replaces its placeholder, or its old text; leave every other project exactly as it is), in this shape:
+3. **Each project to write or rewrite** (replaces its placeholder, or its old text; leave every other project exactly as it is), in the structure of the April 2025 portfolio (`specs/outputs/portfolio.md` 4):
    ```markdown
-   **The product**
+   One paragraph, two to four sentences: what the product is, who uses it, its main features (sections 1 and 2). <!-- src: <id>#1 -->
 
-   Two or three sentences from sections 1 and 2. <!-- src: <id>#1 -->
+   **Responsibilities**
 
-   **My role**
+   * One item per contribution: what you built, how and why, with its result or number when there is one; 1–3 sentences, longer than a CV bullet. <!-- src: <id>#4.N -->
 
-   One or two sentences from section 3. <!-- src: <id>#3 -->
+   **Technologies and frameworks**
 
-   **What I built**
-
-   * One item per contribution, 2–3 sentences: what, how and why, longer than a CV bullet. <!-- src: <id>#4.N -->
-
-   **Results**
-
-   * One line per number from section 7 or a contribution's Result. <!-- src: <id>#4.N -->
-
-   **Technologies**
-
-   React Native, TypeScript, … (hands-on items from section 5). <!-- src: <id>#5 -->
+   React Native, TypeScript, … (the hands-on items of section 5). <!-- src: <id>#5 -->
    ```
-   - At most `portfolio_max_items` items (default 6) under *What I built*, most important first (contribution order, then `cv_emphasis`).
+   - The product paragraph comes first: `refresh` puts the screenshots right after it, as the old portfolio did.
+   - **One page per project** with its screenshots (`specs/outputs/portfolio.md` 4): the product paragraph about 70 words; at most `portfolio_max_items` items (default 4) under *Responsibilities*, about 40 words each, most important first (contribution order, then `cv_emphasis`; the role and leadership go in as items); a short technologies line (the main hands-on items, not all of section 5); at most `checks.portfolio_max_project_words` (300) words in total (`portfolio check` warns).
    - **Sources:** every sentence and bullet ends with `<!-- src: … -->` from **this** project only.
    - **Numbers:** only from the source; a `doc:<id>` number only once "confirmed by user".
    - **Public:** use the project's `portfolio_label` (default `cv_client_label`), never a hidden client's name, a section 9 term (unless `allow_in: [portfolio]`), ticket ids or internal URLs; images and links come only from the generated block.

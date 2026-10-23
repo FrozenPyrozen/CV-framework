@@ -78,23 +78,38 @@ export async function renderPortfolioDocx(markdown: string, mdFile: string, outP
     return linkIds.get(target)!;
   };
   let images = 0;
-  const imageRun = (path: string, alt: string): string | undefined => {
+  // Images: consecutive screenshots share one row (as in the April 2025 portfolio), scaled to the same height, the
+  // row fitting the content width and at most 30% of the content height, and never larger than 150 dpi
+  // (1440 / 150 = 9.6 twips per pixel): a small screenshot is printed smaller rather than blurry.
+  const loadMedia = (path: string) => {
     const abs = resolve(dirname(mdFile), path);
     if (!existsSync(abs)) { warnings.push(`image not found: ${path}`); return undefined; }
     const img = loadImage(abs);
     const px = imageSize(img.data);
     if (!px) { warnings.push(`can't read the size of ${path}`); return undefined; }
+    return { ...img, px, path };
+  };
+  const drawing = (media: { data: Buffer; ext: string }, alt: string, wTw: number, hTw: number): string => {
     const n = ++images;
-    const name = `media/portfolio${n}.${img.ext}`;
-    doc.zip.file(`word/${name}`, img.data);
+    const name = `media/portfolio${n}.${media.ext}`;
+    doc.zip.file(`word/${name}`, media.data);
     const id = `rIdPfImg${n}`;
     rels = rels.replace("</Relationships>", `<Relationship Id="${id}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="${name}"/></Relationships>`);
-    // Fit the content width and at most 45% of the content height, keeping the aspect ratio, and never larger than
-    // 150 dpi (1440 / 150 = 9.6 twips per pixel): a small screenshot is printed smaller rather than blurry.
-    const scale = Math.min(contentW / px.w, (contentH * 0.45) / px.h, 1440 / 150);
-    if ((Math.max(px.w, px.h) * scale) / 1440 < 1.5) warnings.push(`image ${path} is small (${px.w}x${px.h} px: under 1.5 inches at 150 dpi); use a larger screenshot`);
-    const cx = Math.round(px.w * scale * EMU_PER_TWIP), cy = Math.round(px.h * scale * EMU_PER_TWIP);
+    const cx = Math.round(wTw * EMU_PER_TWIP), cy = Math.round(hTw * EMU_PER_TWIP);
     return `<w:r><w:drawing><wp:inline distT="0" distB="0" distL="0" distR="0"><wp:extent cx="${cx}" cy="${cy}"/><wp:docPr id="${1000 + n}" name="Picture ${n}" descr="${escapeXml(alt)}"/><a:graphic><a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture"><pic:pic><pic:nvPicPr><pic:cNvPr id="${1000 + n}" name="portfolio${n}"/><pic:cNvPicPr/></pic:nvPicPr><pic:blipFill><a:blip r:embed="${id}"/><a:stretch><a:fillRect/></a:stretch></pic:blipFill><pic:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="${cx}" cy="${cy}"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></pic:spPr></pic:pic></a:graphicData></a:graphic></wp:inline></w:drawing></w:r>`;
+  };
+  const imageRow = (items: { path: string; alt: string }[]): string | undefined => {
+    const media = items.map((it) => ({ it, m: loadMedia(it.path) })).filter((x) => x.m) as { it: { path: string; alt: string }; m: NonNullable<ReturnType<typeof loadMedia>> }[];
+    if (!media.length) return undefined;
+    const gap = 144; // 0.1 inch between screenshots
+    const ratios = media.map((x) => x.m.px.w / x.m.px.h);
+    const h = Math.min(contentH * 0.3, (contentW - gap * (media.length - 1)) / ratios.reduce((a, b) => a + b, 0), ...media.map((x) => x.m.px.h * (1440 / 150)));
+    const spacer = `<w:r><w:t xml:space="preserve">  </w:t></w:r>`;
+    return media.map((x, k) => {
+      const w = h * ratios[k];
+      if (Math.max(w, h) / 1440 < 1.5) warnings.push(`image ${x.m.path} is small (${x.m.px.w}x${x.m.px.h} px: under 1.5 inches at 150 dpi); use a larger screenshot`);
+      return drawing(x.m, x.it.alt, w, h);
+    }).join(spacer);
   };
 
   // Bold in schema order (after rStyle/rFonts): Pages ignores rFonts that come after <w:b>, and a font without a
@@ -137,10 +152,18 @@ export async function renderPortfolioDocx(markdown: string, mdFile: string, outP
   const push = (p: string | undefined) => { if (p) body.push(p); };
   let block = "";
   let inProject = false;
+  let row: { path: string; alt: string }[] = [];
+  let captions: string[] = [];
+  const flushRow = () => {
+    if (row.length) { const r = imageRow(row); if (r) push(para("image", "", r)); }
+    if (captions.length) push(para("caption", captions.join("; ")));
+    row = []; captions = [];
+  };
   let headline: string | undefined;
   for (const raw of markdown.split("\n")) {
-    const g = raw.match(/^<!--\s*(\/?)generated:([\w-]+)\s*-->$/);
+    const g = raw.match(/^<!--\s*(\/?)generated:([\w/-]+)\s*-->$/);
     if (g) {
+      if (g[1] && g[2].startsWith("media-")) flushRow();
       block = g[1] ? "" : g[2];
       if (!g[1] && block === "portfolio-cover") push(para("cover_contact", "", ""));    // banner padding above
       if (g[1] && g[2] === "portfolio-cover") { push(para("cover_contact", "", "")); push(headline); headline = undefined; } // and below, then the headline
@@ -164,9 +187,9 @@ export async function renderPortfolioDocx(markdown: string, mdFile: string, outP
       continue;
     }
     if (block.startsWith("media-")) {
-      if ((m = line.match(/^!\[([^\]]*)\]\(([^)]+)\)$/))) { const r = imageRun(m[2], m[1]); if (r) push(para("image", "", r)); }
-      else if ((m = line.match(/^\*([^*].*[^*])\*$/))) push(para("caption", m[1]));
-      else push(para("body", line));
+      if ((m = line.match(/^!\[([^\]]*)\]\(([^)]+)\)$/))) row.push({ path: m[2], alt: m[1] });
+      else if ((m = line.match(/^\*([^*].*[^*])\*$/))) captions.push(m[1]);
+      else { flushRow(); push(para("body", line)); }
       continue;
     }
     if (block === "skills") {

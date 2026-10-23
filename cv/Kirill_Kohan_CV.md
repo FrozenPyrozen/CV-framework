@@ -25,7 +25,7 @@ Senior software engineer and tech lead with 7+ years of experience building Reac
 
 * Built core modules of a schema-driven **React 19 / TypeScript** runtime for SYSPRO's **ERP SaaS** modernization platform (25+ person program) that renders **1,800+ ERP programs** from data-model definitions, cutting screen delivery from days to hours, with no per-screen frontend code. <!-- src: syspro-saas-erp#4.1, syspro-team-size, syspro-speed -->
 
-* Authored or maintained ~17 component specifications and validated each against the architecture before and after implementation, with AI agents as reviewers flagging rule violations and specification-to-code drift for human decision. This reduced review cycles; deferred issues went to a **technical-debt register**. <!-- src: syspro-saas-erp#4.2, syspro-saas-erp#4.12, syspro-review-cycles -->
+* Authored or maintained ~17 component specifications and validated each against the architecture before and after implementation, with AI agents flagging rule violations and specification-to-code drift for human decision. This reduced review cycles; deferred issues went to a **technical-debt register**. <!-- src: syspro-saas-erp#4.2, syspro-saas-erp#4.12, syspro-review-cycles -->
 
 * Implemented the runtime's **KendoReact** rendering handlers (forms, date fields, search grids with filtering and sorting, smart-tag lookups, predictive search) and the view orchestration layer with **XState** and **Zustand** (session lifecycle, navigation, modal overlays). <!-- src: syspro-saas-erp#4.4, syspro-saas-erp#4.5 -->
 

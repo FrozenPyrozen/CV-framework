@@ -4,13 +4,14 @@ import assert from "node:assert/strict";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { createHash } from "node:crypto";
-import { edit, run, tempRepo } from "./helpers.ts";
+import { spawnSync } from "node:child_process";
+import { edit, REPO, run, tempRepo } from "./helpers.ts";
 
 const pagesAvailable = process.platform === "darwin" && existsSync("/Applications/Pages.app");
 
 test("build --no-pdf: refresh, lint, trace warning, both markets rendered, build record; status follows changes", () => {
   const dir = tempRepo();
-  edit(dir, "cv/Kirill_Kohan_CV.md", "July 2023 - November 2025", "07/2023 - 11/2025"); // a stale job line refresh must fix
+  edit(dir, "cv/Kirill_Kohan_CV.md", "July 2023 - December 2025", "07/2023 - 12/2025"); // a stale job line refresh must fix
   edit(dir, "cv/Kirill_Kohan_CV.md", / <!-- src: velas-wallet#4\.1 -->/, ""); // an unsourced claim: only a warning for the master CV
   const r = run("build.ts", dir, ["--no-pdf"]);
   assert.equal(r.code, 0, r.out);
@@ -211,3 +212,16 @@ test("select lists the current job's Stack line even when no profile pins it; an
   assert.equal(entries.find((e: any) => e.id === "syspro-saas-erp").stack, "syspro-saas-erp#5");
   assert.equal(entries.find((e: any) => e.id === "velas-wallet").stack, undefined);
 });
+
+test("portfolio-only summary fields don't make CV entries stale", () => {
+  const dir = tempRepo();
+  const before = spawnHashes(dir);
+  edit(dir, "summaries/velas-wallet.md", /^portfolio_title: .*$/m, 'portfolio_title: "Another title"');
+  assert.equal(spawnHashes(dir)["velas-wallet"], before["velas-wallet"]);
+  edit(dir, "summaries/velas-wallet.md", "role: Technical Leader", "role: Technical Lead");
+  assert.notEqual(spawnHashes(dir)["velas-wallet"], before["velas-wallet"]);
+});
+function spawnHashes(dir: string): Record<string, string> {
+  const r = spawnSync(process.execPath, ["--import", "tsx", "-e", "import('./scripts/lib/buildstate.ts').then(m => console.log(JSON.stringify(m.entryHashes())))"], { cwd: REPO, env: { ...process.env, CV_ROOT: dir }, encoding: "utf8" });
+  return JSON.parse(r.stdout.trim().split("\n").pop()!);
+}

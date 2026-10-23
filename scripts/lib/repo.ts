@@ -125,6 +125,7 @@ export interface PortfolioItem {
   kind: "image" | "link" | "demo";
   value: string; // image path (relative to portfolio/), URL, or demo note
   caption?: string; // image caption
+  project?: string; // the portfolio page (portfolio_projects id) it belongs to, for a summary with several
   label?: string; // link text
   public: string | undefined; // "no" or "yes, confirmed by user YYYY-MM-DD"
   isPublic: boolean;
@@ -209,10 +210,10 @@ export function parsePortfolioItems(text: string): PortfolioItem[] {
   text.split("\n").forEach((line, i) => {
     const item = line.match(/^- (image|link|demo):\s*(.+?)\s*$/);
     if (item) { cur = { kind: item[1] as PortfolioItem["kind"], value: unquote(item[2]), public: undefined, isPublic: false, line: i + 1 }; out.push(cur); return; }
-    const field = line.match(/^\s+(caption|label|public):\s*(.+?)\s*$/);
+    const field = line.match(/^\s+(caption|label|public|project):\s*(.+?)\s*$/);
     if (field && cur) {
       const v = unquote(field[2]);
-      if (field[1] === "public") { cur.public = v; cur.isPublic = PUBLIC_YES.test(v); } else cur[field[1] as "caption" | "label"] = v;
+      if (field[1] === "public") { cur.public = v; cur.isPublic = PUBLIC_YES.test(v); } else cur[field[1] as "caption" | "label" | "project"] = v;
       return;
     }
     if (line.trim() && !/^\s/.test(line)) cur = null; // a note ends the item

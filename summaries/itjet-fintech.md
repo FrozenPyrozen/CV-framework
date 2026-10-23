@@ -16,6 +16,16 @@ author_identities: []
 harvested_at: null
 # --- how it appears in the CV ---
 show_in_cv: true
+show_in_portfolio: true   # all jobs, decided by user 2026-10-23
+portfolio_order: 8
+portfolio_projects:                # one page per client, as in the April 2025 portfolio (user 2026-10-23)
+  - { id: aspiration-signup, title: "Aspiration signup flow (React Native Web)", label: "Aspiration, an Itjet client" }
+  - { id: aspiration-web, title: "Aspiration banking web app (React, Next.js)", label: "Aspiration, an Itjet client" }
+  - { id: registart, title: "RegiStart voter-registration app (React, Node.js, AWS)", label: "RegiStart, an Itjet client" }
+  - { id: fused, title: "Fused coach and athlete app (React, React Native, Node.js)", label: "Fused, an Itjet client" }
+  - { id: wink, title: "Wink social app (React Native)", label: "Wink, an Itjet client" }
+  - { id: golfuture, title: "Golfuture golf app (React Native)", label: "Golfuture, an Itjet client" }
+  - { id: oroscopo, title: "Oroscopo astrology app (React Native)", label: "Oroscopo, an Itjet client" }
 cv_section: experience
 cv_client_label: Itjet
 cv_location: "Kyiv, Ukraine (Hybrid)"
@@ -198,9 +208,11 @@ Source: doc:portfolio-2025-04
 
 - image: ../sources/media/portfolio-2025-04/image30.png
   caption: Fused web app, coach subscriptions an athlete can connect to (Stripe)
+  project: fused
   public: yes, confirmed by user 2026-10-22
 - image: ../sources/media/portfolio-2025-04/image32.png
   caption: Fused web app, the coach's workout schedule
+  project: fused
   public: yes, confirmed by user 2026-10-22
 
 Both screenshots are Fused (confirmed by user 2026-10-22) and show test data only; both may be public (confirmed by user 2026-10-22). Other Itjet screenshots in doc:portfolio-2025-04 (Wink) are still to be gone through.

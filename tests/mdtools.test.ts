@@ -24,7 +24,7 @@ test("refresh generates header, entry lines and blocks, and keeps every bullet",
   run("refresh.ts", dir);
   const after = readFileSync(join(dir, CV), "utf8");
   assert.match(after, /<!-- generated:header -->\n# \*\*Kirill Kohan\*\*/);
-  assert.match(after, /<!-- entry: general-motors-navigation -->\n## \*\*Team Leader\*\*\n\n### \*\*General Motors \| Remote \| July 2023 - November 2025\*\*/);
+  assert.match(after, /<!-- entry: general-motors-navigation -->\n## \*\*Team Leader\*\*\n\n### \*\*General Motors \| Remote \| July 2023 - December 2025\*\*/);
   assert.match(after, /<!-- entry: syspro-saas-erp -->\n## \*\*Senior Software Engineer\*\*\n\n### \*\*SYSPRO \| Remote \| December 2025 - Present\*\*/);
   assert.match(after, /### \*\*Clinical Trials Patient App \| Remote\*\*/); // consulting: no dates
   assert.match(after, /## \*\*Senior React Native Engineer \(Contract\)\*\*/); // real contract keeps label (worldwide)
@@ -76,7 +76,7 @@ test("market writes the Ukraine version: no phone, availability, time zones or c
 test("lint passes on the refreshed CV and fails on the unrefreshed one", () => {
   assert.equal(run("lint.ts", refreshed(), [CV]).code, 0);
   const dir = refreshed();
-  edit(dir, CV, "July 2023 - November 2025", "07/2023 \u2013 11/2025"); // the old, hand-typed date format
+  edit(dir, CV, "July 2023 - December 2025", "07/2023 \u2013 12/2025"); // the old, hand-typed date format
   const raw = run("lint.ts", dir, [CV]);
   assert.equal(raw.code, 1);
   assert.match(raw.out, /generated parts are out of date/);
@@ -93,7 +93,7 @@ const lintCases: [string, (dir: string) => void, RegExp][] = [
   ["a foreign URL", (d) => edit(d, CV, "* Delivered the R&D department's core **React Native** app", "* Delivered https://example.com/x the core mobile app"), /URL not from profile\.yaml/],
   ["a secret", (d) => edit(d, CV, "* Delivered the R&D department's core **React Native** app", "* Delivered token=abcDEF1234567890 the core mobile app"), /credential assignment/],
   ["a wrong years-of-experience number", (d) => edit(d, CV, "7+ years", "12+ years"), /"12\+ years" but the calculated value is/],
-  ["a hand-edited job line", (d) => edit(d, CV, "| July 2023 - November 2025", "| July 2023 - December 2025"), /generated parts are out of date/],
+  ["a hand-edited job line", (d) => edit(d, CV, "| July 2023 - December 2025", "| July 2023 - January 2026"), /generated parts are out of date/],
 ];
 for (const [name, breakIt, expected] of lintCases) {
   test(`lint catches ${name}`, () => {
@@ -493,7 +493,7 @@ test("market hide_headline_qualifier: master drops the master CV's (…) qualifi
 test("lint warns when the summary paragraph names a company (decision summary-no-company-names)", () => {
   const dir = refreshed();
   assert.doesNotMatch(run("lint.ts", dir, [CV]).out, /summary names/);
-  edit(dir, CV, "Built core modules", "At SYSPRO, currently builds core modules");
+  edit(dir, CV, "Core contributor to", "At SYSPRO, currently a core contributor to");
   const out = run("lint.ts", dir, [CV]).out;
   assert.match(out, /summary names "SYSPRO": describe the work instead/);
   assert.match(out, /summary says "currently": describe general experience without timing words/);
@@ -528,7 +528,7 @@ test("round 1 audit: unsourced summary sentence, partial reattach, refresh guard
   assert.match(run("refresh.ts", dir2, [CV]).out, /replaced: "\*\*Principal Engineer\*\*"/);
   // Hidden client names and company names in the summary match in any case.
   const dir3 = refreshed();
-  edit(dir3, CV, "Built core modules", "For clinical ink, built core modules at syspro");
+  edit(dir3, CV, "Core contributor to", "For clinical ink, core contributor at syspro to");
   const l = run("lint.ts", dir3, [CV]).out;
   assert.match(l, /confidential term "Clinical Ink"/);
   assert.match(l, /summary names "SYSPRO"/);
@@ -540,7 +540,7 @@ test("round 1 audit: unsourced summary sentence, partial reattach, refresh guard
 
 test("round 2 audit: abbreviations don't split sentences; empty summary; unknown tags in select", () => {
   const dir = refreshed();
-  edit(dir, CV, "Built core modules of a schema-driven React 19 runtime", "Built core modules (e.g. React 19 and XState) of a schema-driven React 19 runtime");
+  edit(dir, CV, "Core contributor to a schema-driven React 19 runtime", "Core contributor (e.g. React 19 and XState) to a schema-driven React 19 runtime");
   assert.doesNotMatch(run("trace.ts", dir, [CV]).out, /without their own source/);
   const dir2 = refreshed();
   edit(dir2, CV, /# \*\*SUMMARY\*\*\n\n[^\n]+\n/, "# **SUMMARY**\n\n");

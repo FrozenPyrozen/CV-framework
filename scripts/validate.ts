@@ -115,6 +115,8 @@ export function validateRepo(): Issue[] {
         if (!/\.(png|jpe?g|svg|gif|webp|tiff?)$/i.test(it.value)) err(s.file, `${where}: not an image file (PNG, JPEG, SVG, GIF, WebP or TIFF)`);
         if (!it.caption) err(s.file, `${where}: needs a caption:`);
       }
+      const subs = (s.frontMatter.portfolio_projects ?? []).map((p: any) => p.id);
+      if (it.project && !subs.includes(it.project)) err(s.file, `${where}: project "${it.project}" isn't in portfolio_projects`);
       if (it.kind === "link") {
         if (!/^https?:\/\//.test(it.value)) err(s.file, `${where}: a link must start with http:// or https://`);
         if (!it.label) err(s.file, `${where}: needs a label:`);

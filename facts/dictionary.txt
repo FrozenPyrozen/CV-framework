@@ -14,6 +14,7 @@ Itjet
 RegiStart
 SYSPRO
 Velas
+Heco                # blockchain network (Velas wallet)
 
 # Tools and technologies
 Bitrise
