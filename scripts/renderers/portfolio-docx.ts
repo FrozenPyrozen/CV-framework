@@ -155,8 +155,20 @@ export async function renderPortfolioDocx(markdown: string, mdFile: string, outP
   let row: { path: string; alt: string }[] = [];
   let captions: string[] = [];
   const flushRow = () => {
-    // at most 4 screenshots per row, as on the published portfolio (Fused: 4 phone screens, then 2 web pages)
-    for (let i = 0; i < row.length; i += 4) { const r = imageRow(row.slice(i, i + 4)); if (r) push(para("image", "", r)); }
+    // at most 4 screenshots per row, as on the published portfolio (Fused: 4 phone screens, then 2 web pages), and a
+    // row with a landscape screenshot is at least 1.75 inches tall, so desktop pages stay readable (two per row)
+    const ratio = (it: { path: string }) => { const m = loadMedia(it.path); return m ? m.px.w / m.px.h : 1; };
+    const fits = (items: { path: string }[]) => {
+      const r = items.map(ratio), sum = r.reduce((a, b) => a + b, 0);
+      const h = (contentW - 144 * (items.length - 1)) / sum;
+      return items.length <= 4 && (r.every((x) => x <= 1.2) || h >= 1.75 * 1440);
+    };
+    let cur: typeof row = [];
+    for (const it of row) {
+      if (cur.length && !fits([...cur, it])) { const r = imageRow(cur); if (r) push(para("image", "", r)); cur = []; }
+      cur.push(it);
+    }
+    if (cur.length) { const r = imageRow(cur); if (r) push(para("image", "", r)); }
     if (captions.length) push(para("caption", captions.join("; ")));
     row = []; captions = [];
   };

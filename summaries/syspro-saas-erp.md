@@ -334,6 +334,19 @@ Program size, delivery speed and review-cycle outcomes are confirmed facts, not 
 
 ## 8. Portfolio material
 
+- image: assets/syspro-saas-erp/program-menu.png
+  caption: The ERP program menu with program search
+  public: yes, confirmed by user 2026-10-23
+- image: assets/syspro-saas-erp/purchase-order.png
+  caption: A purchase order program rendered from its definition
+  public: yes, confirmed by user 2026-10-23
+- image: assets/syspro-saas-erp/branch-lookup.png
+  caption: A lookup grid for sales branches with filters
+  public: yes, confirmed by user 2026-10-23
+- image: assets/syspro-saas-erp/route-code-lookup.png
+  caption: A route code lookup with a search panel and sample data
+  public: yes, confirmed by user 2026-10-23
+
 TODO (needs user input)
 
 ## 9. Confidentiality notes

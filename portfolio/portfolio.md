@@ -15,7 +15,13 @@
 SYSPRO is bringing its ERP product to the web with a schema-driven platform. <!-- src: syspro-saas-erp#1 --> Instead of a hand-built web page for each ERP screen, the platform stores each program's form, grid and toolbar as a declarative definition, which a single React runtime renders when a user opens the program. <!-- src: syspro-saas-erp#1 --> ERP operators use business programs such as Bill of Materials and Inventory on the web, and administrators manage operators and roles. <!-- src: syspro-saas-erp#1 --> The frontend consists of three independently deployable apps (a host runtime, an identity app and an administration app) in a zero-trust micro-frontend architecture where apps never import from each other. <!-- src: syspro-saas-erp#1 -->
 
 <!-- generated:media-syspro-saas-erp -->
+![The ERP program menu with program search](assets/syspro-saas-erp/program-menu.png)
 
+![A purchase order program rendered from its definition](assets/syspro-saas-erp/purchase-order.png)
+
+![A lookup grid for sales branches with filters](assets/syspro-saas-erp/branch-lookup.png)
+
+![A route code lookup with a search panel and sample data](assets/syspro-saas-erp/route-code-lookup.png)
 <!-- /generated:media-syspro-saas-erp -->
 
 **Responsibilities**
