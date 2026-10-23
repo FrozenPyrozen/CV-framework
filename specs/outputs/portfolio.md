@@ -75,7 +75,7 @@ Blocks (`<!-- generated:… -->`) are written by `npm run refresh`, never by the
 ## 5. Formats and page sizes
 
 - **Markdown** is the source and is readable on its own (images as relative links).
-- **Word (`.docx`)** from the portfolio template (`templates/portfolio-<name>/`, imported with `/import-template` from the user's Pages or Word file). The style map gains the portfolio's paragraph types: cover title, intro, project title, project meta, section label, body, list item, caption, image.
+- **Word (`.docx`)** from the portfolio template (`templates/portfolio-<name>/`: imported with `/import-template` from a flowing Pages or Word file, or rebuilt as a flowing document when the original is a free-form layout, as for `portfolio-classic`, section 5a). The style map gains the portfolio's paragraph types: cover title, intro, project title, project meta, section label, body, list item, caption, image.
 - **Page sizes:** a portfolio template lists the sizes it supports in its `fixes.yaml`: `sizes: { a4: { page_margins: {…} }, letter: { page_margins: {…} } }`, extending the existing `page_margins` fix (`templates.md`). The renderer sets the page size and margins per size and scales images to the content width. Default: A4 and Letter.
 - **PDF:** one per size, exported through the PDF exporters in order (Pages, Word, LibreOffice; plan 6.1).
 - **Pages (`.pages`):** saved through Pages when it is installed (the Pages exporter already drives it), for editing by hand. A hand edit is never the source: changes go back into the summaries or `portfolio.md`.

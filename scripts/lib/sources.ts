@@ -53,7 +53,10 @@ on run argv
   end timeout
 end run`;
 
-export const hasPandoc = () => spawnSync("pandoc", ["--version"], { encoding: "utf8" }).status === 0;
+// pandoc on PATH, or in the usual Homebrew folders (a GUI-launched or minimal shell may not have them on PATH).
+export const pandocBin = (): string | undefined =>
+  ["pandoc", "/opt/homebrew/bin/pandoc", "/usr/local/bin/pandoc"].find((b) => spawnSync(b, ["--version"], { encoding: "utf8" }).status === 0);
+export const hasPandoc = () => !!pandocBin();
 
 async function pagesToText(file: string, media?: { dir: string; link: string }): Promise<string> {
   if (process.platform !== "darwin" || !existsSync("/Applications/Pages.app")) throw new Error(`${file}: reading .pages needs Pages on macOS; export it to PDF or Word first`);
@@ -63,7 +66,7 @@ async function pagesToText(file: string, media?: { dir: string; link: string }):
     const r = spawnSync("osascript", ["-e", PAGES_TO_DOCX, file, docx], { encoding: "utf8", timeout: 660_000 });
     if (r.status !== 0 || !existsSync(docx)) throw new Error(`Pages couldn't export ${file} to Word: ${(r.stderr || r.error?.message || "").trim()}`);
     if (!hasPandoc()) return await extractText(docx);
-    const p = spawnSync("pandoc", ["doc.docx", "-t", "gfm", "--wrap=none", "--extract-media=media"], { cwd: tmp, encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
+    const p = spawnSync(pandocBin()!, ["doc.docx", "-t", "gfm", "--wrap=none", "--extract-media=media"], { cwd: tmp, encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
     if (p.status !== 0) throw new Error(`pandoc failed on the Word export of ${file}: ${p.stderr.trim()}`);
     let md = p.stdout;
     const imgs = join(tmp, "media", "media");

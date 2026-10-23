@@ -256,6 +256,11 @@ export function validateRepo(): Issue[] {
         const s = summaries.find((x) => x.id === id);
         const ok = num === "5" ? !!s && !!o?.pin && !o?.text && !o?.drop : num ? !!s?.contributions.some((c) => c.number === num) : confirmed.facts.some((x) => x.id === id);
         if (!ok) err(file, num === "5" ? `overrides: "${src}" (a Stack line) needs an existing summary and only { pin: true }` : `overrides: "${src}" doesn't resolve`);
+        for (const a of o?.also ?? []) {
+          const [aid, anum] = String(a).split("#");
+          const resolves = anum ? !!summaries.find((x) => x.id === aid)?.contributions.some((c) => c.number === anum) : confirmed.facts.some((x) => x.id === aid);
+          if (!resolves) err(file, `overrides: "${src}" also: "${a}" doesn't resolve`);
+        }
       }
       if (o?.pin && !src.endsWith("#5")) {
         const entry = num ? id : confirmed.facts.find((x) => x.id === id)?.entry;

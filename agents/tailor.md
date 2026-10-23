@@ -29,6 +29,7 @@ description: Builds a role variant (cv/variants/<profile>/) or a job-specific CV
      - The master CV has a bullet with the same `src`: start from its wording (including the user's edits) and only shorten or re-emphasize it. If that bullet also cites other sources, keep their parts when they're facts about the same work or `cv_emphasis` points (`specs/tailoring-spec.md` 2, step 3).
      - Otherwise: write it from the source, following `cv-spec.md`.
      - A profile override with `text`: use that text exactly.
+     - A bullet whose `src` lists several ids (an override's `also`) is one bullet citing all of them: keep the whole list in its `src` comment.
      - **Stack lines:** the current job keeps its `* Stack: …` line. An older job keeps its Stack line only when `selection.json` lists it as the entry's `stack` (from the master CV, src `<id>#5`).
    - Keep every `src` comment and every `<!-- entry -->` marker. All entries stay listed, shrinking to the minimum when less relevant.
    - **Headline and summary paragraph:** the profile's `headline` (for a job ad, one fitting it goes in `jd-tags.yaml` `headline`; `refresh` writes the header); rewrite the summary around `summary_focus`, with a `src` per sentence.

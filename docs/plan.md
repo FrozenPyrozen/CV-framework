@@ -1,6 +1,6 @@
 # CV Agent Framework: Plan
 
-Status: steps 1–12 and 14 done (section 8; step 12 by full archive on this Mac, its private-file round trip still to rerun once a tailored or sent CV exists); left: step 13 (new laptop + new repo, on the new laptop); agent replay due · 2026-10-21
+Status: steps 1–12 and 14 done (section 8; step 12 by full archive on this Mac, its private-file round trip still to rerun once a tailored or sent CV exists); left: step 13 (new laptop + new repo, on the new laptop); agent replay due. Since then: portable harvest (9c) and sources (9d) built, the portfolio specified and its content imported (9e, P2) · 2026-10-23
 
 ## 1. Goal
 
@@ -77,8 +77,8 @@ CV/
 │   ├── skills.yaml                # the SKILLS section's only source (4.2b)
 │   ├── decisions.yaml             # choices you made about the CV (e.g. "no LinkedIn"), so reviewers stop re-raising them
 │   └── applications.yaml          # optional log: which CV/PDF went to which company and when (4.5)
-├── sources/                       # imported old CVs and portfolios: index.yaml, files/ (originals), text/ (extracted) (9d)
-├── portfolio/                     # (phase P2, 9e) portfolio.md, assets/<summary-id>/ images; built .docx/.pages/PDFs git-ignored
+├── sources/                       # imported old CVs and portfolios: index.yaml, files/ (originals), text/ (extracted), media/ (images) (9d)
+├── portfolio/                     # (9e) assets/<summary-id>/ images (P1), portfolio.md (P3); built .docx/.pages/PDFs git-ignored (P4)
 ├── summaries/                     # one file per job/project, all following work-summary-spec
 │   └── .digests/                  # generated short digests (contributions + tags) read by composer/tailor (R10; git-ignored,
 │                                  # recreated by `npm run digest`)
@@ -107,7 +107,7 @@ CV/
 ├── reports/<YYYY-MM-DD-HHmm>/     # reviewer reports for one run: ats.md, hr.md, proofreading.md, ...
 ├── .cv-runs/                      # working files (git-ignored): <run-id>/ (state.json, git-digest.md), export.lock, snapshots/, doctor/, template-test-<name>/
 ├── schemas/                       # common, config, summary, confirmed, decisions, profile, skills, market, style-map,
-│                                  # fixes, report, role-profile
+│                                  # fixes, report, role-profile, sources
 ├── scripts/                       # Node/TypeScript CLIs
 │   ├── lib/repo.ts                # shared loader: config, summaries, facts, profile, skills, markets, entries, CLI paths
 │   ├── lib/cvmd.ts                # CV Markdown model: generated parts (header, entry lines, blocks) per market and role profile
@@ -140,6 +140,7 @@ CV/
 │   ├── backup.ts                  # backup (--full: whole-project archive) and restore (npm run restore = backup.ts --restore)
 │   ├── log-application.ts         # records a sent CV in facts/applications.yaml (4.5)
 │   ├── lib/buildstate.ts          # build records: source/output hashes
+│   ├── lib/sources.ts             # imported documents: the sources index and text extraction (.docx, .pdf, .md, .txt, .pages) (9d)
 │   ├── validate.ts                # JSON Schema validation of all inputs
 │   ├── index.ts                   # regenerates the agents/rubrics/profiles/outputs list in AGENTS.md
 │   └── migrations/                # (created when the first format change needs one)
@@ -150,6 +151,7 @@ CV/
     ├── agents/                    # thin wrappers -> agents/*.md
     └── commands/                  # /harvest /compose /tailor /variants /review /improve /add-experience
                                    # /profile /job-change /add-repo /import-template /build /status /log-application /doctor
+                                   # /harvest-prompt /import-summary /import-docs
 ```
 
 ## 4. Data formats
@@ -161,7 +163,7 @@ CV/
 schema_version: 1                  # bumped when the summary format changes (see section 9)
 id: syspro-saas-erp                # stable id used in trace references; lowercase-kebab <client>-<project>, suggested by /harvest
                                    # when <id> is omitted and confirmed by you; never renamed later (CV sources depend on it)
-source: git                        # git (harvested) | cv (built from old CV text, step 4) | user (/add-experience, /job-change)
+source: git                        # git (harvested) | cv (built from old CV text, step 4, or from an imported document, 9d) | user (/add-experience, /job-change)
 # --- the job ---
 client: SYSPRO                     # real name, private
 role: Senior Software Engineer
@@ -175,6 +177,7 @@ repos:
   - { name: saas-frontend-repo }   # name only: no remote URL (access ends with the job) and no local path (per laptop, in framework.local.yaml)
 author_identities: []              # optional; added to profile.yaml git_identities for this summary's repos
 harvested_at: 2026-09-30           # null for source: cv / user
+harvest_mode: local                # optional: local (default) | portable (written on another machine, 9c)
 # --- how it appears in the CV ---
 show_in_cv: true                   # false = kept as a source, never used in CV/tailored output; can be flipped later
 cv_section: experience             # section id from framework.config.yaml: experience | consulting | ...
@@ -233,7 +236,7 @@ A summary is the **single source of truth for a project**. The CV uses it now, a
 5. **Technologies and frameworks:** grouped by category (language, UI, state, testing, CI/CD, cloud, AI and agents …) with versions where known, marked *hands-on* or *used by the project*.
 6. **Skills demonstrated:** a skills list mapped to the contributions that prove each skill.
 7. **Metrics and outcomes:** each number with its source (git history, the user, or a dashboard) and a confidence level.
-8. **Portfolio material:** links, screenshots and demo notes, plus what is safe to show publicly. Left empty until you share portfolio details.
+8. **Portfolio material:** links, screenshots and demo notes, plus what is safe to show publicly; structured items (`- image:`, `- link:`, `- demo:`, each `public: yes, confirmed by user <date>` or `public: no`) per `specs/outputs/portfolio.md` 3. A contribution taken from an imported document ends with `Source: doc:<id>` after its `Tags:` line (`specs/sources-spec.md` 4).
 9. **Confidentiality notes:** internal names, codes and tickets that must not leave this file.
 
 ### 4.2 Confirmed facts (`facts/confirmed.yaml`)
@@ -434,8 +437,9 @@ Rules for the tailor agent with a profile:
     syspro-saas-erp#4.1: { text: "Built core modules of a schema-driven React 19 runtime ...", pin: true }   # exact wording, always included
     velas-wallet#4.5: { drop: true }                                                                               # never include
     general-motors-navigation#5: { pin: true }     # keep an older job's Stack line (it doesn't count toward limits)
+    itjet-fintech#4.6: { pin: true, also: [itjet-fintech#4.15], text: "…" }   # one bullet citing two contributions about the same work
   ```
-  Pinned bullets come first, in the order `overrides` lists them, and may not exceed an entry's limit. An `<id>#5` key takes only `pin` and appears as the entry's `stack` in `selection.json`.
+  Pinned bullets come first, in the order `overrides` lists them, and may not exceed an entry's limit. An `<id>#5` key takes only `pin` and appears as the entry's `stack` in `selection.json`. `also` lists further sources of the same bullet: its `src` in `selection.json` lists them all, and a contribution named in `also` isn't selected again on its own.
 - **Job-specific CVs** (`--jd`; the `--profile` flag is optional, the profile is not) record the profile and an optional job-fitting `headline` in `jd-tags.yaml`; `refresh`, `lint`, `build` and `pdf-check` read them from there.
   Lint warns when a variant file was edited after its last build, so a hand edit isn't silently lost.
 - It may **shorten and reword** the bullets `select` chose (in its order; pins set the opening bullets), rewrite the summary and headline within the profile's focus, and reorder skills.
@@ -514,11 +518,11 @@ entries:
 
 | Agent | Input | Output | Spec / rubric |
 |---|---|---|---|
-| **Harvester** | repo name(s) resolved to local paths through `framework.local.yaml` (see `/harvest`), project id, author identities (default from profile), optional date range. Reads `git log` filtered by author and dates, commit messages, diff statistics per folder, and the repo's README and docs. Large repos are summarized per area (folder or package). It **never copies source code, internal document text, URLs or secrets**, only describes the work in its own words. | new `summaries/<id>.md`, or for an existing summary a **merge**: contributions are updated from git; sections you edited, filled TODOs, `cv_*` fields and numbering of existing contributions are kept (new items get new numbers, so CV `src` ids never break); a diff is shown for approval | work-summary-spec |
+| **Harvester** | repo name(s) resolved to local paths through `framework.local.yaml` (see `/harvest`), or a summary written on another machine (`/import-summary`, 9c); project id, author identities (default from profile), optional date range. Reads `git log` filtered by author and dates, commit messages, diff statistics per folder, and the repo's README and docs. Large repos are summarized per area (folder or package). It **never copies source code, internal document text, URLs or secrets**, only describes the work in its own words. | new `summaries/<id>.md`, or for an existing summary a **merge**: contributions are updated from git; sections you edited, filled TODOs, `cv_*` fields and numbering of existing contributions are kept (new items get new numbers, so CV `src` ids never break); a diff is shown for approval | work-summary-spec |
 | **Composer** | summary digests (full summaries only for changed entries, R10), `confirmed.yaml`, `profile.yaml`, `skills.yaml`, `decisions.yaml`, `framework.config.yaml`, current CV | the updated master CV (path and name from config) with trace comments + short change log in the reply. It edits one entry at a time and runs `reattach-src` then `trace` (R7). | cv-spec |
 | **Tailor** | a profile and/or a job description file, master CV, summaries, facts | `cv/variants/<profile>/` or `cv/tailored/<company-role>/`: `cv.md` + `gap-report.md` | tailoring-spec + the profile (selection and order from `select`; may shorten and re-emphasize; may not add unsourced claims) |
 | **Reviewer** (run per rubric) | CV file, rubric, `decisions.yaml` (findings already decided are listed as "decided", not raised again), `profile.yaml` (HR), summaries/facts (fact-check only), preview images (layout only), job ad (ATS job-ad mode; for `cv/tailored/*` its `job-description.md` and `jd-tags.yaml` are used automatically), and for variants the role profile (`max_pages`, `max_words`, headline) and `gap-report.md` | `reports/<date-time>/<rubric>.md` with verdict, score, findings (line, issue, suggestion, severity, `needs_user_input: yes/no`) | rubrics/* |
-| **Advisor** | a report (or several), the CV, facts; also used by `/job-change`, `/profile` and `/add-experience` for their questions (the harvester asks `/harvest`'s job-detail questions itself, in the advisor's style) | asks you questions one topic at a time with suggested answers. It writes your answers to `facts/confirmed.yaml`, `facts/decisions.yaml`, `facts/profile.yaml` or a summary (e.g. its `cv_emphasis`), hands the change list to the composer, and shows the diff. | cv-spec + the report's rubric |
+| **Advisor** | a report (or several), the CV, facts; also used by `/job-change`, `/profile`, `/add-experience` and `/import-docs` (proposals from imported documents, 9d) for their questions (the harvester asks `/harvest`'s job-detail questions itself, in the advisor's style) | asks you questions one topic at a time with suggested answers. It writes your answers to `facts/confirmed.yaml`, `facts/decisions.yaml`, `facts/profile.yaml` or a summary (e.g. its `cv_emphasis`), hands the change list to the composer, and shows the diff. | cv-spec + the report's rubric |
 | **Template importer** | a Word CV (PDF input deferred, section 11) | `templates/<name>/` (section 6.4) | template-import rules in `specs/templates.md` |
 
 Reviewer set: **ATS**, **HR**, **proofreading**, **fact-check**, **confidentiality**, **layout**. They run in parallel when the tool supports it, otherwise one after another.
@@ -555,17 +559,17 @@ What the main rubrics must produce (taken from the reviews done in this chat):
 | `check` | lint + trace for the master CV, its market versions, all variants and all tailored CVs (takes no file: use `lint` and `trace` for one CV); one failing CV is reported without stopping the rest |
 | `refresh [file] [--market <id>] [--profile <id>] [--out <file>] [--check]` | rewrites the script-owned parts (4.2d): header, section headings and intro lines, entry title and detail lines with `<!-- entry: id -->` markers, education, skills and languages. Runs `validate` first and refuses invalid sources, then writes digests. Reports every line it replaces (including hand edits inside generated parts) and refuses `--market` for a non-default market on a committed CV (allowed with `--out`, `--check`, or on a file under `markets/`), so the committed CV stays in the default market. The role profile comes from `--profile` or the `cv/variants/<id>/` path. `--check` exits 1 if the file isn't up to date. |
 | `status [--ack <company>]` | Compares `cv/.build-state.json` with the current sources (config, summaries, profile, confirmed facts, skills, markets, the template's files, the role profile; not `decisions.yaml`, which only affects reviewers) and per-entry hashes, the CV Markdown and the outputs, and lists each CV as up to date, stale (with every reason, e.g. "summaries/velas-wallet.md changed") or never built. A tailored CV also depends on its `jd-tags.yaml`. Entries whose sources changed are listed first ("entries to update" for the master CV, "entries to rewrite in variants" or "in this tailored CV"); `build` keeps each one listed until its text in that CV changes, or `--entries-reviewed` confirms it needs no change, so `build:all` can't hide them. Also warns once per application when the PDF you sent has changed since, or is gone with no kept copy (R14); `--ack <company>` records that you know and confirms it (an unknown company is reported). Notes CVs built without a PDF, and names job-specific CVs to rebuild with `npm run build -- <file>` (`build:all` skips them). |
-| `validate` | checks all inputs against `schemas/` (summaries' `repos` hold names only; a `remote` field is rejected), including each template's `style-map.yaml` and `fixes.yaml` (fix paragraph types must exist in the style map), role variants without their profile, job ads (`jd-tags.yaml`: `profile:` required, known tags, overrides, `#5` pin-only), role profiles (schema, tags, `skills_order` categories, `include_sections`, template, bullet limits, no more pins than an entry's limit, `overrides` and `entry_max_bullets` ids), and the front matter of reviewer reports in `reports/`. Every tag (summary contributions, facts, skills, profiles' `emphasize_tags`/`deemphasize_tags`/`summary_focus`) must be in the config tag list, so a typo like `react-nativ` fails instead of silently breaking selection. **New** tags enter the list only through an approved proposal (from `/harvest` or `/add-experience`), so new technologies are added deliberately, never blocked. |
+| `validate` | checks all inputs against `schemas/` (summaries' `repos` hold names only; a `remote` field is rejected), including each template's `style-map.yaml` and `fixes.yaml` (fix paragraph types must exist in the style map), role variants without their profile, job ads (`jd-tags.yaml`: `profile:` required, known tags, overrides, `#5` pin-only), role profiles (schema, tags, `skills_order` categories, `include_sections`, template, bullet limits, no more pins than an entry's limit, `overrides` and `entry_max_bullets` ids), the front matter of reviewer reports in `reports/`, the sources index (`sources/index.yaml`: schema, unique ids, each original unchanged by sha256, text and media present) with every `doc:<id>` reference and `Source:` line, and profile and job-ad `overrides` `also` ids. Every tag (summary contributions, facts, skills, profiles' `emphasize_tags`/`deemphasize_tags`/`summary_focus`) must be in the config tag list, so a typo like `react-nativ` fails instead of silently breaking selection. **New** tags enter the list only through an approved proposal (from `/harvest` or `/add-experience`), so new technologies are added deliberately, never blocked. |
 | `index [--check]` | regenerates the registry lists in `AGENTS.md` (agents, reviewer rubrics, role profiles, markets, templates with approval state, output specs, commands) between `<!-- generated:index -->` markers; `--check` exits 1 if `AGENTS.md` is out of date. Before step 6 (no `AGENTS.md` yet) it prints the registry. |
 | `log-application --company <name> --pdf <file.pdf> [--role] [--status] [--notes] [--keep-copy]` | records a sent CV in `facts/applications.yaml` (4.5): date, company, role, the PDF and its quoted hash, CV folder, market, git commit, exporter (from the build record), status; `--keep-copy` saves the exact PDF to `cv/sent/` |
 | `test` | runs every `tests/*.test.ts` file with Node's test runner; most tests break a temporary copy of the real repo |
 | `typecheck` | TypeScript type check of `scripts/` and `tests/` |
 | `digest` | regenerates `summaries/.digests/`, one per summary with its facts (R10; `cv_entry` items are read from `confirmed.yaml` directly). Runs automatically after a successful `validate`, and `refresh`, `build` and every agent flow validate before writing digests (so broken summaries never produce digests), so digests are never stale and a fresh laptop needs no extra step. |
 | `git-digest <repo-name> [--path <dir>] [--since] [--until] [--identity <name>] [--run <id>]` | read-only digest of a repo's history for the harvester (R9, R11), written to `.cv-runs/<run-id>/git-digest.md`: every commit author with matches to your identities marked, your commits by area (folder or package: counts, dates, lines, key commit messages), commits by others that credit you (`Co-authored-by`), and "possibly yours" commits and merges mentioning your names. Repo path from `--path` or `framework.local.yaml`; identities from `profile.yaml`, the summaries listing the repo, and `--identity`.  Renames count as deleted plus added lines (`--no-renames`), so moved files don't hide inside a rename. |
-| `harvest-prompt [--merge <id>] [--out <file>]` | writes `.cv-runs/harvest-prompt-<date>.md` (or `--out`): one self-contained prompt with the work-summary-spec rules and format, the tag list, your git identities, plain `git` commands for the history, and with `--merge` the existing summary to extend (9c) |
-| `import-summary <file> [--apply]` | checks a summary written elsewhere in a temporary copy of the repo (schema, sections, numbering, tags, repo names only, secret scan) without touching `summaries/`; `--apply` writes a new summary to `summaries/<id>.md`, or for an existing id to `.cv-runs/import/<id>.md` for the harvester to merge (9c) |
+| `harvest-prompt [--merge <id>] [--out <file>]` | writes `.cv-runs/harvest-prompt-<date>.md` (`-<id>` added with `--merge`; or `--out`): one self-contained prompt with the work-summary-spec rules and format, the tag list, your git identities, plain `git` commands for the history, and with `--merge` the existing summary to extend (9c). Refuses to write a prompt that would carry another summary's confidentiality terms or hidden client names |
+| `import-summary <file> [--apply]` | checks a summary written elsewhere in a temporary copy of the repo (schema, sections, numbering, tags, repo names only, secret scan; no code blocks or local paths; unknown and proposed tags reported as proposals) without touching `summaries/`; `--apply` writes a new summary to `summaries/<id>.md`, or for an existing id to `.cv-runs/import/<id>.md` for the harvester to merge (9c) |
 | `import-doc <file> --date <YYYY-MM> [--kind --id --title]` | copies an old CV, portfolio or other document (`.docx`, `.pdf`, `.md`, `.txt`, and `.pages` on macOS through Pages and pandoc, keeping its images in `sources/media/<id>/`) to `sources/files/`, extracts its text to `sources/text/<id>.md` and lists it in `sources/index.yaml` (newest first); refuses a file already imported and a file with no extractable text; changes no summary (9d) |
-| `select <cv-dir> [--profile <id>] [--tags <file>]` (at least one) | deterministic bullet selection and ordering by tags, limits and overrides (scoring in `specs/tailoring-spec.md` 2). `--tags` is looked up in `<cv-dir>` first. Writes `selection.json` into `<cv-dir>`, which the tailor agent then words (R8).  Rejects tags that aren't in the config list, a job ad without a profile, and a folder outside `cv/variants/` or `cv/tailored/`. |
+| `select <cv-dir> [--profile <id>] [--tags <file>]` (at least one) | deterministic bullet selection and ordering by tags, limits and overrides (scoring in `specs/tailoring-spec.md` 2). `--tags` is looked up in `<cv-dir>` first. Writes `selection.json` into `<cv-dir>`, which the tailor agent then words (R8). An override's `also` makes one bullet cite several contributions (`src` lists them all).  Rejects tags that aren't in the config list, a job ad without a profile, and a folder outside `cv/variants/` or `cv/tailored/`. |
 | `reattach-src <file> [--save \| --from <old-file>]` | `--save` before editing stores a snapshot in `.cv-runs/snapshots/`. After editing, restores dropped source comments by matching each bullet (same entry) or summary sentence to the previous version: `--from`, else the snapshot (kept until the next `--save`), else git HEAD; fails with a clear message when none exists. Lists what it couldn't match (R7), skipping generated section intro lines. |
 | `doctor [--no-export]` | checks the environment and says how to fix each problem: Node version (`engines` in `package.json`), installed dependencies, the preview renderer, AI agent tools on the PATH, `framework.local.yaml`, repo paths (a repo with no local path is *info*: after a job ends that's normal; a path that doesn't exist is a warning), the backup folder, and the PDF exporters (unavailable fallbacks are only *info*). Unless `--no-export`, it renders and exports a tiny test document with the active exporter: this triggers the one-time macOS permission prompt while you're at the keyboard (R12) and checks that the template's fonts are embedded (R3). |
 | `backup [--out <dir>] [--no-password] [--full]` | packs everything git doesn't carry (`cv/tailored/` with job ads, `cv/sent/`, `facts/applications.yaml`, `framework.local.yaml`) into one dated zip in `backup_dir` from `framework.local.yaml`, encrypted (AES-256-GCM, `.zip.enc`) when the environment variable named by `backup_password_env` is set; the password is never stored. `--full` writes the whole project as one plain zip that opens without the framework: a git bundle with full history, that private backup, a manifest and restore steps; it refuses to run with uncommitted changes (`specs/portability-spec.md` 3). |
@@ -638,7 +642,7 @@ To make your CV look like an existing Word or PDF CV, run `/import-template <fil
 
 Your current template is the first one imported (`templates/classic/`). Rebuilding today's CV through it must match the current `.docx`, which tests the importer.
 
-Dependencies: TypeScript (`typescript`, `@types/node`) run with `tsx`, `ajv` for schema validation, `jszip` for reading and writing `.docx`, `yaml` for front matter and facts, `pdfjs-dist` for PDF text extraction, `docx` for rebuilding templates from PDF samples (installed together with PDF import, which is deferred), `@napi-rs/canvas` for rendering PDF pages to images (prebuilt, no system libraries). Backups use `jszip` plus Node's built-in `crypto` (AES-256-GCM), so password-protected backups work the same on macOS, Windows and Linux with no extra packages. LibreOffice and `pdftoppm` are optional (no longer needed for previews). No Python, since your Homebrew Python's XML parser is currently broken.
+Dependencies: TypeScript (`typescript`, `@types/node`) run with `tsx`, (optional, outside npm) `pandoc` for turning `.pages` imports into Markdown with images (without it, `import-doc` keeps the Word text only), `ajv` for schema validation, `jszip` for reading and writing `.docx`, `yaml` for front matter and facts, `pdfjs-dist` for PDF text extraction, `docx` for rebuilding templates from PDF samples (installed together with PDF import, which is deferred), `@napi-rs/canvas` for rendering PDF pages to images (prebuilt, no system libraries). Backups use `jszip` plus Node's built-in `crypto` (AES-256-GCM), so password-protected backups work the same on macOS, Windows and Linux with no extra packages. LibreOffice and `pdftoppm` are optional (no longer needed for previews). No Python, since your Homebrew Python's XML parser is currently broken.
 
 ## 7. Workflows (commands)
 
@@ -664,7 +668,7 @@ Dependencies: TypeScript (`typescript`, `@types/node`) run with `tsx`, `ajv` for
 | `/status [--ack <company>]` | `npm run status`, then suggests the commands that bring stale CVs up to date |
 | `/log-application` | Records a sent CV in `applications.yaml` (4.5) |
 
-Each command file in `.claude/commands/` points to an agent definition (or one of its sections) or runs scripts (`/build`, `/status`, `/doctor`, `/log-application`), and never holds rules of its own. The same instructions are listed in `AGENTS.md` for other tools.
+Each command file in `.claude/commands/` points to an agent definition (or one of its sections) or runs scripts (`/build`, `/status`, `/doctor`, `/log-application`, `/harvest-prompt`), and never holds rules of its own. The same instructions are listed in `AGENTS.md` for other tools.
 
 ## 8. Build steps
 
@@ -707,7 +711,7 @@ Each step ends with something you can check.
 
 The framework is designed so new outputs, reviewers and agents are **added as files, not by changing existing code**.
 
-- **Sources and outputs are separate.** Summaries and facts are the sources. The CV, tailored CVs, and later the portfolio, a LinkedIn profile or cover letters are *outputs*. Each output is defined by one spec plus an optional renderer, so adding the portfolio later means adding `specs/outputs/portfolio.md` and an agent (the CV itself is specified by `cv-spec.md` and `tailoring-spec.md`), without touching summaries.
+- **Sources and outputs are separate.** Summaries and facts are the sources. The CV, tailored CVs, and later the portfolio, a LinkedIn profile or cover letters are *outputs*. Each output is defined by one spec plus an optional renderer, so adding the portfolio means adding `specs/outputs/portfolio.md`, an agent and a renderer (the CV itself is specified by `cv-spec.md` and `tailoring-spec.md`); summaries only gain optional portfolio fields and a structured section 8 (9e, P1).
 - **Folders act as registries:**
   - Any file in `specs/rubrics/` is a reviewer. Dropping in `specs/rubrics/frontend-architect-role.md` adds a reviewer with no other changes.
   - Any file in `profiles/` is a CV variant. `/variants` builds them all.
@@ -798,39 +802,6 @@ On the new laptop:
 
 `node_modules/`, built files, `.cv-runs/` and `backups/` never move: they are recreated, and `node_modules/` holds native binaries for one OS and CPU.
 
-## 9c. Harvesting on another machine
-
-Some repos can't leave the machine they live on (a work laptop), and this framework can't go there either. The summary is then written on that machine and only the summary comes back (rules in `specs/work-summary-spec.md` 9):
-
-1. Here: `/harvest-prompt` (or `npm run harvest-prompt -- --merge <id>` to extend an existing summary) generates a self-contained prompt. It is generated from the current spec and tag list, so it never drifts.
-2. There: in the repo, any AI agent tool follows the prompt: it reads the history with plain `git` commands, asks you what git can't know, and writes one `<id>.md` with `harvest_mode: portable`.
-3. You review the file and move it by a channel your employer allows (the prompt reminds you: own words, no code, secrets or internal URLs; section 9 can stay `TODO` if internal names may not leave).
-4. Here: `/import-summary <file>` checks it with the same rules as `validate` plus the secret scan, then adds or merges it, and the usual `/compose`, `/variants`, `build:all` and `/review` follow.
-
-## 9d. Old CVs and portfolios as sources
-
-Older CVs and portfolios often hold more detail about past jobs than the summaries. They are imported into the repo and used to fill gaps (rules in `specs/sources-spec.md`):
-
-1. `/import-docs <file…>`: `npm run import-doc` copies each file to `sources/files/`, extracts its text to `sources/text/<id>.md` and lists it in `sources/index.yaml` with the date it was written.
-2. **Precedence:** your answers and confirmed facts, then git, then the current summaries and CV (the originals), then imported documents, newest first. A document only fills gaps; it never overrides anything above it.
-3. The advisor proposes, per summary: filled `TODO` sections, new contributions (`Source: doc:<id>`), technologies, portfolio material, numbers (section 7 `doc:<id>`; in the CV only once you confirm them) and conflicts (listed; the current value stays unless you say otherwise, and then it's recorded as your answer). Jobs no summary covers become `source: cv` summaries hidden from the CV until you decide.
-4. `validate` checks the index, that each original is unchanged (sha256), and that every `doc:<id>` names an imported document. Then `/compose`, `/variants`, `build:all`.
-
-## 9e. Portfolio (specified, built in phases)
-
-The portfolio is a second output of the same sources: a multi-page document (cover, a page or more per project, skills, contact) behind a **public link**. Rules are in `specs/outputs/portfolio.md`; it reuses the CV pipeline (Markdown → Word template → PDF exporters → checks) and adds images, several page sizes, `.pages` output, public-only confidentiality and a dictionary spell check.
-
-| Phase | What | Needs |
-|---|---|---|
-| P1 | Summary fields `show_in_portfolio`, `portfolio_order`, `portfolio_label`, `portfolio_max_items` and the structured section 8 (images, links, demos, each `public: yes, confirmed by user <date>`) in the schema and `validate`; `/portfolio-material` with the advisor to fill section 8 and opt projects in | nothing |
-| P2 | Import your current portfolio: `/import-docs` for its content (sources, 9d; **content imported 2026-10-22** as `doc:portfolio-2025-04`) and its layout as the template `templates/portfolio-classic/`. The Pages file is a free-form layout (text boxes), so the template is rebuilt as a flowing Word document with the recorded look (`specs/outputs/portfolio.md` 5a) instead of `/import-template`; new paragraph types: cover title, intro, project title, project meta, section label, caption, image | provided 2026-10-22 |
-| P3 | `agents/portfolio.md` and `/portfolio`: writes `portfolio/portfolio.md` with a source on every sentence; `refresh` writes its generated blocks; `status` tracks it | P1, P2 |
-| P4 | Renderer: images (scaled to the content width, captions), page sizes per template (`sizes: { a4, letter }`), `build:portfolio [--size a4\|letter\|all]`: `.docx`, `.pages` (through Pages), one PDF per size, `pdf-check` and previews per size | P2, P3 |
-| P5 | `npm run spellcheck`: a dictionary spell check (US English) with the project word list `facts/dictionary.txt`, for the portfolio **and** the CV (today spelling is checked only by the proofreading reviewer and `checks.spelling_variants`) | nothing |
-| P6 | Portfolio checks and reviews: image checks (exists, public-confirmed, at least 1200 px wide, none unused), `lint` as for the CV except that section 9 terms are allowed only with `allow_in: [portfolio]` (job-id and `summary` exceptions don't apply); the phone number left out unless decided otherwise, `/review --portfolio` (proofreading, fact-check, confidentiality with public rules, layout); acceptance scenario B17 | P4 |
-
-P1 and P5 can start now; P2's content import is done, its template follows with P4 (images and sizes in the renderer).
-
 ## 9b. Known risks and mitigations
 
 Problems expected when the flows actually run, found by simulating every flow against what happened in the 2026-10-15 chat. Each mitigation is part of the build step shown.
@@ -864,6 +835,39 @@ Problems expected when the flows actually run, found by simulating every flow ag
 
 **Design consequence:** scripts handle selection, history condensing, source comments and comparisons. AI agents handle only writing and judgment. That keeps runs cheaper, repeatable and low-noise.
 
+## 9c. Harvesting on another machine
+
+Some repos can't leave the machine they live on (a work laptop), and this framework can't go there either. The summary is then written on that machine and only the summary comes back (rules in `specs/work-summary-spec.md` 9):
+
+1. Here: `/harvest-prompt` (or `npm run harvest-prompt -- --merge <id>` to extend an existing summary) generates a self-contained prompt. It is generated from the current spec and tag list, so it never drifts.
+2. There: in the repo, any AI agent tool follows the prompt: it reads the history with plain `git` commands, asks you what git can't know, and writes one `<id>.md` with `harvest_mode: portable`.
+3. You review the file and move it by a channel your employer allows (the prompt reminds you: own words, no code, secrets or internal URLs; section 9 can stay `TODO` if internal names may not leave).
+4. Here: `/import-summary <file>` checks it with the same rules as `validate` plus the secret scan, then adds or merges it, and the usual `/compose`, `/variants`, `build:all` and `/review` follow.
+
+## 9d. Old CVs and portfolios as sources
+
+Older CVs and portfolios often hold more detail about past jobs than the summaries. They are imported into the repo and used to fill gaps (rules in `specs/sources-spec.md`):
+
+1. `/import-docs <file…>`: `npm run import-doc` copies each file to `sources/files/`, extracts its text to `sources/text/<id>.md` and lists it in `sources/index.yaml` with the date it was written.
+2. **Precedence:** your answers and confirmed facts, then git, then the current summaries and CV (the originals), then imported documents, newest first. A document only fills gaps; it never overrides anything above it.
+3. The advisor proposes, per summary: filled `TODO` sections, new contributions (`Source: doc:<id>`), technologies, portfolio material, numbers (section 7 `doc:<id>`; in the CV only once you confirm them) and conflicts (listed; the current value stays unless you say otherwise, and then it's recorded as your answer). Jobs no summary covers become `source: cv` summaries hidden from the CV until you decide.
+4. `validate` checks the index, that each original is unchanged (sha256), and that every `doc:<id>` names an imported document. Then `/compose`, `/variants`, `build:all`.
+
+## 9e. Portfolio (specified, built in phases)
+
+The portfolio is a second output of the same sources: a multi-page document (cover, a page or more per project, skills, contact) behind a **public link**. Rules are in `specs/outputs/portfolio.md`; it reuses the CV pipeline (Markdown → Word template → PDF exporters → checks) and adds images, several page sizes, `.pages` output, public-only confidentiality and a dictionary spell check.
+
+| Phase | What | Needs |
+|---|---|---|
+| P1 | Summary fields `show_in_portfolio`, `portfolio_order`, `portfolio_label`, `portfolio_max_items` and the structured section 8 (images, links, demos, each `public: yes, confirmed by user <date>`) in the schema and `validate`; `/portfolio-material` with the advisor to fill section 8 and opt projects in | nothing |
+| P2 | Import your current portfolio: `/import-docs` for its content (sources, 9d; **content imported 2026-10-22** as `doc:portfolio-2025-04`) and its layout as the template `templates/portfolio-classic/`. The Pages file is a free-form layout (text boxes), so the template is rebuilt as a flowing Word document with the recorded look (`specs/outputs/portfolio.md` 5a) instead of `/import-template`; new paragraph types: cover title, intro, project title, project meta, section label, body, list item, caption, image | provided 2026-10-22 |
+| P3 | `agents/portfolio.md` and `/portfolio`: writes `portfolio/portfolio.md` with a source on every sentence; `refresh` writes its generated blocks; `status` tracks it | P1, P2 |
+| P4 | Renderer: images (scaled to the content width, captions), page sizes per template (`sizes: { a4, letter }`), `build:portfolio [--size a4\|letter\|all]`: `.docx`, `.pages` (through Pages), one PDF per size, `pdf-check` and previews per size | P2, P3 |
+| P5 | `npm run spellcheck`: a dictionary spell check (US English) with the project word list `facts/dictionary.txt`, for the portfolio **and** the CV (today spelling is checked only by the proofreading reviewer and `checks.spelling_variants`) | nothing |
+| P6 | Portfolio checks and reviews: image checks (exists, public-confirmed, at least 1200 px wide, none unused), `lint` as for the CV except that section 9 terms are allowed only with `allow_in: [portfolio]` (job-id and `summary` exceptions don't apply); the phone number left out unless decided otherwise, `/review --portfolio` (proofreading, fact-check, confidentiality with public rules, layout); acceptance scenario B17 | P4 |
+
+P1 and P5 can start now; P2's content import is done, its template follows with P4 (images and sizes in the renderer).
+
 ## 10. Decisions
 
 | Topic | Decision |
@@ -885,7 +889,7 @@ Problems expected when the flows actually run, found by simulating every flow ag
 ## 11. Out of scope for now
 
 - **PDF input for `/import-template`:** Word input works; PDF input (planned in section 6.4) is deferred until you need a template from a PDF CV.
-- **Portfolio output:** specified (`specs/outputs/portfolio.md`, section 9e); the template, agent and renderer are built in phases P2–P6 once you share your portfolio as Pages or Word and PDF.
+- **Portfolio output:** specified (`specs/outputs/portfolio.md`, section 9e); the April 2025 portfolio's content is imported (P2, 2026-10-22). Next: P1 and P5 (can start now), then the template, agent and renderer in P3–P6.
 - Cover-letter agent (the format leaves room to add it later).
 - Pulling history from remote GitHub or Azure DevOps (local clones only, while you have access).
 - A fully code-driven pipeline (Agent SDK CLI). It can wrap the same `agents/*.md` later.
@@ -975,4 +979,4 @@ Every step done by hand in the chat, and the capability that repeats it. Rows 37
 | 76 | Asked to import old CVs and portfolios and take information from them | Sources (section 9d, `specs/sources-spec.md`): originals and extracted text in `sources/`, `import-doc`, `/import-docs` in the advisor; precedence user > git > current summaries and CV > documents (newest first); documents fill gaps only, numbers need confirmation, conflicts keep the current value; contribution `Source: doc:<id>` lines; `validate` checks the index, file hashes and `doc:` references; composer and fact-check rules; acceptance B16 |
 | 77 | Asked to handle the portfolio like the CV: generate it, convert it to Markdown, Pages and PDF in several sizes, keep it updated, check spelling, use templates | `specs/outputs/portfolio.md` and section 9e: a document-style, public portfolio from the same summaries; opt-in projects and public-confirmed material (structured section 8); portfolio templates with page sizes; `.docx`, `.pages` and a PDF per size; stricter public confidentiality; a dictionary spell check for the portfolio and the CV; staleness through `status`; built in phases P1–P6, P2 after you provide your current portfolio files |
 | 78 | Provided the current portfolio (Pages and PDF) and asked to convert it to Markdown and handle it by the plan | `import-doc` reads `.pages` (Pages exports Word, pandoc makes Markdown with images in `sources/media/<id>/`); imported as `doc:portfolio-2025-04` (2,748 words, 15 images); proposals for the summaries in `.cv-runs/import-docs-2026-10-22/`; layout recorded in `specs/outputs/portfolio.md` 5a (free-form Pages layout, so the template is rebuilt as a flowing document with the same fonts and colors); the public portfolio names clients the CV hides, so it is flagged for confidentiality |
-| 79 | Asked whether plan, specs and logic match the day's changes | Variant choices made by hand (Wink everywhere, RegiStart MVP, Fused payments, the clinical-trials upgrade and Stack line, dropped bullets) recorded as profile `overrides`, so `/variants` keeps them; new override field `also` (one bullet citing two contributions; `select` doesn't pick those again; `validate` checks them); composer rule for Stack lines on older jobs (decision `orion-stack-line`); `import-doc` docs list `.pages`; portfolio image paths from `sources/media/`; open items and the `keep-previous-cv-metrics` exception updated |
+| 79 | Asked whether plan, specs and logic match the day's changes | Variant choices made by hand (Wink everywhere, RegiStart MVP, Fused payments, the clinical-trials upgrade and Stack line, dropped bullets) recorded as profile `overrides`, so `/variants` keeps them (its next run also re-selects the other bullets with the contributions the portfolio import added); new override field `also` (one bullet citing two contributions; `select` doesn't pick those again; `validate` checks them); composer rule for Stack lines on older jobs (decision `orion-stack-line`); `import-doc` docs list `.pages`; portfolio image paths from `sources/media/`; open items and the `keep-previous-cv-metrics` exception updated |

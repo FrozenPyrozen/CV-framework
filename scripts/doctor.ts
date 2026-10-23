@@ -3,6 +3,7 @@
 // Node version, dependencies, AI agent tools, framework.local.yaml and repo paths, PDF exporters, previews,
 // and (unless --no-export) a tiny real export with the active exporter, which triggers the one-time macOS
 // permission prompt while you're at the keyboard and checks that the template's fonts get embedded.
+import { hasPandoc } from "./lib/sources.ts";
 import { spawnSync } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -66,6 +67,8 @@ export async function runDoctor(opts: { export?: boolean } = {}): Promise<Check[
   const active = avail.find((a) => a.ok);
   // Unavailable exporters are only a warning when nothing earlier in the order works.
   for (const a of avail) add(a.ok ? "ok" : active && avail.indexOf(active) < avail.indexOf(a) ? "info" : "warn", `PDF exporter ${a.id}: ${a.ok ? (a === active ? "available (used)" : "available (fallback)") : `${a.reason} (fallback only)`}`);
+  // pandoc is optional: import-doc uses it to turn .pages files into Markdown with images (plan 9d).
+  add(hasPandoc() ? "ok" : "info", `pandoc: ${hasPandoc() ? "available (.pages imports keep headings and images)" : "not installed (.pages imports keep the Word text only, without images)"}`, hasPandoc() ? undefined : "brew install pandoc");
   if (!active) add("fail", "no PDF exporter available: builds will stop after the .docx", "install Pages or Microsoft Word (macOS) or LibreOffice (any OS)");
 
   // A tiny real export: permission prompt (macOS) + font embedding (R3, R12)

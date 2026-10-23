@@ -39,7 +39,7 @@ After writing, run `npm run validate`, then hand the change list to `agents/comp
 
 ## `/import-docs <file…>`
 Old CVs, portfolios and similar documents fill gaps in the summaries, with the **lowest precedence** (`specs/sources-spec.md` 3): the user, then git, then the current summaries and CV, then documents, newest first.
-1. **Import.** For each file, ask when it was written (`--date`), its kind and a short id (e.g. `cv-2021-06`, `portfolio-2022`), then run `npm run import-doc -- <file> --date <…> --kind <…> --id <…> --title "<…>"`. An unreadable file (`.pages`, `.pptx`, a scan): ask the user to export a text PDF.
+1. **Import.** For each file, ask when it was written (`--date`), its kind and a short id (e.g. `cv-2021-06`, `portfolio-2022`), then run `npm run import-doc -- <file> --date <…> --kind <…> --id <…> --title "<…>"`. `.pages` works on macOS with Pages (pandoc keeps its images); an unreadable file (`.pptx`, `.key`, a scan, or `.pages` without Pages): ask the user to export a text PDF.
 2. **Map.** Read `sources/text/<id>.md` of every document not yet `reviewed`, newest first. Match each passage to a summary or `cv_entry` by company, product, dates and technologies. Collect jobs no summary covers.
 3. **Propose,** per summary, into `.cv-runs/import-docs-<date>/proposals.md` (shown to the user), grouped as:
    - **gaps** it fills: `TODO` sections, work no contribution covers (a new contribution, next free number, `Source: doc:<id>`), technologies, portfolio material;
