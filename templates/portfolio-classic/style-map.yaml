@@ -12,41 +12,43 @@ page:
     left: 1134
     right: 1134
 fonts:
-  - Rockwell
   - DIN Condensed
+  - Rockwell
   - Charter
   - Avenir Next Medium
 links:
   color: "077482"
   underline: true
 paragraphs:
-  cover_title:
+  cover_top:
     sample: 0
-  cover_name:
+  cover_title:
     sample: 1
-  cover_contact:
+  cover_name:
     sample: 2
-  headline:
+  cover_contact:
     sample: 3
-  intro:
+  headline:
     sample: 4
-  project_title:
+  intro:
     sample: 5
-  project_meta:
+  project_title:
     sample: 6
-  section_label:
+  project_meta:
     sample: 7
-  body:
+  section_label:
     sample: 8
-  list_item:
+  body:
     sample: 9
-  image:
+  list_item:
     sample: 10
-  caption:
+  image:
     sample: 11
-  section_heading:
+  caption:
     sample: 12
-  skills_line:
+  section_heading:
     sample: 13
-  contact_line:
+  skills_line:
     sample: 14
+  contact_line:
+    sample: 15

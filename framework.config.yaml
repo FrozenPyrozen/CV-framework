@@ -188,8 +188,8 @@ tags:
   - agile
   - design-tools
 
-# The public portfolio's cover (specs/outputs/portfolio.md 4): the name and the links line as on the published
-# portfolio (GitHub and LinkedIn; the CV leaves them out by decision no-profile-links, the portfolio keeps them).
+# The public portfolio's cover (specs/outputs/portfolio.md 4): the links line as on the published portfolio (GitHub
+# and LinkedIn; the CV leaves them out by decision no-profile-links, the portfolio keeps them). The name is the
+# profile's, as on the CV; portfolio.name overrides it.
 portfolio:
-  name: Kyrylo Kohan
   cover_links: [GitHub, LinkedIn]   # labels of profile.yaml contacts.links

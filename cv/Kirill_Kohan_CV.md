@@ -54,9 +54,9 @@ Senior software engineer and tech lead with 7+ years of experience building Reac
 
 * Defined the unit-testing strategy that reached 95% coverage and introduced an **Agile** delivery process, which reduced production bugs. <!-- src: general-motors-navigation#4.5 -->
 
-* Implemented in-car navigation features with the **HERE HNav / HNod SDK**, including route-deviation handling and a redesigned search UI. <!-- src: general-motors-navigation#4.6 -->
+* Implemented in-car navigation features with the **HERE HNav / HNod SDK**, including route-deviation handling on the **truck navigation app for HERE Technologies**, and a redesigned search UI. <!-- src: general-motors-navigation#4.6 -->
 
-* Built a proof of concept for in-car navigation combining search, routing, guidance and a **voice AI assistant** that builds routes and finds places from speech. <!-- src: general-motors-navigation#4.7 -->
+* Built the **car navigation PoC** (proof of concept), combining search, routing, guidance and a **voice AI assistant** that builds routes and finds places from speech. <!-- src: general-motors-navigation#4.7 -->
 
 * Implemented a passenger second-screen feature for a luxury car brand. <!-- src: general-motors-navigation#4.8 -->
 

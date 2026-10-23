@@ -40,7 +40,7 @@ Senior React Native engineer and tech lead with 7+ years of experience building 
 
 * Owned the **system design** of the app's modular architecture so that new feature requests from product teams could be added without reworking existing modules. <!-- src: general-motors-navigation#4.4 -->
 
-* Implemented in-car navigation features with the **HERE HNav / HNod SDK**, including route-deviation handling and a redesigned search UI. <!-- src: general-motors-navigation#4.6 -->
+* Implemented in-car navigation features with the **HERE HNav / HNod SDK**, including route-deviation handling on the **truck navigation app for HERE Technologies**, and a redesigned search UI. <!-- src: general-motors-navigation#4.6 -->
 
 * Implemented a passenger second-screen feature for a luxury car brand. <!-- src: general-motors-navigation#4.8 -->
 

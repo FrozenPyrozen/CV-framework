@@ -23,6 +23,7 @@ const PDF_FONTS: Record<string, string> = {};
 // One sample paragraph per portfolio paragraph type, in this order (style-map.yaml sample indexes).
 interface Sample { type: string; font: string; size: number; bold?: boolean; italic?: boolean; color?: string; fill?: string; align?: "center" | "left"; caps?: boolean; rule?: number; before?: number; after?: number; pageBreak?: boolean; keepNext?: boolean; bullet?: boolean }
 export const SAMPLES: Sample[] = [
+  { type: "cover_top", font: F.banner, size: 20, fill: CORAL, before: 0, after: 0 }, // room above the links line (space before is dropped at the page top)
   { type: "cover_title", font: F.title, size: 84, bold: true, color: "FFFFFF", fill: CORAL, align: "center", rule: 2, before: 60, after: 0 },
   { type: "cover_name", font: F.title, size: 32, bold: true, color: "FFFFFF", fill: CORAL, align: "center", before: 80, after: 200 },
   { type: "cover_contact", font: F.banner, size: 24, color: "FFFFFF", fill: CORAL, align: "left", caps: true, rule: 4, before: 160, after: 100 },

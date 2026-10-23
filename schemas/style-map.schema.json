@@ -106,6 +106,7 @@
             ],
             "propertyNames": {
               "enum": [
+                "cover_top",
                 "cover_title",
                 "cover_name",
                 "cover_contact",

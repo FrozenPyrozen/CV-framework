@@ -3,7 +3,7 @@
 
 # **My Portfolio**
 
-## **Kyrylo Kohan**
+## **Kirill Kohan**
 <!-- /generated:portfolio-cover -->
 
 <!-- project: syspro-saas-erp -->
@@ -92,7 +92,7 @@ An automotive app built to show the possibilities of the latest HERE technology 
 
 **Responsibilities**
 
-I implemented the L3 interaction feature and the Hugo AI assistant feature, which builds routes and shows nearby places. <!-- src: doc:portfolio-2025-09 --> I also implemented the Porsche theme and layout, and added debug car-data settings for electric cars. <!-- src: doc:portfolio-2025-09 --> I wrote a script that replaced inefficient manual steps and made the build 3x faster. <!-- src: doc:portfolio-2025-09 -->
+I implemented the L3 interaction feature and the Hugo AI assistant feature, which builds routes and shows nearby places. <!-- src: doc:portfolio-2025-09 --> I also implemented the Porsche theme and layout, and added debug car-data settings for electric cars. <!-- src: doc:portfolio-2025-09 --> I wrote a script that replaced inefficient manual steps and made the build 3x faster. <!-- src: doc:portfolio-2025-09, gm-poc-build-3x -->
 
 **Technologies and frameworks**
 
@@ -192,7 +192,7 @@ React Native, TypeScript, React Navigation, React Native Navigation, React Hooks
 ## **IoT app with dosimeter under NDA (React Native)**
 <!-- /generated:project-thermo-fisher-dosimeter -->
 
-The app helps doctors around the world who work with radiation avoid overexposure. <!-- src: doc:portfolio-2025-09 --> It has three roles (user, admin and superuser), OAuth 2.0 login, 10 screens, and REST API, MQTT and Bluetooth communication. <!-- src: doc:portfolio-2025-09 --> The app reads data from radiation dosimeters over Bluetooth, sends it to an IoT server over MQTT, and can sync many dosimeters at the same time. <!-- src: doc:portfolio-2025-09 --> A main menu with swipe navigation and bottom pagination leads to the main screen, which shows sync progress, how many dosimeters synced with errors, and the sync time. <!-- src: doc:portfolio-2025-09 --> Another screen shows the details of the current sync, or of the last one when no sync is running, and the last screen holds the history of all syncs, filterable in a full-screen modal by date range, wearer, errors and ID. <!-- src: doc:portfolio-2025-09 --> The history is stored in a local Realm database, and all secure values in the keychain. <!-- src: doc:portfolio-2025-09 --> The app can also update the dosimeter firmware, and menus on the left and right lead to the Profile, Settings and Logs pages (Logs for superusers only). <!-- src: doc:portfolio-2025-09 -->
+The app helps doctors around the world who work with radiation avoid overexposure. <!-- src: doc:portfolio-2025-09 --> It has three roles (user, admin and superuser), OAuth 2.0 login, 10 screens, and REST API, MQTT and Bluetooth communication. <!-- src: doc:portfolio-2025-09, dosimeter-10-screens --> The app reads data from radiation dosimeters over Bluetooth, sends it to an IoT server over MQTT, and can sync many dosimeters at the same time. <!-- src: doc:portfolio-2025-09 --> A main menu with swipe navigation and bottom pagination leads to the main screen, which shows sync progress, how many dosimeters synced with errors, and the sync time. <!-- src: doc:portfolio-2025-09 --> Another screen shows the details of the current sync, or of the last one when no sync is running, and the last screen holds the history of all syncs, filterable in a full-screen modal by date range, wearer, errors and ID. <!-- src: doc:portfolio-2025-09 --> The history is stored in a local Realm database, and all secure values in the keychain. <!-- src: doc:portfolio-2025-09 --> The app can also update the dosimeter firmware, and menus on the left and right lead to the Profile, Settings and Logs pages (Logs for superusers only). <!-- src: doc:portfolio-2025-09 -->
 
 <!-- generated:media-thermo-fisher-dosimeter -->
 
@@ -212,7 +212,7 @@ React Native, TypeScript, React Navigation, React Hooks, Git, Fastlane, react-na
 ## **Aspiration signup (React Native Web)**
 <!-- /generated:project-itjet-fintech/aspiration-signup -->
 
-Aspiration is a large company that develops a banking app ecosystem for customers in the US. <!-- src: doc:portfolio-2025-09 --> It is an eco-friendly bank that helps the planet by planting trees and investing in renewable energy sources. <!-- src: doc:portfolio-2025-09 --> The company moved its signup flow from Angular to React. <!-- src: doc:portfolio-2025-09 -->
+Aspiration is a large company that develops a banking app ecosystem for customers in the US. <!-- src: doc:portfolio-2025-09 --> It is an eco-friendly bank that helps the planet by planting trees and investing in renewable energy sources and fossil fuel. <!-- src: doc:portfolio-2025-09 --> The company moved its signup flow from Angular to React. <!-- src: doc:portfolio-2025-09 -->
 
 <!-- generated:media-itjet-fintech/aspiration-signup -->
 ![Aspiration signup, screen 1](../sources/media/portfolio-2025-09/p10-1.png)

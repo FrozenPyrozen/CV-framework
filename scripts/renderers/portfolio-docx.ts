@@ -166,6 +166,7 @@ export async function renderPortfolioDocx(markdown: string, mdFile: string, outP
     if (g) {
       if (g[1] && g[2].startsWith("media-")) flushRow();
       block = g[1] ? "" : g[2];
+      if (!g[1] && block === "portfolio-cover" && sample("cover_top")) push(para("cover_top", "", "")); // banner row above the links
       // after the banner an unshaded paragraph, so the next page break doesn't carry the banner fill to the page end
       if (g[1] && g[2] === "portfolio-cover") { push(headline ?? para("body", "", "")); headline = undefined; }
       continue;

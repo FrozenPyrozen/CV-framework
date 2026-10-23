@@ -93,3 +93,16 @@ facts:
     show_dates_in_cv: false
     counts_as_experience: false
     source: user + previous CV
+
+  # --- Numbers from the published portfolio (doc:portfolio-2025-09), confirmed 2026-10-23 ---
+  - id: gm-poc-build-3x
+    fact: On the car navigation PoC, a script that replaced manual build steps made the build 3x faster.
+    source: user, 2026-10-23 (from doc:portfolio-2025-09)
+    entry: general-motors-navigation
+    tags: [build-tooling, delivery-speed]
+
+  - id: dosimeter-10-screens
+    fact: The dosimeter app has 10 screens.
+    source: user, 2026-10-23 (from doc:portfolio-2025-09)
+    entry: thermo-fisher-dosimeter
+    tags: [react-native, scale]

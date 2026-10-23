@@ -82,7 +82,7 @@ test("portfolio refresh: cover without phone or self-link, only public images, p
   assert.match(md, /!\[Fused web app, the coach's workout schedule\]\(\.\.\/sources\/media\/portfolio-2025-04\/image32\.png\)/);
   assert.doesNotMatch(md, /^### /m, "title-only pages, as on the published portfolio");
   assert.match(md, /github\.com\/FrozenPyrozen/);
-  assert.match(md, /## \*\*Kyrylo Kohan\*\*/);
+  assert.match(md, /## \*\*Kirill Kohan\*\*/);
   assert.doesNotMatch(md, /## \*\*Skills\*\*/);
   assert.doesNotMatch(md, /^\*Fused web app/m, "captions aren't printed");
   assert.doesNotMatch(md, /August 2019|November 2020/, "no dates in the portfolio");
@@ -157,7 +157,7 @@ test("the CV renderer refuses a portfolio template; a portfolio style map needs 
   const r = run("render.ts", dir, ["--template", "portfolio-classic", "--out", join(dir, "x.docx")]);
   assert.notEqual(r.code, 0);
   assert.match(r.out, /is a portfolio template/);
-  edit(dir, "templates/portfolio-classic/style-map.yaml", /  image:\n    sample: 10\n/, "");
+  edit(dir, "templates/portfolio-classic/style-map.yaml", /  image:\n    sample: \d+\n/, "");
   const v = run("validate.ts", dir);
   assert.equal(v.code, 1);
   assert.match(v.out, /must have required property 'image'/);

@@ -117,6 +117,12 @@ decisions:
     why: User confirmed both are fine to mention (review 2026-10-23-1349, confidentiality-1).
     matches: [voice AI proof of concept, passenger second screen, luxury car brand, unreleased GM work]
 
+  - id: gm-project-names
+    decision: The CV and the portfolio name the projects of the General Motors period. The truck navigation app for HERE Technologies and the car navigation PoC stay in the General Motors entry, named as projects (CV bullets 4.6 and 4.7), and are separate pages in the portfolio.
+    date: "2026-10-23"
+    why: User said to show the project names both in the CV and the portfolio (closes the open item "HERE truck navigation vs General Motors").
+    matches: [HERE Technologies, truck navigation app, car navigation PoC, HERE vs General Motors]
+
   - id: direct-employment
     decision: SYSPRO, General Motors and Thermo Fisher Scientific employed the user directly (no services company in between).
     date: "2026-10-23"

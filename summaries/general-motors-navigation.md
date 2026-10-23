@@ -80,15 +80,15 @@ Defined the unit-testing strategy for the app and introduced an Agile delivery p
 Result: unit-test coverage reached 95%, and production bugs fell by 50%.
 Tags: testing, agile, leadership
 
-### 4.6 In-car navigation features
+### 4.6 In-car navigation features (truck navigation app for HERE Technologies)
 
-Implemented in-car navigation features with the HERE HNav / HNod SDK, including route-deviation handling and a redesigned search UI.
+Implemented in-car navigation features with the HERE HNav / HNod SDK, including route-deviation handling on the truck navigation app for HERE Technologies, and a redesigned search UI (project name confirmed for the CV and portfolio by user 2026-10-23, decision gm-project-names).
 
 Tags: here-sdk, automotive, react-native
 
-### 4.7 Voice AI navigation proof of concept
+### 4.7 Car navigation PoC
 
-Built a proof of concept for in-car navigation that combined search, routing, guidance and a voice AI assistant able to build routes and find places from spoken requests.
+Built the car navigation PoC (proof of concept), an in-car navigation app that combined search, routing, guidance and a voice AI assistant able to build routes and find places from spoken requests.
 
 Tags: here-sdk, automotive, voice-ai
 
