@@ -64,3 +64,8 @@
   found: "2026-10-15"
   set:
     letter_spacing: 1   # twentieths of a point, on every run
+- id: keep-education-together
+  why: "EDUCATION split across pages: the PhD and Master's degrees ended page 2 and the Bachelor's degree started page 3."
+  found: "2026-10-23"
+  set:
+    keep_sections_together: [EDUCATION]

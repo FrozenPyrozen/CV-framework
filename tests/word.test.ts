@@ -78,9 +78,12 @@ test("render applies the classic fixes: right-aligned dates, headings and bullet
   assert.match(pPr(details), /<w:keepNext w:val="1"\/>/);
   const isBullet = (p: string) => p.includes("<w:numPr>");
   const keeps = (p: string) => /<w:keepNext w:val="1"\/>/.test(pPr(p));
-  // In every run of bullets: the first and the second-to-last bullet keep with the next one; the last doesn't.
+  // In every run of bullets: the first and the second-to-last bullet keep with the next one; the last doesn't
+  // (except in EDUCATION, which the keep-education-together fix keeps on one page as a whole).
+  const eduStart = d.paragraphs.findIndex((p) => paragraphText(p) === "EDUCATION");
+  const eduEnd = d.paragraphs.findIndex((p, i) => i > eduStart && paragraphText(p) === "SKILLS");
   for (let i = 0; i < d.paragraphs.length; i++) {
-    if (!isBullet(d.paragraphs[i])) continue;
+    if (!isBullet(d.paragraphs[i]) || (i > eduStart && i < eduEnd)) continue;
     const first = !isBullet(d.paragraphs[i - 1] ?? ""), last = !isBullet(d.paragraphs[i + 1] ?? "");
     const secondLast = !last && !isBullet(d.paragraphs[i + 2] ?? "");
     if (last) assert.ok(!keeps(d.paragraphs[i]), `last bullet at ${i} must not keep with next`);
@@ -155,4 +158,16 @@ test("render: the page_margins fix sets the page's top margin", async () => {
   assert.equal(run("render.ts", dir).code, 0);
   const xml = await (await JSZip.loadAsync(readFileSync(join(dir, "cv/Kirill_Kohan_CV.docx")))).file("word/document.xml")!.async("string");
   assert.match(xml, /<w:pgMar [^>]*w:top="360"/); // classic's smaller-top-margin fix (was 580)
+});
+
+test("keep_sections_together keeps every EDUCATION paragraph with the next one", async () => {
+  const dir = tempRepo();
+  const out = join(dir, "edu.docx");
+  const r = run("render.ts", dir, ["--out", out]);
+  assert.equal(r.code, 0, r.out);
+  const d = await openDocx(out);
+  const start = d.paragraphs.findIndex((p) => paragraphText(p) === "EDUCATION");
+  const end = d.paragraphs.findIndex((p, i) => i > start && paragraphText(p) === "SKILLS");
+  assert.ok(start >= 0 && end > start);
+  for (let i = start; i < end - 1; i++) assert.match(pPr(d.paragraphs[i]), /<w:keepNext/, `paragraph ${i - start} of EDUCATION`);
 });

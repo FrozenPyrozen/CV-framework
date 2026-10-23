@@ -15,7 +15,7 @@ interface StyleMap {
   page?: { width_twips: number; margins_twips: { left: number; right: number } };
 }
 
-interface Fix { id: string; set: { bullet?: { indent_left: number; hanging: number; tab?: { type: string; pos: number } }; keep_with_next?: string[]; date_tab?: { align: "left" | "right"; pos: number }; keep_last_bullets_together?: number; keep_first_bullets_together?: number; paragraphs?: Record<string, { indent_left?: number; first_line?: number; before?: number; after?: number; line?: number }>; first_after_section_heading?: { before: number }; letter_spacing?: number; rule_full_width?: boolean; page_margins?: Partial<Record<"top" | "bottom" | "left" | "right", number>> } }
+interface Fix { id: string; set: { bullet?: { indent_left: number; hanging: number; tab?: { type: string; pos: number } }; keep_with_next?: string[]; date_tab?: { align: "left" | "right"; pos: number }; keep_last_bullets_together?: number; keep_first_bullets_together?: number; keep_sections_together?: string[]; paragraphs?: Record<string, { indent_left?: number; first_line?: number; before?: number; after?: number; line?: number }>; first_after_section_heading?: { before: number }; letter_spacing?: number; rule_full_width?: boolean; page_margins?: Partial<Record<"top" | "bottom" | "left" | "right", number>> } }
 
 export interface RenderResult { paragraphs: number; links: number; warnings: string[] }
 
@@ -46,6 +46,7 @@ export async function renderDocx(markdown: string, outPath: string, templateName
   let letterSpacing = 0;
   let firstAfterHeading: number | undefined;
   let keepFirstBullets = 0;
+  const keepSections = new Set<string>();
   let numbering = doc.zip.file("word/numbering.xml") ? await doc.zip.file("word/numbering.xml")!.async("string") : undefined;
   for (const f of fixes) {
     // keep_with_next: the paragraph moves to the next page together with the one after it (no orphaned headings).
@@ -93,6 +94,7 @@ export async function renderDocx(markdown: string, outPath: string, templateName
     if (f.set.first_after_section_heading) firstAfterHeading = f.set.first_after_section_heading.before;
     if (f.set.keep_last_bullets_together) keepLastBullets = Math.max(keepLastBullets, f.set.keep_last_bullets_together);
     if (f.set.keep_first_bullets_together) keepFirstBullets = Math.max(keepFirstBullets, f.set.keep_first_bullets_together);
+    for (const h of f.set.keep_sections_together ?? []) keepSections.add(h.toLowerCase());
     const b = f.set.bullet;
     if (!b) continue;
     const idx = styleMap.paragraphs.bullet?.sample;
@@ -179,6 +181,7 @@ export async function renderDocx(markdown: string, outPath: string, templateName
   const push = (x: string | undefined, what: string) => { if (x) body.push(x); else warnings.push(`template "${templateName}" has no sample for ${what}`); };
   let inHeader = false;
   let section = "";
+  const sectionStarts: { name: string; at: number }[] = []; // where each section's heading sits in body
   // Comments are removed together with the space before them, so "sentence. <!-- src --> Next" renders with one space.
   const lines = markdown.replace(/[ \t]*<!--(?!\s*\/?generated:header)[\s\S]*?-->/g, "").split("\n");
 
@@ -201,6 +204,7 @@ export async function renderDocx(markdown: string, outPath: string, templateName
     }
     if ((m = line.match(/^# \*\*(.+)\*\*$/))) {
       section = m[1].toLowerCase();
+      sectionStarts.push({ name: section, at: body.length });
       push(para("section_heading", m[1]), "section_heading");
       const rule = keep("section_rule");
       if (rule) body.push(rule);
@@ -243,6 +247,14 @@ export async function renderDocx(markdown: string, outPath: string, templateName
       }
     }
   }
+
+  // keep_sections_together: every paragraph of the named sections keeps with the next one, so the section moves to the
+  // next page as a whole instead of splitting (e.g. EDUCATION).
+  sectionStarts.forEach((s, k) => {
+    if (!keepSections.has(s.name)) return;
+    const end = k + 1 < sectionStarts.length ? sectionStarts[k + 1].at : body.length;
+    for (let i = s.at; i < end - 1; i++) body[i] = body[i].replace(/<w:keepNext(?:\s[^>]*)?\/>/, "").replace(/(<w:pStyle [^>]*\/>)|<w:pPr>/, (m0, style) => (style ? `${style}<w:keepNext w:val="1"/>` : '<w:pPr><w:keepNext w:val="1"/>'));
+  });
 
   // keep_last_bullets_together: the last N bullets of each entry stay on one page (no lone bullet on a new page).
   if (keepLastBullets > 1) {

@@ -72,6 +72,7 @@ Supported fix types (each fix has `id`, `why`, `found`, `set`):
 | `date_tab: { align, pos }` | tab stop for the dates in entry detail lines (e.g. right-aligned at the margin) |
 | `keep_first_bullets_together: N` | an entry's first N bullets stay together, and the line right before a run of bullets (entry details, an education line) stays with the first bullet, so a heading never ends a page with fewer than N bullets |
 | `keep_last_bullets_together: N` | an entry's last N bullets stay together, so no bullet sits alone on a new page |
+| `keep_sections_together: [EDUCATION]` | every paragraph of these sections (headings as in `cv_sections`) keeps with the next, so the section moves to the next page as a whole instead of splitting |
 | `paragraphs: { <type>: { indent_left, first_line, before, after, line } }` | indentation and spacing per paragraph type in twips (20 = 1 pt; `line: 240` = single spacing); overrides the Word style |
 | `first_after_section_heading: { before }` | space above whatever comes first under a section line, so every section starts with the same gap |
 | `rule_full_width: true` | the drawn line under section headings (`section_rule`) spans the whole text width (page width minus the effective left and right margins, after any `page_margins` fix); combine with `paragraphs: { section_rule: { indent_left: 0 } }` so it starts where headings start |
