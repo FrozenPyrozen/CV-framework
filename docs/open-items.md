@@ -37,9 +37,6 @@ Kept in the repo (not in any AI tool's memory) so it travels to every laptop (`s
 | Topic | Question | Source |
 |---|---|---|
 | Side work | The clinical and Jira plugin contracts overlapped full-time jobs: was that allowed, and how many hours a week? | hr-2 |
-| Hiring setup | How would a foreign company hire you full-time (Employer of Record or a local entity)? How do you invoice B2B? Any work permits outside Ukraine? | hr-3 |
-| Employer | At General Motors, Thermo Fisher and SYSPRO, were you employed directly or through a services company? Who would a reference check contact? | hr-4 |
-| Continuity | Backup power and internet for outages in Kyiv? | hr-6 |
 | Notice period | Earliest start date after an offer | 2026-10-23-1349 hr-5 |
-| Hiring route | How a company outside Ukraine hires you: B2B (Ukrainian FOP), Employer of Record, or both | 2026-10-23-1349 hr-4 |
-| Outages | How you keep working through power or internet outages in Kyiv | 2026-10-23-1349 hr-8 |
+| Hiring route | How a company outside Ukraine hires you: B2B (Ukrainian FOP), Employer of Record, or both | 2026-10-16 review, 2026-10-23-1349 hr-4 |
+| Outages | How you keep working through power or internet outages in Kyiv | hr-6 (2026-10-16), hr-8 (2026-10-23) |
