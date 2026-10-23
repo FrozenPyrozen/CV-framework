@@ -185,7 +185,7 @@ Part-time contract and consulting work, alongside full-time roles
 
 * Created the design generation form with multiple inputs: design description, reference images, product requirements document (PRD) and user-flow uploads, website URL, **MCP (Model Context Protocol)** server URL and design-system selection, using **Atlaskit** components, a reusable file-upload component and form validation. <!-- src: designai-jira-plugin#4.2 -->
 
-* Moved file handling to direct **Azure Blob Storage** uploads, working around Forge file-size limits and removing the app's dependency on the backend. <!-- src: designai-jira-plugin#4.3 -->
+* Moved file handling to direct **Azure Blob Storage** uploads that transfer image data in chunks, working around Forge file-size limits and removing the app's dependency on the backend. <!-- src: designai-jira-plugin#4.3, jira-blob-chunks -->
 
 * Added ESLint, TypeScript and a pre-commit lint hook, enabled Atlassian design tokens, and fixed a **SonarQube** TypeScript error. <!-- src: designai-jira-plugin#4.4 -->
 

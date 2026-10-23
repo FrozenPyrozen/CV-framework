@@ -141,6 +141,48 @@ decisions:
     why: User said two pages are fine for SYSPRO (after the screenshots were added).
     matches: [SYSPRO two pages, portfolio project over one page, SYSPRO page break]
 
+  - id: portfolio-poc-names-public
+    decision: The car navigation PoC page may name Volkswagen AG and its brands (Audi, Porsche, Volkswagen), the Hugo AI assistant, Kurviger and the Porsche theme and layout, as the published 2025-09 portfolio did.
+    date: "2026-10-23"
+    why: User said to keep the names (portfolio review 2026-10-23-1633, confidentiality-1).
+    matches: [Volkswagen AG, Audi, Porsche, Hugo AI, Kurviger, PoC client names, under NDA PoC]
+
+  - id: portfolio-wink-mockups
+    decision: The Wink screenshots are design mockups with stock photos and made-up names (Joe Viola, jviola29, Sarah); they may be public.
+    date: "2026-10-23"
+    why: User confirmed (portfolio review 2026-10-23-1633, confidentiality-2).
+    matches: [Wink screenshots, real people in screenshots, Joe Viola, jviola29, Sarah 17]
+
+  - id: portfolio-aspiration-fossil-fuel
+    decision: The Aspiration signup page keeps "investing in renewable energy sources and fossil fuel" as written.
+    date: "2026-10-23"
+    why: User chose to keep the wording (portfolio review 2026-10-23-1633, proofreading-1, fact-check-5).
+    matches: [fossil fuel, renewable energy, Aspiration eco-friendly bank]
+
+  - id: portfolio-clinical-page-kept
+    decision: The clinical trial page keeps its description and screenshots as they are.
+    date: "2026-10-23"
+    why: User chose to keep them (portfolio review 2026-10-23-1633, confidentiality-3).
+    matches: [clinical trial description, client product wording, clinical screenshots crop, code-editor fragments]
+
+  - id: portfolio-screenshots-test-data
+    decision: The OMO device IDs and Armed status, the Fused profile photo and body data, the GM and Golfuture phone numbers, the RegiStart names and the Velas wallet data in the portfolio screenshots are test accounts and sample data.
+    date: "2026-10-23"
+    why: User confirmed (portfolio review 2026-10-23-1633, confidentiality-4, -6, -8, -9).
+    matches: [test data, device IDs, phone numbers in screenshots, face photo, RegiStart names, Velas wallet balances]
+
+  - id: portfolio-here-detail-kept
+    decision: The HERE navigation page keeps HERE's components (HNod library, HERE bundler, HERE runner, HNav) and the project's structure, as the published portfolio did.
+    date: "2026-10-23"
+    why: User chose to keep it (portfolio review 2026-10-23-1633, confidentiality-5).
+    matches: [HERE bundler, HERE runner, HNod, HERE internal components, HERE project structure]
+
+  - id: portfolio-tech-lists-project-stack
+    decision: A portfolio page's Technologies and frameworks list shows the project's stack, as in the old portfolio, including tools other people on the project ran (CI, monitoring, native code).
+    date: "2026-10-23"
+    why: User chose to keep the lists (portfolio review 2026-10-23-1633, fact-check-6, fact-check-9).
+    matches: [Technologies list, used by the project, not hands-on, project stack, Kotlin Java PoC]
+
   - id: direct-employment
     decision: SYSPRO, General Motors and Thermo Fisher Scientific employed the user directly (no services company in between).
     date: "2026-10-23"

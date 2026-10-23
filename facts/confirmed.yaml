@@ -106,3 +106,35 @@ facts:
     source: user, 2026-10-23 (from doc:portfolio-2025-09)
     entry: thermo-fisher-dosimeter
     tags: [react-native, scale]
+
+  # --- Portfolio review 2026-10-23-1633 (answers from /improve) ---
+  - id: jira-blob-chunks
+    fact: On the Jira plugin, worked around Atlassian Forge's file upload limits by transferring image data to Azure Blob Storage in chunks.
+    source: user, 2026-10-23
+    entry: designai-jira-plugin
+    tags: [architecture, generative-ai]
+
+  - id: jira-on-time-delivery
+    fact: The Jira plugin was delivered on time, in close collaboration with the backend and ML teams.
+    source: user, 2026-10-23
+    entry: designai-jira-plugin
+    tags: [delivery-speed]
+
+  - id: aspiration-angular-to-rnw
+    fact: At Aspiration, first migrated the web app from Angular to React, then the team built a new signup flow in React Native Web (separate projects).
+    source: user, 2026-10-23
+    entry: itjet-fintech
+    tags: [legacy-migration, react, react-native]
+
+  - id: fused-product
+    fact: Fused is a fitness coaching app where coaches plan workouts for their athletes.
+    source: user, 2026-10-23
+    entry: itjet-fintech
+    tags: [react-native]
+
+  - id: wink-product
+    fact: Wink is a social app for meeting new friends on Snapchat; swiping right or left on other users costs gems, the in-app currency.
+    source: user, 2026-10-23
+    entry: itjet-fintech
+    tags: [react-native]
+

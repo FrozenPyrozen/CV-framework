@@ -195,7 +195,8 @@ export async function renderPortfolioDocx(markdown: string, mdFile: string, outP
       continue;
     }
     if (block.startsWith("project-")) {
-      if ((m = line.match(/^## \*\*(.+)\*\*$/))) { const p = para("project_title", m[1]); push(p ? withPageBreak(p) : p); } // each project starts a new page
+      // each project starts a new page; the technologies in the title's parentheses don't break across lines
+      if ((m = line.match(/^## \*\*(.+)\*\*$/))) { const p = para("project_title", m[1].replace(/\([^)]*\)/g, (t) => t.replace(/ /g, "\u00a0"))); push(p ? withPageBreak(p) : p); }
       else if ((m = line.match(/^### \*\*(.+)\*\*$/))) push(para("project_meta", m[1]));
       else push(para("body", line));
       continue;

@@ -68,7 +68,7 @@ React Native, HERE SDK, HERE API, Redux Toolkit, TypeScript, React Hooks, Git, A
 ## **Automotive navigation app under NDA for HERE Technologies (React Native, React, Node.js, Android)**
 <!-- /generated:project-general-motors-navigation/navigation -->
 
-The customer works in package delivery and builds on HERE solutions (HNod, HNav, HERE SDK, HERE API). <!-- src: doc:portfolio-2025-09 --> We worked on a customizable Android app built with JavaScript tools (Node.js, React Native, React) and Android tools (Kotlin, Java), connected through gRPC. <!-- src: doc:portfolio-2025-09 --> It is a navigation app for large-truck drivers, installed on the driver's tablet and based on HERE maps. <!-- src: doc:portfolio-2025-09 --> Drivers see the route to their destination and set their truck's parameters, such as width and height, to see the restrictions that apply to it. <!-- src: doc:portfolio-2025-09 --> The app can be extended with custom logic and features through service packages connected to the gRPC bundler, which add menu items, screens, pop-ups and routing logic with React Native, React and Node.js. <!-- src: doc:portfolio-2025-09 --> In short, the project consists of the HNod library, service packages and an Android native or web app. <!-- src: doc:portfolio-2025-09 -->
+The customer works in package delivery and builds on HERE solutions (HNod, HNav, HERE SDK, HERE API). <!-- src: doc:portfolio-2025-09 --> I worked on a customizable Android app built with JavaScript tools (Node.js, React Native, React) and Android tools (Kotlin, Java), connected through gRPC. <!-- src: doc:portfolio-2025-09 --> It is a navigation app for large-truck drivers, installed on the driver's tablet and based on HERE maps. <!-- src: doc:portfolio-2025-09 --> Drivers see the route to their destination and set their truck's parameters, such as width and height, to see the restrictions that apply to it. <!-- src: doc:portfolio-2025-09 --> The app can be extended with custom logic and features through service packages connected to the HERE bundler (gRPC), which add menu items, screens, pop-ups and routing logic with React Native, React and Node.js. <!-- src: doc:portfolio-2025-09 --> In short, the project consists of the HNod library, service packages and an Android native or web app. <!-- src: doc:portfolio-2025-09 -->
 
 <!-- generated:media-general-motors-navigation/navigation -->
 ![Navigation app, route view](../sources/media/portfolio-2025-04/image2.jpeg)
@@ -82,7 +82,7 @@ I was responsible for handling route deviations, when a truck driver leaves the 
 
 **Technologies and frameworks**
 
-JavaScript, TypeScript, Node.js, gRPC, React Native, React, custom HERE solutions (HNod library, HERE bundler, HERE runner, HERE API, HERE SDK, HNav library), RxJS, Jest, GitLab pipelines. <!-- src: doc:portfolio-2025-09 -->
+JavaScript, TypeScript, Node.js, gRPC, React Native, React, custom HERE solutions (HNod library, HERE bundler (gRPC), HERE runner, HERE API, HERE SDK, HNav library), RxJS, Jest, GitLab pipelines. <!-- src: doc:portfolio-2025-09 -->
 
 <!-- project: general-motors-navigation/poc -->
 
@@ -90,7 +90,7 @@ JavaScript, TypeScript, Node.js, gRPC, React Native, React, custom HERE solution
 ## **Car navigation PoC under NDA (Node.js, React)**
 <!-- /generated:project-general-motors-navigation/poc -->
 
-An automotive app built to show the possibilities of the latest HERE technology in Volkswagen AG cars (Audi, Porsche, Volkswagen and others) and to integrate the latest features: the Hugo AI assistant, L3 interaction, ADAS, Kurviger, ODD, custom themes, layout support and more. <!-- src: doc:portfolio-2025-09 -->
+This proof of concept (PoC) is an automotive app that showed the possibilities of the latest HERE technology in Volkswagen AG cars (Audi, Porsche, Volkswagen and others) and integrated the latest features: the Hugo AI assistant, Level 3 automated driving (L3) interaction, advanced driver-assistance systems (ADAS), the Kurviger route planner, the operational design domain (ODD), custom themes, layout support and more. <!-- src: doc:portfolio-2025-09 -->
 
 <!-- generated:media-general-motors-navigation/poc -->
 ![Car navigation PoC on the head unit](../sources/media/portfolio-2025-09/p04-1.png)
@@ -110,7 +110,7 @@ JavaScript, Node.js, TypeScript, React, RxJS, gRPC, Kotlin, Java, HNav, HNod, Hu
 ## **Velas Wallet (React, React Native, Electron)**
 <!-- /generated:project-velas-wallet -->
 
-A fully open-source, non-custodial, multi-language crypto wallet that supports the Velas, Ethereum, BNB Smart Chain (BSC), Heco and Bitcoin networks. <!-- src: doc:portfolio-2025-09 --> Users can stake VLX and earn rewards, swap tokens between networks through bridges, and send and receive crypto by QR code. <!-- src: doc:portfolio-2025-09 --> The wallet has web, mobile and desktop versions. <!-- src: doc:portfolio-2025-09 -->
+Velas Wallet is a fully open-source, non-custodial, multi-language crypto wallet that supports the Velas, Ethereum, BNB Smart Chain (BSC), HECO and Bitcoin networks. <!-- src: doc:portfolio-2025-09 --> Users can stake VLX and earn rewards, swap tokens between networks through bridges, and send and receive crypto by QR code. <!-- src: doc:portfolio-2025-09 --> The wallet has web, mobile and desktop versions. <!-- src: doc:portfolio-2025-09 -->
 
 <!-- generated:media-velas-wallet -->
 ![Velas Wallet on mobile](../sources/media/portfolio-2025-09/p05-1.png)
@@ -132,7 +132,7 @@ React Native Web, React Native, Web3, MobX, TypeScript, GitHub Actions, React Ho
 ## **Jira design generation plugin under NDA (Node.js, React)**
 <!-- /generated:project-designai-jira-plugin -->
 
-This generative AI application greatly speeds up designers' work, letting them quickly create MVP, proof-of-concept (PoC) and presales designs for customers. <!-- src: doc:portfolio-2025-09 --> It integrates with the client's Jira board. <!-- src: doc:portfolio-2025-09 --> Users describe their requirements in a text prompt, provide a URL and upload photos or style schemas. <!-- src: doc:portfolio-2025-09 --> The system then generates a design (for example, in Figma format), creates a new Jira ticket with the request and returns the finished design, which streamlines the early design and project-planning phases. <!-- src: doc:portfolio-2025-09 -->
+This generative AI application speeds up designers' work, letting them quickly create minimum viable product (MVP), proof-of-concept (PoC) and presales designs for customers. <!-- src: doc:portfolio-2025-09 --> It integrates with the client's Jira board. <!-- src: doc:portfolio-2025-09 --> Users describe their requirements in a text prompt, provide a URL and upload photos or style schemas. <!-- src: doc:portfolio-2025-09 --> The system then generates a design (for example, in Figma format), creates a Jira subtask that tracks the request and returns the finished design for the early design and project-planning phases. <!-- src: doc:portfolio-2025-09, designai-jira-plugin#2 -->
 
 <!-- generated:media-designai-jira-plugin -->
 ![The plugin's design request form with an attached wireframe (plugin name covered)](assets/designai-jira-plugin/form-image-attached.png)
@@ -142,7 +142,7 @@ This generative AI application greatly speeds up designers' work, letting them q
 
 **Responsibilities**
 
-I built a generative AI Jira plugin with Jira Forge Custom UI, Atlaskit and TypeScript that automates website design generation. <!-- src: doc:portfolio-2025-09 --> A key architectural challenge was working around Jira Forge's strict file upload limits, which I solved by integrating Azure Blob Storage to transfer image data in chunks. <!-- src: doc:portfolio-2025-09 --> The solution works end to end, including calls to the Jira API that automatically create tickets with the generated design and its specifications. <!-- src: doc:portfolio-2025-09 --> Close collaboration with the backend and ML teams brought the project to a successful, on-time delivery. <!-- src: doc:portfolio-2025-09 -->
+I built a generative AI Jira plugin with Atlassian Forge Custom UI, Atlaskit and TypeScript that automates website design generation. <!-- src: doc:portfolio-2025-09 --> A key architectural challenge was working around Atlassian Forge's strict file upload limits, which I solved by integrating Azure Blob Storage to transfer image data in chunks. <!-- src: doc:portfolio-2025-09, jira-blob-chunks --> The solution works end to end, including calls to the Jira API that automatically create a subtask for each generated design. <!-- src: doc:portfolio-2025-09, designai-jira-plugin#4.1 --> I worked closely with the backend and ML teams, and the plugin was delivered on time. <!-- src: doc:portfolio-2025-09, jira-on-time-delivery -->
 
 **Technologies and frameworks**
 
@@ -166,7 +166,7 @@ The app makes it easier to take part in a clinical trial. <!-- src: doc:portfoli
 
 **Responsibilities**
 
-I refactored and optimized the app's core flow and integrated it with the patient document library. <!-- src: doc:portfolio-2025-09 --> I raised unit test coverage and applied TypeScript and modern React Hooks best practices to improve maintainability and performance. <!-- src: orion-mobile-clinical-ink#4.2 --> I migrated the Android app from Android 13 to Android 14 to meet Google Play Store requirements, upgraded key dependencies and resolved complex migration issues (for example, the SQLCipher for Android library, SQLite and Android 14 compatibility). <!-- src: doc:portfolio-2025-09 -->
+I refactored the legacy study library flow into a new TypeScript patient documents screen built from small components. <!-- src: doc:portfolio-2025-09, orion-mobile-clinical-ink#4.2 --> I raised unit test coverage and applied TypeScript and modern React Hooks best practices to improve maintainability and performance. <!-- src: orion-mobile-clinical-ink#4.2 --> I migrated the Android app from Android 13 to Android 14 to meet Google Play Store requirements, upgraded key dependencies and resolved complex migration issues (for example, the SQLCipher for Android library, SQLite and Android 14 compatibility). <!-- src: doc:portfolio-2025-09 -->
 
 **Technologies and frameworks**
 
@@ -178,7 +178,7 @@ JavaScript, TypeScript, React Native, Expo, React, Kotlin, SQLCipher, Redux Tool
 ## **Smart-home ecosystem IoT device management app for OMO Systems (React Native)**
 <!-- /generated:project-omo-systems-smart-home -->
 
-The app provides access control, security and home automation for multi-apartment buildings worldwide. <!-- src: doc:portfolio-2025-09 --> Access to the apartment: residents control and open entrances, doors, barriers, elevators, gates and waste bins from a single app. <!-- src: doc:portfolio-2025-09 --> Video surveillance: they watch buildings and grounds from the same app, with live access to cameras and their video archive, synced with motion sensors through scenarios. <!-- src: doc:portfolio-2025-09 --> Security: the app protects the apartment from burglary and from damage caused by breakdowns and accidents, with traffic monitoring, door and window opening sensors, video surveillance inside the apartment, and automatic gas and water shut-off when a leak occurs. <!-- src: doc:portfolio-2025-09 -->
+The app provides access control, security and home automation for multi-apartment buildings in several countries. <!-- src: doc:portfolio-2025-09, omo-systems-smart-home#1 --> Access to the apartment: residents control and open entrances, doors, barriers, elevators, gates and waste bins from a single app. <!-- src: doc:portfolio-2025-09 --> Video surveillance: they watch buildings and grounds from the same app, with live access to cameras and their video archive, synced with motion sensors through scenarios. <!-- src: doc:portfolio-2025-09 --> Security: the app protects the apartment from burglary and from damage caused by breakdowns and accidents, with traffic monitoring, door and window opening sensors, video surveillance inside the apartment, and automatic gas and water shut-off when a leak occurs. <!-- src: doc:portfolio-2025-09 -->
 
 Residents can also set up scenarios that trigger devices on events, for example starting a camera when a motion sensor detects movement. <!-- src: doc:portfolio-2025-09 --> They manage their home, share it with family members and enable face recognition for their cameras. <!-- src: doc:portfolio-2025-09 --> In security mode the whole home is guarded: if an incident occurs, the app raises an alarm and automatically calls a security team. <!-- src: doc:portfolio-2025-09 -->
 
@@ -200,7 +200,7 @@ React Native, TypeScript, React Navigation, React Native Navigation, React Hooks
 ## **IoT app with dosimeter under NDA (React Native)**
 <!-- /generated:project-thermo-fisher-dosimeter -->
 
-The app helps doctors around the world who work with radiation avoid overexposure. <!-- src: doc:portfolio-2025-09 --> It has three roles (user, admin and superuser), OAuth 2.0 login, 10 screens, and REST API, MQTT and Bluetooth communication. <!-- src: doc:portfolio-2025-09, dosimeter-10-screens --> The app reads data from radiation dosimeters over Bluetooth, sends it to an IoT server over MQTT, and can sync many dosimeters at the same time. <!-- src: doc:portfolio-2025-09 --> A main menu with swipe navigation and bottom pagination leads to the main screen, which shows sync progress, how many dosimeters synced with errors, and the sync time. <!-- src: doc:portfolio-2025-09 --> Another screen shows the details of the current sync, or of the last one when no sync is running, and the last screen holds the history of all syncs, filterable in a full-screen modal by date range, wearer, errors and ID. <!-- src: doc:portfolio-2025-09 --> The history is stored in a local Realm database, and all secure values in the keychain. <!-- src: doc:portfolio-2025-09 --> The app can also update the dosimeter firmware, and menus on the left and right lead to the Profile, Settings and Logs pages (Logs for superusers only). <!-- src: doc:portfolio-2025-09 -->
+The app helps medical staff who work with radiation avoid overexposure. <!-- src: doc:portfolio-2025-09, thermo-fisher-dosimeter#1 --> It has three roles (user, admin and superuser), OAuth 2.0 login, 10 screens, and REST API, MQTT and Bluetooth communication. <!-- src: doc:portfolio-2025-09, dosimeter-10-screens --> The app reads data from radiation dosimeters over Bluetooth, sends it to an IoT server over MQTT, and can sync many dosimeters at the same time. <!-- src: doc:portfolio-2025-09 --> A main menu with swipe navigation and bottom pagination leads to the main screen, which shows sync progress, how many dosimeters synced with errors, and the sync time. <!-- src: doc:portfolio-2025-09 --> Another screen shows the details of the current sync, or of the last one when no sync is running, and the last screen holds the history of all syncs, filterable in a full-screen modal by date range, wearer, errors and ID. <!-- src: doc:portfolio-2025-09 --> The history is stored in a local Realm database, and all secure values in the keychain. <!-- src: doc:portfolio-2025-09 --> The app can also update the dosimeter firmware, and menus on the left and right lead to the Profile, Settings and Logs pages (Logs for superusers only). <!-- src: doc:portfolio-2025-09 -->
 
 <!-- generated:media-thermo-fisher-dosimeter -->
 
@@ -208,7 +208,7 @@ The app helps doctors around the world who work with radiation avoid overexposur
 
 **Responsibilities**
 
-I built the API communication logic between the backend and the UI screens, and investigated, fixed and rewrote React Native and native libraries so they worked properly for our needs. <!-- src: doc:portfolio-2025-09 --> I took an active part in project meetings, proposed effective solutions for the business, did code reviews, covered code with unit tests following a TDD approach, and suggested ways to improve the user experience. <!-- src: doc:portfolio-2025-09 --> I integrated MQTT, built the OAuth 2.0 login flow, worked with background jobs on Android and iOS, and added native modules. <!-- src: doc:portfolio-2025-09 --> I also improved the dosimeter data parsing so data is no longer overwritten, and set up the Realm database connection with its filter logic. <!-- src: doc:portfolio-2025-09 -->
+I built the API communication logic between the backend and the UI screens, and investigated, fixed and rewrote React Native and native libraries so they worked properly for our needs. <!-- src: doc:portfolio-2025-09 --> In project meetings, I proposed solutions for the business and ideas for a better user experience. <!-- src: doc:portfolio-2025-09 --> I reviewed code and covered it with unit tests following a test-driven development (TDD) approach. <!-- src: doc:portfolio-2025-09 --> I integrated MQTT, built the OAuth 2.0 login flow, worked with background jobs on Android and iOS, and added native modules. <!-- src: doc:portfolio-2025-09 --> I also improved the dosimeter data parsing so data is no longer overwritten, and set up the Realm database connection with its filter logic. <!-- src: doc:portfolio-2025-09 -->
 
 **Technologies and frameworks**
 
@@ -220,7 +220,7 @@ React Native, TypeScript, React Navigation, React Hooks, Git, Fastlane, react-na
 ## **Aspiration signup (React Native Web)**
 <!-- /generated:project-itjet-fintech/aspiration-signup -->
 
-Aspiration is a large company that develops a banking app ecosystem for customers in the US. <!-- src: doc:portfolio-2025-09 --> It is an eco-friendly bank that helps the planet by planting trees and investing in renewable energy sources and fossil fuel. <!-- src: doc:portfolio-2025-09 --> The company moved its signup flow from Angular to React. <!-- src: doc:portfolio-2025-09 -->
+Aspiration is a large company that develops a banking app ecosystem for customers in the US. <!-- src: doc:portfolio-2025-09 --> It is an eco-friendly bank that helps the planet by planting trees and investing in renewable energy sources and fossil fuel. <!-- src: doc:portfolio-2025-09 --> I started with the migration of the web app from Angular to React, and the team then built a new signup flow in React Native Web as a separate project. <!-- src: doc:portfolio-2025-09, aspiration-angular-to-rnw -->
 
 <!-- generated:media-itjet-fintech/aspiration-signup -->
 ![Aspiration signup, screen 1](../sources/media/portfolio-2025-09/p10-1.png)
@@ -232,11 +232,11 @@ Aspiration is a large company that develops a banking app ecosystem for customer
 
 **Responsibilities**
 
-I fixed and refactored the existing signup flow, added new screens and components, and helped native mobile developers integrate React Native into the native apps. <!-- src: doc:portfolio-2025-09 --> I worked with the US developers and product managers, took an active part in project meetings, proposed effective solutions for the business and did code reviews. <!-- src: doc:portfolio-2025-09 --> I added the API connection logic, covered code with unit tests, created an end-to-end test utility and applied component-driven development (CDD) across the project. <!-- src: doc:portfolio-2025-09 --> I integrated Plaid, Google Places and reCAPTCHA v3, linked React Native libraries manually, wrote a pull request style guide and documentation for easier onboarding, added A/B tests and suggested ways to improve the user experience. <!-- src: doc:portfolio-2025-09 -->
+I fixed and refactored the existing signup flow, added new screens and components, and helped native mobile developers integrate React Native into the native apps. <!-- src: doc:portfolio-2025-09 --> I worked with the US developers and product managers, brought solution proposals for the business to project meetings, and reviewed code. <!-- src: doc:portfolio-2025-09 --> I added the API connection logic, covered code with unit tests, created an end-to-end test utility and applied component-driven development (CDD) across the project. <!-- src: doc:portfolio-2025-09 --> I integrated Plaid, Google Places and reCAPTCHA v3, linked React Native libraries manually, wrote a pull request style guide and documentation for easier onboarding, added A/B tests and suggested user experience improvements. <!-- src: doc:portfolio-2025-09 -->
 
 **Technologies and frameworks**
 
-React Native Web, Apollo GraphQL, TypeScript, React Navigation, React Hooks, Git, CircleCI, Plaid, Cucumber, Puppeteer, Jest, PlanOut, Segment, Rollbar, Crashlytics, scaffolding, CDD, DDD, Next.js, Storybook, ESLint, CSS Grid, Jira. <!-- src: doc:portfolio-2025-09 -->
+React Native Web, Apollo GraphQL, TypeScript, React Navigation, React Hooks, Git, CircleCI, Plaid, Cucumber, Puppeteer, Jest, PlanOut, Segment, Rollbar, Crashlytics, scaffolding, CDD, domain-driven design (DDD), Next.js, Storybook, ESLint, CSS Grid, Jira. <!-- src: doc:portfolio-2025-09 -->
 
 <!-- project: itjet-fintech/aspiration-web -->
 
@@ -244,7 +244,7 @@ React Native Web, Apollo GraphQL, TypeScript, React Navigation, React Hooks, Git
 ## **Aspiration banking web app (React)**
 <!-- /generated:project-itjet-fintech/aspiration-web -->
 
-A banking web app flow for planting trees from your transactions and for changing your profile, settings and more. <!-- src: doc:portfolio-2025-09 -->
+The banking web app lets customers plant trees with their transactions and change their profile, settings and more. <!-- src: doc:portfolio-2025-09 -->
 
 <!-- generated:media-itjet-fintech/aspiration-web -->
 ![Aspiration banking web app, screen 1](../sources/media/portfolio-2025-09/p11-1.png)
@@ -256,11 +256,11 @@ A banking web app flow for planting trees from your transactions and for changin
 
 **Responsibilities**
 
-I built the application from scratch based on the designs, with a mobile-first approach and reusable components following Atomic Design, and added a scaffolding generator for the file structure. <!-- src: doc:portfolio-2025-09 --> I worked with the remote team in the US, took an active part in grooming sessions and retrospectives, solved communication problems between the remote teams, and planned the scope of tasks for the next period. <!-- src: doc:portfolio-2025-09 -->
+I wrote the application from the ground up to match the designs, with a mobile-first approach and reusable components following Atomic Design, and added a scaffolding generator for the file structure. <!-- src: doc:portfolio-2025-09 --> I worked with the remote team in the US, contributed to grooming sessions and retrospectives, solved communication problems between the remote teams, and planned the scope of tasks for the next period. <!-- src: doc:portfolio-2025-09 -->
 
 **Technologies and frameworks**
 
-React, Apollo GraphQL, React Hooks, Git, Plaid, Jest, Next.js, Storybook, ESLint, CSS Grid, Atomic Design, CDD, UI patterns, Jira, styled-components, Plop. <!-- src: doc:portfolio-2025-09 -->
+React, Apollo GraphQL, React Hooks, Git, Plaid, Jest, Next.js, Storybook, ESLint, CSS Grid, Atomic Design, component-driven development (CDD), UI patterns, Jira, styled-components, Plop. <!-- src: doc:portfolio-2025-09 -->
 
 <!-- project: itjet-fintech/registart -->
 
@@ -282,7 +282,7 @@ RegiStart is a nonprofit startup that uses social networks and technology to sys
 
 **Responsibilities**
 
-I developed the MVP of the frontend from scratch based on sketches with React and Material UI, planned the database tables and relationships, and built the Node.js backend, connected to the database with Sequelize. <!-- src: doc:portfolio-2025-09 --> I set up the PostgreSQL database on AWS RDS, configured CI/CD for deployment to AWS EC2 and S3, added database migrations with node-pg-migrate, and created an optimized algorithm that distributes students among organizers. <!-- src: doc:portfolio-2025-09 -->
+Starting from sketches, I developed the frontend minimum viable product (MVP) with React and Material UI, planned the database tables and relationships, and built the Node.js backend, connected to the database with Sequelize. <!-- src: doc:portfolio-2025-09 --> I set up the PostgreSQL database on AWS RDS, configured CI/CD for deployment to AWS EC2 and S3, added database migrations with node-pg-migrate, and created an optimized algorithm that distributes students among organizers. <!-- src: doc:portfolio-2025-09 -->
 
 **Technologies and frameworks**
 
@@ -294,7 +294,7 @@ React, Redux, TypeScript, AWS (EC2, S3, RDS), CI/CD with Bitbucket Pipelines, Po
 ## **Fused (web, mobile and backend)**
 <!-- /generated:project-itjet-fintech/fused -->
 
-The application has two roles, coach and athlete, and users can switch roles on the settings screen. <!-- src: doc:portfolio-2025-09 --> Coaches invite athletes, create workouts and exercises for them, build teams from athletes and track their workout progress. <!-- src: doc:portfolio-2025-09 --> To create a subscription, a coach adds card details and a bank account. <!-- src: doc:portfolio-2025-09 --> The app was published on Google Play. <!-- src: doc:portfolio-2025-09 -->
+Fused is a fitness coaching app where coaches plan workouts for their athletes. <!-- src: fused-product --> It has two roles, coach and athlete, and users can switch roles on the settings screen. <!-- src: doc:portfolio-2025-09 --> Coaches invite athletes, create workouts and exercises for them, build teams from athletes and track their workout progress. <!-- src: doc:portfolio-2025-09 --> To create a subscription, a coach adds card details and a bank account. <!-- src: doc:portfolio-2025-09 --> The app was published on Google Play. <!-- src: doc:portfolio-2025-09 -->
 
 <!-- generated:media-itjet-fintech/fused -->
 ![Fused mobile app, screen 1](../sources/media/portfolio-2025-09/p13-1.png)
@@ -324,7 +324,7 @@ React Native, React, React Router, React Navigation, Node.js, Sequelize, Postgre
 ## **Wink (React Native)**
 <!-- /generated:project-itjet-fintech/wink -->
 
-Users like or dislike other users by swiping right or left for gems (the in-game currency), get notifications when someone likes them, and change their profile settings. <!-- src: doc:portfolio-2025-09 --> They earn gems through actions such as sharing the app link with friends, claiming a daily prize and leaving a review on Google Play. <!-- src: doc:portfolio-2025-09 --> The app was published on Google Play and the App Store and reached more than 5 million registered users. <!-- src: doc:portfolio-2025-09, itjet-fintech#4.8 -->
+Wink is a social app for meeting new friends on Snapchat. <!-- src: wink-product --> Users like or dislike other users by swiping right or left, and each swipe costs gems, the in-app currency. <!-- src: doc:portfolio-2025-09, wink-product --> Users also get notifications when someone likes them and change their profile settings. <!-- src: doc:portfolio-2025-09 --> They earn gems through actions such as sharing the app link with friends, claiming a daily prize and leaving a review on Google Play. <!-- src: doc:portfolio-2025-09 --> The app was published on Google Play and the App Store and reached more than 5 million registered users. <!-- src: doc:portfolio-2025-09, itjet-fintech#4.8 -->
 
 <!-- generated:media-itjet-fintech/wink -->
 ![Wink, swiping through profiles](../sources/media/portfolio-2025-04/image8.tif)
@@ -338,7 +338,7 @@ Users like or dislike other users by swiping right or left for gems (the in-game
 
 **Responsibilities**
 
-I developed the app from scratch based on the designs, with login through Snapchat or a mobile number, integration with the backend API, and push notifications. <!-- src: doc:portfolio-2025-09 --> I optimized and tested the app, configured CI/CD for deployment, added image optimization on the Node.js backend, did code reviews and communicated directly with the customer. <!-- src: doc:portfolio-2025-09 -->
+I built the whole app from the designs, including login through Snapchat or a mobile number, integration with the backend API, and push notifications. <!-- src: doc:portfolio-2025-09 --> I optimized and tested the app, configured CI/CD for deployment, added image optimization on the Node.js backend, reviewed code and communicated directly with the customer. <!-- src: doc:portfolio-2025-09 -->
 
 **Technologies and frameworks**
 
@@ -350,7 +350,7 @@ React Native, TypeScript, React Hooks, React Navigation, Redux, Redux Thunk, Fir
 ## **Golfuture (React Native)**
 <!-- /generated:project-itjet-fintech/golfuture -->
 
-Golfuture is a proprietary new concept of golf that lets players enjoy many of the best elements of traditional golf in a more time-efficient, eco-friendly and affordable way. <!-- src: doc:portfolio-2025-09 --> Players use the smartphone app to choose a course and their playing partners, and the app guides them through the facility at their own pace, with no waiting for others. <!-- src: doc:portfolio-2025-09 --> Golfuture combines innovative course design with modern ball-tracking technology to create an exciting environment for golfers. <!-- src: doc:portfolio-2025-09 --> The app was published on Google Play and the App Store. <!-- src: doc:portfolio-2025-09 -->
+Golfuture is a form of golf that keeps many elements of traditional golf but takes less time, costs less and is more eco-friendly. <!-- src: doc:portfolio-2025-09 --> Players use the smartphone app to choose a course and their playing partners, and the app guides them through the facility at their own pace, with no waiting for others. <!-- src: doc:portfolio-2025-09 --> Golfuture combines its own course design with ball-tracking technology. <!-- src: doc:portfolio-2025-09 --> The app was published on Google Play and the App Store. <!-- src: doc:portfolio-2025-09 -->
 
 <!-- generated:media-itjet-fintech/golfuture -->
 ![Golfuture, screen 1](../sources/media/portfolio-2025-09/p15-1.png)
@@ -364,7 +364,7 @@ Golfuture is a proprietary new concept of golf that lets players enjoy many of t
 
 **Responsibilities**
 
-I developed the app from scratch based on the designs: I planned and built the components and pages, added the business logic, and connected Stripe and other APIs. <!-- src: doc:portfolio-2025-09 --> I optimized and tested the app, took an active part in project meetings and planning, and presented the results directly to the customer. <!-- src: doc:portfolio-2025-09 -->
+I developed the app from scratch based on the designs: I planned and built the components and pages, added the business logic, and connected Stripe and other APIs. <!-- src: doc:portfolio-2025-09 --> I handled optimization and testing, joined project meetings and planning, and presented the results directly to the customer. <!-- src: doc:portfolio-2025-09 -->
 
 **Technologies and frameworks**
 
@@ -386,7 +386,7 @@ Oroscopo is a tarot and astrology mobile app that makes predictions for zodiac s
 
 **Responsibilities**
 
-I added new features and worked with the app's API: UI components, an animated card circle, the zodiac compatibility logic, banner ads and new screens with tarot layouts. <!-- src: doc:portfolio-2025-09 --> I optimized and tested the app, took an active part in project meetings, and presented the results directly to the customer. <!-- src: doc:portfolio-2025-09 -->
+I added new features and worked with the app's API: UI components, an animated card circle, the zodiac compatibility logic, banner ads and new screens with tarot layouts. <!-- src: doc:portfolio-2025-09 --> I also worked on optimization and testing, took part in project meetings and demoed my work to the customer. <!-- src: doc:portfolio-2025-09 -->
 
 **Technologies and frameworks**
 

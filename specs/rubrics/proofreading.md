@@ -19,7 +19,7 @@
 
 ## Portfolio mode (`/review --portfolio`)
 
-The same checks on `portfolio/portfolio.md` (generated parts included: titles, captions, skills), plus: the section labels are the same in every project (*The product*, *My role*, *What I built*, *Results*, *Technologies*); captions read as short sentences in one style; the text is longer than CV bullets but not padded or repetitive across projects; the intro doesn't repeat the CV summary word for word. `spellcheck` has already run; look for wrong words that are spelled right ("form" for "from").
+The same checks on `portfolio/portfolio.md` (generated parts included: titles, captions, skills), plus: the section labels are the same in every project (*Responsibilities*, *Technologies and frameworks*; `specs/outputs/portfolio.md` 4); captions read as short sentences in one style; the text is longer than CV bullets but not padded or repetitive across projects; the intro doesn't repeat the CV summary word for word. `spellcheck` has already run; look for wrong words that are spelled right ("form" for "from").
 
 ## Required sections in the report
 1. **Summary counts:** spelling / grammar / consistency / style issues.

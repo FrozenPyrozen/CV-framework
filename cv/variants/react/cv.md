@@ -137,7 +137,7 @@ Part-time contract and consulting work, alongside full-time roles
 
 * Added ESLint, TypeScript and a pre-commit lint hook, enabled Atlassian design tokens, and fixed a **SonarQube** TypeScript error. <!-- src: designai-jira-plugin#4.4 -->
 
-* Moved file handling to direct **Azure Blob Storage** uploads, working around Forge file-size limits and removing the app's dependency on the backend. <!-- src: designai-jira-plugin#4.3 -->
+* Moved file handling to direct **Azure Blob Storage** uploads that transfer image data in chunks, working around Forge file-size limits and removing the app's dependency on the backend. <!-- src: designai-jira-plugin#4.3, jira-blob-chunks -->
 
 <!-- entry: various-clients -->
 ## **Software Engineering Consultant**
