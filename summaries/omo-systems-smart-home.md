@@ -18,7 +18,7 @@ harvested_at: null
 show_in_cv: true
 show_in_portfolio: true   # all jobs, decided by user 2026-10-23
 portfolio_order: 6
-portfolio_title: "Smart-home IoT app (React Native)"
+portfolio_title: "Smart-home ecosystem IoT device management app for OMO Systems (React Native)"
 cv_section: experience
 cv_client_label: OMO Systems
 cv_location: Remote
@@ -121,6 +121,10 @@ TODO (needs user input): state management and other tools used.
 - 20% increase in team efficiency from leading and mentoring the team (4.5). Source: previous CV, confirmed by user 2026-10-15. Confidence: exact.
 
 ## 8. Portfolio material
+
+- image: ../sources/media/portfolio-2025-04/image1.tif
+  caption: Smart-home app
+  public: yes, confirmed by user 2026-10-23
 
 TODO (needs user input)
 

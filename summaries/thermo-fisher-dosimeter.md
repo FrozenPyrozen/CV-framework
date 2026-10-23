@@ -18,7 +18,7 @@ harvested_at: null
 show_in_cv: true
 show_in_portfolio: true   # all jobs, decided by user 2026-10-23
 portfolio_order: 7
-portfolio_title: "IoT dosimeter app (React Native)"
+portfolio_title: "IoT app with dosimeter under NDA (React Native)"
 cv_section: experience
 cv_client_label: Thermo Fisher Scientific
 cv_location: Remote

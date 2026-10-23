@@ -67,7 +67,7 @@ checks:
   max_words: 2200
   max_bullet_words: 45
   portfolio_max_pages: 40            # page limit of each portfolio PDF (specs/outputs/portfolio.md 6)
-  portfolio_max_project_words: 300   # one page per project with its screenshots, as in the April 2025 portfolio
+  portfolio_max_project_words: 420   # one page per project with its screenshots, as on the published portfolio (up to about 400 words)
   contacts_on_page_1: true
   export_timeout_s: 60
   forbidden_chars: ["→", "·", "•", "—", "–"]
@@ -187,3 +187,9 @@ tags:
   - presales
   - agile
   - design-tools
+
+# The public portfolio's cover (specs/outputs/portfolio.md 4): the name and the links line as on the published
+# portfolio (GitHub and LinkedIn; the CV leaves them out by decision no-profile-links, the portfolio keeps them).
+portfolio:
+  name: Kyrylo Kohan
+  cover_links: [GitHub, LinkedIn]   # labels of profile.yaml contacts.links

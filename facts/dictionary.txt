@@ -5,12 +5,15 @@
 # Names
 Kirill
 Kohan
+Kyrylo              # the name on the published portfolio (framework.config.yaml portfolio.name)
 
 # Companies, clients and products
 Admasters
 Golfuture
 Oroscopo
 Itjet
+Kurviger            # route planner named on the published portfolio (Car navigation PoC)
+Rollbar             # error-tracking service (Aspiration signup)
 RegiStart
 SYSPRO
 Velas

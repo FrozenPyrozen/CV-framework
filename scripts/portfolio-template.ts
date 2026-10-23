@@ -21,11 +21,11 @@ const F = { title: "Rockwell", body: "Charter", label: "Avenir Next Medium", ban
 const PDF_FONTS: Record<string, string> = {};
 
 // One sample paragraph per portfolio paragraph type, in this order (style-map.yaml sample indexes).
-interface Sample { type: string; font: string; size: number; bold?: boolean; italic?: boolean; color?: string; fill?: string; align?: "center" | "left"; before?: number; after?: number; pageBreak?: boolean; keepNext?: boolean; bullet?: boolean }
+interface Sample { type: string; font: string; size: number; bold?: boolean; italic?: boolean; color?: string; fill?: string; align?: "center" | "left"; caps?: boolean; rule?: number; before?: number; after?: number; pageBreak?: boolean; keepNext?: boolean; bullet?: boolean }
 export const SAMPLES: Sample[] = [
-  { type: "cover_title", font: F.title, size: 84, bold: true, color: "FFFFFF", fill: CORAL, align: "center", before: 240, after: 0 },
-  { type: "cover_name", font: F.title, size: 32, bold: true, color: "FFFFFF", fill: CORAL, align: "center", before: 0, after: 0 },
-  { type: "cover_contact", font: F.banner, size: 28, color: "FFFFFF", fill: CORAL, align: "center", before: 120, after: 120 },
+  { type: "cover_title", font: F.title, size: 84, bold: true, color: "FFFFFF", fill: CORAL, align: "center", rule: 2, before: 60, after: 0 },
+  { type: "cover_name", font: F.title, size: 32, bold: true, color: "FFFFFF", fill: CORAL, align: "center", before: 80, after: 200 },
+  { type: "cover_contact", font: F.banner, size: 24, color: "FFFFFF", fill: CORAL, align: "left", caps: true, rule: 4, before: 160, after: 100 },
   { type: "headline", font: F.body, size: 28, bold: true, color: TEAL, align: "center", before: 360, after: 240 },
   { type: "intro", font: F.body, size: 26, align: "center", before: 120, after: 240 },
   { type: "project_title", font: F.title, size: 32, bold: true, color: TEAL, align: "center", before: 0, after: 60, pageBreak: true, keepNext: true },
@@ -51,12 +51,14 @@ function paragraph(s: Sample): string {
     s.keepNext ? '<w:keepNext w:val="1"/>' : "",
     s.pageBreak ? '<w:pageBreakBefore w:val="1"/>' : "",
     s.bullet ? '<w:numPr><w:ilvl w:val="0"/><w:numId w:val="1"/></w:numPr>' : "",
+    // a thin white rule under a cover row (rule = space in points; rows differ so Word doesn't merge their borders)
+    s.rule ? `<w:pBdr><w:bottom w:val="single" w:sz="6" w:space="${s.rule}" w:color="FFFFFF"/></w:pBdr>` : "",
     s.fill ? `<w:shd w:val="clear" w:color="auto" w:fill="${s.fill}"/>` : "",
     `<w:spacing w:before="${s.before ?? 0}" w:after="${s.after ?? 0}"/>`,
     s.bullet ? '<w:ind w:left="360" w:hanging="360"/>' : "",
     `<w:jc w:val="${s.align ?? "left"}"/>`,
   ].join("");
-  const rpr = `<w:rPr><w:rFonts w:ascii="${s.font}" w:hAnsi="${s.font}" w:cs="${s.font}"/>${s.bold ? "<w:b/>" : ""}${s.italic ? "<w:i/>" : ""}${s.color ? `<w:color w:val="${s.color}"/>` : ""}<w:sz w:val="${s.size}"/><w:szCs w:val="${s.size}"/></w:rPr>`;
+  const rpr = `<w:rPr><w:rFonts w:ascii="${s.font}" w:hAnsi="${s.font}" w:cs="${s.font}"/>${s.bold ? "<w:b/>" : ""}${s.italic ? "<w:i/>" : ""}${s.caps ? "<w:caps/>" : ""}${s.color ? `<w:color w:val="${s.color}"/>` : ""}<w:sz w:val="${s.size}"/><w:szCs w:val="${s.size}"/></w:rPr>`;
   return `<w:p><w:pPr>${ppr}</w:pPr><w:r>${rpr}<w:t xml:space="preserve">${escapeXml(`{{${s.type}}}`)}</w:t></w:r></w:p>`;
 }
 

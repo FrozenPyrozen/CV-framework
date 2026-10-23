@@ -1,6 +1,17 @@
 # Imported documents (specs/sources-spec.md). Newest first; lower precedence than summaries and facts.
 schema_version: 1
 documents:
+  - id: portfolio-2025-09
+    kind: portfolio
+    date: 2025-09
+    title: Portfolio, latest version (PDF exported 2026-10-22; includes the Jira
+      plugin and the car navigation PoC)
+    file: sources/files/portfolio-2025-09.pdf
+    text: sources/text/portfolio-2025-09.md
+    sha256: 3c09a0e75ff6cff7599a04b2c1fc9830459a4c456f51cb5207b8bcf588ac9c1e
+    imported_at: 2026-10-23
+    status: imported
+    media: sources/media/portfolio-2025-09
   - id: portfolio-2025-04
     kind: portfolio
     date: 2025-04

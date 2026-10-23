@@ -17,6 +17,7 @@ import { isMain, loadConfig, loadDecisions, loadSummaries, rootPath, type Summar
 import { buildBlocklist, printFindings, secretFindings, type Finding } from "./lint.ts";
 import { parseArgs } from "./refresh.ts";
 import { spellcheckText } from "./spellcheck.ts";
+import { loadSources } from "./lib/sources.ts";
 import { buildSourceIndex, sentencePieces } from "./trace.ts";
 
 export const PORTFOLIO_TITLE = "My Portfolio";
@@ -63,21 +64,24 @@ export function pageItems(page: PortfolioPage) {
 
 const showPhone = () => (loadDecisions()?.decisions ?? []).some((d: any) => d.id === "portfolio-show-phone");
 
+// The cover, as on the published portfolio: the links line (framework.config.yaml portfolio.cover_links, shown as
+// their addresses), the title and the name (portfolio.name, default the profile's). No phone, headline or location.
 function coverBlock(ctx: Context): string {
-  // The CV header without the location line, and without the phone unless decision portfolio-show-phone exists (public link).
-  const cv = headerBlock({ ...ctx, market: { ...ctx.market, header: { ...ctx.market.header, show_phone: showPhone() && ctx.market.header.show_phone } } });
-  const [name, headline, , contacts] = cv.split("\n\n");
-  // The portfolio doesn't link to itself: a profile link labeled "Portfolio" is left out here.
-  const own = (ctx.profile.contacts.links ?? []).filter((l: any) => /portfolio/i.test(l.label)).map((l: any) => ctx.cfg.header.link_format.replace("{label}", l.label).replace("{url}", l.url));
-  const sep = ctx.cfg.display.field_separator;
-  const kept = contacts.split(sep).filter((c) => !own.includes(c)).join(sep);
-  return [`# **${PORTFOLIO_TITLE}**`, name.replace(/^# /, "## "), headline, kept].join("\n\n");
+  const pf = (ctx.cfg as any).portfolio ?? {};
+  const links = ((pf.cover_links ?? []) as string[])
+    .map((label) => (ctx.profile.contacts.links ?? []).find((l: any) => l.label === label))
+    .filter(Boolean)
+    .map((l: any) => `[${String(l.url).replace(/^https?:\/\//, "").replace(/\/$/, "")}](${l.url})`);
+  void showPhone;
+  return [...(links.length ? [links.join(ctx.cfg.display.field_separator)] : []), `# **${PORTFOLIO_TITLE}**`, `## **${pf.name ?? ctx.profile.name}**`].join("\n\n");
 }
 
 // Title (the product and its main technologies, as in the April 2025 portfolio), then the client label and role.
 // No dates: the portfolio shows projects, not a timeline (the CV has the dates).
-function projectTitleBlock(page: PortfolioPage, ctx: Context): string {
-  return [`## **${page.title}**`, `### **${page.label}${ctx.cfg.display.field_separator}${page.role}**`].join("\n\n");
+function projectTitleBlock(page: PortfolioPage, _ctx: Context): string {
+  // As on the published portfolio: one title naming the product, the client where it may be named, and the main
+  // technologies (portfolio_title or the page's title); no separate client, role or date line.
+  return `## **${page.title}**`;
 }
 
 // The project's text splits after its product paragraph (before the first section label such as **Responsibilities**),
@@ -90,15 +94,11 @@ function splitIntro(text: string): [string, string] {
 function mediaBlock(page: PortfolioPage): string {
   const out: string[] = [];
   for (const it of pageItems(page)) {
-    if (it.kind === "image") out.push(`![${it.caption}](${it.value})`, `*${it.caption}*`);
+    if (it.kind === "image") out.push(`![${it.caption}](${it.value})`); // the caption is the image's description (alt text); not printed, as on the published portfolio
     if (it.kind === "link") out.push(`[${it.label}](${it.value})`);
     if (it.kind === "demo") out.push(`Demo: ${it.value}`);
   }
   return out.join("\n\n");
-}
-
-function contactBlock(ctx: Context): string {
-  return ["## **Contact**", coverBlock(ctx).split("\n\n")[3]].join("\n\n");
 }
 
 const BLOCK = (name: string) => new RegExp(`<!-- generated:${name} -->[\\s\\S]*?<!-- /generated:${name} -->\\n?`, "g");
@@ -121,7 +121,7 @@ export function refreshPortfolio(): { text: string; added: string[]; removed: st
   const ids = projects.map((p) => p.id);
   const added = ids.filter((id) => !old.projects.has(id));
   const removed = [...old.projects.keys()].filter((id) => !ids.includes(id));
-  const parts = [wrapBlock("portfolio-cover", coverBlock(ctx)), old.intro || INTRO_PLACEHOLDER];
+  const parts = [wrapBlock("portfolio-cover", coverBlock(ctx)), ...(old.intro ? [old.intro] : [])]; // the intro is optional (the published portfolio has none)
   for (const p of projects) {
     const text = old.projects.get(p.id);
     const media = wrapBlock(`media-${p.id}`, mediaBlock(p));
@@ -129,7 +129,6 @@ export function refreshPortfolio(): { text: string; added: string[]; removed: st
     const [intro, rest] = splitIntro(text);
     parts.push(`<!-- project: ${p.id} -->`, wrapBlock(`project-${p.id}`, projectTitleBlock(p, ctx)), ...(intro ? [intro] : []), media, ...(rest ? [rest] : []));
   }
-  parts.push(wrapBlock("skills", ["## **Skills**", skillsBlock(ctx)].join("\n\n")), wrapBlock("contact", contactBlock(ctx)));
   return { text: parts.join("\n\n") + "\n", added, removed };
 }
 
@@ -144,6 +143,8 @@ export async function checkPortfolio(file = portfolioPath()): Promise<Finding[]>
   const opted = new Set(portfolioProjects(summaries).map((s) => s.id));
   const pages = new Set(portfolioPages(summaries).map((p) => p.id));
   const idx = buildSourceIndex();
+  // Text kept from the user's published portfolio may cite that document (doc:<id>, specs/sources-spec.md).
+  const docIds = new Set(loadSources().documents.map((d) => d.id));
   const lines = text.split("\n");
   const bl = buildBlocklist(summaries, ctx);
   const escapeRe = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -176,6 +177,7 @@ export async function checkPortfolio(file = portfolioPath()): Promise<Finding[]>
       for (const id of piece.src) {
         const res = idx.resolve(id);
         const owner = id.split("#")[0];
+        if (id.startsWith("doc:")) { if (!docIds.has(id.slice(4))) add("error", `source "${id}" isn't an imported document (sources/index.yaml)`, para.line); continue; }
         if (!res.ok) add("error", `source "${id}" doesn't resolve`, para.line);
         else if (id === "profile" || id.startsWith("calc:")) { if (project) add("error", `source "${id}" belongs in the intro, not in a project`, para.line); }
         else if (!opted.has(res.entry ?? owner)) add("error", `source "${id}" is from a project that isn't in the portfolio (show_in_portfolio)`, para.line);

@@ -18,8 +18,8 @@ harvested_at: "2026-10-15"
 # --- how it appears in the CV ---
 show_in_cv: true
 show_in_portfolio: true   # all jobs, decided by user 2026-10-23
-portfolio_order: 2
-portfolio_title: "Generative AI design app for Jira (Atlassian Forge, React)"
+portfolio_order: 4
+portfolio_title: "Jira design generation plugin under NDA (Node.js, React)"
 cv_section: consulting
 cv_order: 2
 cv_client_label: Generative AI Jira Plugin

@@ -16,23 +16,23 @@ description: Writes the public portfolio's text (portfolio/portfolio.md) from th
 
 1. **Prepare.** Run `npm run validate`, then `npm run portfolio -- refresh` (writes the cover, project title lines, public images and links, skills and contact; adds a placeholder for a new project, drops projects no longer opted in). Run `npm run status` for the projects to write or rewrite. **Never edit inside `<!-- generated:… -->` blocks or the `<!-- project: … -->` markers.** No project opted in: stop and suggest `/portfolio-material`.
 2. **Intro** (replaces `TODO(/portfolio): write the intro paragraph`): two or three sentences on who you are and the kind of products in the portfolio, each ending with `<!-- src: … -->` (an opted-in summary's section, `profile` or `calc:years_experience`).
-3. **Each project to write or rewrite** (replaces its placeholder, or its old text; leave every other project exactly as it is), in the structure of the April 2025 portfolio (`specs/outputs/portfolio.md` 4):
+3. **Each page to write or rewrite** (replaces its placeholder, or its old text; leave every other page exactly as it is), in the structure of the published portfolio (`specs/outputs/portfolio.md` 4):
    ```markdown
-   One paragraph, two to four sentences: what the product is, who uses it, its main features (sections 1 and 2). <!-- src: <id>#1 -->
+   Description: what the product is, who uses it, its features. <!-- src: doc:portfolio-2025-09 -->
 
    **Responsibilities**
 
-   * One item per contribution: what you built, how and why, with its result or number when there is one; 1–3 sentences, longer than a CV bullet. <!-- src: <id>#4.N -->
+   One or two prose paragraphs: what you did, how and why, with results and numbers. <!-- src: doc:portfolio-2025-09 -->
 
    **Technologies and frameworks**
 
-   React Native, TypeScript, … (the hands-on items of section 5). <!-- src: <id>#5 -->
+   React Native, TypeScript, … <!-- src: doc:portfolio-2025-09 -->
    ```
-   - The product paragraph comes first: `refresh` puts the screenshots right after it, as the old portfolio did.
-   - **One page per project** with its screenshots (`specs/outputs/portfolio.md` 4): the product paragraph about 70 words; at most `portfolio_max_items` items (default 4) under *Responsibilities*, about 40 words each, most important first (contribution order, then `cv_emphasis`; the role and leadership go in as items); a short technologies line (the main hands-on items, not all of section 5); at most `checks.portfolio_max_project_words` (300) words in total (`portfolio check` warns).
-   - **Sources:** every sentence and bullet ends with `<!-- src: … -->` from **this** project only.
-   - **Numbers:** only from the source; a `doc:<id>` number only once "confirmed by user".
-   - **Public:** use the project's `portfolio_label` (default `cv_client_label`), never a hidden client's name, a section 9 term (unless `allow_in: [portfolio]`), ticket ids or internal URLs; images and links come only from the generated block.
+   - **Pages of the published portfolio:** keep their content and order, improve the wording and fix typos; cite `doc:portfolio-2025-09`, or the page's summary where you use its wording. The user's corrections win: hidden clients stay hidden, corrected numbers and scopes are used (summaries, `facts/decisions.yaml`).
+   - **New pages:** the same structure, written from the page's summary (sources from that summary only).
+   - **Sources:** every sentence ends with `<!-- src: … -->` (`doc:<id>`, or ids from this page's summary).
+   - **No dates or periods**; at most about 400 words a page (`portfolio check` warns above `checks.portfolio_max_project_words`).
+   - **Public:** never a hidden client's name, a section 9 term (unless `allow_in: [portfolio]`), ticket ids or internal URLs; images come only from the generated block.
 4. **Check.** Run `npm run portfolio -- check` (sources, confidentiality, secrets, spelling; it also records which summary state each project was written from) and fix every error. A project whose sources changed but needs no new text: `npm run portfolio -- check --projects-reviewed`. A real new word: add it to `facts/dictionary.txt` and say so.
 5. **Report** per project (written, rewritten, unchanged), the diff and the next step: `npm run build:portfolio` (Word, PDF and previews for A4 and Letter, and a `.pages` copy), then look at the previews in `portfolio/preview/`.
 

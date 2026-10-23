@@ -18,14 +18,14 @@ harvested_at: null
 show_in_cv: true
 show_in_portfolio: true   # all jobs, decided by user 2026-10-23
 portfolio_order: 8
-portfolio_projects:                # one page per client, as in the April 2025 portfolio (user 2026-10-23)
-  - { id: aspiration-signup, title: "Aspiration signup flow (React Native Web)", label: "Aspiration, an Itjet client" }
-  - { id: aspiration-web, title: "Aspiration banking web app (React, Next.js)", label: "Aspiration, an Itjet client" }
-  - { id: registart, title: "RegiStart voter-registration app (React, Node.js, AWS)", label: "RegiStart, an Itjet client" }
-  - { id: fused, title: "Fused coach and athlete app (React, React Native, Node.js)", label: "Fused, an Itjet client" }
-  - { id: wink, title: "Wink social app (React Native)", label: "Wink, an Itjet client" }
-  - { id: golfuture, title: "Golfuture golf app (React Native)", label: "Golfuture, an Itjet client" }
-  - { id: oroscopo, title: "Oroscopo astrology app (React Native)", label: "Oroscopo, an Itjet client" }
+portfolio_projects:                # one page per client, as on the published portfolio (user 2026-10-23)
+  - { id: aspiration-signup, title: "Aspiration signup (React Native Web)" }
+  - { id: aspiration-web, title: "Aspiration banking web app (React)" }
+  - { id: registart, title: "RegiStart (React web, Node.js backend, CI/CD)" }
+  - { id: fused, title: "Fused (web, mobile and backend)" }
+  - { id: wink, title: "Wink (React Native)" }
+  - { id: golfuture, title: "Golfuture (React Native)" }
+  - { id: oroscopo, title: "Oroscopo (React Native)" }
 cv_section: experience
 cv_client_label: Itjet
 cv_location: "Kyiv, Ukraine (Hybrid)"
@@ -205,6 +205,103 @@ Source: doc:portfolio-2025-04
 - The Wink app reached more than 5 million registered users (4.8). Source: user 2026-10-22, confirmed 2026-10-23 that the app reached them (doc:portfolio-2025-04 said "more than 5 million users"). Confidence: approximate.
 
 ## 8. Portfolio material
+
+- image: ../sources/media/portfolio-2025-09/p10-1.png
+  caption: Aspiration signup, screen 1
+  project: aspiration-signup
+  public: yes, confirmed by user 2026-10-23
+- image: ../sources/media/portfolio-2025-09/p10-3.png
+  caption: Aspiration signup, screen 2
+  project: aspiration-signup
+  public: yes, confirmed by user 2026-10-23
+- image: ../sources/media/portfolio-2025-09/p10-5.png
+  caption: Aspiration signup, screen 3
+  project: aspiration-signup
+  public: yes, confirmed by user 2026-10-23
+- image: ../sources/media/portfolio-2025-09/p11-1.png
+  caption: Aspiration banking web app, screen 1
+  project: aspiration-web
+  public: yes, confirmed by user 2026-10-23
+- image: ../sources/media/portfolio-2025-09/p11-3.png
+  caption: Aspiration banking web app, screen 2
+  project: aspiration-web
+  public: yes, confirmed by user 2026-10-23
+- image: ../sources/media/portfolio-2025-09/p11-5.png
+  caption: Aspiration banking web app, screen 3
+  project: aspiration-web
+  public: yes, confirmed by user 2026-10-23
+- image: ../sources/media/portfolio-2025-09/p12-1.png
+  caption: RegiStart, screen 1
+  project: registart
+  public: yes, confirmed by user 2026-10-23
+- image: ../sources/media/portfolio-2025-09/p12-3.png
+  caption: RegiStart, screen 2
+  project: registart
+  public: yes, confirmed by user 2026-10-23
+- image: ../sources/media/portfolio-2025-09/p12-5.png
+  caption: RegiStart, screen 3
+  project: registart
+  public: yes, confirmed by user 2026-10-23
+- image: ../sources/media/portfolio-2025-09/p12-7.png
+  caption: RegiStart, screen 4
+  project: registart
+  public: yes, confirmed by user 2026-10-23
+- image: ../sources/media/portfolio-2025-09/p13-1.png
+  caption: Fused mobile app, screen 1
+  project: fused
+  public: yes, confirmed by user 2026-10-23
+- image: ../sources/media/portfolio-2025-09/p13-3.png
+  caption: Fused mobile app, screen 2
+  project: fused
+  public: yes, confirmed by user 2026-10-23
+- image: ../sources/media/portfolio-2025-09/p13-5.png
+  caption: Fused mobile app, screen 3
+  project: fused
+  public: yes, confirmed by user 2026-10-23
+- image: ../sources/media/portfolio-2025-09/p13-7.png
+  caption: Fused mobile app, screen 4
+  project: fused
+  public: yes, confirmed by user 2026-10-23
+- image: ../sources/media/portfolio-2025-09/p14-1.png
+  caption: Wink, screen 1
+  project: wink
+  public: yes, confirmed by user 2026-10-23
+- image: ../sources/media/portfolio-2025-09/p14-3.png
+  caption: Wink, screen 2
+  project: wink
+  public: yes, confirmed by user 2026-10-23
+- image: ../sources/media/portfolio-2025-09/p14-5.png
+  caption: Wink, screen 3
+  project: wink
+  public: yes, confirmed by user 2026-10-23
+- image: ../sources/media/portfolio-2025-09/p14-7.png
+  caption: Wink, screen 4
+  project: wink
+  public: yes, confirmed by user 2026-10-23
+- image: ../sources/media/portfolio-2025-09/p15-1.png
+  caption: Golfuture, screen 1
+  project: golfuture
+  public: yes, confirmed by user 2026-10-23
+- image: ../sources/media/portfolio-2025-09/p15-3.png
+  caption: Golfuture, screen 2
+  project: golfuture
+  public: yes, confirmed by user 2026-10-23
+- image: ../sources/media/portfolio-2025-09/p15-5.png
+  caption: Golfuture, screen 3
+  project: golfuture
+  public: yes, confirmed by user 2026-10-23
+- image: ../sources/media/portfolio-2025-09/p15-7.png
+  caption: Golfuture, screen 4
+  project: golfuture
+  public: yes, confirmed by user 2026-10-23
+- image: ../sources/media/portfolio-2025-09/p16-1.png
+  caption: Oroscopo, screen 1
+  project: oroscopo
+  public: yes, confirmed by user 2026-10-23
+- image: ../sources/media/portfolio-2025-09/p16-3.png
+  caption: Oroscopo, screen 2
+  project: oroscopo
+  public: yes, confirmed by user 2026-10-23
 
 - image: ../sources/media/portfolio-2025-04/image30.png
   caption: Fused web app, coach subscriptions an athlete can connect to (Stripe)

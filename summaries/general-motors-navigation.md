@@ -17,10 +17,11 @@ harvested_at: null
 # --- how it appears in the CV ---
 show_in_cv: true
 show_in_portfolio: true   # all jobs, decided by user 2026-10-23
-portfolio_order: 3
-portfolio_projects:                # pages of the April 2025 portfolio, kept (user 2026-10-23)
-  - { id: companion, title: "Vehicle companion app with HERE maps (React Native)" }
-  - { id: navigation, title: "In-car navigation app on HERE (React Native, React, Node.js)" }
+portfolio_order: 2
+portfolio_projects:                # the three pages of the published portfolio (user 2026-10-23: keep its structure)
+  - { id: companion, title: "Automotive car management app for General Motors (React Native)" }
+  - { id: navigation, title: "Automotive navigation app under NDA for HERE Technologies (React Native, React, Node.js, Android)" }
+  - { id: poc, title: "Car navigation PoC under NDA (Node.js, React)" }
 cv_section: experience
 cv_client_label: General Motors
 cv_location: Remote
@@ -155,6 +156,35 @@ Source: doc:portfolio-2025-04
 - Navigation features also used HERE "service packages" (4.6). Source: previous CV, confirmed by user 2026-10-15. Confidence: exact.
 
 ## 8. Portfolio material
+
+- image: ../sources/media/portfolio-2025-04/image1.png
+  caption: Car management app, map screen
+  project: companion
+  public: yes, confirmed by user 2026-10-23
+- image: ../sources/media/portfolio-2025-04/image2.png
+  caption: Car management app, map search
+  project: companion
+  public: yes, confirmed by user 2026-10-23
+- image: ../sources/media/portfolio-2025-04/image1.jpeg
+  caption: Car management app, charging stations
+  project: companion
+  public: yes, confirmed by user 2026-10-23
+- image: ../sources/media/portfolio-2025-04/image3.png
+  caption: Car management app, place details
+  project: companion
+  public: yes, confirmed by user 2026-10-23
+- image: ../sources/media/portfolio-2025-04/image2.jpeg
+  caption: Navigation app, route view
+  project: navigation
+  public: yes, confirmed by user 2026-10-23
+- image: ../sources/media/portfolio-2025-04/image3.jpeg
+  caption: Navigation app, search
+  project: navigation
+  public: yes, confirmed by user 2026-10-23
+- image: ../sources/media/portfolio-2025-09/p04-1.png
+  caption: Car navigation PoC on the head unit
+  project: poc
+  public: yes, confirmed by user 2026-10-23
 
 TODO (needs user input)
 

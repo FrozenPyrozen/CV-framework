@@ -31,7 +31,7 @@ async function settings() {
       language,
       dictionaries: language === "en-GB" ? DICTIONARIES.map((d) => (d === "en_us" ? "en-gb" : d)) : DICTIONARIES,
       words: projectWords(),
-      ignoreRegExpList: ["/https?:\\/\\/\\S+/g", "/[\\w.+-]+@[\\w-]+\\.[\\w.]+/g", "/`[^`]*`/g"],
+      ignoreRegExpList: ["/https?:\\/\\/\\S+/g", "/\\b(?:www\\.)?[\\w-]+\\.(?:com|org|net|io|dev|app|ai)(?:\\/\\S*)?/gi", "/[\\w.+-]+@[\\w-]+\\.[\\w.]+/g", "/`[^`]*`/g"],
     } as any);
   }
   return settingsCache;

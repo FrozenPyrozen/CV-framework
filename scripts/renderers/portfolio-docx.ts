@@ -79,7 +79,7 @@ export async function renderPortfolioDocx(markdown: string, mdFile: string, outP
   };
   let images = 0;
   // Images: consecutive screenshots share one row (as in the April 2025 portfolio), scaled to the same height, the
-  // row fitting the content width and at most 30% of the content height, and never larger than 150 dpi
+  // row fitting the content width and at most 25% of the content height, and never larger than 150 dpi
   // (1440 / 150 = 9.6 twips per pixel): a small screenshot is printed smaller rather than blurry.
   const loadMedia = (path: string) => {
     const abs = resolve(dirname(mdFile), path);
@@ -103,7 +103,7 @@ export async function renderPortfolioDocx(markdown: string, mdFile: string, outP
     if (!media.length) return undefined;
     const gap = 144; // 0.1 inch between screenshots
     const ratios = media.map((x) => x.m.px.w / x.m.px.h);
-    const h = Math.min(contentH * 0.3, (contentW - gap * (media.length - 1)) / ratios.reduce((a, b) => a + b, 0), ...media.map((x) => x.m.px.h * (1440 / 150)));
+    const h = Math.min(contentH * 0.25, (contentW - gap * (media.length - 1)) / ratios.reduce((a, b) => a + b, 0), ...media.map((x) => x.m.px.h * (1440 / 150)));
     const spacer = `<w:r><w:t xml:space="preserve">  </w:t></w:r>`;
     return media.map((x, k) => {
       const w = h * ratios[k];
@@ -155,7 +155,8 @@ export async function renderPortfolioDocx(markdown: string, mdFile: string, outP
   let row: { path: string; alt: string }[] = [];
   let captions: string[] = [];
   const flushRow = () => {
-    if (row.length) { const r = imageRow(row); if (r) push(para("image", "", r)); }
+    // at most 4 screenshots per row, as on the published portfolio (Fused: 4 phone screens, then 2 web pages)
+    for (let i = 0; i < row.length; i += 4) { const r = imageRow(row.slice(i, i + 4)); if (r) push(para("image", "", r)); }
     if (captions.length) push(para("caption", captions.join("; ")));
     row = []; captions = [];
   };
@@ -165,8 +166,8 @@ export async function renderPortfolioDocx(markdown: string, mdFile: string, outP
     if (g) {
       if (g[1] && g[2].startsWith("media-")) flushRow();
       block = g[1] ? "" : g[2];
-      if (!g[1] && block === "portfolio-cover") push(para("cover_contact", "", ""));    // banner padding above
-      if (g[1] && g[2] === "portfolio-cover") { push(para("cover_contact", "", "")); push(headline); headline = undefined; } // and below, then the headline
+      // after the banner an unshaded paragraph, so the next page break doesn't carry the banner fill to the page end
+      if (g[1] && g[2] === "portfolio-cover") { push(headline ?? para("body", "", "")); headline = undefined; }
       continue;
     }
     if (/^<!--\s*project:/.test(raw)) { inProject = true; continue; }

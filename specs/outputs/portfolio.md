@@ -8,7 +8,7 @@ The portfolio is a second **output** of the same sources as the CV (plan section
 
 | Portfolio part | Source |
 |---|---|
-| Cover: title, name, headline, contacts, portfolio intro | `facts/profile.yaml` and the default market's header rules (`markets/*.yaml`, `cv-spec.md` 14), without the location line and without a profile link labeled "Portfolio" (the portfolio doesn't link to itself); one intro paragraph written by the agent from the summaries (sourced like the CV summary). Because the link is public, the **phone number is left out** unless decision `portfolio-show-phone` exists in `facts/decisions.yaml` |
+| Cover: links line, title, name (as on the published portfolio) | `facts/profile.yaml` and the default market's header rules (`markets/*.yaml`, `cv-spec.md` 14), without the location line and without a profile link labeled "Portfolio" (the portfolio doesn't link to itself); one intro paragraph written by the agent from the summaries (sourced like the CV summary). Because the link is public, the **phone number is left out** unless decision `portfolio-show-phone` exists in `facts/decisions.yaml` |
 | Project pages | summaries with `show_in_portfolio: true` (section 3): section 1 (what the product is), 2 (main features), 3 (role), 4 (contributions), 5 (technologies), 7 (numbers), 8 (images, links, demo notes) |
 | Skills overview | `facts/skills.yaml` (generated block, like the CV's SKILLS) |
 | Contacts page | `facts/profile.yaml` |
@@ -61,25 +61,25 @@ Only items with `public: yes, confirmed by user <date>` reach the portfolio. A s
 
 ## 4. Structure of `portfolio.md`
 
-`npm run portfolio -- refresh` writes the generated parts (`<!-- generated:… -->`) and the project markers; the portfolio agent (`agents/portfolio.md`, `/portfolio`) writes the rest, never inside a generated block.
+The structure of the **published portfolio** (`doc:portfolio-2025-09`, the user's choice on 2026-10-23: "keep the old portfolio's structure"). `npm run portfolio -- refresh` writes the generated parts (`<!-- generated:… -->`) and the page markers; the portfolio agent (`agents/portfolio.md`, `/portfolio`) writes the rest, never inside a generated block.
 
-1. **Cover** (generated `portfolio-cover`): "My Portfolio", name, headline, contacts (section 1). Then the **intro** (agent): two or three sourced sentences.
-2. **Projects**, one page per opted-in summary or per entry of its `portfolio_projects`, in `portfolio_order` (then newest first; pages of one summary in their listed order), each starting with `<!-- project: <id> -->` (`<summary-id>` or `<summary-id>/<project-id>`), in the structure of the April 2025 portfolio (section 5a):
-   - title lines (generated `project-<id>`): `portfolio_title` (the product and its main technologies, e.g. "Velas crypto wallet (React, React Native, Electron)"; default the role), or the page's title from `portfolio_projects`; then the label (`portfolio_label`, default `cv_client_label`, or the page's own) and the role. **No dates or periods anywhere in the portfolio** (the user's choice, 2026-10-23); the CV carries the dates;
-   - the agent's **product paragraph** (sections 1 and 2: what it is, who uses it, its main features);
-   - images and links (generated `media-<id>`, placed by `refresh` right after the product paragraph): only the section 8 items marked public, images with their captions;
-   - **Responsibilities** (agent): up to `portfolio_max_items` items from sections 3 and 4, longer than CV bullets (the "how" and "why", with results and numbers from section 7 or a contribution's Result);
-   - **Technologies and frameworks** (agent): the hands-on items of section 5.
-   **Length:** each project fits one page with its screenshots, as in the April 2025 portfolio (160–370 words a project): a product paragraph of about 70 words, at most `portfolio_max_items` (4) Responsibilities items of about 40 words, a short technologies line; `portfolio check` warns above `checks.portfolio_max_project_words` (300).
-   Every sentence and bullet cites this project only. A newly opted-in project gets a placeholder until `/portfolio` writes it; a project no longer opted in is dropped.
-3. **Skills overview** (generated `skills`, from `facts/skills.yaml`).
-4. **Contact** (generated `contact`).
+1. **Cover** (generated `portfolio-cover`, its own page): the links line (`framework.config.yaml` `portfolio.cover_links`, shown as their addresses), "My Portfolio" and the name (`portfolio.name`). No headline, location or phone. An intro paragraph is optional; the published portfolio has none.
+2. **Pages**, one per opted-in summary or per entry of its `portfolio_projects`, in `portfolio_order` (pages of one summary in their listed order), each starting with `<!-- project: <id> -->`:
+   - the title (generated `project-<id>`): the product, the client where it may be named (or "under NDA"), and the main technologies, as on the published portfolio (`portfolio_title` or the page's title); no separate client, role or date line;
+   - the agent's **description** (what the product is, who uses it, its features);
+   - the screenshots (generated `media-<id>`, right after the description, in rows): only the section 8 items marked public, without printed captions (the caption is the image's description, its alt text);
+   - **Responsibilities** (agent): one or two prose paragraphs, as on the published portfolio;
+   - **Technologies and frameworks** (agent): a comma-separated list.
+   **No dates or periods anywhere**; the CV carries the dates. **Length:** each page fits one page with its screenshots (up to about 400 words); `portfolio check` warns above `checks.portfolio_max_project_words` (420).
+   **Sources:** text kept from the published portfolio cites `doc:portfolio-2025-09`; text from a summary cites that page's summary. The user's corrections (summaries, decisions) win over the old text: hidden clients stay hidden, corrected numbers and scopes are used.
+   A newly opted-in page gets a placeholder until `/portfolio` writes it; a page no longer opted in is dropped.
+3. No skills or contact pages (the published portfolio has none).
 
 ## 5. Formats and page sizes
 
 - **Markdown** is the source and is readable on its own (images as relative links).
 - **Word (`.docx`)** from a portfolio template (`templates/portfolio-<name>/`, style map `kind: portfolio`): imported with `/import-template` from a flowing Pages or Word file, or generated when the original is a free-form layout, as `portfolio-classic` is (`npm run portfolio-template`, section 5a). Its paragraph types: `cover_title`, `cover_name`, `cover_contact` (the banner), `headline`, `intro`, `project_title` (each project starts a new page), `project_meta`, `section_label`, `body`, `list_item`, `image`, `caption`, `section_heading` (skills starts a new page, contact doesn't), `skills_line`, `contact_line` (`templates.md` 2). One Word file per size.
-- **Images:** PNG and JPEG are embedded as they are; other formats (TIFF from Pages, GIF, WebP) are converted to PNG (macOS `sips`). Consecutive screenshots share **one row**, as in the April 2025 portfolio: scaled to the same height, the row fitting the content width and at most 30% of the page height, with their captions together under it; no image is shown above 150 dpi: a small screenshot is printed smaller rather than blurry (the build warns under 1.5 inches).
+- **Images:** PNG and JPEG are embedded as they are; other formats (TIFF from Pages, GIF, WebP) are converted to PNG (macOS `sips`). Consecutive screenshots share **one row** (at most 4, then a new row), as in the published portfolio: scaled to the same height, the row fitting the content width and at most 25% of the page height (the published portfolio's screenshot height), captions only as alt text; no image is shown above 150 dpi: a small screenshot is printed smaller rather than blurry (the build warns under 1.5 inches).
 - **Page sizes:** a portfolio template lists the sizes it supports in its `fixes.yaml`: `sizes: { a4: { page_margins: {…} }, letter: { page_margins: {…} } }`, extending the existing `page_margins` fix (`templates.md`). The renderer sets the page size and margins per size. Default: A4 and Letter (`npm run build:portfolio -- --size a4|letter|all`).
 - **PDF:** one per size, exported through the PDF exporters in order (Pages, Word, LibreOffice; plan 6.1).
 - **Pages (`.pages`):** saved from the A4 Word file through Pages when it is installed, for editing by hand. A hand edit is never the source: changes go back into the summaries or `portfolio.md`.
@@ -91,7 +91,7 @@ The current portfolio (Pages, April 2025, 16 A4 pages) is the visual reference f
 | Part | Look |
 |---|---|
 | Page | A4 portrait |
-| Cover | a coral-red banner (`#F46B75`) with the links line (DIN Condensed Bold, small caps look), the title "My Portfolio" (Superclarendon Bold, 42 pt, white, centered) and the name (Superclarendon, white) |
+| Cover | a coral-red banner (`#F46B75`) across the top of the page, rows separated by thin white rules: the links line (DIN Condensed, capitals, left), the title "My Portfolio" (Superclarendon Bold, 42 pt, white, centered) and the name (Superclarendon, white) |
 
 In `portfolio-classic` the Superclarendon titles become **Rockwell Bold**, the closest slab serif: Pages doesn't apply Superclarendon to text that comes from a Word file under any name (tested 2026-10-23, it falls back to Times), while Rockwell, Charter, Avenir Next and DIN Condensed are kept and embedded. The headline sits under the banner. `doctor` checks that the template's fonts are installed.
 | Project title | Superclarendon Bold (Rockwell Bold in the template), about 16 pt, teal (`#077482`), centered, one project per page |
@@ -122,7 +122,7 @@ The fonts are macOS system fonts: the PDF is exported through Pages (first in `p
 - A project whose sources changed but whose text still fits: `npm run portfolio -- check --projects-reviewed`.
 - `/portfolio` rewrites only the stale projects and keeps the wording of the rest (`cv-spec.md` 12, same rule).
 - A new project appears only after `show_in_portfolio: true` is set with the user.
-- **Coverage (2026-10-23):** every project of the April 2025 portfolio stays (GM companion app and HERE navigation app, Velas, the clinical trial app, OMO, the dosimeter app, and the Itjet clients Aspiration (signup and web app), RegiStart, Fused, Wink, Golfuture and Oroscopo), plus SYSPRO and the Jira plugin. The Admasters wasn't in it and stays out.
+- **Coverage (2026-10-23):** every page of the published portfolio (`doc:portfolio-2025-09`) stays, in its order: the GM car management app, the HERE navigation app, the car navigation PoC, Velas, the Jira plugin, the clinical trial app, OMO, the dosimeter app, and the Itjet clients Aspiration (signup and banking web app), RegiStart, Fused, Wink, Golfuture and Oroscopo; SYSPRO is added first. The Admasters wasn't in it and stays out. Its screenshots are reused (public, as already published).
 
 ## 8. Rules
 

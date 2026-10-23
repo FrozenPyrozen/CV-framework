@@ -17,8 +17,8 @@ harvested_at: null
 # --- how it appears in the CV ---
 show_in_cv: true
 show_in_portfolio: true   # all jobs, decided by user 2026-10-23
-portfolio_order: 4
-portfolio_title: "Velas crypto wallet (React, React Native, Electron)"
+portfolio_order: 3
+portfolio_title: "Velas Wallet (React, React Native, Electron)"
 cv_section: experience
 cv_client_label: Velas
 cv_location: Remote
@@ -151,6 +151,13 @@ Source: doc:portfolio-2025-04
 - First interaction with the Android wallet 3x faster (4.9). Source: cv. Confidence: exact.
 
 ## 8. Portfolio material
+
+- image: ../sources/media/portfolio-2025-09/p05-1.png
+  caption: Velas Wallet on mobile
+  public: yes, confirmed by user 2026-10-23
+- image: ../sources/media/portfolio-2025-09/p05-3.png
+  caption: Velas Wallet on desktop
+  public: yes, confirmed by user 2026-10-23
 
 TODO (needs user input)
 

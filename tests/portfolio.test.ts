@@ -60,14 +60,15 @@ const optIn = (d: string) => {
     const p = join(d, "summaries", f);
     // Itjet as one page (its portfolio_projects and the screenshots' project keys removed): the older tests below.
     let t = readFileSync(p, "utf8").replace(/^show_in_portfolio: true.*$/m, f === "itjet-fintech.md" ? "show_in_portfolio: true" : "show_in_portfolio: false");
-    if (f === "itjet-fintech.md") t = t.replace(/^portfolio_projects:[^\n]*\n(?:  - [^\n]*\n)+/m, "").replace(/^  project: fused\n/gm, "");
+    if (f === "itjet-fintech.md") t = t.replace(/^portfolio_projects:[^\n]*\n(?:  - [^\n]*\n)+/m, "").replace(/^- image: \.\.\/sources\/media\/portfolio-2025-09\/[^\n]*\n(?:  [^\n]*\n)*/gm, "").replace(/^  project: [\w-]+\n/gm, "");
     writeFileSync(p, t);
   }
 };
 const P = "portfolio/portfolio.md";
 const write = (d: string, intro: string, project: string) => {
   const p = join(d, P);
-  writeFileSync(p, readFileSync(p, "utf8").replace("<!-- TODO(/portfolio): write the intro paragraph -->", intro).replace("<!-- TODO(/portfolio): write this project -->", project));
+  // The intro is optional now (the published portfolio has none): it goes right after the cover.
+  writeFileSync(p, readFileSync(p, "utf8").replace("<!-- /generated:portfolio-cover -->\n", `<!-- /generated:portfolio-cover -->\n\n${intro}\n`).replace("<!-- TODO(/portfolio): write this project -->", project));
 };
 
 test("portfolio refresh: cover without phone or self-link, only public images, placeholders; check refuses placeholders", () => {
@@ -79,7 +80,11 @@ test("portfolio refresh: cover without phone or self-link, only public images, p
   assert.doesNotMatch(md, /\+380/);
   assert.doesNotMatch(md, /drive\.google\.com/);
   assert.match(md, /!\[Fused web app, the coach's workout schedule\]\(\.\.\/sources\/media\/portfolio-2025-04\/image32\.png\)/);
-  assert.match(md, /### \*\*Itjet \| Full-Stack Engineer\*\*/);
+  assert.doesNotMatch(md, /^### /m, "title-only pages, as on the published portfolio");
+  assert.match(md, /github\.com\/FrozenPyrozen/);
+  assert.match(md, /## \*\*Kyrylo Kohan\*\*/);
+  assert.doesNotMatch(md, /## \*\*Skills\*\*/);
+  assert.doesNotMatch(md, /^\*Fused web app/m, "captions aren't printed");
   assert.doesNotMatch(md, /August 2019|November 2020/, "no dates in the portfolio");
   const c = run("portfolio.ts", dir, ["check"]);
   assert.equal(c.code, 1);
@@ -231,7 +236,7 @@ test("portfolio_projects: one summary gives several pages; screenshots go to the
   const fused = md.slice(md.indexOf("<!-- project: itjet-fintech/fused -->"), md.indexOf("<!-- project: itjet-fintech/wink -->"));
   assert.match(fused, /image30\.png/);
   assert.doesNotMatch(md.slice(0, md.indexOf("<!-- project: itjet-fintech/fused -->")), /image30\.png/);
-  assert.match(md, /### \*\*Fused, an Itjet client \| Full-Stack Engineer\*\*/);
+  assert.match(md, /## \*\*Fused \(web, mobile and backend\)\*\*/);
   edit(dir, "summaries/itjet-fintech.md", "  project: fused\n", "  project: nope\n");
   assert.match(run("validate.ts", dir).out, /project "nope" isn't in portfolio_projects/);
 });

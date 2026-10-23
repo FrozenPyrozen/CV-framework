@@ -20,7 +20,7 @@ harvested_at: "2026-10-15"
 show_in_cv: true
 show_in_portfolio: true   # all jobs, decided by user 2026-10-23
 portfolio_order: 5
-portfolio_title: "Clinical trial patient app (React Native, Android)"
+portfolio_title: "Clinical trial app under NDA (React Native, React, Android)"
 cv_section: consulting
 cv_order: 1
 cv_client_label: Clinical Trials Patient App
@@ -241,6 +241,16 @@ Harvest notes: counts are non-merge commits across all branches, for the author 
 | Last commit on the update-crash investigation (4.6) | 2025-04-29 (still open) | git | exact |
 
 ## 8. Portfolio material
+
+- image: ../sources/media/portfolio-2025-04/image4.jpeg
+  caption: Clinical trial app, dashboard with test tasks
+  public: yes, confirmed by user 2026-10-23
+- image: ../sources/media/portfolio-2025-04/image5.jpeg
+  caption: Clinical trial app, study documents
+  public: yes, confirmed by user 2026-10-23
+- image: ../sources/media/portfolio-2025-04/image6.jpeg
+  caption: Clinical trial app, task completion
+  public: yes, confirmed by user 2026-10-23
 
 TODO (needs user input)
 
