@@ -147,6 +147,7 @@ Not allowed (lint fails): italics, tables, nested lists, numbered lists, images,
 - HTML comments (`<!-- entry: … -->`, `<!-- src: … -->`, generated markers) are never rendered, so summary ids and source ids in them may contain such terms (e.g. `orion-mobile-clinical-ink`). The CV Markdown stays in the private repo; only the built files are sent.
 - When `cv_client_label` differs from `client`, the real client name never appears in the CV.
 - `lint` enforces this with a blocklist and secret scan. Hidden client names match in any case; other confidential terms are case-sensitive. The confidentiality reviewer checks the meaning ("could a reader identify the client from this description?").
+- Facts (`facts/confirmed.yaml`) may hold internal names for context; a CV built from them paraphrases those names, and `lint` blocks any section 9 term that slips through.
 
 ## 12. How agents edit a CV
 

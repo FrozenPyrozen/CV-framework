@@ -8,6 +8,8 @@ Kohan
 
 # Companies, clients and products
 Admasters
+Golfuture
+Oroscopo
 Itjet
 RegiStart
 SYSPRO
@@ -15,6 +17,7 @@ Velas
 
 # Tools and technologies
 Bitrise
+vlcplayer
 MMKV
 Snapcraft
 SonarQube

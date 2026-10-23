@@ -203,3 +203,11 @@ test("profile overrides: `also` makes one bullet cite two contributions, the sec
   assert.equal(v.code, 1);
   assert.match(v.out, /also: "itjet-fintech#4\.99" doesn't resolve/);
 });
+
+test("select lists the current job's Stack line even when no profile pins it; an older job's only when pinned", () => {
+  const dir = tempRepo();
+  assert.equal(run("select.ts", dir, ["cv/variants/react", "--profile", "react"]).code, 0);
+  const entries = JSON.parse(readFileSync(join(dir, "cv/variants/react/selection.json"), "utf8")).entries;
+  assert.equal(entries.find((e: any) => e.id === "syspro-saas-erp").stack, "syspro-saas-erp#5");
+  assert.equal(entries.find((e: any) => e.id === "velas-wallet").stack, undefined);
+});

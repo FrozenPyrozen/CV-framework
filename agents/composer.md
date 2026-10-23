@@ -22,8 +22,8 @@ description: Updates the master CV from the summaries and confirmed facts, one e
    - Note its messages: entries missing from the CV, entries in the wrong section.
    - Run `npm run status`: "entries to update" lists master-CV entries whose sources changed since the last build. Each stays listed until its own text in the CV changes; if one needs no text change, build the master alone with `npm run build -- <cv> --entries-reviewed`.
 2. **Plan the changes.** For each entry that needs work (new entry, new or changed contributions or facts, `cv_emphasis`, advisor change list), decide which bullets to add, update or remove. Leave every other entry exactly as it is.
-3. **Old sections without markers** (a CV written before the framework): move their bullets into the configured section (`cv_sections` heading), delete the old heading and its stray lines, and add the entry markers. `refresh` only reports these ("add to section …"); it doesn't move text.
-4. **New entries.** Add the entry block in its section, in the right order (`cv_order`, then newest first): the marker line `<!-- entry: <id> -->` followed by a placeholder `## **x**` and `### **x**`. `refresh` (step 7) fills the real lines. Then write its bullets.
+3. **Old sections without markers** (a CV written before the framework): `refresh` adds the markers itself to every entry whose title lines it recognizes. For entries it reports as "not in the CV yet; the composer should add it to section …", move their bullets into the configured section (`cv_sections` heading) as a new entry (step 4), and delete the old heading and its stray lines. `refresh` doesn't move text.
+4. **New entries.** Add the entry block in its section, in the right order (`cv_order`, then newest first): the marker line `<!-- entry: <id> -->` followed by a placeholder `## **x**` and `### **x**`. This is the only marker the composer writes; `refresh` (step 7) fills the real lines and owns every marker after that. Then write its bullets.
 5. **Write bullets, one entry at a time.**
    - **Shape:** action, then technology, then outcome; a past-tense verb first; one achievement per bullet; about 45 words at most.
    - **Numbers:** only from the source, never rounded up. A number whose only source is an imported document (`doc:<id>` in section 7) is used only once it says "confirmed by user" (`specs/sources-spec.md` 4).
@@ -33,7 +33,10 @@ description: Updates the master CV from the summaries and confirmed facts, one e
    - **Stack lines:** the current job ends with a `* Stack: **…**` line, sourced from the summary's section 5 (`<id>#5`). An older job keeps a Stack line it already has, updated when section 5 changes; don't add new ones to older jobs unless the user asks for that job's technologies to show in the CV (record it as a decision, e.g. `orion-stack-line`).
    - **Sources:** end every bullet with `<!-- src: <id>#4.N -->`, a fact id, or several, comma-separated.
    - **Existing bullets:** keep the user's wording unless the contribution or fact it cites now says something different (compare meaning, not the file's age), the user asked for a change, or the wording claims more than its source ("maintained" for "used", "authored" for "contributed to"): then correct it to match the source.
-   - **Limits:** respect `cv_max_bullets` (the Stack line doesn't count). Entries without one have no fixed limit; follow decision `keep-length` and don't trim older roles.
+   - **Limits:** respect `cv_max_bullets` (the Stack line doesn't count). Entries without one have no fixed limit; follow decision `keep-length` and don't trim older roles. The hard length limit is `checks.max_words`; `keep-length` means no trimming to shorten, not a lower cap.
+   - **More new material than fits `checks.max_words`:** prefer contributions that make a `cv_emphasis` point, carry a number, or show a skill or tag the CV doesn't show yet; list the ones left out in the report (they stay in the summaries for variants, tailored CVs and the portfolio).
+   - **Numbers only in section 7** (not in a contribution's text or Result): usable, citing `<id>#7`, worded with their confidence ("about" for approximate).
+   - **Confidential terms in facts:** a fact may name internal products or modules (section 9 terms); keep them out of the CV wording and paraphrase (`lint` would block them).
 6. **Summary paragraph.** Update only if the entries changed what it should say. One `src` comment per sentence; calculated values cite `calc:years_experience` / `calc:team_size_led`, profile facts cite `profile`. Use the calculated values (lint checks "7+ years" and "up to N engineers").
 7. **Check.**
    - **Self-check against the sources:** reread every bullet you wrote or kept next to the contribution or fact its `src` cites, as the fact-check rubric does; fix any verb or scope stronger than the source.
@@ -52,6 +55,6 @@ Used to add sources to a CV that has none yet (build step 7, or a CV written by 
 **Spelling:** `check` and `build` run `spellcheck`. Fix a flagged typo; add a real word (name, product, technology) to `facts/dictionary.txt` and say so in the report.
 
 ## Never
-- Change generated blocks, entry title or detail lines, or `<!-- entry -->` markers by hand.
+- Change generated blocks, entry title or detail lines, or existing `<!-- entry -->` markers by hand (a new entry's marker, step 4, is the one exception).
 - Add a claim without a source, inflate scope ("led" for "contributed"), or describe AI agents as designers or as ad-hoc code generation (decision `ai-agents-wording`).
 - Rewrite the whole file in one step.

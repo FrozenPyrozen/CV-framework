@@ -17,7 +17,7 @@ A tailored CV is the master CV adapted to a type of role (a **profile**) or to o
 
 ## 2. Steps
 
-1. **Tags.** For a profile, take its tags. For a job ad, map its requirements to tags from the config tag list, propose new tags for anything missing, and save `jd-tags.yaml` for the user to adjust. A job ad always builds on a role profile (`profile:` in `jd-tags.yaml`): without `--profile`, the tailor proposes the closest one for the user to confirm. The job ad's tags add to the profile's.
+1. **Tags.** For a profile, take its tags. For a job ad, map its requirements to tags from the config tag list, propose new tags for anything missing, and save `jd-tags.yaml` for the user to adjust. A job ad always builds on a role profile (`profile:` in `jd-tags.yaml`): without `--profile`, the tailor proposes the closest one for the user to confirm. The job ad's tags add to the profile's. The ad's **requirements** ("what we're looking for", "must have") go to `required`; its **duties** ("what you'll do") and "nice to have" items go to `nice_to_have`, unless the requirements repeat them. The proposed profile is written to `jd-tags.yaml` `profile` (with a one-line reason as a comment) and explained at the top of the gap report.
    `jd-tags.yaml` format:
    ```yaml
    required: [react-native, typescript, testing]     # must-have requirements, weight 3
@@ -30,16 +30,17 @@ A tailored CV is the master CV adapted to a type of role (a **profile**) or to o
    ```
 2. **Selection (script).** `npm run select -- <cv-dir> [--profile <id>] [--tags jd-tags.yaml]` (the profile may also come from `jd-tags.yaml` `profile`) scores every contribution and fact by its tags (2 × emphasize, 1 × summary focus, −2 × de-emphasize, 3 × job-ad required, 1 × job-ad nice-to-have; pinned bullets first in the order the profile's `overrides` list them, ties keep the summary's order), applies limits (the profile's `entry_max_bullets`, then `max_bullets_per_entry`, else the entry's `cv_max_bullets`, the same order lint uses) and overrides, and writes `selection.json`: which bullets each entry gets, in which order. **The agent doesn't change the selection.** If it disagrees, it says so in the gap report, and the user changes the profile or `jd-tags.yaml`.
 3. **Wording (agent).** For each selected bullet:
-   - If the master CV has a bullet with the same source id, start from its wording (including the user's manual edits) and only shorten or re-emphasize it.
+   - If the master CV has a bullet with the same source id, start from its wording (including the user's manual edits) and only shorten or re-emphasize it. Re-emphasizing may bring in a detail from the **same** source (for example where an app was published), never one from another source.
    - Otherwise write it fresh from the source, following `cv-spec.md`.
    - Keep its `src` comment.
-   - **Master bullets with several sources:** keep the parts backed by selected sources, and the parts backed by a confirmed fact about the same work (its number, scope or ownership, e.g. `syspro-team-size` with `#4.1`, `syspro-tech-stack-ownership` with `#4.3`) or by one of the entry's `cv_emphasis` points. Drop a part backed only by an unrelated, unselected source, unless the same claim is already elsewhere in the CV. Cite exactly the sources the remaining text uses.
+   - **Master bullets with several sources:** keep the parts backed by selected sources, and the parts backed by a confirmed fact about the same work (its number, scope or ownership, e.g. `syspro-team-size` with `#4.1`, `syspro-tech-stack-ownership` with `#4.3`) or by one of the entry's `cv_emphasis` points. Drop a part backed only by an unrelated, unselected source, unless the same claim is already elsewhere in the CV. Cite exactly the sources the remaining text uses. When a source that a master bullet merges is itself selected as a separate bullet in this CV (for example a pinned fact), it gets its own bullet and is left out of the merged one: no claim appears twice.
    - **Order:** bullets appear in selection order; the agent doesn't reorder them (pins set the opening bullets). Bullets with a score of 0 or less are selected only to reach `min_bullets_per_entry`, so an entry can end below its limit.
-4. **Headline and summary.** Use the profile's `headline`, or for a job ad one fitting it, written to `jd-tags.yaml` `headline` (the header is generated, so `refresh` reads it from there). Rewrite the summary paragraph around `summary_focus`, with a `src` comment on every sentence.
+4. **Headline and summary.** Use the profile's `headline`, or for a job ad one fitting it, written to `jd-tags.yaml` `headline` (the header is generated, so `refresh` reads it from there). Rewrite the summary paragraph around `summary_focus`, with a `src` comment on every sentence; a sentence may cite any contribution or fact of an entry shown in the CV, selected as a bullet or not.
+   - **Over `max_words`:** shorten the wording first (each bullet keeps its claim and sources). If the CV is still too long, the agent doesn't drop selected bullets itself: it proposes drops (`overrides` in `jd-tags.yaml` or the profile) in the gap report, and the user decides.
 5. **Skills.** Reordered by `skills_order` through the generated `skills` block (not by hand).
 6. **Only changed entries are rewritten.** Each build record in `cv/.build-state.json` has an `entries` map: a hash per CV entry of everything it's built from (its summary's front matter, contributions, metrics and facts, or its `cv_entry` and facts). `npm run status` lists the entries whose hash changed. On a rebuild, entries whose hash didn't change are copied unchanged, so variants don't change in git without a reason. `build` keeps an entry's old hash until that entry's text in the CV changes, so `build:all` can't hide entries that still need rewriting; when a listed entry needs no text change, build that CV alone with `npm run build -- <cv.md> --entries-reviewed` (refused with `--all`, which would also clear other CVs' lists).
 7. **Gap report** (section 5).
-8. **Checks.** `npm run reattach-src -- <cv.md>` (after saving a snapshot with `--save` before step 3), then `npm run build` on the result. Report failures.
+8. **Checks.** `npm run reattach-src -- <cv.md>` (after saving a snapshot with `--save` before step 3; the snapshot restores source comments of text that was copied, while rewritten bullets take theirs from `selection.json`), then `npm run build -- <cv.md>` on the result (`check` checks every CV and takes no file). Report failures.
 9. Show a diff. Never commit. For a job-specific CV, remind the user it's git-ignored and can be kept with `git add -f`.
 
 ## 3. Rules
@@ -66,7 +67,7 @@ entry_max_bullets:
   syspro-saas-erp: 7                             # per-entry limit instead of max_bullets_per_entry
 ```
 
-- **Stack lines** (`<id>#5`) don't count toward the bullet limits. The current job always keeps its Stack line; an older job keeps it only when pinned, and `selection.json` then lists it as the entry's `stack`.
+- **Stack lines** (`<id>#5`) don't count toward the bullet limits. `selection.json` lists an entry's `stack` for the current job (ongoing and counting as experience, the rule `lint` uses) and for any entry whose Stack line is pinned; only those entries get one.
 - **`also`** lists further sources the same bullet cites (`selection.json` gives the bullet `src: "<id>#4.6, <id>#4.15"`); a contribution named in `also` isn't selected again on its own. `validate` checks that each one resolves. Use it with `text` when the merged wording matters.
 - **`entry_max_bullets`** sets a different limit for one entry (e.g. more bullets for the current job in one profile).
 - Pinned bullets come first in the order `overrides` lists them, and an entry can't have more pins than its limit (`validate` checks it).
