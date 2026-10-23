@@ -14,6 +14,7 @@ paths:
   reports: reports
   runs: .cv-runs
   sources: sources                 # imported old CVs and portfolios (specs/sources-spec.md)
+  portfolio: portfolio             # the public portfolio (specs/outputs/portfolio.md)
 
 output:
   master_dir: cv

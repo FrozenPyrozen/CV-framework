@@ -78,6 +78,7 @@ Each entry is a list of `*` bullets (one level, no nesting).
 - **No filler or hype:** avoid "passionate", "results-driven", "highly accomplished", "leveraged", "synergy", "cutting-edge", "rockstar", "ninja", "guru", "leverage" (list in `checks.filler_words`).
 - **Company names exactly as in the summary:** `SYSPRO` (all caps), `General Motors`, `Thermo Fisher Scientific`.
 - **Consistent terms:** pick one form per term and keep it everywhere (`React Native`, not `RN`; `Node.js`, not `NodeJS`).
+- **Spelling:** US English, checked by `npm run spellcheck` in `build` and `check` against dictionaries plus `facts/dictionary.txt`. Fix a flagged typo; add a real word (a name, product or technology) to `facts/dictionary.txt`.
 
 ## 5. Emphasis rules
 

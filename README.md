@@ -70,6 +70,8 @@ Slash commands run in your AI agent tool (`.claude/commands/` for Claude Code; o
 | Add a repo's work to the CV (summary, CV, variants, build, review) | `/add-repo <path or repo name>` |
 | Add a repo that can't leave a work laptop (summary written there, brought back) | `/harvest-prompt`, then `/import-summary <file>` |
 | Take details from old CVs or portfolios (they fill gaps; current data wins) | `/import-docs <file…>` |
+| Choose what goes into the public portfolio (projects, screenshots, links) | `/portfolio-material` |
+| Check spelling (also part of build and check) | `npm run spellcheck` |
 | Update the CV after editing summaries or facts | `/compose`, then `/variants` |
 | Add experience that has no repo (interviews, audits …) | `/add-experience` |
 | Change phone, country, availability | `/profile` |

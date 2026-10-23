@@ -48,6 +48,8 @@ description: Builds a role variant (cv/variants/<profile>/) or a job-specific CV
 ## `/variants`
 Run steps 3 to 6 for every file in `profiles/` (only changed entries are rewritten), and step 7's `reattach-src` and `npm run check` (expect lint's "edited by hand since its last build" warning for each rewritten variant until the build); then one `npm run build:all` builds them all (no per-variant build, except `--entries-reviewed` builds above).
 
+**Spelling:** `check` and `build` run `spellcheck`. Fix a flagged typo; add a real word (name, product, technology) to `facts/dictionary.txt` and say so in the report.
+
 ## Never
 - Add claims, change numbers, dates, titles, client labels or contract labels, hide a job, or edit generated parts.
 - Edit `cv/variants/*/cv.md` outside this agent; lasting variant changes go in the profile's `overrides`.

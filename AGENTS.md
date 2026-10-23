@@ -37,6 +37,7 @@ Commands are available as Claude Code slash commands (`.claude/commands/`). Any 
 | `/harvest-prompt [--merge <id>]` | Portable harvest, step 1: a self-contained prompt to write a summary on a machine the repo can't leave (`specs/work-summary-spec.md` 9) | `npm run harvest-prompt` |
 | `/import-summary <file>` | Portable harvest, step 4: check a summary written elsewhere, then add or merge it | `agents/harvester.md` (Importing a portable summary) |
 | `/import-docs <file…>` | Import old CVs or portfolios as sources and fill gaps in summaries from them (lowest precedence; `specs/sources-spec.md`) | `agents/advisor.md` (/import-docs), then `agents/composer.md` |
+| `/portfolio-material [summary-id…]` | Sort portfolio images, links and demos, and choose which projects go into the public portfolio | `agents/advisor.md` (/portfolio-material) |
 | `/harvest <path or name> [id]` | Write or merge a work summary from a repo | `agents/harvester.md` |
 | `/compose` | Update the master CV from summaries and facts | `agents/composer.md` |
 | `/tailor --profile <id>` / `--jd <file or text> [--profile <id>] [--market <id>]` | Build a role variant or a job-specific CV, with a gap report | `agents/tailor.md` |
@@ -62,6 +63,7 @@ Commands are available as Claude Code slash commands (`.claude/commands/`). Any 
 | `harvest-prompt [--merge <id>] [--out <file>]` | writes the portable harvest prompt to `.cv-runs/harvest-prompt-<date>.md` |
 | `import-summary <file> [--apply]` | checks a portable summary (validate rules, secret scan, no code or paths) in a temp copy; `--apply` places it |
 | `import-doc <file> --date <YYYY-MM> [--kind --id --title]` | keeps an old CV or portfolio (`.docx`, `.pdf`, `.md`, `.txt`, `.pages` on macOS) in `sources/` with its extracted text, images and index entry; changes no summary |
+| `spellcheck [file…] [--list]` | dictionary spelling check of CVs and the portfolio with `facts/dictionary.txt`; also run by `build` and `check` |
 | `refresh [cv] [--market --profile --out --check]` | regenerate the script-owned parts of a CV (header, entry lines, education, skills, languages) |
 | `market [cv] [--market <id>]` | write the other market versions of a CV |
 | `lint [cv] [--market --profile]`, `trace [cv] [--warn-only]`, `check` | CV rules, claim sources, both for every CV |
@@ -146,6 +148,7 @@ Commands are available as Claude Code slash commands (`.claude/commands/`). Any 
 - `/improve`: Go through review findings with the user and apply the answers
 - `/job-change`: Start or leave a job
 - `/log-application`: Record a sent CV in facts/applications.yaml
+- `/portfolio-material`: Sort portfolio images, links and demos, and choose which projects go into the public portfolio
 - `/profile`: Update personal details (phone, country, availability, work permit …)
 - `/review`: Review a CV with the rubrics and write reports
 - `/status`: What is stale and why

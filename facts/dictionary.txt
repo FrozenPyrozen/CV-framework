@@ -1,0 +1,27 @@
+# Project word list for npm run spellcheck (specs/cv-spec.md 4): real words the bundled dictionaries
+# (US English, software terms, companies) don't know. One per line; matching ignores case.
+# Add a word only when it is right; a typo gets fixed instead.
+
+# Names
+Kirill
+Kohan
+
+# Companies, clients and products
+Admasters
+Itjet
+RegiStart
+SYSPRO
+Velas
+
+# Tools and technologies
+Bitrise
+MMKV
+Snapcraft
+SonarQube
+
+# Terms
+fintech
+frontends
+hackathon
+presales
+tabnabbing

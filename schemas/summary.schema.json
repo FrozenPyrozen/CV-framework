@@ -34,7 +34,11 @@
     "show_dates_in_cv": { "type": "boolean" },
     "cv_title_suffix": { "type": "string" },
     "cv_emphasis": { "type": "array", "items": { "type": "string" } },
-    "cv_max_bullets": { "type": "integer", "minimum": 1 }
+    "cv_max_bullets": { "type": "integer", "minimum": 1 },
+    "show_in_portfolio": { "type": "boolean", "description": "the public portfolio opts projects in (specs/outputs/portfolio.md 3); default false" },
+    "portfolio_order": { "type": "integer", "minimum": 1 },
+    "portfolio_label": { "type": "string", "minLength": 1, "description": "public client or product name; default cv_client_label; must hide what the CV hides" },
+    "portfolio_max_items": { "type": "integer", "minimum": 1, "maximum": 20 }
   },
   "additionalProperties": false
 }

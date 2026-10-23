@@ -1,6 +1,6 @@
 # Portfolio Spec
 
-Status: v0 (specified, not built) · Applies to: `portfolio/`, written by the portfolio agent (`/portfolio`), built by `npm run build:portfolio`
+Status: v0 (P1 summary fields, P2 content import and P5 spell check built; agent, template and renderer not yet: plan 9e) · Applies to: `portfolio/`, written by the portfolio agent (`/portfolio`), built by `npm run build:portfolio`
 
 The portfolio is a second **output** of the same sources as the CV (plan section 2, "Sources and outputs are separate"): a multi-page **document** with a cover and a page or more per project, shared through a **public link**. It is built like the CV: Markdown first, then Word through an imported template, then PDF, with the same checks. Building starts once the user provides the current portfolio as Pages or Word and PDF (plan 9e, phase P2).
 
@@ -28,7 +28,7 @@ portfolio/
 └── spellcheck.md                # spelling report (git-ignored)
 ```
 
-## 3. Summary fields (added to `schemas/summary.schema.json` in phase P1)
+## 3. Summary fields (in `schemas/summary.schema.json` since phase P1)
 
 | Field | Default | Meaning |
 |---|---|---|

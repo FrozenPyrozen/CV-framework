@@ -118,6 +118,17 @@ export interface Summary {
   contributions: Contribution[];
   confidentiality: ConfidentialityRule[];
   confidentialityNone: boolean;
+  portfolio: PortfolioItem[]; // structured items of section 8 (specs/outputs/portfolio.md 3)
+}
+
+export interface PortfolioItem {
+  kind: "image" | "link" | "demo";
+  value: string; // image path (relative to portfolio/), URL, or demo note
+  caption?: string; // image caption
+  label?: string; // link text
+  public: string | undefined; // "no" or "yes, confirmed by user YYYY-MM-DD"
+  isPublic: boolean;
+  line: number; // line inside section 8, for messages
 }
 
 const FRONT_MATTER = /^---\n([\s\S]*?)\n---\n?/;
@@ -185,7 +196,28 @@ export function parseSummary(text: string, file = "<memory>"): Summary {
     contributions,
     confidentiality: rules,
     confidentialityNone: none,
+    portfolio: parsePortfolioItems(sections.find((x) => x.number === 8)?.text ?? ""),
   };
+}
+
+// Section 8 items: "- image: <path>" / "- link: <url>" / "- demo: <note>", each followed by indented
+// "caption:", "label:" and "public:" lines. Free text around them stays as notes (specs/outputs/portfolio.md 3).
+export const PUBLIC_YES = /^yes, confirmed by user \d{4}-\d{2}-\d{2}$/;
+export function parsePortfolioItems(text: string): PortfolioItem[] {
+  const out: PortfolioItem[] = [];
+  let cur: PortfolioItem | null = null;
+  text.split("\n").forEach((line, i) => {
+    const item = line.match(/^- (image|link|demo):\s*(.+?)\s*$/);
+    if (item) { cur = { kind: item[1] as PortfolioItem["kind"], value: unquote(item[2]), public: undefined, isPublic: false, line: i + 1 }; out.push(cur); return; }
+    const field = line.match(/^\s+(caption|label|public):\s*(.+?)\s*$/);
+    if (field && cur) {
+      const v = unquote(field[2]);
+      if (field[1] === "public") { cur.public = v; cur.isPublic = PUBLIC_YES.test(v); } else cur[field[1] as "caption" | "label"] = v;
+      return;
+    }
+    if (line.trim() && !/^\s/.test(line)) cur = null; // a note ends the item
+  });
+  return out;
 }
 
 // Section 9 uses a YAML-like list: "- term: X", "- prefix: OR-", "- url_pattern: ...", optional "  allow_in: [...]".

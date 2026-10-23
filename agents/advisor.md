@@ -49,6 +49,14 @@ Old CVs, portfolios and similar documents fill gaps in the summaries, with the *
 4. **Go through it with the user,** one summary at a time (How to ask). Apply what they approve in their own words; a conflict the user resolves in the document's favor is written as a user answer (`user, <date>`), not as `doc:<id>`. Internal names found go to section 9.
 5. **Finish.** Set `status: reviewed` in `sources/index.yaml` for every document fully gone through, run `npm run validate` and `npm run lint`, show the diff, and hand the changed summaries to the composer (`/compose`, then `/variants`).
 
+## `/portfolio-material [summary-id…]`
+Fills section 8 (portfolio material) of the summaries and opts projects into the public portfolio (`specs/outputs/portfolio.md` 3). Default: every summary; offer first the ones with images from imported documents (`sources/media/`) or with `show_in_portfolio` unset.
+1. **Per project:** ask whether it goes into the public portfolio (`show_in_portfolio`), its position (`portfolio_order`) and its public name (`portfolio_label`, default `cv_client_label`; a client the CV hides stays hidden, decision `portfolio-client-names`).
+2. **Per image:** show it (a scaled copy in the scratchpad for large files), say which project it belongs to and what it shows, and point out anything that may not be public (customer data, internal names, URLs, NDA notes). Write it as `- image: <path relative to portfolio/>` with a `caption:`; images from imported documents stay in `sources/media/<doc-id>/` (`../sources/media/…`). Ask before marking it public.
+3. **Per link and demo:** `- link: <https URL>` with a `label:`, `- demo: <note>`.
+4. **Public:** `public: yes, confirmed by user <date>` only with the user's explicit yes; otherwise `public: no`. Never mark a whole group public at once without listing it.
+5. Run `npm run validate` (it checks the items, paths, captions and labels, and that `portfolio_label` doesn't name a hidden client), show the diff, and update `docs/open-items.md` (screenshots still to sort).
+
 ## `/profile`
 1. The user describes a change ("moved to Poland, new phone +48…").
 2. Ask what follows from it: work permit (`work_authorization`), still B2B, new time zone and overlaps, relocation, whether each market file still fits (e.g. a Poland market).

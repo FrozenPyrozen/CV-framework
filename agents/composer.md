@@ -49,6 +49,8 @@ Used to add sources to a CV that has none yet (build step 7, or a CV written by 
 3. Verify: the CV with all `<!-- src: … -->` comments stripped is identical to the version before, then `npm run reattach-src -- <cv>` and `npm run check`.
 4. A claim with no source is reported, not removed (suggest `/add-experience`). Wording that `check` warns about (e.g. bullets over `max_bullet_words`) is proposed to the user as a separate change, applied only after approval.
 
+**Spelling:** `check` and `build` run `spellcheck`. Fix a flagged typo; add a real word (name, product, technology) to `facts/dictionary.txt` and say so in the report.
+
 ## Never
 - Change generated blocks, entry title or detail lines, or `<!-- entry -->` markers by hand.
 - Add a claim without a source, inflate scope ("led" for "contributed"), or describe AI agents as designers or as ad-hoc code generation (decision `ai-agents-wording`).

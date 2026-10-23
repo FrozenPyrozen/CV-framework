@@ -1,7 +1,7 @@
 // npm run build [file] [--template <name>] [--market <id>] [--no-pdf] [--entries-reviewed]   one CV (default: the master)
 // npm run build:all [--no-pdf]                              the master CV and every role variant
 //
-// The full chain (plan 6): validate -> digest -> refresh -> lint -> trace -> market versions ->
+// The full chain (plan 6): validate -> digest -> refresh -> lint -> trace -> spellcheck -> market versions ->
 // for every market: render .docx -> PDF -> pdf-check -> previews -> build record (cv/.build-state.json).
 // Stops a CV at its first failing step. Unsourced claims are warnings for the master CV and errors for
 // variants and tailored CVs. --no-pdf stops after the .docx (e.g. on a laptop without a PDF exporter).
@@ -24,6 +24,7 @@ import { parseArgs, refreshText } from "./refresh.ts";
 import { docxPathFor, templateFor } from "./render.ts";
 import { renderDocx } from "./renderers/docx.ts";
 import { buildSourceIndex, traceCv } from "./trace.ts";
+import { spellcheckFiles } from "./spellcheck.ts";
 import { printIssues, validateRepo } from "./validate.ts";
 
 export interface BuildOutcome { cv: string; ok: boolean; steps: string[]; problems: string[]; outputs: string[] }
@@ -85,6 +86,9 @@ export async function buildCv(mdFile: string, opts: { template?: string; noPdf?:
   const traceErr = errors(traceCv(mdFile, buildSourceIndex()));
   if (traceErr.length && !isMaster) return fail(`trace: ${traceErr.length} unsourced or unresolved claim(s), first: ${traceErr[0].line ? `line ${traceErr[0].line}: ` : ""}${traceErr[0].message}`);
   step(traceErr.length ? `trace: ${traceErr.length} unsourced claim(s) (warning for the master CV)` : "trace: ok");
+  const spell = await spellcheckFiles([mdFile]);
+  if (spell.length) return fail(`spellcheck: ${spell.length} unknown word(s), first: line ${spell[0].line}: "${spell[0].word}" (fix it, or add it to facts/dictionary.txt if it's right)`);
+  step("spellcheck: ok");
 
   // market versions
   // Markets: every market by default; one market with --market. A job-specific CV (cv/tailored/) is built for

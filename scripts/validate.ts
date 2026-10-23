@@ -7,9 +7,9 @@ import AjvModule from "ajv/dist/2020.js";
 const Ajv2020: typeof AjvModule.default = (AjvModule as any).default ?? AjvModule;
 import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { parse as parseYaml } from "yaml";
-import { basename, join } from "node:path";
+import { basename, join, resolve as resolvePath } from "node:path";
 import {
-  isMain, SUMMARY_SECTIONS, loadConfig, loadConfirmed, loadDecisions, loadLocalConfig, loadMarkets, loadProfile, loadSkills, loadSummaries, readYaml, rootPath,
+  isMain, PUBLIC_YES, SUMMARY_SECTIONS, loadConfig, loadConfirmed, loadDecisions, loadLocalConfig, loadMarkets, loadProfile, loadSkills, loadSummaries, readYaml, rootPath,
 } from "./lib/repo.ts";
 import { writeDigests } from "./digest.ts";
 import { DOC_REF, sourcesDir } from "./lib/sources.ts";
@@ -102,6 +102,28 @@ export function validateRepo(): Issue[] {
     }
     if (!s.confidentiality.length && !s.confidentialityNone) warn(s.file, `section 9 has no "- term:" / "- prefix:" entries and doesn't say "None known"`);
     for (const r of s.confidentiality) if (r.term && r.term.length < 3) warn(s.file, `confidentiality term "${r.term}" is very short and may cause false alarms`);
+    // Portfolio material (section 8) and portfolio fields (specs/outputs/portfolio.md 3).
+    const pdir = cfg.paths.portfolio ?? "portfolio";
+    for (const it of s.portfolio) {
+      const where = `section 8, ${it.kind} "${it.value}"`;
+      if (it.public === undefined) err(s.file, `${where}: needs a public: line ("no" or "yes, confirmed by user YYYY-MM-DD")`);
+      else if (it.public !== "no" && !PUBLIC_YES.test(it.public)) err(s.file, `${where}: public must be "no" or "yes, confirmed by user YYYY-MM-DD", got "${it.public}"`);
+      if (it.kind === "image") {
+        const abs = resolvePath(rootPath(pdir), it.value);
+        if (!abs.startsWith(rootPath() + "/")) err(s.file, `${where}: the path leaves the repository`);
+        else if (!existsSync(abs)) err(s.file, `${where}: no such file (paths are relative to ${pdir}/)`);
+        if (!/\.(png|jpe?g|svg|gif|webp|tiff?)$/i.test(it.value)) err(s.file, `${where}: not an image file (PNG, JPEG, SVG, GIF, WebP or TIFF)`);
+        if (!it.caption) err(s.file, `${where}: needs a caption:`);
+      }
+      if (it.kind === "link") {
+        if (!/^https?:\/\//.test(it.value)) err(s.file, `${where}: a link must start with http:// or https://`);
+        if (!it.label) err(s.file, `${where}: needs a label:`);
+      }
+    }
+    const fmP = s.frontMatter;
+    const hidden = fmP.client && fmP.cv_client_label && fmP.client !== fmP.cv_client_label;
+    if (hidden && fmP.portfolio_label && new RegExp(`(?<![\\w-])${String(fmP.client).replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}(?![\\w-])`, "i").test(fmP.portfolio_label))
+      err(s.file, `portfolio_label "${fmP.portfolio_label}" names the client the CV hides ("${fmP.client}"); the portfolio is public`);
   }
 
   // --- skills must be supported (plan 4.2b): a tag on a contribution or fact, or listed hands-on in a section 5 ---
