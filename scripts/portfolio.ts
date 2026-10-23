@@ -9,8 +9,8 @@
 //            (only `allow_in: [portfolio]` lets one through), hidden client name, ticket id, internal address,
 //            secret or foreign URL; spelling. When it passes, it records the state `status` uses (stale projects).
 import { createHash } from "node:crypto";
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { dirname, relative } from "node:path";
+import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
+import { dirname, join, relative, resolve } from "node:path";
 import { readState, writeRecord } from "./lib/buildstate.ts";
 import { formatPeriod, headerBlock, loadContext, skillsBlock, stripComments, wrapBlock, type Context } from "./lib/cvmd.ts";
 import { isMain, loadConfig, loadDecisions, loadSummaries, rootPath, type Summary } from "./lib/repo.ts";
@@ -114,6 +114,24 @@ export async function checkPortfolio(file = portfolioPath()): Promise<Finding[]>
   const lines = text.split("\n");
   const bl = buildBlocklist(summaries, ctx);
   const escapeRe = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+  // Images: each one shown must be a public item of its own project (refresh writes only those; this catches hand edits).
+  let owner = "";
+  lines.forEach((raw, i) => {
+    const pm = raw.match(/^<!-- project: ([\w-]+) -->$/);
+    if (pm) owner = pm[1];
+    const im = raw.match(/^!\[[^\]]*\]\(([^)]+)\)$/);
+    if (!im) return;
+    const s = summaries.find((x) => x.id === owner);
+    if (!s?.portfolio.some((it) => it.kind === "image" && it.isPublic && it.value === im[1])) add("error", `image ${im[1]} isn't a public item of ${owner || "any project"}'s section 8`, i + 1);
+  });
+  // Files in portfolio/assets/ that no summary's section 8 lists (kept in git for nothing).
+  const assets = rootPath(loadConfig().paths.portfolio ?? "portfolio", "assets");
+  if (existsSync(assets)) {
+    const listed = new Set(summaries.flatMap((s) => s.portfolio.filter((it) => it.kind === "image").map((it) => resolve(rootPath(loadConfig().paths.portfolio ?? "portfolio"), it.value))));
+    const walk = (d: string): string[] => readdirSync(d, { withFileTypes: true }).flatMap((e) => (e.isDirectory() ? walk(join(d, e.name)) : [join(d, e.name)]));
+    for (const f of walk(assets)) if (!listed.has(f) && !f.endsWith(".DS_Store")) add("warning", `${rel(f)} isn't used by any summary's section 8`);
+  }
 
   let inBlock = false;
   let project = ""; // "" = the intro

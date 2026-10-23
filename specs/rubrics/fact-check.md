@@ -21,6 +21,10 @@
 | Calculated values | years of experience and team size match the calculation |
 | Unsourced content | sentences without `src` outside generated blocks |
 
+## Portfolio mode (`/review --portfolio`)
+
+Each project's text cites only that project (`portfolio check` enforces it); check the **meaning**: the portfolio's longer items (*What I built*: the "how" and "why") must not add claims, scope or results their contribution doesn't state; *Results* numbers match section 7 exactly, and a `doc:<id>` number appears only when "confirmed by user"; *Technologies* lists only hands-on items of section 5; captions describe what the screenshot shows and what the summary says about it.
+
 ## Required sections in the report
 1. **Claims checked:** count, supported / partly supported / unsupported.
 2. **Findings** (report spec): quote, source quote, and what's wrong. Unsupported claims are `high`, and `needs_user_input: yes` when the user could confirm them as a fact.

@@ -144,3 +144,47 @@ test("the CV renderer refuses a portfolio template; a portfolio style map needs 
   assert.equal(v.code, 1);
   assert.match(v.out, /must have required property 'image'/);
 });
+
+// P6: image checks and portfolio reviews.
+import { mkdirSync } from "node:fs";
+const PNG_1PX = Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=", "base64");
+
+test("portfolio check: an image that isn't a public item is an error; an unused asset is a warning", () => {
+  const dir = tempRepo();
+  optIn(dir);
+  run("portfolio.ts", dir, ["refresh"]);
+  write(dir, "Intro. <!-- src: itjet-fintech#1 -->", "Text. <!-- src: itjet-fintech#1 -->");
+  mkdirSync(join(dir, "portfolio/assets/itjet-fintech"), { recursive: true });
+  writeFileSync(join(dir, "portfolio/assets/itjet-fintech/unused.png"), PNG_1PX);
+  const p = join(dir, P);
+  writeFileSync(p, readFileSync(p, "utf8").replace("Text. <!-- src: itjet-fintech#1 -->", "![x](assets/itjet-fintech/unused.png)\n\nText. <!-- src: itjet-fintech#1 -->"));
+  const r = run("portfolio.ts", dir, ["check"]);
+  assert.equal(r.code, 1);
+  assert.match(r.out, /image assets\/itjet-fintech\/unused\.png isn't a public item of itjet-fintech/);
+  assert.match(r.out, /warn .*portfolio\/assets\/itjet-fintech\/unused\.png isn't used by any summary/);
+});
+
+test("build:portfolio warns about a small image; it is never shown above 150 dpi", () => {
+  const dir = tempRepo();
+  optIn(dir);
+  mkdirSync(join(dir, "portfolio/assets/itjet-fintech"), { recursive: true });
+  writeFileSync(join(dir, "portfolio/assets/itjet-fintech/tiny.png"), PNG_1PX);
+  edit(dir, "summaries/itjet-fintech.md", "## 8. Portfolio material\n", "## 8. Portfolio material\n\n- image: assets/itjet-fintech/tiny.png\n  caption: A tiny test image\n  public: yes, confirmed by user 2026-10-23\n");
+  run("portfolio.ts", dir, ["refresh"]);
+  write(dir, "Intro. <!-- src: itjet-fintech#1 -->", "Text. <!-- src: itjet-fintech#1 -->");
+  const r = run("build-portfolio.ts", dir, ["--no-pdf", "--no-pages", "--size", "a4"]);
+  assert.equal(r.code, 0, r.out);
+  assert.match(r.out, /image assets\/itjet-fintech\/tiny\.png is small \(1x1 px/);
+});
+
+test("validate: a portfolio report may only use a rubric with a portfolio mode", () => {
+  const dir = tempRepo();
+  mkdirSync(join(dir, "reports/2026-10-23-1200"), { recursive: true });
+  const fm = (rubric: string) => `---\nschema_version: 1\nrubric: ${rubric}\ncv: portfolio/portfolio.md\njob_ad: null\nmarket: null\nreviewed_at: 2026-10-23T12:00\nverdict: pass\nscore: 9\n---\n\n# Review\n`;
+  writeFileSync(join(dir, "reports/2026-10-23-1200/layout.md"), fm("layout"));
+  assert.equal(run("validate.ts", dir).code, 0);
+  writeFileSync(join(dir, "reports/2026-10-23-1200/ats.md"), fm("ats"));
+  const v = run("validate.ts", dir);
+  assert.equal(v.code, 1);
+  assert.match(v.out, /rubric "ats" has no portfolio mode/);
+});

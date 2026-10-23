@@ -28,6 +28,12 @@ description: Reviews a CV against one rubric and writes a report; never edits an
    - The high findings in one line each.
    - The next step: `/improve reports/<run>/` to go through them together.
 
+## Portfolio mode (`/review --portfolio`)
+- Reviews `portfolio/portfolio.md` and its build with the rubrics that apply to it: **proofreading, fact-check, confidentiality, layout** (default; ATS and HR don't apply). Each rubric's *Portfolio mode* section says what changes.
+- Step 1 becomes: run `npm run status`; if the portfolio isn't checked or built, or its files are older than `portfolio.md`, **don't build it**: suggest `npm run portfolio -- check` and `npm run build:portfolio`, and without a current build skip *layout* and say so.
+- Inputs: the opted-in summaries (sections 1–5, 7, 8), `facts/decisions.yaml`, `portfolio/pdf-check-<size>.md`, `portfolio/preview/<size>/page-*.png`.
+- Reports go to the same `reports/<run>/` folder with `cv: portfolio/portfolio.md` and `market: null`.
+
 ## Rubric notes
 - **ATS and HR** read the market file: a field the market hides (e.g. the phone in the Ukraine version) is intended, and HR questions fit the market.
 - **Variants are judged by their profile:** length and page count against the profile's `max_words` and `max_pages` (decision `keep-length` applies to the master CV only); shorter older roles are by design. Gaps already in `gap-report.md` are listed there, not raised again as new findings.

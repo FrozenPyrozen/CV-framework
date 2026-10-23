@@ -89,8 +89,10 @@ export async function renderPortfolioDocx(markdown: string, mdFile: string, outP
     doc.zip.file(`word/${name}`, img.data);
     const id = `rIdPfImg${n}`;
     rels = rels.replace("</Relationships>", `<Relationship Id="${id}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="${name}"/></Relationships>`);
-    // Fit the content width and at most 45% of the content height, keeping the aspect ratio.
-    const scale = Math.min(contentW / px.w, (contentH * 0.45) / px.h);
+    // Fit the content width and at most 45% of the content height, keeping the aspect ratio, and never larger than
+    // 150 dpi (1440 / 150 = 9.6 twips per pixel): a small screenshot is printed smaller rather than blurry.
+    const scale = Math.min(contentW / px.w, (contentH * 0.45) / px.h, 1440 / 150);
+    if ((Math.max(px.w, px.h) * scale) / 1440 < 1.5) warnings.push(`image ${path} is small (${px.w}x${px.h} px: under 1.5 inches at 150 dpi); use a larger screenshot`);
     const cx = Math.round(px.w * scale * EMU_PER_TWIP), cy = Math.round(px.h * scale * EMU_PER_TWIP);
     return `<w:r><w:drawing><wp:inline distT="0" distB="0" distL="0" distR="0"><wp:extent cx="${cx}" cy="${cy}"/><wp:docPr id="${1000 + n}" name="Picture ${n}" descr="${escapeXml(alt)}"/><a:graphic><a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture"><pic:pic><pic:nvPicPr><pic:cNvPr id="${1000 + n}" name="portfolio${n}"/><pic:cNvPicPr/></pic:nvPicPr><pic:blipFill><a:blip r:embed="${id}"/><a:stretch><a:fillRect/></a:stretch></pic:blipFill><pic:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="${cx}" cy="${cy}"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></pic:spPr></pic:pic></a:graphicData></a:graphic></wp:inline></w:drawing></w:r>`;
   };

@@ -1,6 +1,6 @@
 # Portfolio Spec
 
-Status: v0 (P1–P5 built: summary fields, content import, agent and text checks, template, renderer and build, spell check; image size checks and reviews (P6) not yet: plan 9e) · Applies to: `portfolio/`, written by the portfolio agent (`/portfolio`), built by `npm run build:portfolio`
+Status: v1 (built, plan 9e P1–P6; the `portfolio-classic` template awaits approval from the first real previews) · Applies to: `portfolio/`, written by the portfolio agent (`/portfolio`), built by `npm run build:portfolio`
 
 The portfolio is a second **output** of the same sources as the CV (plan section 2, "Sources and outputs are separate"): a multi-page **document** with a cover and a page or more per project, shared through a **public link**. It is built like the CV: Markdown first, then Word through an imported template, then PDF, with the same checks. Building starts once the user provides the current portfolio as Pages or Word and PDF (plan 9e, phase P2).
 
@@ -74,7 +74,7 @@ Only items with `public: yes, confirmed by user <date>` reach the portfolio. A s
 
 - **Markdown** is the source and is readable on its own (images as relative links).
 - **Word (`.docx`)** from a portfolio template (`templates/portfolio-<name>/`, style map `kind: portfolio`): imported with `/import-template` from a flowing Pages or Word file, or generated when the original is a free-form layout, as `portfolio-classic` is (`npm run portfolio-template`, section 5a). Its paragraph types: `cover_title`, `cover_name`, `cover_contact` (the banner), `headline`, `intro`, `project_title` (each project starts a new page), `project_meta`, `section_label`, `body`, `list_item`, `image`, `caption`, `section_heading` (skills starts a new page, contact doesn't), `skills_line`, `contact_line` (`templates.md` 2). One Word file per size.
-- **Images:** PNG and JPEG are embedded as they are; other formats (TIFF from Pages, GIF, WebP) are converted to PNG (macOS `sips`). Each image fits the content width and at most 45% of the page height, keeping its aspect ratio.
+- **Images:** PNG and JPEG are embedded as they are; other formats (TIFF from Pages, GIF, WebP) are converted to PNG (macOS `sips`). Each image fits the content width and at most 45% of the page height, keeping its aspect ratio, and is never shown above 150 dpi: a small screenshot is printed smaller rather than blurry (the build warns under 1.5 inches).
 - **Page sizes:** a portfolio template lists the sizes it supports in its `fixes.yaml`: `sizes: { a4: { page_margins: {…} }, letter: { page_margins: {…} } }`, extending the existing `page_margins` fix (`templates.md`). The renderer sets the page size and margins per size. Default: A4 and Letter (`npm run build:portfolio -- --size a4|letter|all`).
 - **PDF:** one per size, exported through the PDF exporters in order (Pages, Word, LibreOffice; plan 6.1).
 - **Pages (`.pages`):** saved from the A4 Word file through Pages when it is installed, for editing by hand. A hand edit is never the source: changes go back into the summaries or `portfolio.md`.
@@ -98,7 +98,7 @@ The fonts are macOS system fonts: the PDF is exported through Pages (first in `p
 
 ## 6. Checks
 
-`npm run portfolio -- check` runs the text checks; `npm run build:portfolio` runs it first, then the output checks, and fails on any error (plan 9e P3, P4; P6 adds the image size checks and reviews).
+`npm run portfolio -- check` runs the text and image checks; `npm run build:portfolio` runs it first, then the output checks, and fails on any error; `/review --portfolio` reviews the result (plan 9e P3, P4, P6).
 
 | Check | Where | What |
 |---|---|---|
@@ -106,10 +106,10 @@ The fonts are macOS system fonts: the PDF is exported through Pages (first in `p
 | confidentiality | `portfolio check` | the CV's lint rules (every summary's section 9 terms, hidden client names in any case, ticket prefixes, internal addresses, secrets, URLs other than profile links and public link items), with one difference: a term's `allow_in` job ids and `summary` **don't apply** here; only `allow_in: [portfolio]` lets a term appear in the portfolio (`work-summary-spec.md` 3.1) |
 | generated parts | `portfolio check` (warning), `status` | the generated parts match what `refresh` writes now |
 | `spellcheck` | `portfolio check`, `spellcheck` | dictionary spelling (US English) with `facts/dictionary.txt`; unknown words fail until fixed or added. The same check runs on the CV |
-| images | `validate`, `refresh`, the renderer; size and unused files in P6 | every image exists and is public-confirmed in its summary's section 8 (`validate`; `refresh` writes only public items; the renderer warns about a missing file); at least 1200 px wide and nothing unused in `assets/` come with P6 |
+| images | `validate`, `portfolio check`, the renderer | every image exists and is public-confirmed in its summary's section 8 (`validate`); an image in `portfolio.md` that isn't a public item of its own project is an error (`portfolio check`); a file in `assets/` no summary lists is a warning; the renderer never shows an image above 150 dpi and warns when one ends up under 1.5 inches (a pixel minimum like "1200 px wide" doesn't fit phone screenshots) |
 | `pdf-check` | `build:portfolio` | per size: every Markdown word appears in the PDF (image lines excepted), the template's fonts are embedded, no garbled text, no phone number unless decision `portfolio-show-phone`, the page count is within `checks.portfolio_max_pages` (40); written to `pdf-check-<size>.md` |
 | `preview` | `build:portfolio` | page images per size in `preview/<size>/`, to look at before sharing; the template is approved (`approved: true`) only after the user has looked at them |
-| reviewers | `/review --portfolio` (P6) | proofreading, fact-check, confidentiality (public rules) and layout rubrics; reports follow `review-report-spec.md` with `cv: portfolio/portfolio.md` |
+| reviewers | `/review --portfolio` | proofreading, fact-check, confidentiality (public rules, screenshots) and layout (both sizes), each rubric's *Portfolio mode*; reports follow `review-report-spec.md` with `cv: portfolio/portfolio.md`, `market: null`; `validate` refuses other rubrics for the portfolio |
 
 ## 7. Updates
 

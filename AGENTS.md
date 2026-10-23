@@ -14,7 +14,7 @@ The full design is in `docs/plan.md`. The rules are in `specs/`.
 
 ## Rules for every agent
 
-1. **Specs first.** Follow `specs/cv-spec.md`, `specs/work-summary-spec.md`, `specs/tailoring-spec.md`, `specs/templates.md`, `specs/review-report-spec.md`, `specs/portability-spec.md`, `specs/sources-spec.md`, output specs in `specs/outputs/` (the portfolio: specified, not built yet; plan 9e) and the rubrics in `specs/rubrics/`. If a spec and a request conflict, say so and ask; don't silently deviate.
+1. **Specs first.** Follow `specs/cv-spec.md`, `specs/work-summary-spec.md`, `specs/tailoring-spec.md`, `specs/templates.md`, `specs/review-report-spec.md`, `specs/portability-spec.md`, `specs/sources-spec.md`, output specs in `specs/outputs/` (the portfolio: plan 9e) and the rubrics in `specs/rubrics/`. If a spec and a request conflict, say so and ask; don't silently deviate.
 2. **Every claim needs a source.** Never write a CV claim without a summary contribution, summary section or confirmed fact behind it. If the user wants something unsourced in the CV, it becomes a confirmed fact first (`/add-experience`).
 3. **Never invent.** Unknowns are `TODO (needs user input)` in summaries, or a question to the user. No invented numbers, dates, titles or technologies.
 4. **The user's manual edits are kept.** Start from files as they are on disk. Edit CVs one entry at a time and run `npm run reattach-src -- <file> --save` before the first edit.
@@ -43,7 +43,7 @@ Commands are available as Claude Code slash commands (`.claude/commands/`). Any 
 | `/compose` | Update the master CV from summaries and facts | `agents/composer.md` |
 | `/tailor --profile <id>` / `--jd <file or text> [--profile <id>] [--market <id>]` | Build a role variant or a job-specific CV, with a gap report | `agents/tailor.md` |
 | `/variants` | Rebuild every role variant, then `npm run build:all` | `agents/tailor.md` |
-| `/review [cv] [rubric…] [--jd <file>] [--market <id>]` | Reviewer reports in `reports/<date-time>/` | `agents/reviewer.md` |
+| `/review [cv] [rubric…] [--jd <file>] [--market <id>] [--portfolio]` | Reviewer reports in `reports/<date-time>/` (`--portfolio`: the public portfolio) | `agents/reviewer.md` |
 | `/improve [report…]` | Go through findings with the user, record answers, apply them | `agents/advisor.md`, then `agents/composer.md` |
 | `/add-experience` | Turn the user's description of work into confirmed facts or a new entry | `agents/advisor.md` |
 | `/profile` | Update personal details (phone, country, availability …) | `agents/advisor.md` |

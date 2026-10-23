@@ -21,6 +21,10 @@ This rubric looks at the **page images** in `preview/`, which an AI model with i
 | Fonts | look matches the reference (no substituted font) |
 | Density | no overcrowded pages; a short last page is a *low* note (suggest tightening only if a few lines would bring it onto the previous page), never a high finding |
 
+## Portfolio mode (`/review --portfolio`)
+
+Inputs: `portfolio/preview/<size>/page-*.png` for every size (A4, Letter), `portfolio/pdf-check-<size>.md`, the portfolio template's `style-map.yaml` and, once approved, its `reference-preview.png`. Checks: the cover banner is one block with the headline under it; each project and the skills overview start on a new page; no project title, label or image is left alone at a page bottom; images are sharp (not upscaled), centered, not cut, with the caption right under them; spacing is the same in every project; both sizes look alike. Suggestions name the generator setting in `scripts/portfolio-template.ts` (paragraph type and property), since `portfolio-classic` is generated.
+
 ## Required sections in the report
 1. **Per page:** page number, *ok / issues*, one line.
 2. **Findings** (report spec), with page number and position (e.g. "page 2, third bullet of Velas"). Fixes usually belong in the template's `fixes.yaml`, so suggestions say which paragraph type and property to adjust.

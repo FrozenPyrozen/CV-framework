@@ -10,9 +10,9 @@ All rubrics in `specs/rubrics/` produce reports in this format, so the advisor (
 ---
 schema_version: 1
 rubric: ats                         # file name of the rubric
-cv: cv/Kirill_Kohan_CV.md           # the file reviewed
+cv: cv/Kirill_Kohan_CV.md           # the file reviewed (portfolio/portfolio.md for /review --portfolio)
 job_ad: null                        # path when run with --jd
-market: worldwide                   # the market version reviewed
+market: worldwide                   # the market version reviewed (null for the portfolio)
 reviewed_at: 2026-10-20T14:05
 verdict: pass                       # pass | pass-with-issues | fail
 score: 8.5                          # 0-10, rubric-specific meaning

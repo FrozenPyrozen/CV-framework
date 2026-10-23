@@ -73,6 +73,7 @@ Slash commands run in your AI agent tool (`.claude/commands/` for Claude Code; o
 | Choose what goes into the public portfolio (projects, screenshots, links) | `/portfolio-material` |
 | Write or update the portfolio's text | `/portfolio` (then `npm run portfolio -- check`) |
 | Build the portfolio (Word, PDF in A4 and Letter, previews, Pages) | `npm run build:portfolio` |
+| Review the portfolio (spelling, facts, confidentiality, layout) | `/review --portfolio` |
 | Check spelling (also part of build and check) | `npm run spellcheck` |
 | Update the CV after editing summaries or facts | `/compose`, then `/variants` |
 | Add experience that has no repo (interviews, audits …) | `/add-experience` |

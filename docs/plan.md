@@ -1,6 +1,6 @@
 # CV Agent Framework: Plan
 
-Status: steps 1–12 and 14 done (section 8; step 12 by full archive on this Mac, its private-file round trip still to rerun once a tailored or sent CV exists); left: step 13 (new laptop + new repo, on the new laptop); agent replay due. Since then: portable harvest (9c) and sources (9d) built, the portfolio specified, its content imported (P2), its summary fields (P1), the portfolio agent and text checks (P3), template, renderer and build (P4) and the spell check (P5) built (9e) · 2026-10-23
+Status: steps 1–12 and 14 done (section 8; step 12 by full archive on this Mac, its private-file round trip still to rerun once a tailored or sent CV exists); left: step 13 (new laptop + new repo, on the new laptop); agent replay due. Since then: portable harvest (9c) and sources (9d) built, the portfolio specified, its content imported (P2), its summary fields (P1), the portfolio agent and text checks (P3), template, renderer and build (P4), the spell check (P5) and portfolio reviews (P6) built (9e) · 2026-10-23
 
 ## 1. Goal
 
@@ -671,7 +671,7 @@ Dependencies: TypeScript (`typescript`, `@types/node`) run with `tsx`, `cspell-l
 | `/tailor --profile <id>` | Tailor builds `cv/variants/<id>/cv.md` from the profile, then `npm run build` on it |
 | `/tailor --jd <file \| pasted text> [--profile <id>] [--market <id>]` | Tailor builds `cv/tailored/<company-role>/` for one job, always starting from a role profile (`--profile`, or the closest one the tailor proposes and you confirm; recorded as `profile:` in `jd-tags.yaml`), then `npm run build`. Pasted job ad text is saved as `job-description.md` in that folder. |
 | `/variants` | Rebuilds every profile variant (after summaries or the master CV change), then `npm run build:all` |
-| `/review [cv-file] [rubric…] [--jd <file>] [--market <id>]` | Runs the reviewers (default all 6) on the chosen market version (default: the default market) and writes `reports/<date-time>/`. The ATS and HR reviewers read the market file, so hidden fields count as intended and HR questions fit the market. With `--jd`, the ATS reviewer also scores the CV against that job ad. "Would this CV pass an AI ATS?" is `/review ats`, and "…and then HR?" is `/review hr`. |
+| `/review [cv-file] [rubric…] [--jd <file>] [--market <id>] [--portfolio]` | Runs the reviewers (default all 6) on the chosen market version (default: the default market) and writes `reports/<date-time>/`. The ATS and HR reviewers read the market file, so hidden fields count as intended and HR questions fit the market. With `--jd`, the ATS reviewer also scores the CV against that job ad. "Would this CV pass an AI ATS?" is `/review ats`, and "…and then HR?" is `/review hr`. `--portfolio` reviews the public portfolio with the proofreading, fact-check, confidentiality and layout rubrics (9e P6). |
 | `/improve [report…]` | Advisor goes through the findings one topic at a time. It asks you questions with suggested answers, records them as facts, has the composer apply them, and shows the diff. Findings you decline are recorded as decisions (e.g. "no LinkedIn link", "keep length"), so later reviews don't raise them again. |
 | `/profile` | You describe a change ("moved to Poland, new phone +48…"). The advisor asks the follow-up questions (work permit? still B2B? new time zone? relocation?), updates `profile.yaml`, runs `/variants` (which ends with `build:all`), and lists tailored CVs and already-sent PDFs that still have the old details. |
 | `/add-experience` | You describe experience in your own words (e.g. "technical interviewing, legacy React Native audits, presales"). The advisor asks follow-up questions, writes a `confirmed.yaml` entry (or a `cv_entry` for a new job), and the composer adds the bullets. |
@@ -867,7 +867,7 @@ Older CVs and portfolios often hold more detail about past jobs than the summari
 3. The advisor proposes, per summary: filled `TODO` sections, new contributions (`Source: doc:<id>`), technologies, portfolio material, numbers (section 7 `doc:<id>`; in the CV only once you confirm them) and conflicts (listed; the current value stays unless you say otherwise, and then it's recorded as your answer). Jobs no summary covers become `source: cv` summaries hidden from the CV until you decide.
 4. `validate` checks the index, that each original is unchanged (sha256), and that every `doc:<id>` names an imported document. Then `/compose`, `/variants`, `build:all`.
 
-## 9e. Portfolio (specified, built in phases)
+## 9e. Portfolio (built in phases P1–P6)
 
 The portfolio is a second output of the same sources: a multi-page document (cover, a page or more per project, skills, contact) behind a **public link**. Rules are in `specs/outputs/portfolio.md`; it reuses the CV pipeline (Markdown → Word template → PDF exporters → checks) and adds images, several page sizes, `.pages` output, public-only confidentiality and a dictionary spell check.
 
@@ -878,9 +878,9 @@ The portfolio is a second output of the same sources: a multi-page document (cov
 | P3 (**done 2026-10-23**) | `agents/portfolio.md` and `/portfolio`: writes `portfolio/portfolio.md` with a source on every sentence; `refresh` writes its generated blocks; `status` tracks it | P1, P2 |
 | P4 (**done 2026-10-23**) | Renderer: images (scaled to the content width, captions), page sizes per template (`sizes: { a4, letter }`), `build:portfolio [--size a4\|letter\|all]`: `.docx`, `.pages` (through Pages), one PDF per size, `pdf-check` and previews per size | P2, P3 |
 | P5 (**done 2026-10-23**) | `npm run spellcheck`: a dictionary spell check (US English) with the project word list `facts/dictionary.txt`, for the portfolio **and** the CV, in `build` and `check` (cspell-lib with bundled English, software-term and company dictionaries) | nothing |
-| P6 | Portfolio checks and reviews: image checks (exists, public-confirmed, at least 1200 px wide, none unused), `lint` as for the CV except that section 9 terms are allowed only with `allow_in: [portfolio]` (job-id and `summary` exceptions don't apply); the phone number left out unless decided otherwise, `/review --portfolio` (proofreading, fact-check, confidentiality with public rules, layout); acceptance scenario B17 | P4 |
+| P6 (**done 2026-10-23**) | Portfolio checks and reviews: images (exist and public-confirmed; an image in `portfolio.md` must be a public item of its own project; unused files in `assets/` warned; shown at most at 150 dpi, warned under 1.5 inches, instead of a pixel minimum that phone screenshots can't meet), `lint` as for the CV except that section 9 terms are allowed only with `allow_in: [portfolio]` (in `portfolio check` since P3); the phone number left out unless decided; `/review --portfolio` (proofreading, fact-check, confidentiality with public rules and screenshots, layout for both sizes; `validate` refuses other rubrics); acceptance B17 | P4 |
 
-P1–P5 are done (P4: the generated `portfolio-classic` template with Rockwell titles, since Pages won't apply Superclarendon to Word text; `build:portfolio`); next is P6, and approving the template after looking at real previews.
+P1–P6 are done. What's left is content: `/portfolio-material` (choose projects and screenshots), `/portfolio`, `npm run build:portfolio`, `/review --portfolio`, and approving the `portfolio-classic` template from the real previews.
 
 ## 10. Decisions
 
@@ -903,7 +903,7 @@ P1–P5 are done (P4: the generated `portfolio-classic` template with Rockwell t
 ## 11. Out of scope for now
 
 - **PDF input for `/import-template`:** Word input works; PDF input (planned in section 6.4) is deferred until you need a template from a PDF CV.
-- **Portfolio output:** specified (`specs/outputs/portfolio.md`, section 9e); the April 2025 portfolio's content is imported (P2, 2026-10-22). P1–P5 are done (2026-10-23); next P6 (image size checks, reviews) and approving the portfolio template.
+- **Portfolio output:** built (`specs/outputs/portfolio.md`, section 9e, P1–P6, 2026-10-23). What's left is content, not scope: choosing projects and screenshots (`/portfolio-material`), writing (`/portfolio`), building and reviewing, and approving the `portfolio-classic` template from the real previews.
 - Cover-letter agent (the format leaves room to add it later).
 - Pulling history from remote GitHub or Azure DevOps (local clones only, while you have access).
 - A fully code-driven pipeline (Agent SDK CLI). It can wrap the same `agents/*.md` later.
@@ -911,7 +911,7 @@ P1–P5 are done (P4: the generated `portfolio-classic` template with Rockwell t
 
 ## 12. Coverage of the 2026-10-15 chat
 
-Every step done by hand in the chat, and the capability that repeats it. Rows 37 onward also log the build steps of section 8 (step 5: rows 37–42, step 6: 43–44, step 7: 46–47, step 8: 48–49, step 9: 50–52, step 10: 54, step 11: 55, step 12: 56–57, step 14: 61), the audits (58, 62, 71–74) and the changes you asked for (59–60, 63–70, 75–82).
+Every step done by hand in the chat, and the capability that repeats it. Rows 37 onward also log the build steps of section 8 (step 5: rows 37–42, step 6: 43–44, step 7: 46–47, step 8: 48–49, step 9: 50–52, step 10: 54, step 11: 55, step 12: 56–57, step 14: 61), the audits (58, 62, 71–74) and the changes you asked for (59–60, 63–70, 75–83).
 
 | # | What we did in the chat | Framework capability |
 |---|---|---|
@@ -997,3 +997,4 @@ Every step done by hand in the chat, and the capability that repeats it. Rows 37
 | 80 | Asked to continue the portfolio (P1, P5) and keep plan and specs aligned | P1: summary fields `show_in_portfolio`, `portfolio_order`, `portfolio_label`, `portfolio_max_items` in the schema; section 8 items parsed and checked by `validate` (public format, image exists and is an image, caption, link URL and label; `portfolio_label` can't name a hidden client); `/portfolio-material`. P5: `npm run spellcheck` (cspell-lib, bundled dictionaries plus `facts/dictionary.txt`), part of `build` and `check`; the CVs had no typos, 18 real words seeded |
 | 81 | Asked to go on with the plan (P3) and keep plan and specs aligned | `npm run portfolio -- refresh` (generated cover without phone or self-link, project titles, public images and links, skills, contact; placeholders; drops opted-out projects) and `check` (sources owned by the project, confidentiality with only `allow_in: [portfolio]`, secrets, spelling; records state); `status` lists the portfolio; `agents/portfolio.md` and `/portfolio`; portfolio spec sections 1, 4, 6 and 7 rewritten to match; acceptance B20 |
 | 82 | Asked to go on with the plan (P4) and keep plan and specs aligned | `npm run portfolio-template` generates `templates/portfolio-classic` (style map `kind: portfolio`, sizes A4 and Letter; Rockwell Bold for the Superclarendon titles, which Pages won't apply to Word text); the portfolio renderer (images embedded, TIFF converted, each project and the skills on a new page); `npm run build:portfolio` (check, Word and PDF per size, PDF check, previews, `.pages`); `status` flags outputs older than `portfolio.md`; `doctor` checks the portfolio fonts; `checks.portfolio_max_pages`; the CV renderer refuses portfolio templates; portfolio spec 2, 5, 5a and 6 and templates spec 2 and 3 updated |
+| 83 | Asked to go on with the plan (P6) and keep plan and specs aligned | `portfolio check` refuses images that aren't public items of their project and warns about unused assets; the renderer shows images at most at 150 dpi and warns under 1.5 inches (a 1200 px minimum would reject the phone screenshots); `/review --portfolio` with a *Portfolio mode* in the proofreading, fact-check, confidentiality and layout rubrics and the reviewer; `validate` refuses other rubrics for portfolio reports; portfolio spec 5 and 6, report spec, plan and acceptance updated |

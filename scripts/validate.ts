@@ -207,6 +207,8 @@ export function validateRepo(): Issue[] {
       const data = parseYaml(fm[1]);
       check("report.schema.json", data, file);
       if (data?.rubric && !existsSync(rootPath("specs/rubrics", `${data.rubric}.md`))) err(file, `rubric "${data.rubric}" has no specs/rubrics/${data.rubric}.md`);
+      // Portfolio reviews (specs/outputs/portfolio.md 6): only the rubrics with a portfolio mode.
+      if (String(data?.cv ?? "").startsWith(`${cfg.paths.portfolio ?? "portfolio"}/`) && !["proofreading", "fact-check", "confidentiality", "layout"].includes(data?.rubric)) err(file, `rubric "${data?.rubric}" has no portfolio mode (proofreading, fact-check, confidentiality, layout)`);
     }
   }
 
