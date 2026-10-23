@@ -130,6 +130,13 @@ Tags: code-quality, typescript, design-systems
 
 ## 8. Portfolio material
 
+- image: assets/designai-jira-plugin/form-image-attached.png
+  caption: The plugin's design request form with an attached wireframe (plugin name covered)
+  public: yes, confirmed by user 2026-10-23
+- image: assets/designai-jira-plugin/form-images-and-url.png
+  caption: The design request form with four wireframes, a reference URL and an error message (plugin name covered)
+  public: yes, confirmed by user 2026-10-23
+
 TODO (needs user input)
 
 ## 9. Confidentiality notes

@@ -32,3 +32,5 @@ frontends
 hackathon
 presales
 tabnabbing
+wireframe
+wireframes

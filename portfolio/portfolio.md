@@ -129,7 +129,9 @@ React Native Web, React Native, Web3, MobX, TypeScript, GitHub Actions, React Ho
 This generative AI application greatly speeds up designers' work, letting them quickly create MVP, proof-of-concept (PoC) and presales designs for customers. <!-- src: doc:portfolio-2025-09 --> It integrates with the client's Jira board. <!-- src: doc:portfolio-2025-09 --> Users describe their requirements in a text prompt, provide a URL and upload photos or style schemas. <!-- src: doc:portfolio-2025-09 --> The system then generates a design (for example, in Figma format), creates a new Jira ticket with the request and returns the finished design, which streamlines the early design and project-planning phases. <!-- src: doc:portfolio-2025-09 -->
 
 <!-- generated:media-designai-jira-plugin -->
+![The plugin's design request form with an attached wireframe (plugin name covered)](assets/designai-jira-plugin/form-image-attached.png)
 
+![The design request form with four wireframes, a reference URL and an error message (plugin name covered)](assets/designai-jira-plugin/form-images-and-url.png)
 <!-- /generated:media-designai-jira-plugin -->
 
 **Responsibilities**

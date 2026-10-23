@@ -14,7 +14,7 @@ process.on("exit", () => { for (const d of made) rmSync(d, { recursive: true, fo
 export function tempRepo(): string {
   const dir = mkdtempSync(join(tmpdir(), "cv-test-"));
   made.push(dir);
-  for (const p of ["framework.config.yaml", "facts", "summaries", "schemas", "markets", "specs", "cv", "templates", "profiles", "sources"]) {
+  for (const p of ["framework.config.yaml", "facts", "summaries", "schemas", "markets", "specs", "cv", "templates", "profiles", "sources", "portfolio/assets"]) {
     // Copy-on-write clones where the file system supports them (APFS), plain copies elsewhere.
     if (existsSync(join(REPO, p))) cpSync(join(REPO, p), join(dir, p), { recursive: true, mode: constants.COPYFILE_FICLONE });
   }
