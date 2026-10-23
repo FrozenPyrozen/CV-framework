@@ -199,7 +199,7 @@ National Aviation University | Ukraine | 2016 - 2020
 
 **Backend and Cloud:** Node.js, Express, Sequelize, PM2, Nginx, PostgreSQL, Amazon Web Services (AWS: EC2, S3, RDS, Amplify, AppSync, Cognito), Microsoft Azure (Azure Blob Storage), Stripe, Docker
 
-**Authentication and Security:** OAuth 2.0, OpenID Connect (OIDC), Zero-trust architecture, SSL certificate pinning, PII redaction
+**Authentication and Security:** OAuth 2.0, OpenID Connect (OIDC), Zero-trust architecture, SSL certificate pinning, PII (personal data) redaction
 
 **AI:** Generative AI integration, Model Context Protocol (MCP), AI agent governance (SDD), AI-assisted development
 

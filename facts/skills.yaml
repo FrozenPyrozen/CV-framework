@@ -86,7 +86,7 @@ categories:
       - { name: OpenID Connect (OIDC), tags: [oidc] }
       - { name: Zero-trust architecture, tags: [security, architecture] }
       - { name: SSL certificate pinning, tags: [security] }
-      - { name: PII redaction, tags: [security, observability] }
+      - { name: PII (personal data) redaction, tags: [security, observability] }
 
   - id: testing
     label: Testing
