@@ -48,6 +48,9 @@ export function validateRepo(): Issue[] {
   // --- profile, skills, decisions ---
   const profile = loadProfile(cfg);
   check("profile.schema.json", profile, "facts/profile.yaml");
+  // The portfolio cover's links are labels of profile.yaml contacts.links (specs/outputs/portfolio.md 4).
+  const linkLabels = (profile?.contacts?.links ?? []).map((l: any) => l.label);
+  for (const label of (cfg as any).portfolio?.cover_links ?? []) if (!linkLabels.includes(label)) err("framework.config.yaml", `portfolio.cover_links: "${label}" isn't a label of facts/profile.yaml contacts.links (${linkLabels.join(", ") || "none"})`);
   const skills = loadSkills(cfg);
   check("skills.schema.json", skills, "facts/skills.yaml");
   const seenSkills = new Set<string>();
@@ -239,9 +242,9 @@ export function validateRepo(): Issue[] {
     for (const src of Object.keys(p.overrides ?? {})) {
       const [id, num] = src.split("#");
       const s = summaries.find((x) => x.id === id);
-      const ok = num === "5" ? !!s && !!p.overrides[src]?.pin && !p.overrides[src]?.text && !p.overrides[src]?.drop
+      const ok = num === "5" ? !!s && !!p.overrides[src]?.pin !== !!p.overrides[src]?.drop && !p.overrides[src]?.text
         : num ? !!s?.contributions.some((c) => c.number === num) : confirmed.facts.some((x) => x.id === id);
-      if (!ok) err(file, num === "5" ? `overrides: "${src}" (a Stack line) needs an existing summary and only { pin: true }` : `overrides: "${src}" doesn't resolve to a summary contribution or confirmed fact`);
+      if (!ok) err(file, num === "5" ? `overrides: "${src}" (a Stack line) needs an existing summary and only { pin: true } or { drop: true }` : `overrides: "${src}" doesn't resolve to a summary contribution or confirmed fact`);
       for (const a of p.overrides[src]?.also ?? []) {
         const [aid, anum] = String(a).split("#");
         const resolves = anum ? !!summaries.find((x) => x.id === aid)?.contributions.some((c) => c.number === anum) : confirmed.facts.some((x) => x.id === aid);
@@ -280,8 +283,8 @@ export function validateRepo(): Issue[] {
       const [id, num] = src.split("#");
       if (src in (t.overrides ?? {})) {
         const s = summaries.find((x) => x.id === id);
-        const ok = num === "5" ? !!s && !!o?.pin && !o?.text && !o?.drop : num ? !!s?.contributions.some((c) => c.number === num) : confirmed.facts.some((x) => x.id === id);
-        if (!ok) err(file, num === "5" ? `overrides: "${src}" (a Stack line) needs an existing summary and only { pin: true }` : `overrides: "${src}" doesn't resolve`);
+        const ok = num === "5" ? !!s && !!o?.pin !== !!o?.drop && !o?.text : num ? !!s?.contributions.some((c) => c.number === num) : confirmed.facts.some((x) => x.id === id);
+        if (!ok) err(file, num === "5" ? `overrides: "${src}" (a Stack line) needs an existing summary and only { pin: true } or { drop: true }` : `overrides: "${src}" doesn't resolve`);
         for (const a of o?.also ?? []) {
           const [aid, anum] = String(a).split("#");
           const resolves = anum ? !!summaries.find((x) => x.id === aid)?.contributions.some((c) => c.number === anum) : confirmed.facts.some((x) => x.id === aid);

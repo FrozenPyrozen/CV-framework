@@ -1,25 +1,27 @@
 # Gap report: fullstack-react-node
 
-Built: 2026-10-16 · Profile: fullstack-react-node · Job ad: no
+Built: 2026-10-23 · Profile: fullstack-react-node · Job ad: no
 
 ## Strong evidence
-- **React and TypeScript:** SYSPRO schema-driven React 19 runtime, view orchestration, Login micro-frontend (`syspro-saas-erp#4.1`, `#4.5`, `#4.6`); Jira Forge app (`designai-jira-plugin#4.1`, `#4.2`); Velas wallet (`velas-wallet#4.1`, `#4.8`); Itjet (`itjet-fintech#4.1`, `#4.3`).
-- **Architecture:** SDD process and platform/solution architecture work (`syspro-saas-erp#4.2`, `syspro-architecture-scope`), frontend tech-stack decision record (`syspro-saas-erp#4.3`); micro-frontend, zero-trust OIDC setup (`syspro-saas-erp#4.7`); General Motors modular architecture (`general-motors-navigation#4.4`); Thermo Fisher app from scratch (`thermo-fisher-dosimeter#4.1`).
+- **React and TypeScript:** SYSPRO schema-driven React 19 runtime (first SYSPRO bullet, decision `syspro-runtime-bullet-first`), view orchestration and Login micro-frontend (`syspro-saas-erp#4.1`, `#4.5`, `#4.6`); Jira Forge app (`designai-jira-plugin#4.1`, `#4.2`); Velas wallet (`velas-wallet#4.1`, `#4.8`, `#4.10`); Itjet TypeScript adoption and RegiStart React frontend (`itjet-fintech#4.3`, `#4.14`).
+- **Node.js and REST APIs:** Fused subscription flow with Node.js REST APIs and Stripe, card-removal endpoints (`itjet-fintech#4.6`, `#4.15`); RegiStart Node.js backend with Sequelize (`itjet-fintech#4.14`); Velas staking-rewards backend and lighter REST API responses (`velas-wallet#4.6`, `#4.10`); Jira Forge Node.js resolvers (`designai-jira-plugin#4.1`).
+- **PostgreSQL, AWS, CI/CD:** PostgreSQL to AWS RDS, 2x database performance (`itjet-fintech#4.4`); node-pg-migrate migrations (`#4.14`); CI/CD on AWS EC2 / S3 (`#4.3`); GitHub Actions builds and signing (`velas-wallet#4.4`).
+- **Architecture:** SDD and platform / solution architecture (`syspro-saas-erp#4.2`, `#4.3`, `syspro-architecture-scope`); zero-trust OIDC micro-frontend setup (`syspro-saas-erp#4.7`); General Motors modular architecture and the move of a feature app into the host app (`general-motors-navigation#4.4`, `#4.10`).
+- **Next.js, GraphQL and Docker:** Itjet (`itjet-fintech#4.7`), The Admasters (`admasters-ecommerce#4.3`); Docker hands-on at Itjet, SYSPRO (`syspro-saas-erp#5`) and the Jira plugin (confirmed by user 2026-10-23).
+- **Payments:** Stripe subscription flow (`itjet-fintech#4.6`); the OMO payment gate with 10x income growth is no longer selected (`omo-systems-smart-home#4.3`).
 - **Leadership:** team of 8 at General Motors (`general-motors-navigation#4.1`, `#4.2`), OMO Systems (`omo-systems-smart-home#4.5`), The Admasters (`admasters-ecommerce#4.2`), technical interviews (`consulting-interviews`).
-- **Next.js and SSR:** Itjet (`itjet-fintech#4.7`), The Admasters (`admasters-ecommerce#4.3`).
-- **Payments:** Stripe subscription flow (`itjet-fintech#4.6`), payment gate with 10x income growth (`omo-systems-smart-home#4.3`).
-- **Postgres, AWS, CI/CD:** RDS migration and schema migrations (`itjet-fintech#4.4`, `#4.5`), CI/CD on AWS EC2/S3 (`itjet-fintech#4.3`), GitHub Actions releases (`velas-wallet#4.4`).
 
 ## Weak or missing evidence
 | Area | What exists | Suggestion |
 |---|---|---|
-| Recent Node.js backend | Itjet REST APIs (2019-2020), Velas Node.js staking backend (2021-2023), Jira Forge Node.js resolvers, SYSPRO Node.js mock backend (`syspro-saas-erp#4.11`, not selected). No sourced production backend work after 2023 yet. User context (2026-10-16, not a CV claim): there is backend work after 2023, to be added later. | Add it with /add-experience; until then the summary keeps calling the Node.js work "earlier". |
-| AWS | Only Itjet 2019-2020 (EC2, S3, RDS). Recent cloud work is Azure (Pipelines, Blob Storage). | Add newer AWS work as a fact only if it exists. |
-| GraphQL | Hands-on at Itjet (`itjet-fintech#4.7`); the Clinical Trials app summary lists Apollo Client, AWS AppSync and GraphQL as "used by the project". User context (2026-10-16, not a CV claim): GraphQL was also used on the clinical-trials app and other projects. | Only if your own work there was hands-on: record it in that summary (/harvest), and the other projects via /add-experience. |
-| WebSockets | Listed as hands-on in SYSPRO section 5 and now in the SYSPRO Stack line, but no contribution describes the work. | Add a contribution describing the real-time work via /harvest so a bullet can cite it. |
-| Docker | Evidence is thin rather than missing: hands-on at Itjet (`itjet-fintech#4.7`, "containerized services with Docker") and at SYSPRO (summary section 5, Stack line); used by the Jira plugin project (Docker and Helm deployment). Only one bullet shows it. | If there is more container or deployment work, describe it in a summary so a bullet can cite it. |
+| Recent Node.js backend | Itjet REST APIs (2019-2020), Velas Node.js backend (2021-2023), Jira Forge Node.js resolvers (2025), SYSPRO Node.js mock backend (`syspro-saas-erp#4.11`, not selected); no sourced production backend work after 2023 | Add newer backend work with /add-experience, only if true |
+| AWS | Hands-on EC2, S3 and RDS at Itjet (2019-2020); AWS Amplify, AppSync and Cognito hands-on on the clinical-trials app (client side, confirmed by user 2026-10-22, `orion-mobile-clinical-ink#5`); recent cloud work is Azure (Pipelines, Blob Storage) | Amplify, AppSync and Cognito stay in Skills (decision `skills-only-in-skills-list`) |
+| GraphQL | Hands-on at Itjet (`itjet-fintech#4.7`); Apollo Client 3 and GraphQL hands-on on the clinical-trials app (confirmed 2026-10-22, `orion-mobile-clinical-ink#5`) | The clinical-trials bullet could name GraphQL citing `orion-mobile-clinical-ink#5` (review 2026-10-23-1705 ats-1); Apollo Client stays in Skills by decision |
+| WebSockets | Hands-on at SYSPRO (`syspro-saas-erp#5`, Stack line) with no contribution describing the work | Add a contribution with /harvest so a bullet can cite it |
+| Admasters stack | Bullets name only Next.js and SSR; section 5 is TODO (open item "Admasters stack") | Answer the open item with /add-experience |
 
 ## Selection disagreements
-- **SYSPRO `#4.11` (Node.js mock backend) and `#4.9` (Vitest/Playwright tests)** would show Node.js and testing for this profile better than `#4.6` (Login micro-frontend) now that `#4.8` (telemetry) is out. Consider adding `testing` to `emphasize_tags`, or pinning `#4.11`.
-- **Thermo Fisher `#4.4` (firmware background jobs, score 0)** was chosen only to reach the minimum; `#4.5` (OAuth 2.0 login) fits a full-stack profile better. Consider adding `oauth`/`security` to `emphasize_tags`.
-- **General Motors `#4.3` (HERE SDK map library)** is picked despite the `here-sdk` de-emphasis because its `micro-frontends` tag cancels it out; acceptable, but `#4.7` (voice AI assistant proof of concept) is an alternative.
+- **General Motors:** `#4.10` (moving a feature app into the host app) and `#4.9` (delivery and testing process) push out `#4.5` (95% unit-test coverage strategy, a number). For full-stack roles `#4.5` is stronger than `#4.3` (map library).
+- **Thermo Fisher `#4.4`** (firmware background jobs) is chosen only to reach the minimum; `#4.5` (OAuth 2.0 login) fits a full-stack profile better.
+- **Jira plugin:** `jira-blob-chunks` is its own bullet, separate from `designai-jira-plugin#4.3` (tailoring-spec 2, step 3).
+- **SYSPRO `#4.11`** (Node.js mock backend) would show Node.js at the current job; consider pinning it as the nodejs profile does.

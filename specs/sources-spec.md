@@ -63,6 +63,7 @@ A document that disagrees with a higher source (dates, titles, team sizes, numbe
 
 ## 6. Rules
 
-- `doc:<id>` references (contribution `Source:` lines, section 7, section texts, `facts/confirmed.yaml` `source`) must name a document in `index.yaml`. `validate` checks this, and also that each file exists and matches its `sha256`.
+- `doc:<id>` references (contribution `Source:` lines, section 7, section texts, `facts/confirmed.yaml` `source`) must name a document in `index.yaml`. `validate` checks this, and also that each file exists and matches its `sha256`. They may also appear in `portfolio/portfolio.md` source comments, which `npm run portfolio -- check` checks the same way.
+- Text kept from a published portfolio may cite that document directly in `portfolio/portfolio.md` (`<!-- src: doc:<id> -->`, `specs/outputs/portfolio.md` 4); numbers still follow section 4 (used only once confirmed).
 - Text from documents is still written in your own words in summaries, with the same writing rules (`work-summary-spec.md` 5). Internal names found in a document go to the summary's section 9.
 - The extracted text is regenerated, never edited. To correct a document, import a new version under a new id.

@@ -183,6 +183,18 @@ decisions:
     why: User chose to keep the lists (portfolio review 2026-10-23-1633, fact-check-6, fact-check-9).
     matches: [Technologies list, used by the project, not hands-on, project stack, Kotlin Java PoC]
 
+  - id: skills-only-in-skills-list
+    decision: Hands-on skills that appear only in the skills list (React Testing Library, PM2, Nginx, Apollo Client, AWS Amplify, AppSync, Cognito, store publishing, native modules) are not added to the bullets for now.
+    date: "2026-10-23"
+    why: User chose to skip it (review 2026-10-23-1705, ats findings on keywords only in Skills).
+    matches: [only in Skills, keywords not in bullets, React Testing Library, PM2, Nginx, Apollo Client, Amplify, AppSync, Cognito, App Store, Google Play, native modules]
+
+  - id: syspro-runtime-bullet-first
+    decision: In the React, Node.js and full-stack variants the SYSPRO runtime bullet (1,800+ ERP programs) comes first and the SDD bullet second; the master CV and the React Native variant keep the SDD bullet first. The SDD bullet's ending is shortened everywhere.
+    date: "2026-10-23"
+    why: User chose it (review 2026-10-23-1705, hr-1 in several reports).
+    matches: [SYSPRO first bullet, SDD bullet first, process wording first, runtime bullet order]
+
   - id: direct-employment
     decision: SYSPRO, General Motors and Thermo Fisher Scientific employed the user directly (no services company in between).
     date: "2026-10-23"

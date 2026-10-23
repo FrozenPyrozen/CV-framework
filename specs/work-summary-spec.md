@@ -2,7 +2,7 @@
 
 Status: v1 · Applies to: `summaries/*.md`, written by the harvester, `/add-experience`, `/job-change` and by hand
 
-A work summary is the **single source of truth for one job or project**, and the **lasting record** of it: access to the repos usually ends with the job, so everything worth keeping must be in the summary before you leave (see the final harvest in section 6). The CV, role variants and tailored CVs are built from it now, and the portfolio will be later. It is richer than any one output needs.
+A work summary is the **single source of truth for one job or project**, and the **lasting record** of it: access to the repos usually ends with the job, so everything worth keeping must be in the summary before you leave (see the final harvest in section 6). The CV, role variants, tailored CVs and the public portfolio are built from it. It is richer than any one output needs.
 
 ## 1. File
 
@@ -69,7 +69,7 @@ cv_max_bullets: 8
 | `cv_title_suffix` | no | default derived from `engagement` (`contract` gives `display.contract_suffix`) |
 | `cv_emphasis` | no | points the CV entry must make clear, in its first bullets |
 | `cv_max_bullets` | no | limit for this entry in the master CV |
-| `show_in_portfolio`, `portfolio_order`, `portfolio_title`, `portfolio_label`, `portfolio_max_items` | no | the public portfolio (`specs/outputs/portfolio.md` 3); in the schema since portfolio phase P1 |
+| `show_in_portfolio`, `portfolio_order`, `portfolio_title`, `portfolio_projects`, `portfolio_label`, `portfolio_max_items` | no | the public portfolio (`specs/outputs/portfolio.md` 3); in the schema since portfolio phase P1 |
 
 **Rule for optional fields:** if missing, the default applies; if set, it wins.
 
@@ -98,7 +98,7 @@ The body may start with one optional `# Title` line, then always has these nine 
 | 5. Technologies and frameworks | Grouped by category (language, UI, state, data, testing, CI/CD, cloud, AI and agents …), versions where known, each marked **hands-on** or **used by the project**. |
 | 6. Skills demonstrated | Each skill with the contribution numbers that prove it, e.g. `OpenID Connect (OIDC): 4.2, 4.3`. |
 | 7. Metrics and outcomes | Every number with its source (`git`, `user`, `dashboard`, `cv`, `doc:<id>`; `cv` may be written "previous CV"; either may add "confirmed by user <date>") and confidence (`exact`, `approximate`). A `doc:<id>` number reaches the CV only once confirmed (`sources-spec.md` 4). |
-| 8. Portfolio material | Links, screenshots, demo notes, and what is safe to show publicly. May be `TODO (needs user input)`. `validate` checks its structured items; it is a structured list (images, links, demos, each with `public: yes, confirmed by user <date>` or `public: no`; `specs/outputs/portfolio.md` 3). |
+| 8. Portfolio material | Links, screenshots, demo notes, and what is safe to show publicly. May be `TODO (needs user input)`. `validate` checks its structured items; it is a structured list (images, links, demos, each with `public: yes, confirmed by user <date>` or `public: no`, and optionally `project: <id>` naming one of the summary's `portfolio_projects` pages; `specs/outputs/portfolio.md` 3). |
 | 9. Confidentiality notes | Internal names, repo names, ticket prefixes and internal URL patterns (e.g. the repo host, `*dev.azure.com*<org>*`) that must never appear in a CV. `lint` reads this section to build its blocklist. Exceptions use `allow_in`. The host patterns stay even though no remote URLs are stored. |
 
 A section with nothing known yet contains `TODO (needs user input)`. **Never invent content to fill a section.**

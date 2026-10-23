@@ -15,7 +15,7 @@ interface StyleMap {
   page?: { width_twips: number; margins_twips: { left: number; right: number } };
 }
 
-interface Fix { id: string; set: { bullet?: { indent_left: number; hanging: number; tab?: { type: string; pos: number } }; keep_with_next?: string[]; date_tab?: { align: "left" | "right"; pos: number }; keep_last_bullets_together?: number; keep_first_bullets_together?: number; keep_sections_together?: string[]; paragraphs?: Record<string, { indent_left?: number; first_line?: number; before?: number; after?: number; line?: number }>; first_after_section_heading?: { before: number }; letter_spacing?: number; rule_full_width?: boolean; page_margins?: Partial<Record<"top" | "bottom" | "left" | "right", number>> } }
+interface Fix { id: string; set: { bullet?: { indent_left: number; hanging: number; tab?: { type: string; pos: number } }; keep_with_next?: string[]; date_tab?: { align: "left" | "right"; pos: number }; keep_last_bullets_together?: number; keep_first_bullets_together?: number; keep_sections_together?: string[]; strip_header_text?: boolean; paragraphs?: Record<string, { indent_left?: number; first_line?: number; before?: number; after?: number; line?: number }>; first_after_section_heading?: { before: number }; letter_spacing?: number; rule_full_width?: boolean; page_margins?: Partial<Record<"top" | "bottom" | "left" | "right", number>> } }
 
 export interface RenderResult { paragraphs: number; links: number; warnings: string[] }
 
@@ -95,6 +95,14 @@ export async function renderDocx(markdown: string, outPath: string, templateName
     if (f.set.keep_last_bullets_together) keepLastBullets = Math.max(keepLastBullets, f.set.keep_last_bullets_together);
     if (f.set.keep_first_bullets_together) keepFirstBullets = Math.max(keepFirstBullets, f.set.keep_first_bullets_together);
     for (const h of f.set.keep_sections_together ?? []) keepSections.add(h.toLowerCase());
+    // strip_header_text: empty every text run in the page headers (shapes stay), so a parser doesn't read a stray
+    // character (the classic header's decorative bar holds a 1 pt ".") before the name on every page.
+    if (f.set.strip_header_text) {
+      for (const name of Object.keys(doc.zip.files).filter((n) => /^word\/header\d*\.xml$/.test(n))) {
+        const xml = await doc.zip.file(name)!.async("string");
+        doc.zip.file(name, xml.replace(/(<w:t(?: [^>]*)?>)[^<]*(<\/w:t>)/g, "$1$2"));
+      }
+    }
     const b = f.set.bullet;
     if (!b) continue;
     const idx = styleMap.paragraphs.bullet?.sample;

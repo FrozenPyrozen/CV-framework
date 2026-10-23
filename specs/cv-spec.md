@@ -64,7 +64,7 @@ Each entry is a list of `*` bullets (one level, no nesting).
 - **Numbers:** use them whenever a source provides one (`1,800+`, `12x`, `95%`, `25+ person program`). Never invent or round up a number. "~" is allowed when the source says "about".
 - **Bold:** bold the technologies and key terms a screener searches for (`**React Native**`, `**OpenID Connect (OIDC)**`), and important numbers or outcomes when they're the point of the bullet. Don't bold whole sentences.
 - **Acronyms:** spell out once with the acronym in brackets where screeners may search either form: `**specification-driven development (SDD)**`, `**OpenID Connect (OIDC)**`.
-- **Stack line:** an entry may end with `* Stack: **A, B, C**` listing the main technologies, sourced from its summary's section 5 (expected for the current job, and `lint` warns when it's missing; older jobs keep one they already have, and get a new one only when the user asks for that job's technologies to show, recorded as a decision such as `orion-stack-line`). It doesn't count toward bullet limits.
+- **Stack line:** an entry may end with `* Stack: **A, B, C**` listing the main technologies, sourced from its summary's section 5 (expected for the current job, and `lint` warns when it's missing; older jobs keep one they already have, and get a new one only when the user asks for that job's technologies to show, recorded as a decision such as `orion-stack-line`). A role profile can drop the current job's Stack line with `<id>#5: { drop: true }` in its `overrides` (`tailoring-spec.md`); `lint` then doesn't warn. It doesn't count toward bullet limits.
 - **Length:** a bullet should fit in about 2 lines of the rendered CV (roughly 45 words at most).
 - **Limits:** `cv_max_bullets` in the summary caps an entry in the master CV. Profiles set their own limits (see the tailoring spec).
 - **Source:** every bullet ends with a source comment (section 6).
@@ -182,6 +182,6 @@ Agents never write market-specific content by hand. Current markets:
 
 | Market | Phone | Availability line | Time-zone line | Contract labels | Headline qualifier | File suffix |
 |---|---|---|---|---|---|---|
-| worldwide (default) | shown | Open to B2B contract or full-time employment | shown | shown | shown | none |
+| worldwide (default) | shown | Open to B2B contract or full-time employment | shown | shown | hidden on the master CV only ("Senior Software Engineer / Tech Lead"); variants and tailored CVs keep theirs | none |
 | ukraine | hidden | hidden | hidden | hidden | hidden on the master CV only ("Senior Software Engineer / Tech Lead"); variants and tailored CVs keep theirs | `_UA` |
 

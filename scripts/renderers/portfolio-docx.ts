@@ -1,6 +1,6 @@
 // Portfolio Word renderer (specs/outputs/portfolio.md 5, plan 9e P4): fills a portfolio template's sample paragraphs
 // (style map kind: portfolio) with portfolio/portfolio.md, embeds the images (converting formats Word can't show to
-// PNG), starts each project and the skills overview on a new page, and sets the page size per output size.
+// PNG), starts each project on a new page, and sets the page size per output size.
 import { spawnSync } from "node:child_process";
 import { existsSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -78,7 +78,7 @@ export async function renderPortfolioDocx(markdown: string, mdFile: string, outP
     return linkIds.get(target)!;
   };
   let images = 0;
-  // Images: consecutive screenshots share one row (as in the April 2025 portfolio), scaled to the same height, the
+  // Images: consecutive screenshots share one row (as on the published portfolio, 2025-09), scaled to the same height, the
   // row fitting the content width and at most 25% of the content height, and never larger than 150 dpi
   // (1440 / 150 = 9.6 twips per pixel): a small screenshot is printed smaller rather than blurry.
   const loadMedia = (path: string) => {

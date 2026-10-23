@@ -19,7 +19,7 @@ Senior software engineer and tech lead with 7+ years of experience building Reac
 
 ### **SYSPRO | Remote | December 2025 - Present**
 
-* Delivered the frontend through architecture-governed **specification-driven development (SDD)**, not ad-hoc AI code generation, and helped define it: specification templates, validation and rules for **AI agents** that implement and review code against the specifications, with each subsystem traced from architecture to code across 4 repositories. <!-- src: syspro-saas-erp#4.2, syspro-architecture-scope -->
+* Delivered the frontend through architecture-governed **specification-driven development (SDD)**, not ad-hoc AI code generation, and helped define it: specification templates, validation and rules for **AI agents** that implement and review code against the specifications across 4 repositories. <!-- src: syspro-saas-erp#4.2, syspro-architecture-scope -->
 
 * Worked with the lead architect on the **platform and solution architecture**: reviewed and co-authored architecture documents and drove open questions to decisions. Owned the **frontend technology stack** (decision record, **ADR**) for the Login micro-frontend and the schema-driven runtime, including OIDC libraries and **Vitest Browser Mode**. <!-- src: syspro-saas-erp#4.3, syspro-architecture-scope, syspro-tech-stack-ownership -->
 
@@ -69,7 +69,7 @@ Senior software engineer and tech lead with 7+ years of experience building Reac
 
 * Developed the Velas **blockchain** wallet for web, mobile and desktop using **React, React Native, Node.js, TypeScript, MobX and Web3.js**. <!-- src: velas-wallet#4.1 -->
 
-* Cut staking page loading from 2 minutes to 5 seconds and made it use 5x less mobile battery by moving filtering to the server and adding a blockchain-node RPC fallback. <!-- src: velas-wallet#4.2 -->
+* Cut staking page loading from 2 minutes to 5 seconds and made it use 5x less mobile battery by moving filtering to the server and adding a blockchain-node remote procedure call (RPC) fallback. <!-- src: velas-wallet#4.2 -->
 
 * Added automatic **Web3 provider** failover for testnet and mainnet tokens, switching when one was slow or unreachable. <!-- src: velas-wallet#4.3 -->
 
@@ -90,7 +90,7 @@ Senior software engineer and tech lead with 7+ years of experience building Reac
 
 ### **OMO Systems | Remote | April 2021 - December 2021**
 
-* Delivered the R&D department's core **React Native** app for controlling smart-home Internet of Things (**IoT**) devices. <!-- src: omo-systems-smart-home#4.1 -->
+* Delivered the research and development (R&D) department's core **React Native** app for controlling smart-home Internet of Things (**IoT**) devices. <!-- src: omo-systems-smart-home#4.1 -->
 
 * Proposed a refactoring of the mobile app architecture that won first place at a local hackathon. <!-- src: omo-systems-smart-home#4.2 -->
 
@@ -107,7 +107,7 @@ Senior software engineer and tech lead with 7+ years of experience building Reac
 
 * Built an **IoT healthcare** app from scratch and designed its architecture with **React Native, TypeScript, Redux** and an offline-first **Realm** database, communicating with radiation dosimeters over Bluetooth. <!-- src: thermo-fisher-dosimeter#4.1 -->
 
-* Rewrote legacy **native modules** to use **MQTT over TLS** with client certificates on iOS and Android, making data transfer 30% faster. <!-- src: thermo-fisher-dosimeter#4.2 -->
+* Rewrote legacy **native modules** to use **MQTT** over Transport Layer Security (**TLS**) with client certificates on iOS and Android, making data transfer 30% faster. <!-- src: thermo-fisher-dosimeter#4.2 -->
 
 * Improved the accuracy of **Bluetooth Low Energy (BLE)** communication with the dosimeter (**react-native-ble-plx**) by reworking the buffer-reading logic. <!-- src: thermo-fisher-dosimeter#4.3 -->
 
@@ -132,7 +132,7 @@ Senior software engineer and tech lead with 7+ years of experience building Reac
 
 * Doubled database performance for Fused by migrating **PostgreSQL** from EC2 to **AWS RDS** and optimizing slow SQL queries. <!-- src: itjet-fintech#4.4 -->
 
-* Developed the RegiStart voter-registration MVP from sketches: a **React** and **Material UI** frontend, a **Node.js** backend with **Sequelize** and **PostgreSQL** on **AWS RDS** behind **PM2** and **Nginx**, **node-pg-migrate** migrations, and an algorithm that distributes students among organizers. <!-- src: itjet-fintech#4.14, itjet-fintech#4.5, itjet-fintech#5 -->
+* Developed the RegiStart voter-registration minimum viable product (MVP) from sketches: a **React** and **Material UI** frontend, a **Node.js** backend with **Sequelize** and **PostgreSQL** on **AWS RDS** behind **PM2** and **Nginx**, **node-pg-migrate** migrations, and an algorithm that distributes students among organizers. <!-- src: itjet-fintech#4.14, itjet-fintech#4.5, itjet-fintech#5 -->
 
 * Implemented the automated monthly subscription flow for Fused with **Stripe**, **Node.js REST APIs** (**Express**, **Sequelize**), **React** and **React Native**. <!-- src: itjet-fintech#4.6 -->
 
@@ -147,7 +147,7 @@ Senior software engineer and tech lead with 7+ years of experience building Reac
 
 * Led a team of 3 software engineers and introduced **Agile** processes. <!-- src: admasters-ecommerce#4.2 -->
 
-* Developed e-commerce sites and landing pages with **Next.js** and server-side rendering (SSR) for SEO. <!-- src: admasters-ecommerce#4.3 -->
+* Developed e-commerce sites and landing pages with **Next.js** and server-side rendering (SSR) for search engine optimization (SEO). <!-- src: admasters-ecommerce#4.3 -->
 
 * Redesigned a legacy codebase to speed up feature deployment. <!-- src: admasters-ecommerce#4.4 -->
 
@@ -177,7 +177,7 @@ Part-time contract and consulting work, alongside full-time roles
 * Stack: **React Native, Expo, TypeScript, Apollo Client, GraphQL, AWS Amplify, AppSync, Cognito, Redux Toolkit, Redux Saga, Redux Persist, Realm, MMKV, Firebase Cloud Messaging, Sentry, Jest**. <!-- src: orion-mobile-clinical-ink#5 -->
 
 <!-- entry: designai-jira-plugin -->
-## **Frontend Engineer (Contract)**
+## **Full-Stack Engineer (Contract)**
 
 ### **Generative AI Jira Plugin | Remote**
 

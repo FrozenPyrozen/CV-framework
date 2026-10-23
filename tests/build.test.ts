@@ -31,7 +31,7 @@ test("build --no-pdf: refresh, lint, trace warning, both markets rendered, build
 test("build stops on lint errors", () => {
   const dir = tempRepo();
   run("refresh.ts", dir);
-  edit(dir, "cv/Kirill_Kohan_CV.md", "* Delivered the R&D department's core **React Native** app", "* Delivered the *core* mobile app");
+  edit(dir, "cv/Kirill_Kohan_CV.md", "* Delivered the research and development (R&D) department's core **React Native** app", "* Delivered the *core* mobile app");
   const r = run("build.ts", dir, ["--no-pdf"]);
   assert.equal(r.code, 1);
   assert.match(r.out, /FAILED lint: \d+ error\(s\), first: line \d+: italics are not supported/);
@@ -66,7 +66,7 @@ test("lint warns when a built variant was edited by hand", () => {
   const md = readFileSync(join(dir, "cv/variants/rn/cv.md"), "utf8");
   writeFileSync(join(dir, "cv/.build-state.json"), JSON.stringify({ "cv/variants/rn/cv.md": { built_at: "x", template: "classic", md_sha: sha(md), sources: {}, outputs: {} } }));
   assert.doesNotMatch(run("lint.ts", dir, ["cv/variants/rn/cv.md"]).out, /edited by hand/);
-  writeFileSync(join(dir, "cv/variants/rn/cv.md"), md.replace("Delivered the R&D department's core **React Native** app", "Delivered the main mobile app"));
+  writeFileSync(join(dir, "cv/variants/rn/cv.md"), md.replace("Delivered the research and development (R&D) department's core **React Native** app", "Delivered the main mobile app"));
   assert.match(run("lint.ts", dir, ["cv/variants/rn/cv.md"]).out, /edited by hand since its last build/);
 });
 
@@ -118,7 +118,9 @@ test("build --market builds one market; a tailored CV gets only the default mark
   mkdirSync(join(dir, "cv/tailored/acme"), { recursive: true });
   run("refresh.ts", dir);
   // Tailored CVs must be fully sourced: give every claim a placeholder source so the build reaches the markets step.
+  // One short bullet is left out: the master CV runs to its own word limit (decision keep-length), a tailored CV's is max_words.
   const sourced = readFileSync(join(dir, "cv/Kirill_Kohan_CV.md"), "utf8").split("\n")
+    .filter((l) => !/passenger second-screen/.test(l))
     .map((l) => (/^\* /.test(l) || /^Senior software engineer/.test(l) ? `${l} <!-- src: profile -->` : l)).join("\n");
   writeFileSync(join(dir, "cv/tailored/acme/cv.md"), sourced);
   const t = run("build.ts", dir, ["cv/tailored/acme/cv.md", "--no-pdf"]);
@@ -134,7 +136,7 @@ test("round 1 audit: per-entry pending list, --all with --entries-reviewed refus
   // Velas changes: the variant lists it; rewriting another entry (Thermo Fisher) keeps Velas listed.
   edit(dir, "summaries/velas-wallet.md", "Developed the Velas blockchain wallet", "Developed the Velas blockchain wallet app");
   assert.match(run("status.ts", dir).out, /entries to rewrite in variants: velas-wallet/);
-  edit(dir, V, "* Built an **IoT healthcare** app", "* Built an **IoT healthcare** application");
+  edit(dir, V, "* Built an Internet of Things (**IoT**) healthcare app", "* Built an Internet of Things (**IoT**) healthcare application");
   run("build.ts", dir, [V, "--no-pdf"]);
   assert.match(run("status.ts", dir).out, /entries to rewrite in variants: velas-wallet/);
   // --entries-reviewed works per CV, and is refused with --all.

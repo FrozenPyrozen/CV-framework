@@ -72,8 +72,9 @@ export function select(input: SelectionInput): Selection {
         id: e.id,
         section: e.section,
         // The Stack line (<id>#5): always for the current job (an ongoing entry that counts as experience, the same
-        // rule as lint), otherwise only when pinned; it doesn't count toward the bullet limits.
-        ...(p.overrides?.[`${e.id}#5`]?.pin || (e.period?.end === "present" && e.countsAsExperience) ? { stack: `${e.id}#5` } : {}),
+        // rule as lint), otherwise only when pinned; a profile's `drop` on <id>#5 removes it, even for the current job.
+        // It doesn't count toward the bullet limits.
+        ...(!p.overrides?.[`${e.id}#5`]?.drop && (p.overrides?.[`${e.id}#5`]?.pin || (e.period?.end === "present" && e.countsAsExperience)) ? { stack: `${e.id}#5` } : {}),
         // `also`: further sources the same bullet cites (one bullet for two contributions about the same work).
         bullets: chosen.map((c) => ({ src: c.also?.length ? [c.src, ...c.also].join(", ") : c.src, title: c.title, score: c.score, ...(c.pinned ? { pinned: true } : {}), ...(c.text ? { text: c.text } : {}) })),
       });

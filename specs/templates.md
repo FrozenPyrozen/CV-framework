@@ -13,7 +13,7 @@ templates/<name>/
 ├── template.docx         # formatting only: styles, numbering, page setup, header/footer, one sample of each paragraph type, no CV content
 ├── style-map.yaml        # how each Markdown element maps to the template
 ├── fixes.yaml            # renderer fixes for this template
-├── reference-preview.png # the approved look of page 1, used by the layout reviewer
+├── reference-preview.png # the approved look of page 1 (a portfolio template: its first project page, page 2 of the A4 preview), used by the layout reviewer
 └── import-report.md      # findings from the import (written by the template-importer agent; classic predates it)
 ```
 
@@ -73,6 +73,7 @@ Supported fix types (each fix has `id`, `why`, `found`, `set`):
 | `keep_first_bullets_together: N` | an entry's first N bullets stay together, and the line right before a run of bullets (entry details, an education line) stays with the first bullet, so a heading never ends a page with fewer than N bullets |
 | `keep_last_bullets_together: N` | an entry's last N bullets stay together, so no bullet sits alone on a new page |
 | `keep_sections_together: [EDUCATION]` | every paragraph of these sections (headings as in `cv_sections`) keeps with the next, so the section moves to the next page as a whole instead of splitting |
+| `strip_header_text: true` | every text run in the page headers is emptied (shapes and borders stay), so ATS parsers don't read a stray character (the classic header bar's 1 pt ".") before the name on every page |
 | `paragraphs: { <type>: { indent_left, first_line, before, after, line } }` | indentation and spacing per paragraph type in twips (20 = 1 pt; `line: 240` = single spacing); overrides the Word style |
 | `first_after_section_heading: { before }` | space above whatever comes first under a section line, so every section starts with the same gap |
 | `rule_full_width: true` | the drawn line under section headings (`section_rule`) spans the whole text width (page width minus the effective left and right margins, after any `page_margins` fix); combine with `paragraphs: { section_rule: { indent_left: 0 } }` so it starts where headings start |

@@ -4,7 +4,7 @@ id: designai-jira-plugin
 source: git
 # --- the job ---
 client: Velocity AI
-role: Frontend Engineer
+role: Full-Stack Engineer   # user, 2026-10-23 (was Frontend Engineer)
 engagement: contract
 period: { start: 2025-05, end: 2025-08 }
 domain: [Generative AI, Developer tools]

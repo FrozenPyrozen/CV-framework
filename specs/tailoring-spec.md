@@ -62,12 +62,12 @@ overrides:
   syspro-saas-erp#4.1: { text: "Built core modules of a schema-driven React 19 runtime ...", pin: true }   # exact wording, always included
   velas-wallet#4.5: { drop: true }                                                                               # never include
   itjet-fintech#4.6: { pin: true, also: [itjet-fintech#4.15], text: "…" }                                        # one bullet citing two contributions about the same work
-  general-motors-navigation#5: { pin: true }     # keep this older job's Stack line (only pin is allowed for #5)
+  general-motors-navigation#5: { pin: true }     # keep this older job's Stack line (pin keeps one, drop removes one, even the current job's)
 entry_max_bullets:
   syspro-saas-erp: 7                             # per-entry limit instead of max_bullets_per_entry
 ```
 
-- **Stack lines** (`<id>#5`) don't count toward the bullet limits. `selection.json` lists an entry's `stack` for the current job (ongoing and counting as experience, the rule `lint` uses) and for any entry whose Stack line is pinned; only those entries get one.
+- **Stack lines** (`<id>#5`) don't count toward the bullet limits. `selection.json` lists an entry's `stack` for the current job (ongoing and counting as experience, the rule `lint` uses) and for any entry whose Stack line is pinned; only those entries get one. A profile's `drop` on `<id>#5` removes the line even for the current job (lint then doesn't warn).
 - **`also`** lists further sources the same bullet cites (`selection.json` gives the bullet `src: "<id>#4.6, <id>#4.15"`); a contribution named in `also` isn't selected again on its own. `validate` checks that each one resolves. Use it with `text` when the merged wording matters.
 - **`entry_max_bullets`** sets a different limit for one entry (e.g. more bullets for the current job in one profile).
 - Pinned bullets come first in the order `overrides` lists them, and an entry can't have more pins than its limit (`validate` checks it).

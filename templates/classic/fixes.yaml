@@ -69,3 +69,8 @@
   found: "2026-10-23"
   set:
     keep_sections_together: [EDUCATION]
+- id: no-header-text
+  why: "The decorative header bar holds an invisible 1 pt \".\" that ATS parsers read first on every page (review 2026-10-23-1705 ats-4)."
+  found: "2026-10-23"
+  set:
+    strip_header_text: true

@@ -110,7 +110,7 @@ test("render: consistent left edge and spacing, lead-in lines stay with their bu
 test("render turns [text](url) into a real link with that text", async () => {
   const dir = tempRepo();
   run("refresh.ts", dir);
-  edit(dir, CV, "* Delivered the R&D department's core **React Native** app", "* See [my site](https://example.com/x) and delivered the core mobile app");
+  edit(dir, CV, "* Delivered the research and development (R&D) department's core **React Native** app", "* See [my site](https://example.com/x) and delivered the core mobile app");
   run("render.ts", dir);
   const out = join(dir, "cv/Kirill_Kohan_CV.docx");
   const d = await openDocx(out);
@@ -171,3 +171,17 @@ test("keep_sections_together keeps every EDUCATION paragraph with the next one",
   assert.ok(start >= 0 && end > start);
   for (let i = start; i < end - 1; i++) assert.match(pPr(d.paragraphs[i]), /<w:keepNext/, `paragraph ${i - start} of EDUCATION`);
 });
+
+test("the classic template's strip_header_text fix leaves no text in the page headers", async () => {
+  const dir = tempRepo();
+  run("refresh.ts", dir);
+  assert.equal(run("render.ts", dir).code, 0);
+  const zip = await JSZip.loadAsync(readFileSync(join(dir, "cv/Kirill_Kohan_CV.docx")));
+  const headers = Object.keys(zip.files).filter((n) => /^word\/header\d*\.xml$/.test(n));
+  assert.ok(headers.length > 0, "the classic template has page headers");
+  for (const h of headers) {
+    const xml = await zip.file(h)!.async("string");
+    assert.deepEqual([...xml.matchAll(/<w:t(?: [^>]*)?>([^<]+)<\/w:t>/g)].map((m) => m[1]), [], `${h} has text`);
+  }
+});
+

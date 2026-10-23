@@ -15,6 +15,7 @@
           "bullet": { "type": "object", "required": ["indent_left", "hanging"], "properties": { "indent_left": { "type": "integer" }, "hanging": { "type": "integer" }, "tab": { "type": "object" } }, "additionalProperties": false },
           "keep_with_next": { "type": "array", "items": { "type": "string" } },
           "keep_sections_together": { "type": "array", "items": { "type": "string" }, "description": "section headings (as in cv_sections) kept on one page as a whole" },
+          "strip_header_text": { "type": "boolean", "description": "empty every text run in the page headers (shapes stay)" },
           "date_tab": { "type": "object", "required": ["align", "pos"], "properties": { "align": { "enum": ["left", "right"] }, "pos": { "type": "integer" } }, "additionalProperties": false },
           "keep_first_bullets_together": { "type": "integer", "minimum": 2 },
           "keep_last_bullets_together": { "type": "integer", "minimum": 2 },

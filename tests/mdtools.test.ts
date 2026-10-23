@@ -84,14 +84,14 @@ test("lint passes on the refreshed CV and fails on the unrefreshed one", () => {
 });
 
 const lintCases: [string, (dir: string) => void, RegExp][] = [
-  ["italics", (d) => edit(d, CV, "* Delivered the R&D department's core **React Native** app", "* Delivered the *core* mobile app"), /italics are not supported/],
+  ["italics", (d) => edit(d, CV, "* Delivered the research and development (R&D) department's core **React Native** app", "* Delivered the *core* mobile app"), /italics are not supported/],
   ["a table", (d) => edit(d, CV, "# **SUMMARY**\n", "# **SUMMARY**\n\n| a | b |\n"), /tables are not supported/],
-  ["unbalanced bold", (d) => edit(d, CV, "* Delivered the R&D department's core **React Native** app", "* Delivered the **core mobile app"), /unbalanced \*\*/],
-  ["a hidden client name", (d) => edit(d, CV, "* Delivered the R&D department's core **React Native** app", "* Delivered for Clinical Ink the core mobile app"), /confidential term "Clinical Ink"/],
-  ["an internal code name", (d) => edit(d, CV, "* Delivered the R&D department's core **React Native** app", "* Delivered the Studio Shell core mobile app"), /confidential term "Studio Shell"/],
-  ["a ticket id", (d) => edit(d, CV, "* Delivered the R&D department's core **React Native** app", "* Delivered OR-22199 and the core mobile app"), /ticket id with prefix "OR-"/],
-  ["a foreign URL", (d) => edit(d, CV, "* Delivered the R&D department's core **React Native** app", "* Delivered https://example.com/x the core mobile app"), /URL not from profile\.yaml/],
-  ["a secret", (d) => edit(d, CV, "* Delivered the R&D department's core **React Native** app", "* Delivered token=abcDEF1234567890 the core mobile app"), /credential assignment/],
+  ["unbalanced bold", (d) => edit(d, CV, "* Delivered the research and development (R&D) department's core **React Native** app", "* Delivered the **core mobile app"), /unbalanced \*\*/],
+  ["a hidden client name", (d) => edit(d, CV, "* Delivered the research and development (R&D) department's core **React Native** app", "* Delivered for Clinical Ink the core mobile app"), /confidential term "Clinical Ink"/],
+  ["an internal code name", (d) => edit(d, CV, "* Delivered the research and development (R&D) department's core **React Native** app", "* Delivered the Studio Shell core mobile app"), /confidential term "Studio Shell"/],
+  ["a ticket id", (d) => edit(d, CV, "* Delivered the research and development (R&D) department's core **React Native** app", "* Delivered OR-22199 and the core mobile app"), /ticket id with prefix "OR-"/],
+  ["a foreign URL", (d) => edit(d, CV, "* Delivered the research and development (R&D) department's core **React Native** app", "* Delivered https://example.com/x the core mobile app"), /URL not from profile\.yaml/],
+  ["a secret", (d) => edit(d, CV, "* Delivered the research and development (R&D) department's core **React Native** app", "* Delivered token=abcDEF1234567890 the core mobile app"), /credential assignment/],
   ["a wrong years-of-experience number", (d) => edit(d, CV, "7+ years", "12+ years"), /"12\+ years" but the calculated value is/],
   ["a hand-edited job line", (d) => edit(d, CV, "| July 2023 - December 2025", "| July 2023 - January 2026"), /generated parts are out of date/],
 ];
@@ -107,7 +107,7 @@ for (const [name, breakIt, expected] of lintCases) {
 
 test("lint warns (but doesn't fail) on filler words", () => {
   const dir = refreshed();
-  edit(dir, CV, "* Delivered the R&D department's core **React Native** app", "* Delivered the cutting-edge core mobile app");
+  edit(dir, CV, "* Delivered the research and development (R&D) department's core **React Native** app", "* Delivered the cutting-edge core mobile app");
   const r = run("lint.ts", dir, [CV]);
   assert.equal(r.code, 0, r.out);
   assert.match(r.out, /warn .*filler word "cutting-edge"/);
@@ -116,7 +116,7 @@ test("lint warns (but doesn't fail) on filler words", () => {
 test("lint catches a phone number in the Ukraine version", () => {
   const dir = refreshed();
   run("market.ts", dir);
-  edit(dir, UA, "* Delivered the R&D department's core **React Native** app", "* Call +380 97 891 9783. Delivered the core mobile app");
+  edit(dir, UA, "* Delivered the research and development (R&D) department's core **React Native** app", "* Call +380 97 891 9783. Delivered the core mobile app");
   const r = run("lint.ts", dir, [UA]);
   assert.match(r.out, /phone number appears although market "ukraine" hides it/);
 });
@@ -240,14 +240,14 @@ test("confidentiality allow_in permits a term only in the listed context", () =>
   edit(dir, "summaries/syspro-saas-erp.md", "- term: Studio Shell\n", "- term: Studio Shell\n  allow_in: [summary]\n");
   edit(dir, CV, "renders 1,800+ ERP programs", "renders 1,800+ ERP programs in Studio Shell");
   assert.doesNotMatch(run("lint.ts", dir, [CV]).out, /confidential term "Studio Shell"/); // in the summary paragraph: allowed
-  edit(dir, CV, "* Delivered the R&D department's core **React Native** app", "* Delivered the Studio Shell core mobile app");
+  edit(dir, CV, "* Delivered the research and development (R&D) department's core **React Native** app", "* Delivered the Studio Shell core mobile app");
   assert.match(run("lint.ts", dir, [CV]).out, /confidential term "Studio Shell"/); // in a bullet: not allowed
 });
 
 test("check includes tailored CVs", () => {
   const dir = refreshed();
   mkdirSync(join(dir, "cv/tailored/example-corp"), { recursive: true });
-  writeFileSync(join(dir, "cv/tailored/example-corp/cv.md"), readFileSync(join(dir, CV), "utf8").replace("* Delivered the R&D department's core **React Native** app", "* Delivered the *core* mobile app"));
+  writeFileSync(join(dir, "cv/tailored/example-corp/cv.md"), readFileSync(join(dir, CV), "utf8").replace("* Delivered the research and development (R&D) department's core **React Native** app", "* Delivered the *core* mobile app"));
   const r = run("check.ts", dir);
   assert.match(r.out, /cv\/tailored\/example-corp\/cv\.md:\d+: italics are not supported/);
 });
@@ -318,7 +318,7 @@ const moreLint: [string, (d: string) => void, RegExp][] = [
   ["sections out of order", (d) => { const t = readFileSync(join(d, CV), "utf8"); const a = t.indexOf("# **EDUCATION**"), b = t.indexOf("# **SKILLS**"), c = t.indexOf("# **LANGUAGES**"); writeFileSync(join(d, CV), t.slice(0, a) + t.slice(b, c) + t.slice(a, b) + t.slice(c)); }, /sections must be, in order/],
   ["too many bullets", (d) => edit(d, "summaries/velas-wallet.md", "cv_section: experience", "cv_section: experience\ncv_max_bullets: 3"), /velas-wallet has 9 bullets \(limit 3\)/],
   ["a wrong team size", (d) => edit(d, CV, "Led a team of 8 engineers building", "Led teams of up to 6 engineers building"), /"up to 6 engineers" but the largest team led is 8/],
-  ["an internal git remote", (d) => edit(d, CV, "* Delivered the R&D department's core **React Native** app", "* Delivered git@ssh.dev.azure.com:v3/SYSPRO-Product/x the core mobile app"), /internal address matching/],
+  ["an internal git remote", (d) => edit(d, CV, "* Delivered the research and development (R&D) department's core **React Native** app", "* Delivered git@ssh.dev.azure.com:v3/SYSPRO-Product/x the core mobile app"), /internal address matching/],
 ];
 for (const [name, breakIt, expected] of moreLint) {
   test(`lint catches ${name}`, () => {
@@ -373,6 +373,28 @@ test("select: entry_max_bullets sets one entry's limit; a pinned Stack line is l
   assert.equal(v.code, 1);
   assert.match(v.out, /\(a Stack line\) needs an existing summary and only \{ pin: true \}/);
   assert.match(v.out, /entry_max_bullets: "no-such-job" isn't a summary or cv_entry/);
+});
+
+test("a profile's <id>#5: { drop: true } removes the current job's Stack line; lint then doesn't warn; validate refuses pin and drop together", () => {
+  const dir = refreshed();
+  const profile = (o: string) => writeFileSync(join(dir, "profiles/t.yaml"), [
+    "schema_version: 1", "id: t", "headline: Test", "summary_focus: [react]", "emphasize_tags: [react, typescript]", "skills_order: [frontend]",
+    "max_bullets_per_entry: 4", "min_bullets_per_entry: 1", "overrides:", `  syspro-saas-erp#5: ${o}`,
+  ].join("\n"));
+  profile("{ drop: true }");
+  assert.equal(run("validate.ts", dir).code, 0);
+  assert.equal(run("select.ts", dir, ["cv/variants/t", "--profile", "t"]).code, 0);
+  const sel = JSON.parse(readFileSync(join(dir, "cv/variants/t/selection.json"), "utf8"));
+  assert.equal(sel.entries.find((x: any) => x.id === "syspro-saas-erp").stack, undefined);
+  // The same CV without its SYSPRO Stack line: a warning for the master, none for the profile that drops it.
+  writeFileSync(join(dir, "cv/variants/t/cv.md"), readFileSync(join(dir, CV), "utf8").replace(/\n\* Stack: \*\*React 19[^\n]*\n/, "\n"));
+  assert.doesNotMatch(run("lint.ts", dir, ["cv/variants/t/cv.md"]).out, /current job syspro-saas-erp has no "Stack:" bullet/);
+  edit(dir, CV, /\n\* Stack: \*\*React 19[^\n]*\n/, "\n");
+  assert.match(run("lint.ts", dir, [CV]).out, /current job syspro-saas-erp has no "Stack:" bullet/);
+  profile("{ pin: true, drop: true }");
+  const v = run("validate.ts", dir);
+  assert.equal(v.code, 1);
+  assert.match(v.out, /"syspro-saas-erp#5" \(a Stack line\) needs an existing summary and only \{ pin: true \} or \{ drop: true \}/);
 });
 
 test("lint ignores confidential terms inside a comment that spans several lines", () => {

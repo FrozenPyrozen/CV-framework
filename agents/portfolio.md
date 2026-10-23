@@ -10,12 +10,12 @@ description: Writes the public portfolio's text (portfolio/portfolio.md) from th
 - A change request: write the portfolio, write new projects, or rewrite the projects `npm run status` lists
 
 ## Output
-- The intro paragraph and each project's text in `portfolio/portfolio.md`, then a passing `npm run portfolio -- check`, a short change log and the diff.
+- Each project's text in `portfolio/portfolio.md` (and an intro paragraph only when the user asks for one), then a passing `npm run portfolio -- check`, a short change log and the diff.
 
 ## Steps
 
-1. **Prepare.** Run `npm run validate`, then `npm run portfolio -- refresh` (writes the cover, project title lines, public images and links, skills and contact; adds a placeholder for a new project, drops projects no longer opted in). Run `npm run status` for the projects to write or rewrite. **Never edit inside `<!-- generated:… -->` blocks or the `<!-- project: … -->` markers.** No project opted in: stop and suggest `/portfolio-material`.
-2. **Intro** (replaces `TODO(/portfolio): write the intro paragraph`): two or three sentences on who you are and the kind of products in the portfolio, each ending with `<!-- src: … -->` (an opted-in summary's section, `profile` or `calc:years_experience`).
+1. **Prepare.** Run `npm run validate`, then `npm run portfolio -- refresh` (writes the cover, project titles and public images and links; adds a placeholder for a new project, drops projects no longer opted in). Run `npm run status` for the projects to write or rewrite. **Never edit inside `<!-- generated:… -->` blocks or the `<!-- project: … -->` markers.** No project opted in: stop and suggest `/portfolio-material`.
+2. **Intro** (optional; the published portfolio has none, so write one only when the user asks; no placeholder is written for it): two or three sentences after the cover block on who you are and the kind of products in the portfolio, each ending with `<!-- src: … -->` (an opted-in summary's section, `profile` or `calc:years_experience`).
 3. **Each page to write or rewrite** (replaces its placeholder, or its old text; leave every other page exactly as it is), in the structure of the published portfolio (`specs/outputs/portfolio.md` 4):
    ```markdown
    Description: what the product is, who uses it, its features. <!-- src: doc:portfolio-2025-09 -->

@@ -86,7 +86,20 @@ export async function checkPdf(pdf: string, mdFile: string, templateName?: strin
   const sm = parseYaml(readFileSync(rootPath(cfg.paths.templates, template, "style-map.yaml"), "utf8"));
   const families = fonts.filter((f) => !f.includes("(not embedded)")).map((f) => f.split(/[-,]/)[0].replace(/MT$|PSMT$/, ""));
   for (const f of fonts.filter((x) => x.includes("(not embedded)"))) failures.push(`font ${f}: readers without it will substitute another font`);
-  for (const f of sm.fonts as string[]) if (!families.some((x) => x.toLowerCase() === f.replace(/\s+/g, "").toLowerCase())) failures.push(`template font "${f}" is not embedded (a substitute font was used: ${fonts.join(", ") || "none"})`);
+  // A font the template uses only in its page headers and footers is not needed once fix strip_header_text empties them.
+  const fixesFile = rootPath(cfg.paths.templates, template, "fixes.yaml");
+  const stripsHeader = existsSync(fixesFile) && ((parseYaml(readFileSync(fixesFile, "utf8")) ?? []) as any[]).some((x) => x?.set?.strip_header_text);
+  let bodyXml = "";
+  if (stripsHeader) {
+    const { default: JSZip } = await import("jszip");
+    const zip = await JSZip.loadAsync(readFileSync(rootPath(cfg.paths.templates, template, "template.docx")));
+    for (const n of ["word/document.xml", "word/styles.xml"]) bodyXml += (await zip.file(n)?.async("string")) ?? "";
+  }
+  for (const f of sm.fonts as string[]) {
+    if (families.some((x) => x.toLowerCase() === f.replace(/\s+/g, "").toLowerCase())) continue;
+    if (stripsHeader && !bodyXml.includes(`"${f}"`)) notes.push(`template font "${f}" is used only in the emptied page header and footer, so it isn't embedded`);
+    else failures.push(`template font "${f}" is not embedded (a substitute font was used: ${fonts.join(", ") || "none"})`);
+  }
   const extra = fonts.filter((f) => !(sm.fonts as string[]).some((t) => f.toLowerCase().startsWith(t.replace(/\s+/g, "").toLowerCase())));
   if (extra.length) notes.push(`fonts not listed in the template: ${extra.join(", ")}`);
 

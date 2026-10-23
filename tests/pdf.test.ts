@@ -67,7 +67,7 @@ test("Pages export + pdf-check: worldwide and Ukraine pass; a tampered Markdown 
   }
   // Tamper: a word in the Markdown that the PDF doesn't have, and a phone number in the Ukraine Markdown.
   const ww = join(dir, "cv/Kirill_Kohan_CV.md");
-  writeFileSync(ww, readFileSync(ww, "utf8").replace("Delivered the R&D department's core **React Native** app", "Delivered the zyxwvut core mobile app"));
+  writeFileSync(ww, readFileSync(ww, "utf8").replace("Delivered the research and development (R&D) department's core **React Native** app", "Delivered the zyxwvut core mobile app"));
   const bad = run("pdf-check.ts", dir, ["cv/Kirill_Kohan_CV.pdf"]);
   assert.equal(bad.code, 1);
   assert.match(bad.out, /missing in the PDF: zyxwvut/);

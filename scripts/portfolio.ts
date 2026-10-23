@@ -1,18 +1,18 @@
 // npm run portfolio -- refresh | check [--projects-reviewed]
 // The public portfolio's Markdown, portfolio/portfolio.md (specs/outputs/portfolio.md 4, plan 9e P3).
-//   refresh  writes the generated parts: the cover, each opted-in project's title lines and its public images and
-//            links (only section 8 items with public: yes, confirmed by user), the skills overview and the contact
-//            line. It keeps the text the portfolio agent wrote, adds a placeholder for a newly opted-in project and
-//            drops projects that are no longer opted in.
+//   refresh  writes the generated parts: the cover, each page's title and its public images and links (only
+//            section 8 items with public: yes, confirmed by user). It keeps the text the portfolio agent wrote (and
+//            an optional intro), adds a placeholder for a newly opted-in page and drops pages no longer opted in.
 //   check    every sentence and bullet the agent wrote has a source that resolves and belongs to its project (or,
-//            in the intro, to an opted-in project or the profile); no placeholder is left; no confidentiality term
+//            in the intro, to an opted-in project or the profile; doc:<id> of an imported document anywhere); no
+//            placeholder is left; a page's length (warning above checks.portfolio_max_project_words); no confidentiality term
 //            (only `allow_in: [portfolio]` lets one through), hidden client name, ticket id, internal address,
 //            secret or foreign URL; spelling. When it passes, it records the state `status` uses (stale projects).
 import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
 import { readState, writeRecord } from "./lib/buildstate.ts";
-import { headerBlock, loadContext, skillsBlock, stripComments, wrapBlock, type Context } from "./lib/cvmd.ts";
+import { loadContext, stripComments, wrapBlock, type Context } from "./lib/cvmd.ts";
 import { isMain, loadConfig, loadDecisions, loadSummaries, rootPath, type Summary } from "./lib/repo.ts";
 import { buildBlocklist, printFindings, secretFindings, type Finding } from "./lint.ts";
 import { parseArgs } from "./refresh.ts";
@@ -22,7 +22,6 @@ import { buildSourceIndex, sentencePieces } from "./trace.ts";
 
 export const PORTFOLIO_TITLE = "My Portfolio";
 export const PLACEHOLDER = "<!-- TODO(/portfolio): write this project -->";
-export const INTRO_PLACEHOLDER = "<!-- TODO(/portfolio): write the intro paragraph -->";
 
 export const portfolioPath = () => rootPath(loadConfig().paths.portfolio ?? "portfolio", "portfolio.md");
 const rel = (p: string) => relative(rootPath(), p);
@@ -36,7 +35,7 @@ export function portfolioProjects(summaries = loadSummaries()): Summary[] {
 }
 
 // Portfolio pages: one per opted-in summary, or one per entry of its `portfolio_projects` (a job with several
-// products, like the Itjet client projects in the April 2025 portfolio). Page ids: "<summary-id>" or
+// products, like the Itjet client projects on the published portfolio). Page ids: "<summary-id>" or
 // "<summary-id>/<project-id>".
 export interface PortfolioPage { id: string; summary: Summary; key?: string; title: string; label: string; role: string }
 export function portfolioPages(summaries = loadSummaries()): PortfolioPage[] {
@@ -76,16 +75,14 @@ function coverBlock(ctx: Context): string {
   return [...(links.length ? [links.join(ctx.cfg.display.field_separator)] : []), `# **${PORTFOLIO_TITLE}**`, `## **${pf.name ?? ctx.profile.name}**`].join("\n\n");
 }
 
-// Title (the product and its main technologies, as in the April 2025 portfolio), then the client label and role.
-// No dates: the portfolio shows projects, not a timeline (the CV has the dates).
+// The page title only, as on the published portfolio: the product, the client where it may be named, and the main
+// technologies (portfolio_title or the page's title); no separate client, role or date line (the CV has the dates).
 function projectTitleBlock(page: PortfolioPage, _ctx: Context): string {
-  // As on the published portfolio: one title naming the product, the client where it may be named, and the main
-  // technologies (portfolio_title or the page's title); no separate client, role or date line.
   return `## **${page.title}**`;
 }
 
 // The project's text splits after its product paragraph (before the first section label such as **Responsibilities**),
-// where the images go, as in the April 2025 portfolio.
+// where the images go, as on the published portfolio.
 function splitIntro(text: string): [string, string] {
   const i = text.search(/^\*\*[^*]+\*\*\s*$/m);
   return i < 0 ? [text.trim(), ""] : [text.slice(0, i).trim(), text.slice(i).trim()];
@@ -214,7 +211,7 @@ export async function checkPortfolio(file = portfolioPath()): Promise<Finding[]>
   });
   flush();
   // Length: one page per project with its screenshots (checks.portfolio_max_project_words, specs/outputs/portfolio.md 4).
-  const maxWords = (loadConfig().checks as any).portfolio_max_project_words ?? 300;
+  const maxWords = (loadConfig().checks as any).portfolio_max_project_words ?? 420;
   for (const [id, t] of parsePortfolio(text).projects) {
     const n = (stripComments(t).match(/[\p{L}\p{N}][\p{L}\p{N}'.+#/-]*/gu) ?? []).length;
     if (n > maxWords && !t.includes("TODO(/portfolio)")) add("warning", `${id}: ${n} words (about ${maxWords} fit one page with the screenshots, checks.portfolio_max_project_words); shorten it`);

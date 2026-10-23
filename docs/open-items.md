@@ -12,6 +12,7 @@ Kept in the repo (not in any AI tool's memory) so it travels to every laptop (`s
 | Smarty sheets on Aspiration signup | The published portfolio lists "Smarty sheets" among the Aspiration signup technologies; you think it could be a CSS-in-JS styling library (2026-10-23), not confirmed; SmartyStreets (the address API) is the other reading. Left out of the portfolio until then | `itjet-fintech` section 5 and the portfolio's aspiration-signup page | 2026-10-23 |
 | OMO leadership | The CV's "Team Leader, led and mentored a team of about 3 engineers" stays for now; the April 2025 portfolio said "tech lead for a sprint of the frontend team". You'll share more details | `omo-systems-smart-home` 4.5 and section 3 | 2026-10-22 |
 | GM details | The portfolio's description is used for now (phone companion app for owners, map team of 8: 6 React Native, 1 iOS, 1 Android); you'll share more | `general-motors-navigation` | 2026-10-22 |
+| Admasters stack | Which technologies did the Full-Stack Engineer and Team Leader role use (backend too)? Its bullets name none (review 2026-10-23-1705) | `admasters-ecommerce` summary section 5 and its bullets | 2026-10-23 |
 
 ## Questions from the first review (`reports/2026-10-16-1201/`)
 

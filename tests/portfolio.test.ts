@@ -207,7 +207,7 @@ test("validate: a portfolio report may only use a rubric with a portfolio mode",
   assert.match(v.out, /rubric "ats" has no portfolio mode/);
 });
 
-test("portfolio refresh: portfolio_title in the title, label | role | period, and images after the product paragraph", () => {
+test("portfolio refresh: portfolio_title in the title (no meta line or dates), and images after the product paragraph", () => {
   const dir = tempRepo();
   optIn(dir);
   run("portfolio.ts", dir, ["refresh"]);
@@ -240,3 +240,84 @@ test("portfolio_projects: one summary gives several pages; screenshots go to the
   edit(dir, "summaries/itjet-fintech.md", "  project: fused\n", "  project: nope\n");
   assert.match(run("validate.ts", dir).out, /project "nope" isn't in portfolio_projects/);
 });
+
+// Alignment with the published portfolio (plan row 91): image rows, title parentheses, the cover banner, doc: sources,
+// the length warning.
+import { deflateSync } from "node:zlib";
+
+// A valid grayscale PNG of any size (the renderer reads the size from the IHDR chunk; Word gets real image data).
+function png(w: number, h: number): Buffer {
+  const crcTable = Array.from({ length: 256 }, (_, n) => { let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1; return c >>> 0; });
+  const crc = (b: Buffer) => { let c = 0xffffffff; for (const x of b) c = crcTable[(c ^ x) & 0xff] ^ (c >>> 8); return (c ^ 0xffffffff) >>> 0; };
+  const chunk = (type: string, data: Buffer) => {
+    const len = Buffer.alloc(4); len.writeUInt32BE(data.length);
+    const td = Buffer.concat([Buffer.from(type, "ascii"), data]);
+    const c = Buffer.alloc(4); c.writeUInt32BE(crc(td));
+    return Buffer.concat([len, td, c]);
+  };
+  const ihdr = Buffer.alloc(13); ihdr.writeUInt32BE(w, 0); ihdr.writeUInt32BE(h, 4); ihdr[8] = 8; ihdr[9] = 0;
+  const raw = Buffer.alloc((w + 1) * h, 0xff); for (let y = 0; y < h; y++) raw[y * (w + 1)] = 0;
+  return Buffer.concat([Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]), chunk("IHDR", ihdr), chunk("IDAT", deflateSync(raw)), chunk("IEND", Buffer.alloc(0))]);
+}
+
+// Itjet as one page with only the given screenshots (assets/itjet-fintech/<name>.png) and a portfolio_title.
+function withImages(dir: string, imgs: [string, number, number][], title = "Client apps (React, React Native, Node.js)") {
+  optIn(dir);
+  mkdirSync(join(dir, "portfolio/assets/itjet-fintech"), { recursive: true });
+  const items = imgs.map(([n, w, h]) => {
+    writeFileSync(join(dir, `portfolio/assets/itjet-fintech/${n}.png`), png(w, h));
+    return `- image: assets/itjet-fintech/${n}.png\n  caption: A test screen\n  public: yes, confirmed by user 2026-10-23\n`;
+  }).join("");
+  const p = join(dir, "summaries/itjet-fintech.md");
+  writeFileSync(p, readFileSync(p, "utf8").replace(/^- image: [^\n]*\n(?:  [^\n]*\n)*/gm, "").replace("## 8. Portfolio material\n", `## 8. Portfolio material\n\n${items}`).replace(/^show_in_portfolio: true$/m, `show_in_portfolio: true\nportfolio_title: ${title}`));
+  run("portfolio.ts", dir, ["refresh"]);
+  write(dir, "Intro. <!-- src: itjet-fintech#1 -->", "Client apps. <!-- src: itjet-fintech#1 -->");
+}
+async function buildA4(dir: string): Promise<string[]> {
+  const r = run("build-portfolio.ts", dir, ["--no-pdf", "--no-pages", "--size", "a4"]);
+  assert.equal(r.code, 0, r.out);
+  const zip = await JSZip.loadAsync(readFileSync(join(dir, "portfolio/Kirill_Kohan_Portfolio_A4.docx")));
+  return (await zip.file("word/document.xml")!.async("string")).match(/<w:p[ >][\s\S]*?<\/w:p>/g) ?? [];
+}
+const EMU_PER_INCH = 914400;
+
+test("build:portfolio: at most 4 screenshots per row; a row with a landscape screenshot splits so it stays at least 1.75 in tall", async () => {
+  const dir = tempRepo();
+  withImages(dir, [["p1", 600, 1200], ["p2", 600, 1200], ["p3", 600, 1200], ["p4", 600, 1200], ["p5", 600, 1200], ["l1", 1600, 900], ["l2", 1600, 900]]);
+  const rows = (await buildA4(dir)).filter((p) => p.includes("<wp:inline")).map((p) => [...p.matchAll(/<wp:extent cx="(\d+)" cy="(\d+)"\/>/g)].map((m) => ({ w: Number(m[1]), h: Number(m[2]) })));
+  assert.deepEqual(rows.map((r) => r.length), [4, 2, 1], "4 phones; the 5th phone with one landscape; the second landscape alone");
+  for (const r of rows) {
+    assert.ok(r.every((x) => x.h === r[0].h), "same height in a row");
+    if (r.some((x) => x.w / x.h > 1.2)) assert.ok(r[0].h >= 1.75 * EMU_PER_INCH - 1000, `landscape row ${r[0].h / EMU_PER_INCH} in tall`);
+    assert.ok(r[0].h <= 0.25 * (16838 - 2 * 1134) * 635 + 1000, "at most 25% of the content height");
+  }
+});
+
+test("build:portfolio: title parentheses keep non-breaking spaces; the cover has its top row and an unshaded paragraph after the banner", async () => {
+  const dir = tempRepo();
+  withImages(dir, [["p1", 600, 1200]]);
+  const ps = await buildA4(dir);
+  const text = (p: string) => [...p.matchAll(/<w:t[^>]*>([^<]*)<\/w:t>/g)].map((m) => m[1]).join("");
+  assert.ok(ps.some((p) => text(p) === "Client apps (React, React Native, Node.js)"), "title parentheses on one line");
+  assert.ok(ps[0].includes("<w:shd") && text(ps[0]) === "", "cover_top: an empty banner row first");
+  const name = ps.findIndex((p) => text(p) === "Kirill Kohan");
+  assert.ok(name > 0 && ps.slice(0, name + 1).every((p) => p.includes("<w:shd")), "the banner is one shaded block");
+  assert.ok(!ps[name + 1].includes("<w:shd"), "an unshaded paragraph after the banner");
+});
+
+test("portfolio check: a doc:<id> source must be an imported document; a page over 420 words is a warning", () => {
+  const dir = tempRepo();
+  optIn(dir);
+  run("portfolio.ts", dir, ["refresh"]);
+  write(dir, "Intro. <!-- src: itjet-fintech#1 -->", "Fused and other client apps. <!-- src: doc:portfolio-2025-09 -->\n\nMore apps. <!-- src: doc:no-such-doc -->");
+  const bad = run("portfolio.ts", dir, ["check"]);
+  assert.equal(bad.code, 1);
+  assert.match(bad.out, /source "doc:no-such-doc" isn't an imported document/);
+  assert.doesNotMatch(bad.out, /doc:portfolio-2025-09/);
+  const p = join(dir, P);
+  writeFileSync(p, readFileSync(p, "utf8").replace("More apps. <!-- src: doc:no-such-doc -->", "Built the RegiStart app for clients. <!-- src: itjet-fintech#1 -->\n".repeat(70)));
+  const ok = run("portfolio.ts", dir, ["check"]);
+  assert.equal(ok.code, 0, ok.out);
+  assert.match(ok.out, /itjet-fintech: 4\d\d words \(about 420 fit one page/);
+});
+

@@ -7,6 +7,7 @@ emphasize_tags: [react-native, react-native-web, expo, android, ios, native-modu
 deemphasize_tags: [kendo, erp]
 skills_order: [mobile, languages, state-and-data, testing, devops, frontend, backend-and-cloud, auth-and-security, ai, leadership, domain]
 overrides:
+  syspro-saas-erp#5: { drop: true }     # no SYSPRO Stack line: web-only stack, more page 1 for mobile (review 2026-10-23-1705)
   syspro-saas-erp#4.2: { pin: true }   # SDD, not ad-hoc AI code generation (decision sdd-not-vibe-coding)
   syspro-architecture-scope: { pin: true }   # lead architect second: cv_emphasis order (SDD, lead architect, tech stack)
   syspro-saas-erp#4.3: { pin: true }   # lead architect and tech-stack decision record (cv_emphasis)

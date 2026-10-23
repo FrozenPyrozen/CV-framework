@@ -7,11 +7,13 @@ emphasize_tags: [react, typescript, nextjs, micro-frontends, schema-driven-ui, s
 deemphasize_tags: [native-modules, ble, mqtt, app-distribution, here-sdk]
 skills_order: [frontend, languages, state-and-data, testing, auth-and-security, devops, ai, backend-and-cloud, mobile, leadership, domain]
 overrides:
+  syspro-saas-erp#4.1: { pin: true }   # the current job's main result (1,800+ ERP programs), first: recruiters see what was built (review 2026-10-23-1705)
   syspro-saas-erp#4.2: { pin: true }   # SDD, not ad-hoc AI code generation (decision sdd-not-vibe-coding)
   syspro-saas-erp#4.3: { pin: true }   # lead architect and tech-stack decision record (cv_emphasis)
-  syspro-saas-erp#4.1: { pin: true }   # the current job's main result (1,800+ ERP programs)
   syspro-saas-erp#4.8: { pin: true }   # OpenTelemetry module (observability is an emphasized tag; 2026-10-16)
   syspro-tech-stack-ownership: { drop: true }   # already cited in the #4.3 bullet
+  velas-wallet#4.9: { drop: true }    # Android-only bullet; the React one instead (review 2026-10-23-1705)
+  velas-wallet#4.10: { pin: true }    # re-renders and lighter API responses (review 2026-10-23-1705)
   general-motors-navigation#4.1: { pin: true }   # team of 8: evidence for the tech-lead headline
   itjet-fintech#4.8: { pin: true }   # Wink, 5M+ registered users: in every CV (user 2026-10-22)
 max_bullets_per_entry: 6

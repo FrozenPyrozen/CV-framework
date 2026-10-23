@@ -23,7 +23,7 @@
 
 ## Portfolio mode (`/review --portfolio`)
 
-Each project's text cites only that project (`portfolio check` enforces it); check the **meaning**: the portfolio's longer prose (*Responsibilities*: the "how" and "why") must not add claims, scope or results their contribution doesn't state; *Results* numbers match section 7 exactly, and a `doc:<id>` number appears only when "confirmed by user"; *Technologies* lists only hands-on items of section 5; captions describe what the screenshot shows and what the summary says about it.
+Each project's text cites only that project or the published portfolio (`doc:<id>`; `portfolio check` enforces it); check the **meaning**: the longer prose (*Responsibilities*, one or two paragraphs) must not add claims, scope or results its sources don't state; numbers match section 7 exactly, and a `doc:<id>` number appears only when "confirmed by user"; *Technologies and frameworks* shows the project's stack (decision `portfolio-tech-lists-project-stack`); each image's alt text (its section 8 caption) describes what the screenshot shows.
 
 ## Required sections in the report
 1. **Claims checked:** count, supported / partly supported / unsupported.

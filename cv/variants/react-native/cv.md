@@ -10,7 +10,7 @@ Kyiv, Ukraine (Remote) | Open to B2B contract or full-time employment | Working 
 
 # **SUMMARY**
 
-Senior React Native engineer and tech lead with 7+ years of experience building React Native, React and TypeScript apps for automotive, healthcare and clinical trials, IoT, fintech, blockchain and enterprise resource planning (ERP) products. <!-- src: calc:years_experience, profile, general-motors-navigation#1, orion-mobile-clinical-ink#1, thermo-fisher-dosimeter#1, omo-systems-smart-home#1, itjet-fintech#1, velas-wallet#1, syspro-saas-erp#1 --> Led a team of 8 engineers building the HERE SDK map features of an automotive React Native companion app; after release, user engagement rose 20% and app crashes fell 15%. <!-- src: general-motors-navigation#4.1, general-motors-navigation#4.3, general-motors-navigation#4.6, calc:team_size_led --> Built an offline-first IoT healthcare app on Android and iOS with Realm from scratch, including its architecture, and built its Bluetooth Low Energy (BLE), MQTT over TLS and background-job features. <!-- src: thermo-fisher-dosimeter#4.1, thermo-fisher-dosimeter#4.2, thermo-fisher-dosimeter#4.3, thermo-fisher-dosimeter#4.4 --> Made mobile apps measurably faster: a 3x faster first interaction on Android, staking page loading cut from 2 minutes to 5 seconds with 5x less battery use and 30% faster data transfer. <!-- src: velas-wallet#4.9, velas-wallet#4.2, thermo-fisher-dosimeter#4.2 --> Also worked in native Android (Java / Kotlin): an Android 14 (SDK 34) migration, SQLCipher encryption and SSL certificate pinning, plus wallet app releases on F-Droid and Snapcraft. <!-- src: orion-mobile-clinical-ink#4.1, orion-mobile-clinical-ink#4.4, orion-mobile-clinical-ink#4.5, velas-wallet#4.5 --> Built core modules of a schema-driven React 19 runtime that renders 1,800+ ERP programs through architecture-governed specification-driven development (SDD). <!-- src: syspro-saas-erp#4.1, syspro-saas-erp#4.2 -->
+Senior React Native engineer and tech lead with 7+ years of experience building React Native, React and TypeScript apps for automotive, healthcare and clinical trials, Internet of Things (IoT), fintech, blockchain and enterprise resource planning (ERP) products. <!-- src: calc:years_experience, profile, general-motors-navigation#1, orion-mobile-clinical-ink#1, thermo-fisher-dosimeter#1, omo-systems-smart-home#1, itjet-fintech#1, velas-wallet#1, syspro-saas-erp#1 --> Led a team of 8 engineers building the HERE SDK map features of an automotive React Native companion app; after release, user engagement rose 20% and app crashes fell 15%. <!-- src: general-motors-navigation#4.1, general-motors-navigation#4.3, general-motors-navigation#4.6, calc:team_size_led --> Built an offline-first IoT healthcare app on Android and iOS with Realm from scratch, including its architecture, and built its Bluetooth Low Energy (BLE), MQTT over Transport Layer Security (TLS) and background-job features. <!-- src: thermo-fisher-dosimeter#4.1, thermo-fisher-dosimeter#4.2, thermo-fisher-dosimeter#4.3, thermo-fisher-dosimeter#4.4 --> Made mobile apps measurably faster: a 3x faster first interaction on Android, staking page loading cut from 2 minutes to 5 seconds with 5x less battery use and 30% faster data transfer. <!-- src: velas-wallet#4.9, velas-wallet#4.2, thermo-fisher-dosimeter#4.2 --> Also worked in native Android (Java / Kotlin): an Android 14 (SDK 34) migration, SQLCipher encryption and SSL certificate pinning, plus wallet app releases on F-Droid and Snapcraft. <!-- src: orion-mobile-clinical-ink#4.1, orion-mobile-clinical-ink#4.4, orion-mobile-clinical-ink#4.5, velas-wallet#4.5 --> Built core modules of a schema-driven React 19 runtime that renders 1,800+ ERP programs through architecture-governed specification-driven development (SDD). <!-- src: syspro-saas-erp#4.1, syspro-saas-erp#4.2 -->
 
 # **EXPERIENCE**
 
@@ -19,15 +19,13 @@ Senior React Native engineer and tech lead with 7+ years of experience building 
 
 ### **SYSPRO | Remote | December 2025 - Present**
 
-* Delivered the frontend through architecture-governed **specification-driven development (SDD)**, not ad-hoc AI code generation, and helped define it: specification templates, validation and rules for **AI agents** that implement and review code against the specifications, with each subsystem traced from architecture to code across 4 repositories. <!-- src: syspro-saas-erp#4.2, syspro-architecture-scope -->
+* Delivered the frontend through architecture-governed **specification-driven development (SDD)**, not ad-hoc AI code generation, and helped define it: specification templates, validation and rules for **AI agents** that implement and review code against the specifications across 4 repositories. <!-- src: syspro-saas-erp#4.2, syspro-architecture-scope -->
 
 * Worked with the lead architect on the **platform and solution architecture**: reviewed and co-authored architecture documents and drove open architecture questions and blockers to decisions. <!-- src: syspro-architecture-scope -->
 
 * Owned the **frontend technology stack** for the Login micro-frontend and the schema-driven runtime, including the OIDC libraries and the move from React Testing Library to **Vitest Browser Mode**. <!-- src: syspro-saas-erp#4.3, syspro-tech-stack-ownership -->
 
 * Built core modules of a schema-driven **React 19 / TypeScript** runtime for SYSPRO's **ERP SaaS** modernization platform (25+ person program) that renders **1,800+ ERP programs** from data-model definitions, cutting screen delivery from days to hours, with no per-screen frontend code. <!-- src: syspro-saas-erp#4.1, syspro-team-size, syspro-speed -->
-
-* Stack: **React 19, TypeScript, KendoReact, Zustand, XState, TanStack Router, TanStack Query, WebSockets, Vite, SCSS / CSS Modules, OpenTelemetry, Vitest, Playwright, Storybook, Docker, Azure DevOps**. <!-- src: syspro-saas-erp#5 -->
 
 <!-- entry: general-motors-navigation -->
 ## **Team Leader**
@@ -44,7 +42,7 @@ Senior React Native engineer and tech lead with 7+ years of experience building 
 
 * Implemented a passenger second-screen feature for a luxury car brand. <!-- src: general-motors-navigation#4.8 -->
 
-* Ran **code reviews** and set coding standards for the team, mentoring engineers on architecture and testing. <!-- src: general-motors-navigation#4.2 -->
+* Created and documented the delivery and testing process for the map feature across three nested apps: the host app, a reusable feature app and a **React Native** map provider app with native **iOS** and **Android** code and the **HERE SDK**. <!-- src: general-motors-navigation#4.9 -->
 
 * Stack: **React Native, TypeScript, Node.js, Redux Saga, RxJS, Storybook, Detox** (E2E), **Fastlane, Bitrise** (CI/CD), **Bugsnag, Kibana** (monitoring), **Figma**. <!-- src: general-motors-navigation#5 -->
 
@@ -55,22 +53,24 @@ Senior React Native engineer and tech lead with 7+ years of experience building 
 
 * Made the first interaction with the **Android** wallet 3x faster by caching and optimizing wallet and account creation. <!-- src: velas-wallet#4.9 -->
 
+* Made the wallet faster and smoother by removing unnecessary component re-renders, and sped up backend responses by removing unused fields and adding filters and pagination. <!-- src: velas-wallet#4.10 -->
+
 * Published the app on **F-Droid** and the **Snapcraft** store, which tripled the number of new users. <!-- src: velas-wallet#4.5 -->
 
 * Developed the Velas **blockchain** wallet for mobile, web and desktop using **React Native, React, Node.js, TypeScript, MobX and Web3.js**. <!-- src: velas-wallet#4.1 -->
 
-* Cut staking page loading from 2 minutes to 5 seconds and made it use 5x less mobile battery by moving filtering to the server and adding a blockchain-node RPC fallback. <!-- src: velas-wallet#4.2 -->
+* Cut staking page loading from 2 minutes to 5 seconds and made it use 5x less mobile battery by moving filtering to the server and adding a blockchain-node remote procedure call (RPC) fallback. <!-- src: velas-wallet#4.2 -->
 
 * Redesigned the staking-rewards calculation on the **Node.js** backend for stability and speed; user engagement grew 4x afterward. <!-- src: velas-wallet#4.6 -->
-
-* Built a new cross-platform wallet in **React Native Web** from scratch, including the architecture for managing tokens and assets. <!-- src: velas-wallet#4.8 -->
 
 <!-- entry: omo-systems-smart-home -->
 ## **Team Leader**
 
 ### **OMO Systems | Remote | April 2021 - December 2021**
 
-* Delivered the R&D department's core **React Native** app for controlling smart-home **IoT** devices. <!-- src: omo-systems-smart-home#4.1 -->
+* Fixed video stream issues by patching the **react-native-vlcplayer** video player library. <!-- src: omo-systems-smart-home#4.6 -->
+
+* Delivered the research and development (R&D) department's core **React Native** app for controlling smart-home **IoT** devices. <!-- src: omo-systems-smart-home#4.1 -->
 
 * Fixed insecure face-recognition unlock on specific Android devices by patching in a native **Android biometrics** library. <!-- src: omo-systems-smart-home#4.4 -->
 
@@ -87,24 +87,28 @@ Senior React Native engineer and tech lead with 7+ years of experience building 
 
 * Rewrote legacy native libraries to use **MQTT over TLS** with client certificates on iOS and Android, making data transfer 30% faster. <!-- src: thermo-fisher-dosimeter#4.2 -->
 
+* Built the sync flow that reads many dosimeters at the same time, with progress, errors and timing for each sync and a sync history filterable by date range, wearer, errors and ID. <!-- src: thermo-fisher-dosimeter#4.8 -->
+
 * Optimized rendering and offline data access in **Realm** as part of a team-wide **performance** effort that made the app 20% faster. <!-- src: thermo-fisher-dosimeter#4.6 -->
 
 * Implemented a secure **OAuth 2.0** login flow and local storage of dosimeter data with efficient filtering. <!-- src: thermo-fisher-dosimeter#4.5 -->
-
-* Improved the accuracy of **Bluetooth Low Energy (BLE)** communication with the dosimeter (**react-native-ble-plx**) by reworking the buffer-reading logic. <!-- src: thermo-fisher-dosimeter#4.3 -->
 
 <!-- entry: itjet-fintech -->
 ## **Full-Stack Engineer**
 
 ### **Itjet | Kyiv, Ukraine (Hybrid) | August 2019 - November 2020**
 
+* Built the Wink social app from scratch in **React Native** (Snapchat and phone sign-in, **push notifications**, **CI/CD**, image optimization on a **Node.js** backend); it reached more than 5 million registered users. <!-- src: itjet-fintech#4.8 -->
+
 * Built a reusable **React Native Web** signup flow for Aspiration, a fintech product (Forbes top 10), shared by its native mobile and web apps; it made building new flows 3x faster. <!-- src: itjet-fintech#4.1 -->
 
-* Built the Wink social app from scratch in **React Native** (Snapchat and phone sign-in, **push notifications**, **CI/CD**, image optimization on a **Node.js** backend); it reached more than 5 million registered users. <!-- src: itjet-fintech#4.8 -->
+* Built the Golfuture **React Native** app from scratch from the designs, including its business logic and **Stripe** and API integrations, and presented results directly to the client. <!-- src: itjet-fintech#4.9 -->
 
 * Doubled database performance for Fused by migrating **PostgreSQL** from EC2 to **AWS RDS** and optimizing slow SQL queries. <!-- src: itjet-fintech#4.4 -->
 
 * Implemented the automated monthly subscription flow for Fused with **Stripe**, **Node.js REST APIs** (**Express**, **Sequelize**), **React** and **React Native**. <!-- src: itjet-fintech#4.6 -->
+
+* Added features to the Oroscopo **React Native** app: API work, UI components, an animated card circle, the zodiac compatibility logic, **AdMob** banner ads and new tarot layout screens. <!-- src: itjet-fintech#4.10 -->
 
 <!-- entry: admasters-ecommerce -->
 ## **Full-Stack Engineer and Team Leader**
@@ -124,11 +128,11 @@ Part-time contract and consulting work, alongside full-time roles
 
 ### **Clinical Trials Patient App | Remote**
 
-* Migrated the app to **react-native-safe-area-context** across all screens and enforced it with an **ESLint** rule, fixing layout overlaps on iOS and Android. <!-- src: orion-mobile-clinical-ink#4.3 -->
-
 * Worked with the team on upgrading the app to **React Native 0.76** and **Expo SDK 52** to improve app performance. <!-- src: orion-mobile-clinical-ink#4.7 -->
 
-* Investigated production crashes and fixed patient-facing bugs (login, PIN, task scheduling, document loading) by bisecting dependency versions and adding targeted logging. <!-- src: orion-mobile-clinical-ink#4.6, orion-mobile-clinical-ink#4.4 -->
+* Migrated the app to **react-native-safe-area-context** across all screens and enforced it with an **ESLint** rule, fixing layout overlaps on iOS and Android. <!-- src: orion-mobile-clinical-ink#4.3 -->
+
+* Investigated production crashes and fixed patient-facing bugs (login, PIN, task scheduling, document loading), adding targeted diagnostic logging. <!-- src: orion-mobile-clinical-ink#4.6 -->
 
 * Developed and maintained a patient-facing **clinical trial** mobile app for electronic clinical outcome assessment (**eCOA**) built with **React Native, Expo and TypeScript**, and its native **Android (Java / Kotlin)** counterpart. <!-- src: orion-mobile-clinical-ink#4.1 -->
 
@@ -139,7 +143,7 @@ Part-time contract and consulting work, alongside full-time roles
 * Stack: **React Native, Expo, TypeScript, Apollo Client, GraphQL, AWS Amplify, AppSync, Cognito, Redux Toolkit, Redux Saga, Realm, MMKV, Firebase Cloud Messaging, Sentry, Jest**. <!-- src: orion-mobile-clinical-ink#5 -->
 
 <!-- entry: designai-jira-plugin -->
-## **Frontend Engineer (Contract)**
+## **Full-Stack Engineer (Contract)**
 
 ### **Generative AI Jira Plugin | Remote**
 

@@ -8,16 +8,18 @@ emphasize_tags: [node, rest-api, graphql, postgres, aws, azure, docker, ci-cd, w
 deemphasize_tags: [kendo, design-systems, storybook, accessibility, native-modules, ble, here-sdk]
 skills_order: [languages, backend-and-cloud, devops, auth-and-security, state-and-data, testing, ai, frontend, mobile, leadership, domain]
 overrides:
+  syspro-saas-erp#4.1: { pin: true }   # the current job's main result (1,800+ ERP programs), first: recruiters see what was built (review 2026-10-23-1705)
   syspro-saas-erp#4.2: { pin: true }   # SDD, not ad-hoc AI code generation (decision sdd-not-vibe-coding)
   syspro-saas-erp#4.3: { pin: true }   # lead architect and tech-stack decision record (cv_emphasis)
-  syspro-saas-erp#4.1: { pin: true }   # the current job's main result (1,800+ ERP programs)
   syspro-saas-erp#4.11: { pin: true }  # Node.js mock backend: the current job's backend-side work (2026-10-16)
   general-motors-navigation#4.1: { pin: true }   # team of 8: evidence for the tech-lead headline
   itjet-fintech#4.6: { pin: true, also: [itjet-fintech#4.15], text: "Implemented the automated monthly subscription flow for Fused with **Node.js REST APIs** (**Express**, **Sequelize**), **Stripe**, **React** and **React Native**, then moved all payment logic to the web app with card-removal endpoints." }   # Fused subscription plus the move of payments to the web app (compose 2026-10-22)
   itjet-fintech#4.8: { pin: true }   # Wink, 5M+ registered users: in every CV (user 2026-10-22)
-  itjet-fintech#4.14: { pin: true, text: "Developed the RegiStart voter-registration MVP from sketches: a **React** and **Material UI** frontend, a **Node.js** backend with **Sequelize** and **PostgreSQL** on **AWS RDS**, **node-pg-migrate** migrations, and an algorithm that distributes students among organizers." }   # RegiStart MVP: full-stack Node.js evidence (compose 2026-10-22)
+  itjet-fintech#4.14: { pin: true, text: "Developed the RegiStart voter-registration minimum viable product (MVP) from sketches: a **React** and **Material UI** frontend, a **Node.js** backend with **Sequelize** and **PostgreSQL** on **AWS RDS**, **node-pg-migrate** migrations, and an algorithm that distributes students among organizers." }   # RegiStart MVP: full-stack Node.js evidence (compose 2026-10-22)
   itjet-fintech#4.5: { drop: true }   # node-pg-migrate is part of the RegiStart MVP bullet
 max_bullets_per_entry: 6
+entry_max_bullets:
+  orion-mobile-clinical-ink: 2       # mobile-only contract: two bullets (review 2026-10-23-1705)
 min_bullets_per_entry: 2
 include_sections: [summary, experience, consulting, education, skills, languages]
 max_pages: 3
