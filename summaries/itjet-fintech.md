@@ -67,7 +67,7 @@ Tags: ab-testing
 
 Introduced TypeScript and built an Atomic Design component library (design system) for Aspiration, with automated tests in Puppeteer, Jest and Cucumber, and set up CI/CD with Bitbucket Pipelines and AWS EC2/S3 for RegiStart (client split confirmed by user 2026-10-22).
 
-Result: delivery speed doubled.
+Result: delivery speed doubled for Aspiration (the 2x applies to Aspiration only, confirmed by user 2026-10-23).
 Tags: typescript, design-systems, ci-cd, aws, testing, e2e
 
 ### 4.4 PostgreSQL migration to AWS RDS
@@ -99,7 +99,7 @@ Tags: nextjs, ssr, graphql, docker
 
 Wink. Built the React Native app from scratch from the designs: sign-in with Snapchat or a phone number, integration with the backend API, push notifications, CI/CD for app deployment, and image optimization on the Node.js backend; also did code reviews and worked directly with the client. The app was published on Google Play and the App Store (Itjet project confirmed by user 2026-10-22).
 
-Result: more than 5 million registered users.
+Result: the app reached more than 5 million registered users (confirmed by user 2026-10-23).
 Tags: react-native, typescript, node, ci-cd, mobile-ci, app-distribution
 Source: doc:portfolio-2025-04
 
@@ -187,12 +187,12 @@ Source: doc:portfolio-2025-04
 
 - The fintech product is a Forbes top 10 (4.1). Source: cv. Confidence: exact.
 - Building new flows 3x faster with the shared signup flow (4.1). Source: cv. Confidence: exact.
-- Delivery speed doubled (4.3). Source: cv. Confidence: exact.
+- Delivery speed doubled for Aspiration (4.3). Source: cv; scope confirmed by user 2026-10-23 (Aspiration only, not RegiStart's CI/CD). Confidence: exact.
 - Database performance doubled (4.4). Source: cv. Confidence: exact.
 - Database stability also doubled with the RDS migration (4.4). Source: previous CV, confirmed by user 2026-10-15. Confidence: exact.
 - The previous CV credits a 2x delivery speedup separately to TypeScript plus Atomic Design and to CI/CD plus automated tests (4.3). Source: previous CV, confirmed by user 2026-10-15. Confidence: exact.
 - Project income increased after the Stripe subscription flow (4.6), no number. Source: previous CV, confirmed by user 2026-10-15. Confidence: exact.
-- More than 5 million registered users in the Wink database (4.8). Source: user 2026-10-22 (doc:portfolio-2025-04 said "more than 5 million users"; the user confirmed they were registered users). Confidence: approximate.
+- The Wink app reached more than 5 million registered users (4.8). Source: user 2026-10-22, confirmed 2026-10-23 that the app reached them (doc:portfolio-2025-04 said "more than 5 million users"). Confidence: approximate.
 
 ## 8. Portfolio material
 

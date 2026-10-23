@@ -110,3 +110,15 @@ decisions:
     date: "2026-10-22"
     why: User asked for these technologies to appear for that project; older jobs otherwise don't get new Stack lines (agents/composer.md).
     matches: [Stack line on an older job, technology list]
+
+  - id: gm-features-public
+    decision: The General Motors voice AI navigation proof of concept and the passenger second-screen feature for a luxury car brand may be mentioned in the CV.
+    date: "2026-10-23"
+    why: User confirmed both are fine to mention (review 2026-10-23-1349, confidentiality-1).
+    matches: [voice AI proof of concept, passenger second screen, luxury car brand, unreleased GM work]
+
+  - id: direct-employment
+    decision: SYSPRO, General Motors and Thermo Fisher Scientific employed the user directly (no services company in between).
+    date: "2026-10-23"
+    why: User's answer to HR finding hr-6 (review 2026-10-23-1349); interview preparation, the CV doesn't change.
+    matches: [direct employer, services company, outsourcing vendor, staffing agency]

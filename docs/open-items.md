@@ -24,8 +24,13 @@ Kept in the repo (not in any AI tool's memory) so it travels to every laptop (`s
 
 | Item | Question | Source |
 |---|---|---|
-| Velas leadership | What did "Technical Leader" cover? Did you lead people, and how many? | ats-1, hr-5 |
-| GM publicity | Are the luxury-brand passenger second screen and the voice AI proof of concept public? | confidentiality-6 |
+| Velas leadership | What did "Technical Leader" cover? Did you lead people, and how many? (asked again 2026-10-23: later) | ats-1, hr-5; 2026-10-23-1349 ats-1, hr-7 |
+
+## Questions from the review of 2026-10-23 (`reports/2026-10-23-1349/`)
+
+| Item | Question | Source |
+|---|---|---|
+| SDD in the summary | The summary's last sentence says the listed experience was "delivered through architecture-governed SDD", which also covers the Android migrations and the generative AI integration (contracts without SDD). Limit SDD to the current job? | fact-check-3 |
 
 ## Interview preparation (answers only; the CV doesn't change)
 
@@ -35,3 +40,6 @@ Kept in the repo (not in any AI tool's memory) so it travels to every laptop (`s
 | Hiring setup | How would a foreign company hire you full-time (Employer of Record or a local entity)? How do you invoice B2B? Any work permits outside Ukraine? | hr-3 |
 | Employer | At General Motors, Thermo Fisher and SYSPRO, were you employed directly or through a services company? Who would a reference check contact? | hr-4 |
 | Continuity | Backup power and internet for outages in Kyiv? | hr-6 |
+| Notice period | Earliest start date after an offer | 2026-10-23-1349 hr-5 |
+| Hiring route | How a company outside Ukraine hires you: B2B (Ukrainian FOP), Employer of Record, or both | 2026-10-23-1349 hr-4 |
+| Outages | How you keep working through power or internet outages in Kyiv | 2026-10-23-1349 hr-8 |

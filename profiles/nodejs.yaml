@@ -13,9 +13,9 @@ overrides:
   syspro-saas-erp#4.1: { pin: true }   # the current job's main result (1,800+ ERP programs)
   syspro-saas-erp#4.11: { pin: true }  # Node.js mock backend: the current job's backend-side work (2026-10-16)
   general-motors-navigation#4.1: { pin: true }   # team of 8: evidence for the tech-lead headline
-  itjet-fintech#4.6: { pin: true, also: [itjet-fintech#4.15], text: "Built the automated monthly subscription flow for Fused with **Node.js REST APIs** (**Express**, **Sequelize**), **Stripe**, **React** and **React Native**, then moved all payment logic to the web app with card-removal endpoints." }   # Fused subscription plus the move of payments to the web app (compose 2026-10-22)
+  itjet-fintech#4.6: { pin: true, also: [itjet-fintech#4.15], text: "Implemented the automated monthly subscription flow for Fused with **Node.js REST APIs** (**Express**, **Sequelize**), **Stripe**, **React** and **React Native**, then moved all payment logic to the web app with card-removal endpoints." }   # Fused subscription plus the move of payments to the web app (compose 2026-10-22)
   itjet-fintech#4.8: { pin: true }   # Wink, 5M+ registered users: in every CV (user 2026-10-22)
-  itjet-fintech#4.14: { pin: true, text: "Built the RegiStart voter-registration MVP from sketches: a **React** and **Material UI** frontend, a **Node.js** backend with **Sequelize** and **PostgreSQL** on **AWS RDS**, **node-pg-migrate** migrations, and an algorithm that distributes students among organizers." }   # RegiStart MVP: full-stack Node.js evidence (compose 2026-10-22)
+  itjet-fintech#4.14: { pin: true, text: "Developed the RegiStart voter-registration MVP from sketches: a **React** and **Material UI** frontend, a **Node.js** backend with **Sequelize** and **PostgreSQL** on **AWS RDS**, **node-pg-migrate** migrations, and an algorithm that distributes students among organizers." }   # RegiStart MVP: full-stack Node.js evidence (compose 2026-10-22)
   itjet-fintech#4.5: { drop: true }   # node-pg-migrate is part of the RegiStart MVP bullet
 max_bullets_per_entry: 6
 min_bullets_per_entry: 2
