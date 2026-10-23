@@ -83,9 +83,9 @@ Tags: testing, typescript, debugging, code-quality, automotive
 
 ### 4.5 In-car navigation features (truck navigation app)
 
-Implemented in-car navigation features with the HERE HNav / HNod SDK, including route-deviation handling on the truck navigation app for HERE Technologies, and a redesigned search UI. Moved from `general-motors-navigation` 4.6 (user 2026-10-23: this work belongs to the HERE consulting entry; project name confirmed for the CV and portfolio, decision gm-project-names).
+Implemented in-car navigation features with the HERE HNav / HNod SDK, including route-deviation handling on the truck navigation app for HERE Technologies, and a redesigned search UI. The HERE navigation SDK work was in TypeScript and on Android (user 2026-10-23). Moved from `general-motors-navigation` 4.6 (user 2026-10-23: this work belongs to the HERE consulting entry; project name confirmed for the CV and portfolio, decision gm-project-names).
 
-Tags: here-sdk, automotive, react-native
+Tags: here-sdk, automotive, react-native, typescript, android
 
 ## 5. Technologies and frameworks
 
@@ -93,7 +93,7 @@ Tags: here-sdk, automotive, react-native
 - Reactive state and services: RxJS and observable-based navigation models, **hands-on**.
 - UI: React and diagnostic components, **hands-on**.
 - Contracts: Protocol Buffers and generated service interfaces, **hands-on**.
-- Navigation: HERE navigation SDK and internal navigation-service integration, **hands-on**.
+- Navigation: HERE navigation SDK (TypeScript and Android) and internal navigation-service integration, **hands-on** (TypeScript and Android: user 2026-10-23).
 - Testing: Jest 29 and test mocks, **hands-on**; exact minor versions may have changed.
 - Tooling: Node.js, npm, pnpm, monorepo tooling, ESLint, Prettier, Husky, and Git, **hands-on**. Lerna, Yarn, and the native runtime are **used by the project**; specific hands-on use was not separately confirmed.
 

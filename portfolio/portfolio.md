@@ -78,11 +78,13 @@ HERE's customer, a package delivery company, builds on HERE solutions (HNod, HNa
 
 **Responsibilities**
 
-I was responsible for handling route deviations, when a truck driver leaves the planned route: collecting these cases and sending them to a reporting endpoint. <!-- src: doc:portfolio-2025-09 --> I extended the HERE HNod library to submit route-change events (new route started, previous route restored, route edited, alternative route selected, driver deviated from route, route refreshed, driver parking). <!-- src: doc:portfolio-2025-09 --> I then handled these events, compared the route data to detect deviations, and sent that data to the customer. <!-- src: doc:portfolio-2025-09 -->
+I handled route deviations, when a truck driver leaves the planned route: collecting these cases and sending them to a reporting endpoint. <!-- src: doc:portfolio-2025-09 --> I extended the HERE HNod library to submit route-change events (new route started, previous route restored, route edited, alternative route selected, driver deviated from route, route refreshed, driver parking). <!-- src: doc:portfolio-2025-09 --> I then handled these events, compared the route data to detect deviations, and sent that data to the customer. <!-- src: doc:portfolio-2025-09 --> This route-deviation work and a redesigned search UI I built used the HERE navigation SDK in TypeScript and on Android, with HNav, HNod and HERE's service packages. <!-- src: navigation-statistics#4.5, navigation-statistics#5, navigation-statistics#7 -->
+
+I made route changes explainable: the guidance statistics report not only which route is active but why it changed, such as a driver's choice, a route refresh or a parking approach. <!-- src: navigation-statistics#1, navigation-statistics#4.1 --> I separated the developer tools and their React diagnostic displays from the core statistics service and updated the shared contracts (Protocol Buffers), keeping the old operations for existing users. <!-- src: navigation-statistics#4.2, navigation-statistics#4.3 --> I added regression tests for each route-change reason and fixed integration failures. <!-- src: navigation-statistics#4.4 -->
 
 **Technologies and frameworks**
 
-JavaScript, TypeScript, Node.js, gRPC, React Native, React, custom HERE solutions (HNod library, HERE bundler (gRPC), HERE runner, HERE API, HERE SDK, HNav library), RxJS, Jest, GitLab pipelines. <!-- src: doc:portfolio-2025-09 -->
+JavaScript, TypeScript, Node.js, React Native, React, Android, RxJS, Protocol Buffers, HERE navigation SDK, Jest, Git. <!-- src: navigation-statistics#5, doc:portfolio-2025-09 -->
 
 <!-- project: navigation-poc -->
 
@@ -90,7 +92,7 @@ JavaScript, TypeScript, Node.js, gRPC, React Native, React, custom HERE solution
 ## **Car navigation PoC under NDA (Node.js, React)**
 <!-- /generated:project-navigation-poc -->
 
-This proof of concept (PoC) is an automotive app that showed the possibilities of new HERE technology in Volkswagen AG cars (Audi, Porsche, Volkswagen and others) and integrated features such as the Hugo AI assistant, Level 3 automated driving (L3) interaction, advanced driver-assistance systems (ADAS), the Kurviger route planner, the operational design domain (ODD), custom themes and layout support. <!-- src: doc:portfolio-2025-09 -->
+This proof of concept (PoC) is an automotive app that showed the possibilities of new HERE technology in Volkswagen AG cars (Audi, Porsche, Volkswagen and others) and integrated features such as the Hugo AI assistant, Level 3 automated driving (L3) interaction, advanced driver-assistance systems (ADAS), the Kurviger route planner, the operational design domain (ODD), custom themes and layout support. <!-- src: doc:portfolio-2025-09 --> It combines a React and TypeScript layer with HERE's navigation SDK on Android, so it can be tried across car brands and in-car displays. <!-- src: navigation-poc#1 -->
 
 <!-- generated:media-navigation-poc -->
 ![Car navigation PoC on the head unit](../sources/media/portfolio-2025-09/p04-1.png)
@@ -98,11 +100,13 @@ This proof of concept (PoC) is an automotive app that showed the possibilities o
 
 **Responsibilities**
 
-I implemented the L3 interaction feature and the Hugo AI assistant feature, which builds routes and shows nearby places. <!-- src: doc:portfolio-2025-09 --> I also implemented the Porsche theme and layout, and added debug car-data settings for electric cars. <!-- src: doc:portfolio-2025-09 --> I wrote a script that replaced inefficient manual steps and made the build 3x faster. <!-- src: doc:portfolio-2025-09, gm-poc-build-3x -->
+I implemented the L3 interaction feature and the Hugo AI assistant feature, which builds routes and shows nearby places. <!-- src: doc:portfolio-2025-09 --> For the assistant, I added typed input next to voice and built clear processing, completion and error states, so a conversation could run alongside the map. <!-- src: navigation-poc#4.1 --> I built the driver warning cards, which let the driver confirm, reject or dismiss a warning. <!-- src: navigation-poc#4.2 --> For a luxury car brand, I built a second screen for the passenger with live trip data from the car, nearby places and a recenter control. <!-- src: navigation-poc#4.3 --> I added route-progress markers that highlight the next one ahead, and the icons and notifications that show the assisted-driving status. <!-- src: navigation-poc#4.4 -->
+
+I also implemented the Porsche theme and layout, and added debug car-data settings for electric cars. <!-- src: doc:portfolio-2025-09 --> I built brand themes with day and night variants and kept the shared cockpit layout consistent across brands. <!-- src: navigation-poc#4.7 --> I added curvy-route controls and fixed alternative-route selection from the map; in a separate Kotlin reference app for motorcycle navigation, I built a route-curviness slider and screen orientation handling during guidance. <!-- src: navigation-poc#4.5 --> For search and parking demos, I added ratings, parking details and a QR-code booking card. <!-- src: navigation-poc#4.6 --> For the web control panel that runs the demos, I moved its settings and scenarios into a configuration that is checked when it loads and can change without rebuilding the app. <!-- src: navigation-poc#4.10 --> I wrote a script that replaced inefficient manual steps and made the build 3x faster. <!-- src: doc:portfolio-2025-09, gm-poc-build-3x -->
 
 **Technologies and frameworks**
 
-JavaScript, Node.js, TypeScript, React, RxJS, gRPC, Kotlin, Java, HNav, HNod, Hugo AI, L3, Kurviger, protobuf.js. <!-- src: doc:portfolio-2025-09 -->
+JavaScript, TypeScript, Node.js, React, RxJS, Protocol Buffers, gRPC, HERE navigation SDK, HERE SDK for Android, Kotlin, Android, Jetpack Compose, Jest, Git. <!-- src: navigation-poc#5 -->
 
 <!-- project: velas-wallet -->
 

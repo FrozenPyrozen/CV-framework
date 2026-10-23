@@ -25,6 +25,7 @@ vlcplayer
 MMKV
 Snapcraft
 SonarQube
+Jetpack
 
 # Terms
 fintech
