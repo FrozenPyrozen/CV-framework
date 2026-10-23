@@ -88,7 +88,7 @@ Slash commands run in your AI agent tool (`.claude/commands/` for Claude Code; o
 
 A script that fails prints one line with the reason; run it with `CV_DEBUG=1` in front to see the full stack trace.
 
-All scripts and their flags are listed in `AGENTS.md`. The ones you'll use most:
+All scripts and their flags are listed in `docs/scripts.md`, all commands in `docs/workflows.md`. The ones you'll use most:
 
 ```bash
 npm run build -- [cv] [--market ukraine] [--no-pdf]   # one CV
@@ -115,6 +115,6 @@ npm test                                              # the framework's own test
 | `specs/`, `agents/`, `AGENTS.md` | rules, agent definitions, the agent entry point |
 | `cv/` | CVs (Markdown committed, built files ignored) |
 | `reports/` | reviewer reports |
-| `docs/plan.md`, `docs/acceptance.md` | design and build log, acceptance checklist |
+| `docs/plan.md`, `docs/changelog.md`, `docs/acceptance.md` | design, change log, acceptance checklist |
 | `docs/open-items.md` | what you said you'll add or answer later |
 | `scripts/`, `schemas/`, `tests/` | the deterministic tooling |

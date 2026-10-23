@@ -96,13 +96,13 @@ test("index creates and updates the registry block in AGENTS.md", () => {
   writeFileSync(join(dir, "AGENTS.md"), "# Agents\n\nIntro.\n");
   run("index.ts", dir);
   const a = readFileSync(join(dir, "AGENTS.md"), "utf8");
-  assert.match(a, /<!-- generated:index -->[\s\S]*\[ats\.md\]\(specs\/rubrics\/ats\.md\)[\s\S]*`classic` \(default\): approved/);
+  assert.match(a, /<!-- generated:index -->[\s\S]*`ats\.md`: AI ATS screener[\s\S]*`classic` \(default\): approved/);
   assert.equal(run("index.ts", dir, ["--check"]).code, 0);
   mkdirSync(join(dir, "profiles"), { recursive: true });
   writeFileSync(join(dir, "profiles/rn.yaml"), "schema_version: 1\nid: rn\nheadline: Senior React Native Engineer\nsummary_focus: [react-native]\nemphasize_tags: [react-native]\nskills_order: [mobile]\n");
   assert.equal(run("index.ts", dir, ["--check"]).code, 1);
   run("index.ts", dir);
-  assert.match(readFileSync(join(dir, "AGENTS.md"), "utf8"), /\[rn\.yaml\]\(profiles\/rn\.yaml\): Senior React Native Engineer/);
+  assert.match(readFileSync(join(dir, "AGENTS.md"), "utf8"), /`rn\.yaml`: Senior React Native Engineer/);
 });
 
 test("log-application records a sent CV with a quoted hash, market and optional exact copy", () => {

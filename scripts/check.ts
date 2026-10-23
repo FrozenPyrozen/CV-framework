@@ -1,4 +1,4 @@
-// npm run check: lint + trace + spellcheck for the master CV, its market versions and every variant (plan 6).
+// npm run check: lint + trace + spellcheck for the master CV, its market versions and every variant (docs/scripts.md).
 import { existsSync, statSync } from "node:fs";
 import { basename, dirname, join, relative } from "node:path";
 import { defaultLintTargets, lintCv, lintSummaries, printFindings, type Finding } from "./lint.ts";

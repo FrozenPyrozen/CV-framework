@@ -1,0 +1,6 @@
+{
+  "enabledPlugins": {
+    "cns@syspro-plugin-marketplace": false,
+    "syspro-webfrontend@syspro-plugin-marketplace": false
+  }
+}

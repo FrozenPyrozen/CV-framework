@@ -1,5 +1,5 @@
 // npm run preview <file.pdf> [--out <dir>] [--scale <n>]
-// Renders every page of a PDF to PNG with pdfjs-dist and @napi-rs/canvas (plan 6.3, R13): no system tools.
+// Renders every page of a PDF to PNG with pdfjs-dist and @napi-rs/canvas (docs/scripts.md, plan R13): no system tools.
 // Output: <pdf dir>/preview/page-1.png, page-2.png, ... (git-ignored). Falls back to macOS Quick Look
 // (page 1 only) if the canvas package can't be loaded.
 import { execFileSync } from "node:child_process";

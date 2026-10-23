@@ -8,7 +8,7 @@ import { REPO, run, tempRepo } from "./helpers.ts";
 
 const read = (p: string) => readFileSync(join(REPO, p), "utf8");
 const docs = () => [
-  "AGENTS.md", "CLAUDE.md",
+  "AGENTS.md", "CLAUDE.md", "docs/workflows.md", "docs/scripts.md",
   ...readdirSync(join(REPO, "agents")).map((f) => `agents/${f}`),
   ...readdirSync(join(REPO, ".claude/commands")).map((f) => `.claude/commands/${f}`),
   ...readdirSync(join(REPO, ".claude/agents")).map((f) => `.claude/agents/${f}`),
@@ -34,7 +34,7 @@ test("every repo file and agent the docs point to exists", () => {
 test("each Claude wrapper points to its agent, and each command to an agent section or script", () => {
   for (const f of readdirSync(join(REPO, ".claude/agents"))) {
     const t = read(`.claude/agents/${f}`);
-    assert.match(t, /^---\nname: [\w-]+\ndescription: .+\n---/);
+    assert.match(t, /^---\nname: [\w-]+\ndescription: .+\n(?:model: (?:sonnet|opus|haiku)\b.*\n)?---/);   // model: optional (token saving)
     assert.ok(t.includes(`agents/${f}`), `${f} must point to agents/${f}`);
   }
   for (const f of readdirSync(join(REPO, ".claude/commands"))) {
@@ -47,14 +47,22 @@ test("each Claude wrapper points to its agent, and each command to an agent sect
   }
 });
 
-test("AGENTS.md registry is up to date and lists every command", () => {
+test("AGENTS.md registry is up to date, and docs/workflows.md lists every command", () => {
   const dir = tempRepo();
   for (const p of ["AGENTS.md", "agents", ".claude"]) {
     cpSync(join(REPO, p), join(dir, p), { recursive: true });
   }
   assert.equal(run("index.ts", dir, ["--check"]).code, 0, "run npm run index");
-  const a = read("AGENTS.md");
-  for (const f of readdirSync(join(REPO, ".claude/commands"))) assert.ok(a.includes(`/${f.replace(/\.md$/, "")}`), `AGENTS.md doesn't mention /${f}`);
+  const w = read("docs/workflows.md");
+  for (const f of readdirSync(join(REPO, ".claude/commands"))) assert.match(w, new RegExp(`^\\| \`/${f.replace(/\.md$/, "")}[ \`]`, "m"), `docs/workflows.md has no row for /${f}`);
+  assert.match(read("AGENTS.md"), /`docs\/workflows\.md`[\s\S]*`docs\/scripts\.md`/, "AGENTS.md must point to docs/workflows.md and docs/scripts.md");
+});
+
+test("docs/scripts.md describes every npm script", () => {
+  const s = read("docs/scripts.md");
+  for (const name of Object.keys(JSON.parse(read("package.json")).scripts)) {
+    assert.match(s, new RegExp(`^\\| \`${name}[ \`]`, "m"), `docs/scripts.md has no row for ${name}`);
+  }
 });
 
 

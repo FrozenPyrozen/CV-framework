@@ -1,5 +1,5 @@
 // npm run doctor [--no-export]
-// Checks this laptop for everything the framework needs (plan 6, 9a, R3, R12) and says how to fix what's missing:
+// Checks this laptop for everything the framework needs (docs/scripts.md, plan 9a, R3, R12) and says how to fix what's missing:
 // Node version, dependencies, AI agent tools, framework.local.yaml and repo paths, PDF exporters, previews,
 // and (unless --no-export) a tiny real export with the active exporter, which triggers the one-time macOS
 // permission prompt while you're at the keyboard and checks that the template's fonts get embedded.

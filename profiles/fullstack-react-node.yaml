@@ -1,4 +1,4 @@
-# Role profile: full-stack React + Node.js roles (docs/plan.md 4.4). The tailor builds cv/variants/fullstack-react-node/ from it.
+# Role profile: full-stack React + Node.js roles (specs/tailoring-spec.md 1.1). The tailor builds cv/variants/fullstack-react-node/ from it.
 schema_version: 1
 id: fullstack-react-node
 headline: Senior Full-Stack Engineer (React / Node.js)

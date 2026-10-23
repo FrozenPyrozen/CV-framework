@@ -1,5 +1,5 @@
 // npm run pdf-check <file.pdf> [--md <cv.md>]
-// Checks that a built PDF is ATS-readable and faithful to its Markdown (plan 6.2, R3, R4):
+// Checks that a built PDF is ATS-readable and faithful to its Markdown (docs/scripts.md, plan R3, R4):
 //   readable text, every section heading present (in order), no missing words, no garbled characters,
 //   template fonts embedded (no substitutes), contact details on page 1 as the market requires,
 //   hidden contact details absent, page count within the limit.

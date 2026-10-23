@@ -1,6 +1,6 @@
 {
   "$id": "confirmed.schema.json",
-  "title": "facts/confirmed.yaml (docs/plan.md 4.2)",
+  "title": "facts/confirmed.yaml (specs/facts-spec.md 2)",
   "type": "object",
   "required": ["schema_version", "facts"],
   "properties": {

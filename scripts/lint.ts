@@ -185,7 +185,7 @@ export function lintCv(file: string, ctx: Context, summaries = loadSummaries(ctx
     if (rec && sha(file) !== rec.md_sha) add("warning", "edited by hand since its last build; variants are rebuilt by /variants, so put lasting changes in the role profile's overrides");
   }
 
-  // Market: hidden contact details must not appear (plan 6.2, cv-spec 14).
+  // Market: hidden contact details must not appear (cv-spec 14, docs/scripts.md PDF check).
   if (!ctx.market.header.show_phone && ctx.profile.contacts.phone) {
     const digits = ctx.profile.contacts.phone.replace(/\D/g, "");
     if (stripComments(text).replace(/\D/g, "").includes(digits)) add("error", `phone number appears although market "${ctx.market.id}" hides it`);

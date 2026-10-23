@@ -1,5 +1,5 @@
 # Personal profile: the only place for personal details.
-# The CV header, education and languages are generated from this file (docs/plan.md 4.2a, specs/cv-spec.md 8).
+# The CV header, education and languages are generated from this file (specs/facts-spec.md 1, specs/cv-spec.md 8).
 schema_version: 1
 
 name: Kirill Kohan

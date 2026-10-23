@@ -131,7 +131,7 @@ export function validateRepo(): Issue[] {
       err(s.file, `portfolio_label "${fmP.portfolio_label}" names the client the CV hides ("${fmP.client}"); the portfolio is public`);
   }
 
-  // --- skills must be supported (plan 4.2b): a tag on a contribution or fact, or listed hands-on in a section 5 ---
+  // --- skills must be supported (specs/facts-spec.md 3): a tag on a contribution or fact, or listed hands-on in a section 5 ---
   const usedTags = new Set<string>();
   for (const s of summaries) for (const c of s.contributions) if (!c.removed) c.tags.forEach((t) => usedTags.add(t));
   const handsOn = summaries.flatMap((s) => (s.sections.find((x) => x.number === 5)?.text ?? "").split("\n").filter((l) => /hands-on/i.test(l))).join("\n").toLowerCase();
@@ -223,7 +223,7 @@ export function validateRepo(): Issue[] {
     if (existsSync(join(vdir, d, "cv.md")) && !existsSync(rootPath(cfg.paths.profiles, `${d}.yaml`))) err(`${cfg.output.variants_dir}/${d}/cv.md`, `role profile "${d}" not found (${cfg.paths.profiles}/${d}.yaml); restore it or remove the variant folder`);
   }
 
-  // --- role profiles (plan 4.4, specs/tailoring-spec.md) ---
+  // --- role profiles (specs/tailoring-spec.md 1.1) ---
   const pdir = rootPath(cfg.paths.profiles);
   if (existsSync(pdir)) for (const f of readdirSync(pdir).filter((x) => x.endsWith(".yaml"))) {
     const p = readYaml(join(pdir, f)) ?? {};

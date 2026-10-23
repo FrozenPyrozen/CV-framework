@@ -1,5 +1,5 @@
 // npm run market [file] [--market <id>]
-// Writes the market versions of a CV (docs/plan.md 4.6, specs/cv-spec.md 14) by script, without AI:
+// Writes the market versions of a CV (specs/cv-spec.md 14) by script, without AI:
 // the same content with the header and entry title lines generated for each non-default market.
 // Output: <cv dir>/markets/<id>/<name><suffix>.md (git-ignored).
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";

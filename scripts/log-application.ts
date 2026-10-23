@@ -1,5 +1,5 @@
 // npm run log-application -- --company "<name>" --pdf <file.pdf> [--role "<title>"] [--status applied] [--notes "<text>"] [--keep-copy]
-// Records a sent CV in facts/applications.yaml (plan 4.5, git-ignored): date, company, role, the PDF and its
+// Records a sent CV in facts/applications.yaml (specs/facts-spec.md 5, git-ignored): date, company, role, the PDF and its
 // hash (quoted), the CV folder, market, git commit of the sources, exporter, status. --keep-copy also saves the
 // exact PDF to cv/sent/<date>-<company>.pdf (git-ignored, included in backups).
 import { execFileSync } from "node:child_process";
@@ -42,7 +42,7 @@ export function logApplication(o: { company: string; pdf: string; role?: string;
   const file = rootPath(cfg.paths.facts, "applications.yaml");
   const list = existsSync(file) ? ((parseYaml(readFileSync(file, "utf8")) as unknown[]) ?? []) : [];
   list.push(entry);
-  const header = "# Application log (git-ignored; docs/plan.md 4.5). Written by npm run log-application; statuses can be edited by hand.\n";
+  const header = "# Application log (git-ignored; specs/facts-spec.md 5). Written by npm run log-application; statuses can be edited by hand.\n";
   writeFileSync(file, header + stringify(list));
   return entry;
 }

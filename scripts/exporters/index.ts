@@ -1,4 +1,4 @@
-// Registry of PDF exporters (plan 6.1). Add a new exporter by adding a module here.
+// Registry of PDF exporters (docs/scripts.md, PDF exporters). Add a new exporter by adding a module here.
 import type { Exporter } from "./types.ts";
 import { libreoffice } from "./libreoffice.ts";
 import { pages } from "./pages.ts";

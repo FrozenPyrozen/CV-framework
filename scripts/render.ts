@@ -11,7 +11,7 @@ import { parseArgs } from "./refresh.ts";
 import { renderDocx } from "./renderers/docx.ts";
 
 export function docxPathFor(mdFile: string): string {
-  // Role variants carry the profile in the file name; a job-specific CV is just <Name>_CV (plan 4.5).
+  // Role variants carry the profile in the file name; a job-specific CV is just <Name>_CV (specs/tailoring-spec.md 5).
   if (basename(mdFile) === "cv.md") return join(dirname(mdFile), `${outputBaseName({ profileId: variantIdForFile(mdFile) })}.docx`);
   return mdFile.replace(/\.md$/, ".docx");
 }

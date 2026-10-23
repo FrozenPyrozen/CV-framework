@@ -1,4 +1,4 @@
-# Role profile: React Native / mobile roles (docs/plan.md 4.4). The tailor builds cv/variants/react-native/ from it.
+# Role profile: React Native / mobile roles (specs/tailoring-spec.md 1.1). The tailor builds cv/variants/react-native/ from it.
 schema_version: 1
 id: react-native
 headline: Senior React Native Engineer / Tech Lead (Mobile)

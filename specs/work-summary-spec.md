@@ -48,7 +48,7 @@ cv_max_bullets: 8
 |---|---|---|
 | `schema_version` | yes | format version; migrations move old files forward |
 | `id` | yes | stable id (section 1) |
-| `source` | yes | `git` = harvested from repos, `cv` = built from old CV text, `user` = described by the user |
+| `source` | yes | `git` = harvested from repos, `cv` = built from old CV text or an imported document (`sources-spec.md`), `user` = described by the user (`/add-experience`, `/job-change`) |
 | `client` | yes | real company or client name (private) |
 | `role` | yes | job title as it should appear in the CV, without the contract suffix |
 | `engagement` | yes | `full-time`, `contract` or `freelance` |
@@ -61,7 +61,7 @@ cv_max_bullets: 8
 | `harvested_at` | for `source: git` | date of the last harvest; `null` otherwise |
 | `harvest_mode` | no | `local` (default: `/harvest` in this repo) or `portable` (written on another machine from a harvest prompt, section 9) |
 | `show_in_cv` | no | default true; false keeps the summary as a source (e.g. for the portfolio) but never shows it in a CV |
-| `cv_section` | yes | a section id from `cv_sections` in config (`experience`, `consulting` …) |
+| `cv_section` | yes | a section id from `cv_sections` in config (`experience`, `consulting` …; `validate` fails on an unknown id) |
 | `cv_order` | no | position inside the section; default newest first |
 | `cv_client_label` | yes | what the CV shows instead of `client` (same value when nothing is hidden) |
 | `cv_location` | yes | e.g. `Remote`, `Berlin, Germany (Hybrid)` |

@@ -1,5 +1,5 @@
 # Per-laptop settings. Copy to framework.local.yaml (git-ignored) and adjust for this laptop.
-# See docs/plan.md, section 9a.
+# See specs/portability-spec.md.
 
 # Summary repo name -> local clone path on this laptop. /harvest fills this in when given a path.
 repos:

@@ -1,4 +1,4 @@
-# Role profile: React frontend roles (docs/plan.md 4.4). The tailor builds cv/variants/react/ from it.
+# Role profile: React frontend roles (specs/tailoring-spec.md 1.1). The tailor builds cv/variants/react/ from it.
 schema_version: 1
 id: react
 headline: Senior React Engineer / Frontend Tech Lead

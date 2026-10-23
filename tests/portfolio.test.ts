@@ -241,7 +241,7 @@ test("portfolio_projects: one summary gives several pages; screenshots go to the
   assert.match(run("validate.ts", dir).out, /project "nope" isn't in portfolio_projects/);
 });
 
-// Alignment with the published portfolio (plan row 91): image rows, title parentheses, the cover banner, doc: sources,
+// Alignment with the published portfolio (docs/changelog.md row 91): image rows, title parentheses, the cover banner, doc: sources,
 // the length warning.
 import { deflateSync } from "node:zlib";
 

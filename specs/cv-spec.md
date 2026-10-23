@@ -20,7 +20,7 @@ A CV contains nothing that doesn't come from one of these files:
 
 ## 2. Structure
 
-Sections appear in the order of `cv_sections` in `framework.config.yaml`, using each section's `heading` text. A role profile may leave sections out with `include_sections` (the order stays the config order). Current order:
+Sections appear in the order of `cv_sections` in `framework.config.yaml`, using each section's `heading` text. A role profile may leave sections out with `include_sections` (the order stays the config order). Each section has an `id`, a `heading`, an `enabled` switch, a `source` (`composer`, `entries`, `profile.education`, `skills`, `profile.languages`), an optional `intro` line and, for entry sections, a `show_dates` default. Each summary (or `cv_entry`) picks its section with `cv_section`, so a job moves between EXPERIENCE and CONSULTING by changing one field; a new section (e.g. *OPEN SOURCE*) is added in config only, and `validate` fails on an unknown `cv_section`. Current order:
 
 1. Header (generated, no heading)
 2. SUMMARY
@@ -178,7 +178,13 @@ A CV is written once, for the default market (`markets/*.yaml` with `default: tr
 - the generated header (phone shown or hidden, time-zone line, availability wording from the market's `engagement_types`, and, with `hide_headline_qualifier: master`, the master CV's headline without its closing part in parentheses), and
 - entry title suffixes (`show_contract_suffix`).
 
-Agents never write market-specific content by hand. Current markets:
+Agents never write market-specific content by hand.
+
+- **A market only hides or narrows** what `profile.yaml` states (`show_availability: false`, a subset of `engagement_types`); it never adds a value the profile doesn't have, and `validate` fails on one that does. Format: `schemas/market.schema.json`; a new market (e.g. `eu.yaml` with work-permit wording) is a new file.
+- Every CV (master and variants) is built for every market by `build:all`; a job-specific CV is built for one (`--market`, else the default). `lint` and `pdf-check` run on every market version (e.g. no phone in a Ukraine PDF).
+- Market versions are build outputs in a `markets/<id>/` folder next to the source CV (`cv/markets/<id>/`, `cv/variants/<profile>/markets/<id>/`: `.md`, `.docx`, `.pdf`, `pdf-check.md`, `preview/`), all git-ignored; the default market's files sit in the CV folder itself.
+
+Current markets:
 
 | Market | Phone | Availability line | Time-zone line | Contract labels | Headline qualifier | File suffix |
 |---|---|---|---|---|---|---|

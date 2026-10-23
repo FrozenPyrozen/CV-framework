@@ -1,6 +1,6 @@
 // npm run pdf [file.docx] [--exporter <id>]
 // .docx -> .pdf with the first available exporter that succeeds, in pdf_exporters order (framework.local.yaml overrides
-// framework.config.yaml). Exports run one at a time under a lock, each with a timeout (plan 6.1, R1).
+// framework.config.yaml). Exports run one at a time under a lock, each with a timeout (docs/scripts.md, plan R1).
 // Default file: the master CV's .docx. Output: the same path with .pdf.
 import { existsSync } from "node:fs";
 import { resolve } from "node:path";
@@ -29,7 +29,7 @@ export async function exportPdf(docx: string, opts: { exporter?: string } = {}):
       return { pdf, exporter: id };
     } catch (e) {
       if (/export lock/.test((e as Error).message)) throw e; // waiting for the lock is not an exporter failure
-      skipped.push(`${id}: failed (${(e as Error).message.split("\n")[0]})`); // try the next exporter (plan 6.1)
+      skipped.push(`${id}: failed (${(e as Error).message.split("\n")[0]})`); // try the next exporter (docs/scripts.md, PDF exporters)
     }
   }
   throw new Error(`no PDF exporter succeeded (${skipped.join("; ")}). Install Pages or Microsoft Word (macOS) or LibreOffice (any OS); the .docx was still produced.`);

@@ -1,4 +1,4 @@
-// PDF exporter interface (plan 6.1). Each exporter turns one .docx into one .pdf.
+// PDF exporter interface (docs/scripts.md, PDF exporters). Each exporter turns one .docx into one .pdf.
 export interface Exporter {
   id: string;
   available(): { ok: boolean; reason?: string };

@@ -1,7 +1,8 @@
 // npm run index [--check]
 // Regenerates the registry lists in AGENTS.md (plan 9: folders act as registries) between
-// <!-- generated:index --> markers: agents, reviewer rubrics, role profiles, markets, templates, output specs
-// and commands. Adding a file to one of those folders is enough; this keeps AGENTS.md in step.
+// <!-- generated:index --> markers: agents, reviewer rubrics, role profiles, markets, templates and output specs,
+// one short line each (AGENTS.md is read by every agent, so it stays small). Adding a file to one of those
+// folders is enough; this keeps AGENTS.md in step. Commands are listed in docs/workflows.md (checked by tests).
 // --check: exit 1 if AGENTS.md is out of date (no write).
 import { existsSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
@@ -9,12 +10,13 @@ import { parse as parseYaml } from "yaml";
 import { isMain, loadConfig, rootPath } from "./lib/repo.ts";
 import { parseArgs } from "./refresh.ts";
 
-function mdTitle(file: string): string {
+// The file's H1 (without "Rubric: "), or with `full` its description (front matter) or question when it has one.
+function mdTitle(file: string, full = false): string {
   const t = readFileSync(file, "utf8");
-  const h = t.match(/^#\s+(.+)$/m)?.[1] ?? "";
+  const h = (t.match(/^#\s+(.+)$/m)?.[1] ?? "").replace(/^Rubric:\s*/, "");
   const q = t.match(/^\*\*Question:\*\*\s*(.+)$/m)?.[1];
   const desc = t.match(/^description:\s*(.+)$/m)?.[1];
-  return [h.replace(/^Rubric:\s*/, ""), q ?? desc].filter(Boolean).join(": ");
+  return (full && (desc ?? q)) || h;
 }
 
 function list(dir: string, ext: string): string[] {
@@ -26,23 +28,22 @@ export function indexBlock(): string {
   const cfg = loadConfig();
   const lines: string[] = [];
   const section = (title: string, items: string[], empty: string) => lines.push(`### ${title}`, "", ...(items.length ? items : [empty]), "");
-  section("Agents (`agents/`)", list("agents", ".md").map((f) => `- [${f}](agents/${f}): ${mdTitle(rootPath("agents", f))}`), "None yet.");
-  section("Reviewer rubrics (`specs/rubrics/`)", list("specs/rubrics", ".md").map((f) => `- [${f}](specs/rubrics/${f}): ${mdTitle(rootPath("specs/rubrics", f))}`), "None yet.");
+  section("Agents (`agents/`)", list("agents", ".md").map((f) => `- \`agents/${f}\`: ${mdTitle(rootPath("agents", f), true)}`), "None yet.");
+  section("Reviewer rubrics (`specs/rubrics/`)", list("specs/rubrics", ".md").map((f) => `- \`${f}\`: ${mdTitle(rootPath("specs/rubrics", f))}`), "None yet.");
   section("Role profiles (`profiles/`)", list(cfg.paths.profiles, ".yaml").map((f) => {
     const p = parseYaml(readFileSync(rootPath(cfg.paths.profiles, f), "utf8")) ?? {};
-    return `- [${f}](${cfg.paths.profiles}/${f}): ${p.headline ?? p.id ?? ""}`;
+    return `- \`${f}\`: ${p.headline ?? p.id ?? ""}`;
   }), "None yet.");
   section("Markets (`markets/`)", list(cfg.paths.markets, ".yaml").map((f) => {
     const m = parseYaml(readFileSync(rootPath(cfg.paths.markets, f), "utf8")) ?? {};
-    return `- [${f}](${cfg.paths.markets}/${f}): ${m.id}${m.default ? " (default)" : ""}, file suffix "${m.file_suffix}"`;
+    return `- \`${f}\`: ${m.id}${m.default ? " (default)" : ""}, file suffix "${m.file_suffix}"`;
   }), "None.");
   const tdir = rootPath(cfg.paths.templates);
   section("Templates (`templates/`)", (existsSync(tdir) ? readdirSync(tdir).filter((d) => existsSync(join(tdir, d, "style-map.yaml"))).sort() : []).map((d) => {
     const sm = parseYaml(readFileSync(join(tdir, d, "style-map.yaml"), "utf8")) ?? {};
     return `- \`${d}\`${d === cfg.default_template ? " (default)" : ""}: ${sm.approved ? "approved" : "not approved"}, fonts ${(sm.fonts ?? []).join(", ")}`;
   }), "None.");
-  section("Output specs (`specs/outputs/`)", list("specs/outputs", ".md").map((f) => `- [${f}](specs/outputs/${f}): ${mdTitle(rootPath("specs/outputs", f))}`), "None yet (the CV is specified by specs/cv-spec.md and specs/tailoring-spec.md).");
-  section("Commands (`.claude/commands/`)", list(".claude/commands", ".md").map((f) => `- \`/${f.replace(/\.md$/, "")}\`: ${mdTitle(rootPath(".claude/commands", f))}`), "None yet.");
+  section("Output specs (`specs/outputs/`)", list("specs/outputs", ".md").map((f) => `- \`${f}\`: ${mdTitle(rootPath("specs/outputs", f))}`), "None yet (the CV is specified by specs/cv-spec.md and specs/tailoring-spec.md).");
   return lines.join("\n").trimEnd();
 }
 

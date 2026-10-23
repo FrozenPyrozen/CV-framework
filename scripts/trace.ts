@@ -2,7 +2,7 @@
 // Every bullet and every summary-paragraph sentence must end with <!-- src: id[, id] --> pointing to a
 // summary contribution (id#4.N), a summary section (id#N) or a confirmed fact id (specs/cv-spec.md 6).
 // Generated blocks, entry lines and section intro lines are exempt.
-// --warn-only: report but exit 0 (used by `build` for the master CV, plan 6).
+// --warn-only: report but exit 0 (used by `build` for the master CV, docs/scripts.md).
 import { splitSentences } from "./lib/text.ts";
 import { readFileSync } from "node:fs";
 import { relative, resolve } from "node:path";

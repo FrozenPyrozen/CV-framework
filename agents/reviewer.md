@@ -16,21 +16,22 @@ description: Reviews a CV against one rubric and writes a report; never edits an
 
 ## Steps
 
-1. **Check the CV is built and current, without changing it.** Run `npm run status`. If the CV is stale or has never been built, **don't build it yourself** (a build rewrites generated parts, and reviewers never edit): tell the user and suggest `/build`. Without a current build, review the Markdown with every rubric that doesn't need the PDF, skip *layout*, and say in each report that `pdf-check.md` and previews were not available.
-2. **One run folder.** `reports/<YYYY-MM-DD-HHmm>/`, shared by all rubrics in this run.
-3. **For each rubric** (independently; in parallel if your tool supports it):
+1. **Read the review context, not the individual files.** For each rubric run `npm run review-context -- <cv> <rubric>` (add `--market <id>`, `--jd <file>`, or use `-- --portfolio <rubric>`) and read the bundle it writes to `.cv-runs/review-context/<cv-slug>-<rubric>.md`: the rules for every agent, the rubric, the report format, the CV with line numbers (source comments kept for fact-check), and only the inputs listed above that the rubric needs (market and profile settings, role profile limits, gap report, job ad, `pdf-check.md` and preview paths, digests and cited facts, section 9 terms, open items, and the decisions that fit, with the rest listed by id). Open a full file only when the bundle points to it (a summary contribution to compare meaning, a page image, a decision listed as "not relevant here" that a finding touches).
+2. **Check the CV is built and current, without changing it.** Run `npm run status`. If the CV is stale or has never been built, **don't build it yourself** (a build rewrites generated parts, and reviewers never edit): tell the user and suggest `/build`. Without a current build, review the Markdown with every rubric that doesn't need the PDF, skip *layout*, and say in each report that `pdf-check.md` and previews were not available.
+3. **One run folder.** `reports/<YYYY-MM-DD-HHmm>/`, shared by all rubrics in this run.
+4. **For each rubric** (independently; in parallel if your tool supports it):
    - Read the rubric and apply every check in its table to the CV, quoting exact text and pointing to `file:line` plus a readable location ("SYSPRO, bullet 2").
-   - Before reporting a finding, check `facts/decisions.yaml`. A finding that matches a decision (its `matches` keywords or meaning) goes under *Decided*, not *Findings*.
+   - Before reporting a finding, check the decisions in the bundle (and `facts/decisions.yaml` for an id it lists as not relevant). A finding that matches a decision (its `matches` keywords or meaning) goes under *Decided*, not *Findings*.
    - Write `reports/<run>/<rubric>.md` exactly in the report format: front matter (`schema_version`, `rubric`, `cv`, `job_ad`, `market`, `reviewed_at`, `verdict`, `score`; `npm run validate` checks it), the rubric's required sections, the findings table (`id`, `severity`, `location`, `issue`, `suggestion`, `needs_user_input`), the *Decided* list.
    - Rank findings high, then medium, then low. Set `needs_user_input: yes` when only the user can resolve it (a number, a choice, a fact to confirm).
-4. **Summary to the user.**
+5. **Summary to the user.**
    - A table: rubric, verdict, score, number of findings by severity.
    - The high findings in one line each.
    - The next step: `/improve reports/<run>/` to go through them together.
 
 ## Portfolio mode (`/review --portfolio`)
 - Reviews `portfolio/portfolio.md` and its build with the rubrics that apply to it: **proofreading, fact-check, confidentiality, layout** (default; ATS and HR don't apply). Each rubric's *Portfolio mode* section says what changes.
-- Step 1 becomes: run `npm run status`; if the portfolio isn't checked or built, or its files are older than `portfolio.md`, **don't build it**: suggest `npm run portfolio -- check` and `npm run build:portfolio`, and without a current build skip *layout* and say so.
+- Step 2 becomes: run `npm run status`; if the portfolio isn't checked or built, or its files are older than `portfolio.md`, **don't build it**: suggest `npm run portfolio -- check` and `npm run build:portfolio`, and without a current build skip *layout* and say so.
 - Inputs: the opted-in summaries (sections 1–5, 7, 8), `facts/decisions.yaml`, `portfolio/pdf-check-<size>.md`, `portfolio/preview/<size>/page-*.png`.
 - Reports go to the same `reports/<run>/` folder with `cv: portfolio/portfolio.md` and `market: null`.
 

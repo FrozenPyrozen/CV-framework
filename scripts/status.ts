@@ -1,6 +1,6 @@
 // npm run status [--ack <company>]
 // Also the public portfolio (plan 9e P3): projects to write or rewrite, generated parts out of date, unchecked changes.
-// Lists which CVs are out of date and why (plan 6, R14), by comparing cv/.build-state.json with the current
+// Lists which CVs are out of date and why (docs/scripts.md, plan R14), by comparing cv/.build-state.json with the current
 // sources, the CV Markdown and the outputs. Also warns, once per application, when a CV you already sent
 // has changed since (facts/applications.yaml); --ack <company> records that you know.
 import { existsSync, readdirSync, readFileSync, writeFileSync } from "node:fs";

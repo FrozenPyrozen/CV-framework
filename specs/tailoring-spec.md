@@ -15,6 +15,30 @@ A tailored CV is the master CV adapted to a type of role (a **profile**) or to o
 | Summary digests, full summaries for changed entries, facts | content and sources |
 | `cv-spec.md` | every structure, style, ATS and confidentiality rule still applies |
 
+### 1.1 Role profile (`profiles/<id>.yaml`)
+
+A profile describes a reusable CV version for a type of role, built without a job ad. Any file in `profiles/` is a variant (`/variants` builds them all); a new profile (e.g. `frontend-architect`) is a new file, with no code change. Structure: `schemas/role-profile.schema.json`.
+
+```yaml
+schema_version: 1
+id: react-native
+headline: Senior React Native Engineer / Tech Lead (Mobile)
+summary_focus: [react-native, android, ios, offline-first, performance, leadership]
+emphasize_tags: [react-native, expo, android, ios, ble, iot, mobile-ci, performance]
+deemphasize_tags: [kendo, erp]
+skills_order: [mobile, languages, state-and-data, testing, devops, frontend, backend-and-cloud]   # category ids from skills.yaml
+template: classic                  # optional; default from framework.config.yaml
+overrides: {}                      # lasting tweaks for this variant, by source id (section 4)
+max_bullets_per_entry: 6           # lower-relevance bullets are dropped first
+entry_max_bullets: {}              # optional per-entry limits, e.g. { syspro-saas-erp: 7 }
+min_bullets_per_entry: 2
+include_sections: [summary, experience, consulting, education, skills, languages]
+max_pages: 3                       # optional; overrides checks.max_pages for this variant (used by pdf-check)
+max_words: 1800                    # optional; overrides checks.max_words (used by lint)
+```
+
+`validate` checks every tag against the config list, `skills_order` categories, `include_sections`, the template, bullet limits, pins per entry and the ids in `overrides` and `entry_max_bullets`. A job-specific CV records its profile and an optional `headline` in `jd-tags.yaml` (section 2); `refresh`, `lint`, `build` and `pdf-check` read them from there.
+
 ## 2. Steps
 
 1. **Tags.** For a profile, take its tags. For a job ad, map its requirements to tags from the config tag list, propose new tags for anything missing, and save `jd-tags.yaml` for the user to adjust. A job ad always builds on a role profile (`profile:` in `jd-tags.yaml`): without `--profile`, the tailor proposes the closest one for the user to confirm. The job ad's tags add to the profile's. The ad's **requirements** ("what we're looking for", "must have") go to `required`; its **duties** ("what you'll do") and "nice to have" items go to `nice_to_have`, unless the requirements repeat them. The proposed profile is written to `jd-tags.yaml` `profile` (with a one-line reason as a comment) and explained at the top of the gap report.

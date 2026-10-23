@@ -145,7 +145,7 @@ if (isMain(import.meta.url)) {
   if (errors.length) { printIssues(errors); console.log("\nrefresh: fix the validate errors first"); process.exit(1); }
   writeDigests();
   const ctx = loadContext({ market: args.market as string | undefined, profileId: args.profile as string | undefined, cvFile: file });
-  // The committed CV is written for the default market (plan 4.6): another market's version goes elsewhere.
+  // The committed CV is written for the default market (specs/cv-spec.md 14): another market's version goes elsewhere.
   if (!ctx.market.default && !args.out && !args.check && !file.includes(`/${loadConfig().output.markets_subdir}/`)) {
     console.error(`refresh: --market ${ctx.market.id} would write that market's header into ${file.replace(rootPath() + "/", "")}; use npm run market, or pass --out <file>`);
     process.exit(2);

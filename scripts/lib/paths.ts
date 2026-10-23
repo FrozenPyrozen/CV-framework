@@ -1,4 +1,4 @@
-// Output paths and file names (framework.config.yaml output.*, docs/plan.md 4.6).
+// Output paths and file names (framework.config.yaml output.*, specs/cv-spec.md 14).
 import { basename, dirname, join } from "node:path";
 import { type Market, loadConfig, loadProfile, rootPath } from "./repo.ts";
 

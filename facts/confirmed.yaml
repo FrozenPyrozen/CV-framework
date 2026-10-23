@@ -1,4 +1,4 @@
-# Confirmed facts: things the user confirmed that no repo history shows (docs/plan.md 4.2).
+# Confirmed facts: things the user confirmed that no repo history shows (specs/facts-spec.md 2).
 # Every fact has an id (used in CV source comments), a source, the entry it belongs to, and tags.
 # Items with type: cv_entry define whole CV entries that have no summary.
 schema_version: 1

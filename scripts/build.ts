@@ -1,7 +1,7 @@
 // npm run build [file] [--template <name>] [--market <id>] [--no-pdf] [--entries-reviewed]   one CV (default: the master)
 // npm run build:all [--no-pdf]                              the master CV and every role variant
 //
-// The full chain (plan 6): validate -> digest -> refresh -> lint -> trace -> spellcheck -> market versions ->
+// The full chain (docs/scripts.md): validate -> digest -> refresh -> lint -> trace -> spellcheck -> market versions ->
 // for every market: render .docx -> PDF -> pdf-check -> previews -> build record (cv/.build-state.json).
 // Stops a CV at its first failing step. Unsourced claims are warnings for the master CV and errors for
 // variants and tailored CVs. --no-pdf stops after the .docx (e.g. on a laptop without a PDF exporter).
@@ -92,7 +92,7 @@ export async function buildCv(mdFile: string, opts: { template?: string; noPdf?:
 
   // market versions
   // Markets: every market by default; one market with --market. A job-specific CV (cv/tailored/) is built for
-  // one market only: --market, else the default market (plan 4.6).
+  // one market only: --market, else the default market (specs/cv-spec.md 14).
   const tailored = mdFile.startsWith(rootPath(cfg.output.tailored_dir) + "/");
   const defaultMarket = loadMarkets(cfg).find((m) => m.market.default)?.market.id;
   const only = opts.market ?? (tailored ? defaultMarket : undefined);
