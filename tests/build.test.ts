@@ -133,7 +133,7 @@ test("round 1 audit: per-entry pending list, --all with --entries-reviewed refus
   // Velas changes: the variant lists it; rewriting another entry (Thermo Fisher) keeps Velas listed.
   edit(dir, "summaries/velas-wallet.md", "Developed the Velas blockchain wallet", "Developed the Velas blockchain wallet app");
   assert.match(run("status.ts", dir).out, /entries to rewrite in variants: velas-wallet/);
-  edit(dir, V, "* Architected an **IoT healthcare** app", "* Architected an **IoT healthcare** application");
+  edit(dir, V, "* Built an **IoT healthcare** app", "* Built an **IoT healthcare** application");
   run("build.ts", dir, [V, "--no-pdf"]);
   assert.match(run("status.ts", dir).out, /entries to rewrite in variants: velas-wallet/);
   // --entries-reviewed works per CV, and is refused with --all.
@@ -188,4 +188,18 @@ test("round 3 audit: a variant without its profile fails alone; check takes no f
   mkdirSync(join(dir, "cv/tailored/acme"), { recursive: true });
   writeFileSync(join(dir, "cv/tailored/acme/jd-tags.yaml"), "profile: react\nrequired: [react\n");
   assert.match(run("select.ts", dir, ["cv/tailored/acme", "--tags", "jd-tags.yaml"]).out, /cv\/tailored\/acme\/jd-tags\.yaml: invalid YAML/);
+});
+
+test("profile overrides: `also` makes one bullet cite two contributions, the second isn't selected again, and validate checks it", () => {
+  const dir = tempRepo();
+  const r = run("select.ts", dir, ["cv/variants/nodejs", "--profile", "nodejs"]);
+  assert.equal(r.code, 0, r.out);
+  const it = JSON.parse(readFileSync(join(dir, "cv/variants/nodejs/selection.json"), "utf8")).entries.find((e: any) => e.id === "itjet-fintech");
+  const srcs = it.bullets.map((b: any) => b.src);
+  assert.ok(srcs.includes("itjet-fintech#4.6, itjet-fintech#4.15"), srcs.join(" | "));
+  assert.ok(!srcs.includes("itjet-fintech#4.15"));
+  edit(dir, "profiles/nodejs.yaml", "also: [itjet-fintech#4.15]", "also: [itjet-fintech#4.99]");
+  const v = run("validate.ts", dir);
+  assert.equal(v.code, 1);
+  assert.match(v.out, /also: "itjet-fintech#4\.99" doesn't resolve/);
 });

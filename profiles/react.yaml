@@ -13,6 +13,7 @@ overrides:
   syspro-saas-erp#4.8: { pin: true }   # OpenTelemetry module (observability is an emphasized tag; 2026-10-16)
   syspro-tech-stack-ownership: { drop: true }   # already cited in the #4.3 bullet
   general-motors-navigation#4.1: { pin: true }   # team of 8: evidence for the tech-lead headline
+  itjet-fintech#4.8: { pin: true }   # Wink, 5M+ registered users: in every CV (user 2026-10-22)
 max_bullets_per_entry: 6
 entry_max_bullets:
   syspro-saas-erp: 7                 # brings back the OpenTelemetry bullet (2026-10-16)

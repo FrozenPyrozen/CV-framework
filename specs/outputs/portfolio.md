@@ -54,7 +54,7 @@ Section 8 of a summary (Portfolio material) gets a structured list, so the agent
 
 Only items with `public: yes, confirmed by user <date>` reach the portfolio. A screenshot is public only after the user confirms it shows no customer data, internal names or internal URLs.
 
-- Image paths are relative to `portfolio/` (the file lives in `portfolio/assets/<summary-id>/`).
+- Image paths are relative to `portfolio/`: a file in `portfolio/assets/<summary-id>/`, or an image of an imported document in `../sources/media/<doc-id>/` (`sources-spec.md` 1). `build:portfolio` converts formats a PDF can't take (e.g. `.tif` from Pages) to PNG.
 - Free text already in section 8 (or `TODO (needs user input)`) stays valid as notes; only the `- image:`, `- link:` and `- demo:` items are read. `validate` checks the items' format and that each image exists.
 - Section 8 is filled with the advisor (`/portfolio-material`, plan 9e P1), which asks per item whether it is public.
 

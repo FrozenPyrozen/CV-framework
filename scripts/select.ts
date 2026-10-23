@@ -14,10 +14,10 @@ export interface SelectionInput {
   profile?: {
     id: string; emphasize_tags?: string[]; deemphasize_tags?: string[]; summary_focus?: string[];
     max_bullets_per_entry?: number; min_bullets_per_entry?: number; entry_max_bullets?: Record<string, number>;
-    overrides?: Record<string, { pin?: boolean; drop?: boolean; text?: string }>;
+    overrides?: Record<string, { pin?: boolean; drop?: boolean; text?: string; also?: string[] }>;
     skills_order?: string[]; include_sections?: string[];
   };
-  jdTags?: { required?: string[]; nice_to_have?: string[]; overrides?: Record<string, { pin?: boolean; drop?: boolean; text?: string }> };
+  jdTags?: { required?: string[]; nice_to_have?: string[]; overrides?: Record<string, { pin?: boolean; drop?: boolean; text?: string; also?: string[] }> };
 }
 
 export interface Selection {
@@ -54,9 +54,10 @@ export function select(input: SelectionInput): Selection {
           const o = p.overrides?.[c.src];
           const score = 2 * count(c.tags, p.emphasize_tags) + count(c.tags, p.summary_focus) - 2 * count(c.tags, p.deemphasize_tags)
             + 3 * count(c.tags, input.jdTags?.required) + count(c.tags, input.jdTags?.nice_to_have);
-          return { ...c, score, order, pinned: !!o?.pin, drop: !!o?.drop, text: o?.text };
+          return { ...c, score, order, pinned: !!o?.pin, drop: !!o?.drop, text: o?.text, also: o?.also };
         })
-        .filter((c) => !c.drop);
+        // A contribution another bullet already cites through `also` isn't selected again on its own.
+        .filter((c) => !c.drop && !Object.values(p.overrides ?? {}).some((o) => o?.also?.includes(c.src)));
       const ranked = [...scored].sort((a, b) => Number(b.pinned) - Number(a.pinned) || b.score - a.score || a.order - b.order);
       // Pinned bullets come first, in the order they're listed in the profile's overrides.
       const pinOrder = Object.keys(p.overrides ?? {});
@@ -72,7 +73,8 @@ export function select(input: SelectionInput): Selection {
         section: e.section,
         // The Stack line (<id>#5) is kept when pinned; it doesn't count toward the bullet limits.
         ...(p.overrides?.[`${e.id}#5`]?.pin ? { stack: `${e.id}#5` } : {}),
-        bullets: chosen.map((c) => ({ src: c.src, title: c.title, score: c.score, ...(c.pinned ? { pinned: true } : {}), ...(c.text ? { text: c.text } : {}) })),
+        // `also`: further sources the same bullet cites (one bullet for two contributions about the same work).
+        bullets: chosen.map((c) => ({ src: c.also?.length ? [c.src, ...c.also].join(", ") : c.src, title: c.title, score: c.score, ...(c.pinned ? { pinned: true } : {}), ...(c.text ? { text: c.text } : {}) })),
       });
     }
   }

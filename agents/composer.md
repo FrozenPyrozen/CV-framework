@@ -30,7 +30,7 @@ description: Updates the master CV from the summaries and confirmed facts, one e
    - **Bold:** key technologies and terms.
    - **Acronyms:** spelled out once with the acronym (e.g. "OpenID Connect (OIDC)").
    - **Emphasis first:** the points in `cv_emphasis` go into the first bullets of their entry. For SYSPRO this means architecture-governed SDD, not AI-generated code (decision `sdd-not-vibe-coding`).
-   - **Stack lines:** the current job ends with a `* Stack: **…**` line, sourced from the summary's section 5 (`<id>#5`). An older job keeps a Stack line it already has, updated when section 5 changes; don't add new ones to older jobs.
+   - **Stack lines:** the current job ends with a `* Stack: **…**` line, sourced from the summary's section 5 (`<id>#5`). An older job keeps a Stack line it already has, updated when section 5 changes; don't add new ones to older jobs unless the user asks for that job's technologies to show in the CV (record it as a decision, e.g. `orion-stack-line`).
    - **Sources:** end every bullet with `<!-- src: <id>#4.N -->`, a fact id, or several, comma-separated.
    - **Existing bullets:** keep the user's wording unless the contribution or fact it cites now says something different (compare meaning, not the file's age), the user asked for a change, or the wording claims more than its source ("maintained" for "used", "authored" for "contributed to"): then correct it to match the source.
    - **Limits:** respect `cv_max_bullets` (the Stack line doesn't count). Entries without one have no fixed limit; follow decision `keep-length` and don't trim older roles.

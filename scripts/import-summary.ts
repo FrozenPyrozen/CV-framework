@@ -5,7 +5,7 @@
 // writes a new summary to summaries/<id>.md, or for an existing id to .cv-runs/import/<id>.md for the harvester
 // to merge (spec section 7). Proposed tags (<!-- proposed-tags: … -->) are reported for the user to approve.
 import { spawnSync } from "node:child_process";
-import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { constants, cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, relative } from "node:path";
 import { cliPath, isMain, loadConfig, parseSummary, rootPath } from "./lib/repo.ts";
@@ -36,7 +36,7 @@ export function checkSummary(file: string): ImportResult {
   const tmp = mkdtempSync(join(tmpdir(), "cv-import-"));
   try {
     for (const p of ["framework.config.yaml", "facts", "summaries", "schemas", "markets", "specs", "cv", "templates", "profiles", "sources"]) {
-      if (existsSync(rootPath(p))) cpSync(rootPath(p), join(tmp, p), { recursive: true });
+      if (existsSync(rootPath(p))) cpSync(rootPath(p), join(tmp, p), { recursive: true, mode: constants.COPYFILE_FICLONE }); // clones on APFS: sources/ is large
     }
     writeFileSync(join(tmp, cfg.paths.summaries, `${id}.md`), text);
     const here = `${cfg.paths.summaries}/${id}.md`;

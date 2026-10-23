@@ -317,7 +317,7 @@ const moreLint: [string, (d: string) => void, RegExp][] = [
   ["a #### heading", (d) => edit(d, CV, "# **SUMMARY**\n", "# **SUMMARY**\n\n#### Note\n"), /only #, ## and ### headings/],
   ["sections out of order", (d) => { const t = readFileSync(join(d, CV), "utf8"); const a = t.indexOf("# **EDUCATION**"), b = t.indexOf("# **SKILLS**"), c = t.indexOf("# **LANGUAGES**"); writeFileSync(join(d, CV), t.slice(0, a) + t.slice(b, c) + t.slice(a, b) + t.slice(c)); }, /sections must be, in order/],
   ["too many bullets", (d) => edit(d, "summaries/velas-wallet.md", "cv_section: experience", "cv_section: experience\ncv_max_bullets: 3"), /velas-wallet has 9 bullets \(limit 3\)/],
-  ["a wrong team size", (d) => edit(d, CV, "Led a team of 8 engineers delivering", "Led teams of up to 6 engineers delivering"), /"up to 6 engineers" but the largest team led is 8/],
+  ["a wrong team size", (d) => edit(d, CV, "Led a team of 8 engineers building", "Led teams of up to 6 engineers building"), /"up to 6 engineers" but the largest team led is 8/],
   ["an internal git remote", (d) => edit(d, CV, "* Delivered the R&D department's core **React Native** app", "* Delivered git@ssh.dev.azure.com:v3/SYSPRO-Product/x the core mobile app"), /internal address matching/],
 ];
 for (const [name, breakIt, expected] of moreLint) {
@@ -458,7 +458,7 @@ test("validate checks a job ad's jd-tags.yaml (profile, tags, overrides) and the
 
 test("lint: team-size wording variants are checked; separators don't count as words", () => {
   const dir = refreshed();
-  edit(dir, CV, "Led a team of 8 engineers delivering", "Managed a team of 9 senior frontend software engineers delivering");
+  edit(dir, CV, "Led a team of 8 engineers building", "Managed a team of 9 senior frontend software engineers building");
   assert.match(run("lint.ts", dir, [CV]).out, /team of 9 senior frontend software engineers" exceeds the largest team led \(8\)/);
 });
 

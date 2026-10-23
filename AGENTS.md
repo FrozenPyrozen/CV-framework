@@ -61,7 +61,7 @@ Commands are available as Claude Code slash commands (`.claude/commands/`). Any 
 | `git-digest <repo> [--path --since --until --identity --run]` | read-only history digest of a repo for the harvester |
 | `harvest-prompt [--merge <id>] [--out <file>]` | writes the portable harvest prompt to `.cv-runs/harvest-prompt-<date>.md` |
 | `import-summary <file> [--apply]` | checks a portable summary (validate rules, secret scan, no code or paths) in a temp copy; `--apply` places it |
-| `import-doc <file> --date <YYYY-MM> [--kind --id --title]` | keeps an old CV or portfolio in `sources/` with its extracted text and index entry; changes no summary |
+| `import-doc <file> --date <YYYY-MM> [--kind --id --title]` | keeps an old CV or portfolio (`.docx`, `.pdf`, `.md`, `.txt`, `.pages` on macOS) in `sources/` with its extracted text, images and index entry; changes no summary |
 | `refresh [cv] [--market --profile --out --check]` | regenerate the script-owned parts of a CV (header, entry lines, education, skills, languages) |
 | `market [cv] [--market <id>]` | write the other market versions of a CV |
 | `lint [cv] [--market --profile]`, `trace [cv] [--warn-only]`, `check` | CV rules, claim sources, both for every CV |

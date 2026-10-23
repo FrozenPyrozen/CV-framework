@@ -30,7 +30,7 @@ decisions:
   - id: keep-previous-cv-metrics
     decision: Keep the numbers taken from the previous CV ("Forbes top 10", "income grew 10x", "tripled new users", "engagement grew 4x"), and don't fill the empty confidentiality notes of the older summaries (GM, Velas, OMO, Thermo Fisher, Itjet, Admasters) from memory.
     date: "2026-10-16"
-    why: User's choice; internal names from those jobs aren't remembered.
+    why: "User's choice; internal names from those jobs aren't remembered. Exception (2026-10-22): the Velas staking figure '12x faster' was replaced by the user-confirmed '2 minutes to 5 seconds' from the April 2025 portfolio."
     matches: [Forbes top 10, revenue figure, income grew 10x, outcome numbers, None known TODO confidentiality notes]
 
   - id: keep-contact-and-keywords
@@ -104,3 +104,9 @@ decisions:
     date: "2026-10-22"
     why: User said the clients may be named in the portfolio too (portfolio import, doc:portfolio-2025-04, question 3).
     matches: [under NDA, General Motors, Thermo Fisher Scientific, client names in portfolio]
+
+  - id: orion-stack-line
+    decision: The clinical-trials app entry (orion-mobile-clinical-ink, an older contract) has a Stack line in the master CV and the React Native variant, listing its technologies (Apollo, GraphQL, AWS Amplify, AppSync, Cognito, Redux Toolkit, Redux Saga, Realm, MMKV, Firebase Cloud Messaging, Sentry, Jest).
+    date: "2026-10-22"
+    why: User asked for these technologies to appear for that project; older jobs otherwise don't get new Stack lines (agents/composer.md).
+    matches: [Stack line on an older job, technology list]

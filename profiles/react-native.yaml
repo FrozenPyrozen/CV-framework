@@ -13,6 +13,10 @@ overrides:
   syspro-saas-erp#4.1: { pin: true }   # the current job's main result (1,800+ ERP programs)
   general-motors-navigation#4.1: { pin: true }   # team of 8: evidence for the tech-lead headline
   general-motors-navigation#5: { pin: true }     # Stack line: mobile CI and testing tools (2026-10-16)
+  itjet-fintech#4.8: { pin: true }   # Wink, 5M+ registered users: in every CV (user 2026-10-22)
+  orion-mobile-clinical-ink#4.7: { pin: true }   # React Native 0.76 / Expo SDK 52 upgrade, team effort (user 2026-10-22)
+  orion-mobile-clinical-ink#5: { pin: true }     # Stack line: Apollo, GraphQL, Amplify, Realm, Sentry … (user 2026-10-22)
+  orion-mobile-clinical-ink#4.5: { drop: true }  # SQLCipher and SSL pinning: made room for the upgrade bullet (2026-10-22)
 max_bullets_per_entry: 6
 min_bullets_per_entry: 2
 include_sections: [summary, experience, consulting, education, skills, languages]

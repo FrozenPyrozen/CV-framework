@@ -216,6 +216,11 @@ export function validateRepo(): Issue[] {
       const ok = num === "5" ? !!s && !!p.overrides[src]?.pin && !p.overrides[src]?.text && !p.overrides[src]?.drop
         : num ? !!s?.contributions.some((c) => c.number === num) : confirmed.facts.some((x) => x.id === id);
       if (!ok) err(file, num === "5" ? `overrides: "${src}" (a Stack line) needs an existing summary and only { pin: true }` : `overrides: "${src}" doesn't resolve to a summary contribution or confirmed fact`);
+      for (const a of p.overrides[src]?.also ?? []) {
+        const [aid, anum] = String(a).split("#");
+        const resolves = anum ? !!summaries.find((x) => x.id === aid)?.contributions.some((c) => c.number === anum) : confirmed.facts.some((x) => x.id === aid);
+        if (!resolves) err(file, `overrides: "${src}" also: "${a}" doesn't resolve to a summary contribution or confirmed fact`);
+      }
     }
     // Pins (Stack lines excepted) can't exceed an entry's limit: select keeps every pin, and lint would then fail.
     const pinsPerEntry: Record<string, number> = {};

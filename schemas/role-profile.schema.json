@@ -16,7 +16,7 @@
       "propertyNames": { "pattern": "^[a-z0-9-]+(#\\d+(\\.\\d+)?)?$" },
       "additionalProperties": {
         "type": "object",
-        "properties": { "text": { "type": "string", "minLength": 1 }, "pin": { "type": "boolean" }, "drop": { "type": "boolean" } },
+        "properties": { "text": { "type": "string", "minLength": 1 }, "pin": { "type": "boolean" }, "drop": { "type": "boolean" }, "also": { "type": "array", "items": { "type": "string" }, "minItems": 1 } },
         "additionalProperties": false,
         "not": { "required": ["pin", "drop"], "properties": { "pin": { "const": true }, "drop": { "const": true } } }
       }
