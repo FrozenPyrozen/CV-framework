@@ -1,4 +1,5 @@
 // npm run status [--ack <company>]
+// Also the public portfolio (plan 9e P3): projects to write or rewrite, generated parts out of date, unchecked changes.
 // Lists which CVs are out of date and why (plan 6, R14), by comparing cv/.build-state.json with the current
 // sources, the CV Markdown and the outputs. Also warns, once per application, when a CV you already sent
 // has changed since (facts/applications.yaml); --ack <company> records that you know.
@@ -11,6 +12,7 @@ import { profileIdForFile } from "./lib/cvmd.ts";
 import { masterCvPath } from "./lib/paths.ts";
 import { isMain, loadConfig, rootPath } from "./lib/repo.ts";
 import { parseArgs } from "./refresh.ts";
+import { portfolioProjects, portfolioStatus } from "./portfolio.ts";
 
 export interface CvStatus { cv: string; state: "up to date" | "stale" | "never built"; reasons: string[] }
 
@@ -103,12 +105,29 @@ if (isMain(import.meta.url)) {
   const warnings = applicationWarnings(args.ack as string | undefined);
   if (args.ack && !readApplications().some((x) => (x.company ?? "").toLowerCase() === String(args.ack).toLowerCase())) console.log(`status: no application to "${args.ack}" in facts/applications.yaml; nothing acknowledged`);
   for (const w of warnings) console.log(`SENT   ${w}`);
+  // The public portfolio (plan 9e P3): only once a project is opted in or the file exists.
+  const ps = portfolioStatus();
+  const portfolioTodo: string[] = [];
+  if (!ps.exists && portfolioProjects().length) portfolioTodo.push(`not created yet: npm run portfolio -- refresh, then /portfolio (${ps.notInFile.join(", ")})`);
+  if (ps.exists) {
+    if (ps.generatedStale && !ps.notInFile.length) portfolioTodo.push("generated parts are out of date (profile, skills, images or titles changed): npm run portfolio -- refresh");
+    if (ps.notInFile.length) portfolioTodo.push(`projects not in the file yet: ${ps.notInFile.join(", ")} (npm run portfolio -- refresh)`);
+    if (ps.toWrite.length) portfolioTodo.push(`projects to write: ${ps.toWrite.join(", ")} (/portfolio)`);
+    if (ps.toRewrite.length) portfolioTodo.push(`projects to rewrite (their summaries changed): ${ps.toRewrite.join(", ")} (/portfolio)`);
+    if (ps.neverChecked) portfolioTodo.push("never checked: npm run portfolio -- check");
+    else if (ps.changedSinceCheck) portfolioTodo.push("changed since the last check: npm run portfolio -- check");
+  }
+  if (ps.exists || portfolioTodo.length) {
+    console.log(`${portfolioTodo.length ? "STALE" : "ok   "}  portfolio/portfolio.md`);
+    for (const r of portfolioTodo) console.log(`         ${r}`);
+  }
   const todo = list.filter((s) => s.state !== "up to date");
   const rewrite = todo.some((s) => s.reasons.some((r) => r.startsWith("entries to rewrite") || r.startsWith("entries to update")));
   const tailored = todo.filter((s) => s.cv.startsWith(`${loadConfig().output.tailored_dir}/`)).map((s) => s.cv);
   if (rewrite) console.log(`\nstatus: sources changed: run /compose for the master CV and /variants for role variants first (they rewrite the listed entries), then npm run build:all`);
   else if (todo.length > tailored.length) console.log(`\nstatus: ${todo.length - tailored.length} CV(s) to rebuild: run npm run build:all (or npm run build -- <file>)`);
   else if (todo.length) console.log(`\nstatus: ${todo.length} job-specific CV(s) to rebuild:`);
+  else if (portfolioTodo.length) console.log("\nstatus: CVs are up to date; the portfolio needs work (above)");
   else console.log("\nstatus: everything is up to date");
   // build:all skips job-specific CVs: name them.
   for (const t of tailored) console.log(`        job-specific CV: /tailor to rewrite it if entries are listed, then npm run build -- ${t}`);

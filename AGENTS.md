@@ -38,6 +38,7 @@ Commands are available as Claude Code slash commands (`.claude/commands/`). Any 
 | `/import-summary <file>` | Portable harvest, step 4: check a summary written elsewhere, then add or merge it | `agents/harvester.md` (Importing a portable summary) |
 | `/import-docs <file…>` | Import old CVs or portfolios as sources and fill gaps in summaries from them (lowest precedence; `specs/sources-spec.md`) | `agents/advisor.md` (/import-docs), then `agents/composer.md` |
 | `/portfolio-material [summary-id…]` | Sort portfolio images, links and demos, and choose which projects go into the public portfolio | `agents/advisor.md` (/portfolio-material) |
+| `/portfolio [summary-id…]` | Write or update the public portfolio's text from the opted-in summaries | `agents/portfolio.md` |
 | `/harvest <path or name> [id]` | Write or merge a work summary from a repo | `agents/harvester.md` |
 | `/compose` | Update the master CV from summaries and facts | `agents/composer.md` |
 | `/tailor --profile <id>` / `--jd <file or text> [--profile <id>] [--market <id>]` | Build a role variant or a job-specific CV, with a gap report | `agents/tailor.md` |
@@ -64,6 +65,7 @@ Commands are available as Claude Code slash commands (`.claude/commands/`). Any 
 | `import-summary <file> [--apply]` | checks a portable summary (validate rules, secret scan, no code or paths) in a temp copy; `--apply` places it |
 | `import-doc <file> --date <YYYY-MM> [--kind --id --title]` | keeps an old CV or portfolio (`.docx`, `.pdf`, `.md`, `.txt`, `.pages` on macOS) in `sources/` with its extracted text, images and index entry; changes no summary |
 | `spellcheck [file…] [--list]` | dictionary spelling check of CVs and the portfolio with `facts/dictionary.txt`; also run by `build` and `check` |
+| `portfolio refresh \| check [--projects-reviewed]` | writes the portfolio's generated parts; checks its sources, confidentiality and spelling and records state for `status` |
 | `refresh [cv] [--market --profile --out --check]` | regenerate the script-owned parts of a CV (header, entry lines, education, skills, languages) |
 | `market [cv] [--market <id>]` | write the other market versions of a CV |
 | `lint [cv] [--market --profile]`, `trace [cv] [--warn-only]`, `check` | CV rules, claim sources, both for every CV |
@@ -100,6 +102,7 @@ Commands are available as Claude Code slash commands (`.claude/commands/`). Any 
 - [advisor.md](agents/advisor.md): Advisor: Talks with the user, one topic at a time, to turn review findings, new experience, profile changes and job changes into confirmed facts, decisions and summary updates, then hands the changes to the composer.
 - [composer.md](agents/composer.md): Composer: Updates the master CV from the summaries and confirmed facts, one entry at a time, keeping the user's wording and every source comment.
 - [harvester.md](agents/harvester.md): Harvester: Writes or merges a work summary (summaries/<id>.md) from a local git repo, asking the user for everything git can't know.
+- [portfolio.md](agents/portfolio.md): Portfolio: Writes the public portfolio's text (portfolio/portfolio.md) from the opted-in summaries, one project at a time, with a source on every sentence; the scripts write everything else.
 - [reviewer.md](agents/reviewer.md): Reviewer: Reviews a CV against one rubric and writes a report; never edits anything. Run once per rubric (ats, hr, proofreading, fact-check, confidentiality, layout).
 - [tailor.md](agents/tailor.md): Tailor: Builds a role variant (cv/variants/<profile>/) or a job-specific CV (cv/tailored/<company-role>/) with a gap report; a script selects the bullets, the agent words them.
 - [template-importer.md](agents/template-importer.md): Template importer: Turns a Word CV into a reusable template (templates/<name>/) by labeling its paragraph types, then test-builds the user's CV with it for approval.
@@ -149,6 +152,7 @@ Commands are available as Claude Code slash commands (`.claude/commands/`). Any 
 - `/job-change`: Start or leave a job
 - `/log-application`: Record a sent CV in facts/applications.yaml
 - `/portfolio-material`: Sort portfolio images, links and demos, and choose which projects go into the public portfolio
+- `/portfolio`: Write or update the public portfolio's text from the opted-in summaries
 - `/profile`: Update personal details (phone, country, availability, work permit …)
 - `/review`: Review a CV with the rubrics and write reports
 - `/status`: What is stale and why

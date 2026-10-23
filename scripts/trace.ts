@@ -40,7 +40,7 @@ export function buildSourceIndex(): SourceIndex {
 }
 
 // Splits a paragraph into pieces that each end with a src comment, plus any trailing text without one.
-function sentencePieces(raw: string): { text: string; src: string[] }[] {
+export function sentencePieces(raw: string): { text: string; src: string[] }[] {
   const pieces: { text: string; src: string[] }[] = [];
   const re = new RegExp(SRC_RE.source, "g");
   let last = 0;

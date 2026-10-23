@@ -1,6 +1,6 @@
 # Portfolio Spec
 
-Status: v0 (P1 summary fields, P2 content import and P5 spell check built; agent, template and renderer not yet: plan 9e) · Applies to: `portfolio/`, written by the portfolio agent (`/portfolio`), built by `npm run build:portfolio`
+Status: v0 (P1 summary fields, P2 content import, P3 agent and text checks, P5 spell check built; template and renderer (P4) and the remaining checks and reviews (P6) not yet: plan 9e) · Applies to: `portfolio/`, written by the portfolio agent (`/portfolio`), built by `npm run build:portfolio`
 
 The portfolio is a second **output** of the same sources as the CV (plan section 2, "Sources and outputs are separate"): a multi-page **document** with a cover and a page or more per project, shared through a **public link**. It is built like the CV: Markdown first, then Word through an imported template, then PDF, with the same checks. Building starts once the user provides the current portfolio as Pages or Word and PDF (plan 9e, phase P2).
 
@@ -8,7 +8,7 @@ The portfolio is a second **output** of the same sources as the CV (plan section
 
 | Portfolio part | Source |
 |---|---|
-| Cover: name, headline, contacts, portfolio intro | `facts/profile.yaml` and the default market's header rules (`markets/*.yaml`, `cv-spec.md` 14); one intro paragraph written by the agent from the summaries (sourced like the CV summary). Because the link is public, the **phone number is left out** unless a decision in `facts/decisions.yaml` says otherwise |
+| Cover: title, name, headline, contacts, portfolio intro | `facts/profile.yaml` and the default market's header rules (`markets/*.yaml`, `cv-spec.md` 14), without the location line and without a profile link labeled "Portfolio" (the portfolio doesn't link to itself); one intro paragraph written by the agent from the summaries (sourced like the CV summary). Because the link is public, the **phone number is left out** unless decision `portfolio-show-phone` exists in `facts/decisions.yaml` |
 | Project pages | summaries with `show_in_portfolio: true` (section 3): section 1 (what the product is), 2 (main features), 3 (role), 4 (contributions), 5 (technologies), 7 (numbers), 8 (images, links, demo notes) |
 | Skills overview | `facts/skills.yaml` (generated block, like the CV's SKILLS) |
 | Contacts page | `facts/profile.yaml` |
@@ -60,17 +60,16 @@ Only items with `public: yes, confirmed by user <date>` reach the portfolio. A s
 
 ## 4. Structure of `portfolio.md`
 
-1. **Cover:** name, headline, one intro paragraph, contacts.
-2. **Projects**, one block each, in `portfolio_order`:
-   - title (role), `portfolio_label`, period, a one-line tech stack;
-   - **The product** (2–3 sentences from sections 1 and 2) and **My role** (from section 3);
-   - **What I built**: up to `portfolio_max_items` items from section 4, longer than CV bullets (2–3 sentences, the "how" and "why"), each with its source;
-   - **Results**: numbers from section 7;
-   - images with captions, and links.
-3. **Skills overview** (generated block).
-4. **Contact** (generated block).
+`npm run portfolio -- refresh` writes the generated parts (`<!-- generated:… -->`) and the project markers; the portfolio agent (`agents/portfolio.md`, `/portfolio`) writes the rest, never inside a generated block.
 
-Blocks (`<!-- generated:… -->`) are written by `npm run refresh`, never by the agent, as in the CV (`cv-spec.md` 8).
+1. **Cover** (generated `portfolio-cover`): "My Portfolio", name, headline, contacts (section 1). Then the **intro** (agent): two or three sourced sentences.
+2. **Projects**, one per opted-in summary, in `portfolio_order` (then newest first), each starting with `<!-- project: <id> -->`:
+   - title lines (generated `project-<id>`): role, then `portfolio_label` (default `cv_client_label`) and the period;
+   - images and links (generated `media-<id>`): only the section 8 items marked public, images with their captions;
+   - the agent's text: **The product** (2–3 sentences from sections 1 and 2), **My role** (section 3), **What I built** (up to `portfolio_max_items` items from section 4, longer than CV bullets: the "how" and "why"), **Results** (numbers from section 7 or a contribution's Result), **Technologies** (hands-on items from section 5). Every sentence and bullet cites this project only.
+   - A newly opted-in project gets a placeholder until `/portfolio` writes it; a project no longer opted in is dropped.
+3. **Skills overview** (generated `skills`, from `facts/skills.yaml`).
+4. **Contact** (generated `contact`).
 
 ## 5. Formats and page sizes
 
@@ -95,21 +94,25 @@ The current portfolio (Pages, April 2025, 16 A4 pages) is the visual reference f
 
 The fonts are macOS system fonts: the PDF is exported through Pages (first in `pdf_exporters`), which embeds them; Word on Windows and LibreOffice would substitute them, so `pdf-check`'s embedded-font check matters here. Content issues found in that portfolio (client names the CV hides, informal wording, typos) are handled through `/import-docs`, never copied.
 
-## 6. Checks (`build:portfolio` fails on errors)
+## 6. Checks
 
-| Check | What |
-|---|---|
-| `trace` | every sentence has a source that exists |
-| `lint` | as for the CV (secret scan, every summary's section 9 terms, hidden client names in any case, internal URLs, hidden contact details), with one difference: a term's `allow_in` job ids and `summary` **don't apply** here; only `allow_in: [portfolio]` lets a term appear in the portfolio (`work-summary-spec.md` 3.1) |
-| images | every image exists, is public-confirmed in its summary's section 8, and is at least 1200 px wide; nothing in `assets/` is unused |
-| `spellcheck` | a dictionary spelling check (US English) with the project word list `facts/dictionary.txt` (product names, technologies); unknown words fail until fixed or added. The same check runs on the CV |
-| `pdf-check` | per size: every Markdown word appears in the PDF, fonts are embedded, the page count is within `checks.portfolio_max_pages` |
-| `preview` | page images per size, to look at before sharing |
-| reviewers | `/review --portfolio`: proofreading, fact-check, confidentiality (public rules) and layout rubrics; reports follow `review-report-spec.md` with `cv: portfolio/portfolio.md` |
+`npm run portfolio -- check` (now, plan 9e P3) runs the text checks; `npm run build:portfolio` (P4, P6) adds the rest and fails on any error.
+
+| Check | Where | What |
+|---|---|---|
+| sources | `portfolio check` | every sentence and bullet the agent wrote has a source that resolves; a project cites only itself; the intro cites opted-in projects, `profile` or `calc:`; no placeholder left |
+| confidentiality | `portfolio check` | the CV's lint rules (every summary's section 9 terms, hidden client names in any case, ticket prefixes, internal addresses, secrets, URLs other than profile links and public link items), with one difference: a term's `allow_in` job ids and `summary` **don't apply** here; only `allow_in: [portfolio]` lets a term appear in the portfolio (`work-summary-spec.md` 3.1) |
+| generated parts | `portfolio check` (warning), `status` | the generated parts match what `refresh` writes now |
+| `spellcheck` | `portfolio check`, `spellcheck` | dictionary spelling (US English) with `facts/dictionary.txt`; unknown words fail until fixed or added. The same check runs on the CV |
+| images | `build:portfolio` (P6) | every image exists, is public-confirmed in its summary's section 8, and is at least 1200 px wide; nothing in `assets/` is unused |
+| `pdf-check` | `build:portfolio` (P4) | per size: every Markdown word appears in the PDF, fonts are embedded, the page count is within `checks.portfolio_max_pages` |
+| `preview` | `build:portfolio` (P4) | page images per size, to look at before sharing |
+| reviewers | `/review --portfolio` (P6) | proofreading, fact-check, confidentiality (public rules) and layout rubrics; reports follow `review-report-spec.md` with `cv: portfolio/portfolio.md` |
 
 ## 7. Updates
 
-- `npm run status` lists the portfolio like a CV: stale when a summary it uses, `profile.yaml`, `skills.yaml`, an image or the template changed, with the project ids to rewrite.
+- `npm run status` lists the portfolio: projects to write (placeholders), projects to rewrite (what the project was written from changed: summary sections 1–5 and 7, its public section 8 items, role, label, period or `portfolio_max_items`; recorded by each passing `portfolio check`), generated parts out of date (`profile.yaml`, `skills.yaml`, images or titles changed: `npm run portfolio -- refresh`) and changes not yet checked. The template and outputs join with P4.
+- A project whose sources changed but whose text still fits: `npm run portfolio -- check --projects-reviewed`.
 - `/portfolio` rewrites only the stale projects and keeps the wording of the rest (`cv-spec.md` 12, same rule).
 - A new project appears only after `show_in_portfolio: true` is set with the user.
 

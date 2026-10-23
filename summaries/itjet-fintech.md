@@ -197,7 +197,7 @@ Source: doc:portfolio-2025-04
 ## 8. Portfolio material
 
 - image: ../sources/media/portfolio-2025-04/image30.png
-  caption: Fused web app, coach subscriptions an athlete can connect to (Stripe, 4.6)
+  caption: Fused web app, coach subscriptions an athlete can connect to (Stripe)
   public: yes, confirmed by user 2026-10-22
 - image: ../sources/media/portfolio-2025-04/image32.png
   caption: Fused web app, the coach's workout schedule

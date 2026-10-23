@@ -68,6 +68,7 @@ Run `npm test` and `npm run check`, plus `npm run build:all` when an export app 
 | B17 | 77 | `/portfolio`, then `npm run build:portfolio -- --size all` (after plan 9e P6; not runnable yet) | two summaries opted in with public-confirmed images | `portfolio/portfolio.md` with sources on every sentence; `.docx`, `.pages` and A4 and Letter PDFs; no hidden client names or section 9 terms; unconfirmed images and numbers left out; spellcheck clean; `status` marks it stale after a summary change |
 | B18 | 80 | `/portfolio-material` | summaries with images from an imported document | each image is shown and asked about; only explicit yes answers become `public: yes, confirmed by user <date>`; `portfolio_label` keeps hidden clients hidden; `validate` passes |
 | B19 | 80 | `npm run spellcheck` | a CV with a typo and a new product name | the typo is an error in `build` and `check`; adding the product name to `facts/dictionary.txt` clears it |
+| B20 | 81 | `/portfolio` | one project opted in with public screenshots | `refresh` writes the cover (no phone, no self-link), title lines and only the public images; the agent writes the intro and project with sources from that project only; `portfolio check` passes; after a summary change `status` lists the project to rewrite |
 
 ## C. Permanent end-to-end scenarios
 
