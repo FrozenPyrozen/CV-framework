@@ -19,7 +19,7 @@ show_in_cv: true
 show_in_portfolio: true   # all jobs, decided by user 2026-10-23
 portfolio_order: 2
 portfolio_projects:                # the three pages of the published portfolio (user 2026-10-23: keep its structure)
-  - { id: companion, title: "Automotive car management app for General Motors (React Native)" }
+  - { id: companion, title: "Car management app for General Motors (React Native)" }
   - { id: navigation, title: "Automotive navigation app under NDA for HERE Technologies (React Native, React, Node.js, Android)" }
   - { id: poc, title: "Car navigation PoC under NDA (Node.js, React)" }
 cv_section: experience

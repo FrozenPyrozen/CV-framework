@@ -5,6 +5,7 @@ description: Builds a role variant (cv/variants/<profile>/) or a job-specific CV
 **Never commits.**
 
 ## Read first
+- The `npm run agent-context -- tailor` bundle of step 3: it holds the rules for every agent and the spec sections below, plus the entries to rewrite; read the files themselves only without it
 - `AGENTS.md` (rules for every agent)
 - `specs/tailoring-spec.md` 2–5 (steps, rules, overrides, gap report), after its *Rules at a glance*
 - `specs/cv-spec.md` 3–6 (bullets, writing style, emphasis, traceability), after its *Rules at a glance*
@@ -26,10 +27,10 @@ Open other sections only when a step points there: `specs/tailoring-spec.md` 1.1
    - Variant: `cv/variants/<profile-id>/`.
    - Job-specific CV: `cv/tailored/<company-role>/` (lowercase-kebab, e.g. `example-corp-senior-rn`). Save a pasted job ad as `job-description.md` there.
 2. **Tags (job ad only).** Without `--profile`, propose the role profile closest to the ad and confirm it with the user (it carries the emphasis pins). Map the ad's requirements to `required` and its duties and nice-to-haves to `nice_to_have` (`specs/tailoring-spec.md` 2, step 1), using tags from the config list, and write `jd-tags.yaml` (`required`, `nice_to_have`, `new_tags_proposed`, plus the `profile` it starts from, which is required, and an optional job-fitting `headline`). Show it to the user, who may adjust it; pins or drops for this one ad go in its `overrides`. When no user is present (an acceptance replay), continue and say in the gap report that `jd-tags.yaml` is awaiting approval. New tags need approval before they go into `framework.config.yaml`.
-3. **Selection (script).** `npm run select -- <cv-dir> --profile <id>` and/or `--tags jd-tags.yaml`. Read `selection.json`. **Don't change the selection.** If you disagree, say so in the gap report; the user changes the profile or `jd-tags.yaml`.
+3. **Selection (script).** `npm run select -- <cv-dir> --profile <id>` and/or `--tags jd-tags.yaml`. **Don't change the selection.** If you disagree, say so in the gap report; the user changes the profile or `jd-tags.yaml`. Then run `npm run agent-context -- tailor <cv-dir>` and read `.cv-runs/agent-context/tailor-<folder>.md` instead of `selection.json`, the role profile, digests, facts, decisions and spec sections: the selection, and per entry to rewrite its lines in this CV and in the master CV (numbered, with `src` comments), the selected contributions, sections 5, 7 and 9, confirmed facts and open items, plus the decisions that fit.
 4. **Which entries to rewrite.**
    - New CV: all.
-   - Rebuild: run `npm run status` and rewrite only the entries it lists under "entries to rewrite in variants" (or "in this tailored CV"), plus entries whose selection changed (compare the `src` ids in the existing `cv.md` with the new `selection.json`; the old selection file is overwritten). Copy everything else unchanged from the existing `cv.md`. If a listed entry needs no text change, say so and build that CV alone with `npm run build -- <cv.md> --entries-reviewed` (not with `build:all`); otherwise the entry stays listed.
+   - Rebuild: the bundle's *Entries in scope* already applies this rule (`--all` for every entry); by hand, run `npm run status` and rewrite only the entries it lists under "entries to rewrite in variants" (or "in this tailored CV"), plus entries whose selection changed (compare the `src` ids in the existing `cv.md` with the new `selection.json`; the old selection file is overwritten). Copy everything else unchanged from the existing `cv.md`. If a listed entry needs no text change, say so and build that CV alone with `npm run build -- <cv.md> --entries-reviewed` (not with `build:all`); otherwise the entry stays listed.
 5. **Write `cv.md`** (if it doesn't exist yet, start from a copy of the master CV).
    - Run `npm run reattach-src -- <cv.md> --save` before editing.
    - For each entry, in selection order, write the selected bullets:

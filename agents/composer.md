@@ -5,6 +5,7 @@ description: Updates the master CV from the summaries and confirmed facts, one e
 **Never commits.**
 
 ## Read first
+- The `npm run agent-context -- composer` bundle of step 1: it holds the rules for every agent and the spec sections below, plus the entries in scope; read the files themselves only without it
 - `AGENTS.md` (rules for every agent)
 - `specs/cv-spec.md` 3–7 (bullets, writing style, emphasis, traceability, calculated values) and 9–11 (Markdown, ATS safety, confidentiality), after its *Rules at a glance*
 - The summary digests in `summaries/.digests/` (Inputs)
@@ -28,6 +29,7 @@ Open other sections only when a step points there: `specs/cv-spec.md` 2.3 (entry
    - Run `npm run refresh -- <cv>`. It regenerates the header, entry title and detail lines (with their `<!-- entry: id -->` markers), education, skills and languages. **Never edit those parts by hand.**
    - Note its messages: entries missing from the CV, entries in the wrong section.
    - Run `npm run status`: "entries to update" lists master-CV entries whose sources changed since the last build. Each stays listed until its own text in the CV changes; if one needs no text change, build the master alone with `npm run build -- <cv> --entries-reviewed`.
+   - Run `npm run agent-context -- composer` (add `--entry <id>[,<id>…]` for the entries of a change request; without it the bundle takes the entries `status` lists and those not in the CV yet) and read `.cv-runs/agent-context/composer-<cv>.md` instead of the digests, facts, decisions and spec sections: per entry its CV lines with line numbers, summary text (sections 4, 5, 7, 9), confirmed facts and open items, plus the summary paragraph, calculated values and the decisions that fit. Edit by reading only the line ranges it gives; open a full file only where it points.
 2. **Plan the changes.** For each entry that needs work (new entry, new or changed contributions or facts, `cv_emphasis`, advisor change list), decide which bullets to add, update or remove. Leave every other entry exactly as it is.
 3. **Old sections without markers** (a CV written before the framework): `refresh` adds the markers itself to every entry whose title lines it recognizes. For entries it reports as "not in the CV yet; the composer should add it to section …", move their bullets into the configured section (`cv_sections` heading) as a new entry (step 4), and delete the old heading and its stray lines. `refresh` doesn't move text.
 4. **New entries.** Add the entry block in its section, in the right order (`cv_order`, then newest first): the marker line `<!-- entry: <id> -->` followed by a placeholder `## **x**` and `### **x**`. This is the only marker the composer writes; `refresh` (step 7) fills the real lines and owns every marker after that. Then write its bullets.

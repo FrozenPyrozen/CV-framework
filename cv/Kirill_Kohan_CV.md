@@ -10,7 +10,7 @@ Kyiv, Ukraine (Remote) | Open to B2B contract or full-time employment | Working 
 
 # **SUMMARY**
 
-Senior software engineer and tech lead with 7+ years of experience building React, React Native, Node.js and TypeScript applications for enterprise resource planning (ERP) SaaS, automotive, healthcare and clinical trials, fintech and blockchain products. <!-- src: calc:years_experience, profile, syspro-saas-erp#1, general-motors-navigation#1, orion-mobile-clinical-ink#1, thermo-fisher-dosimeter#1, itjet-fintech#1, velas-wallet#1 --> Core contributor to a schema-driven React 19 runtime that renders 1,800+ ERP programs without per-screen frontend code. <!-- src: syspro-saas-erp#4.1 --> Led a team of 8 engineers building the HERE SDK map features of an automotive manufacturer's vehicle companion app. <!-- src: general-motors-navigation#4.1, general-motors-navigation#4.3, general-motors-navigation#4.6, calc:team_size_led --> Experienced in micro-frontend architecture, OpenID Connect (OIDC), OpenTelemetry observability, test automation, native Android migrations and generative AI integrations, delivered through architecture-governed specification-driven development (SDD). <!-- src: syspro-saas-erp#4.2, syspro-saas-erp#4.6, syspro-saas-erp#4.7, syspro-saas-erp#4.8, syspro-saas-erp#4.9, orion-mobile-clinical-ink#4.4, designai-jira-plugin#4.1 -->
+Senior software engineer and tech lead with 7+ years of experience building React, React Native, Node.js and TypeScript applications for enterprise resource planning (ERP) software-as-a-service (SaaS), automotive, healthcare and clinical trials, fintech and blockchain products. <!-- src: calc:years_experience, profile, syspro-saas-erp#1, general-motors-navigation#1, orion-mobile-clinical-ink#1, thermo-fisher-dosimeter#1, itjet-fintech#1, velas-wallet#1 --> Core contributor to a schema-driven React 19 runtime that renders 1,800+ ERP programs without per-screen frontend code. <!-- src: syspro-saas-erp#4.1 --> Led a team of 8 engineers building the HERE SDK map features of an automotive manufacturer's vehicle companion app. <!-- src: general-motors-navigation#4.1, general-motors-navigation#4.3, general-motors-navigation#4.6, calc:team_size_led --> Experienced in micro-frontend architecture, OpenID Connect (OIDC), test automation and native Android migrations, delivered through architecture-governed specification-driven development (SDD). <!-- src: syspro-saas-erp#4.2, syspro-saas-erp#4.6, syspro-saas-erp#4.7, syspro-saas-erp#4.9, orion-mobile-clinical-ink#4.4 -->
 
 # **EXPERIENCE**
 
@@ -21,17 +21,17 @@ Senior software engineer and tech lead with 7+ years of experience building Reac
 
 * Delivered the frontend through architecture-governed **specification-driven development (SDD)**, not ad-hoc AI code generation, and helped define it: specification templates, validation and rules for **AI agents** that implement and review code against the specifications across 4 repositories. <!-- src: syspro-saas-erp#4.2, syspro-architecture-scope -->
 
-* Worked with the lead architect on the **platform and solution architecture**: reviewed and co-authored architecture documents and drove open questions to decisions. Owned the **frontend technology stack** (decision record, **ADR**) for the Login micro-frontend and the schema-driven runtime, including OIDC libraries and **Vitest Browser Mode**. <!-- src: syspro-saas-erp#4.3, syspro-architecture-scope, syspro-tech-stack-ownership -->
+* Worked with the lead architect on the **platform and solution architecture**: reviewed and co-authored architecture documents and got open questions decided. Owned the **frontend technology stack** (architecture decision record, **ADR**) for the Login micro-frontend and the schema-driven runtime, including OIDC libraries and **Vitest Browser Mode**. <!-- src: syspro-saas-erp#4.3, syspro-architecture-scope, syspro-tech-stack-ownership -->
 
 * Built core modules of a schema-driven **React 19 / TypeScript** runtime for SYSPRO's **ERP SaaS** modernization platform (25+ person program) that renders **1,800+ ERP programs** from data-model definitions, cutting screen delivery from days to hours, with no per-screen frontend code. <!-- src: syspro-saas-erp#4.1, syspro-team-size, syspro-speed -->
 
-* Authored or maintained ~17 component specifications and validated each against the architecture before and after implementation, with AI agents flagging rule violations and specification-to-code drift for human decision. This reduced review cycles; deferred issues went to a **technical-debt register**. <!-- src: syspro-saas-erp#4.2, syspro-saas-erp#4.12, syspro-review-cycles -->
+* Authored or maintained ~17 component specifications and validated each against the architecture before and after implementation, with AI agents flagging rule violations and mismatches between code and specification for human decision. This reduced review cycles; deferred issues went to a **technical-debt register**. <!-- src: syspro-saas-erp#4.2, syspro-saas-erp#4.12, syspro-review-cycles -->
 
-* Implemented the runtime's **KendoReact** rendering handlers (forms, date fields, search grids with filtering and sorting, smart-tag lookups, predictive search) and the view orchestration layer with **XState** and **Zustand** (session lifecycle, navigation, modal overlays). <!-- src: syspro-saas-erp#4.4, syspro-saas-erp#4.5 -->
+* Implemented the runtime's **KendoReact** rendering handlers (forms, date fields, search grids with filtering and sorting, lookups and search-as-you-type) and the view orchestration layer with **XState** and **Zustand** (session lifecycle, navigation, modal overlays). <!-- src: syspro-saas-erp#4.4, syspro-saas-erp#4.5 -->
 
-* Built the **Login micro-frontend** from scratch (sign-in and password-reset flows, form components, schema-based validation, typography per Web Content Accessibility Guidelines (**WCAG**), **Storybook**) and integrated **OpenID Connect (OIDC)** authentication into it and the host app with **oidc-client-ts** and **react-oidc-context** in a **zero-trust**, independently deployable **micro-frontend architecture**. <!-- src: syspro-saas-erp#4.6, syspro-saas-erp#4.7 -->
+* Built the **Login micro-frontend** from scratch (sign-in and password-reset flows, form components, schema-based validation, typography per Web Content Accessibility Guidelines (**WCAG**), **Storybook**) and integrated **OpenID Connect (OIDC)** authentication into it and the host app with **oidc-client-ts** and **react-oidc-context** in a secure, independently released **micro-frontend architecture**. <!-- src: syspro-saas-erp#4.6, syspro-saas-erp#4.7 -->
 
-* Designed and built a browser telemetry module on **OpenTelemetry** from scratch: event bus, event taxonomy, payload contracts, an OpenTelemetry Protocol (OTLP) exporter and a redaction stage that strips personally identifiable information (**PII**) before export. <!-- src: syspro-saas-erp#4.8 -->
+* Designed and built a browser telemetry module on **OpenTelemetry** from scratch that records app events and traces and removes personally identifiable information (**PII**) before sending them. <!-- src: syspro-saas-erp#4.8 -->
 
 * Covered implementations with **Vitest** and **Vitest Browser Mode** (**Playwright** provider) tests, maintained a **Node.js** mock backend and the **monorepo** tooling (npm workspaces, ESLint, Prettier, **Husky**, small **Azure Pipelines** changes) and fixed schema-to-TypeScript **code generation** bugs, proposing improvements the lead agreed to add. <!-- src: syspro-saas-erp#4.9, syspro-saas-erp#4.10, syspro-saas-erp#4.11, syspro-codegen-fixes -->
 
@@ -54,7 +54,7 @@ Senior software engineer and tech lead with 7+ years of experience building Reac
 
 * Defined the unit-testing strategy that reached 95% coverage and introduced an **Agile** delivery process, which reduced production bugs. <!-- src: general-motors-navigation#4.5 -->
 
-* Implemented in-car navigation features with the **HERE HNav / HNod SDK**, including route-deviation handling on the **truck navigation app for HERE Technologies**, and a redesigned search UI. <!-- src: general-motors-navigation#4.6 -->
+* Implemented in-car navigation features with the **HERE navigation SDK**, including route-deviation handling on the **truck navigation app for HERE Technologies**, and a redesigned search UI. <!-- src: general-motors-navigation#4.6 -->
 
 * Built the **car navigation PoC** (proof of concept), combining search, routing, guidance and a **voice AI assistant** that builds routes and finds places from speech. <!-- src: general-motors-navigation#4.7 -->
 
@@ -69,7 +69,7 @@ Senior software engineer and tech lead with 7+ years of experience building Reac
 
 * Developed the Velas **blockchain** wallet for web, mobile and desktop using **React, React Native, Node.js, TypeScript, MobX and Web3.js**. <!-- src: velas-wallet#4.1 -->
 
-* Cut staking page loading from 2 minutes to 5 seconds and made it use 5x less mobile battery by moving filtering to the server and adding a blockchain-node remote procedure call (RPC) fallback. <!-- src: velas-wallet#4.2 -->
+* Cut staking page loading from 2 minutes to 5 seconds and made it use 5x less mobile battery by moving filtering to the server and adding a backup blockchain connection (remote procedure call, RPC). <!-- src: velas-wallet#4.2 -->
 
 * Added automatic **Web3 provider** failover for testnet and mainnet tokens, switching when one was slow or unreachable. <!-- src: velas-wallet#4.3 -->
 
@@ -79,7 +79,7 @@ Senior software engineer and tech lead with 7+ years of experience building Reac
 
 * Redesigned the staking-rewards calculation on the **Node.js** backend for stability and speed; user engagement grew 4x afterward. <!-- src: velas-wallet#4.6 -->
 
-* Fixed a **reverse tabnabbing** vulnerability across several Velas web projects. <!-- src: velas-wallet#4.7 -->
+* Fixed a **reverse tabnabbing** vulnerability (tab hijacking) across several Velas web projects. <!-- src: velas-wallet#4.7 -->
 
 * Built a new cross-platform wallet in **React Native Web** from scratch, including the architecture for managing tokens and assets. <!-- src: velas-wallet#4.8 -->
 
@@ -124,19 +124,19 @@ Senior software engineer and tech lead with 7+ years of experience building Reac
 
 * Built a reusable **React Native Web** signup flow for Aspiration, a fintech product (Forbes top 10), shared by its native mobile and web apps; it made building new flows 3x faster. <!-- src: itjet-fintech#4.1 -->
 
-* Built the Wink social app from scratch in **React Native** (Snapchat and phone sign-in, **Redux Thunk**, **push notifications**, **CI/CD**, image optimization on a **Node.js** backend); it reached more than 5 million registered users. <!-- src: itjet-fintech#4.8, itjet-fintech#5 -->
+* Built the Wink social app from scratch in **React Native** (Snapchat and phone sign-in, **Redux Thunk**, **push notifications**, continuous integration and delivery (**CI/CD**), image optimization on a **Node.js** backend); it reached more than 5 million registered users. <!-- src: itjet-fintech#4.8, itjet-fintech#5 -->
 
 * Integrated **A/B testing** for Aspiration so its marketing team could analyze user engagement. <!-- src: itjet-fintech#4.2 -->
 
-* Doubled delivery speed for Aspiration by introducing **TypeScript** and an **Atomic Design** component library (**design system**) in **Styled Components** with automated tests (**Puppeteer, Jest, Cucumber**), and set up **CI/CD** (Bitbucket Pipelines, AWS EC2 / S3) for RegiStart. <!-- src: itjet-fintech#4.3, itjet-fintech#5 -->
+* Doubled delivery speed for Aspiration by introducing **TypeScript** and an **Atomic Design** component library (**design system**) in **Styled Components** with automated tests (**Puppeteer, Jest, Cucumber**). <!-- src: itjet-fintech#4.3, itjet-fintech#5 -->
 
 * Doubled database performance for Fused by migrating **PostgreSQL** from EC2 to **AWS RDS** and optimizing slow SQL queries. <!-- src: itjet-fintech#4.4 -->
 
-* Developed the RegiStart voter-registration minimum viable product (MVP) from sketches: a **React** and **Material UI** frontend, a **Node.js** backend with **Sequelize** and **PostgreSQL** on **AWS RDS** behind **PM2** and **Nginx**, **node-pg-migrate** migrations, and an algorithm that distributes students among organizers. <!-- src: itjet-fintech#4.14, itjet-fintech#4.5, itjet-fintech#5 -->
+* Developed the RegiStart voter-registration minimum viable product (MVP) from sketches: a **React** and **Material UI** frontend, a **Node.js** backend with **Sequelize** and **PostgreSQL** on **AWS RDS** behind **PM2** and **Nginx**, **node-pg-migrate** migrations, Bitbucket Pipelines **CI/CD** to EC2/S3, and an algorithm that distributes students among organizers. <!-- src: itjet-fintech#4.14, itjet-fintech#4.5, itjet-fintech#4.3, itjet-fintech#5 -->
 
 * Implemented the automated monthly subscription flow for Fused with **Stripe**, **Node.js REST APIs** (**Express**, **Sequelize**), **React** and **React Native**. <!-- src: itjet-fintech#4.6 -->
 
-* Delivered web features for Aspiration with **Next.js** with server-side rendering (SSR) and **GraphQL**, and containerized Fused and RegiStart services with **Docker**. <!-- src: itjet-fintech#4.7 -->
+* Delivered web features for Aspiration in **Next.js** with server-side rendering (SSR) and **GraphQL**, and containerized Fused and RegiStart services with **Docker**. <!-- src: itjet-fintech#4.7 -->
 
 <!-- entry: admasters-ecommerce -->
 ## **Full-Stack Engineer and Team Leader**
@@ -168,7 +168,7 @@ Part-time contract and consulting work, alongside full-time roles
 
 * Worked with the team on upgrading the app to **React Native 0.76** and **Expo SDK 52** to improve app performance. <!-- src: orion-mobile-clinical-ink#4.7 -->
 
-* Migrated the native Android app to **Android 14 (SDK 34)**: Gradle 8, Java 17, exact-alarm and PendingIntent behavior changes, and **Jenkins** CI build fixes. <!-- src: orion-mobile-clinical-ink#4.4 -->
+* Migrated the native Android app to **Android 14 (SDK 34)**: Gradle 8, Java 17, alarm and notification changes, and **Jenkins** CI build fixes. <!-- src: orion-mobile-clinical-ink#4.4 -->
 
 * Upgraded the **SQLCipher** encrypted database to meet Google Play requirements and rotated **SSL certificate pinning** for a backend certificate change. <!-- src: orion-mobile-clinical-ink#4.5 -->
 
@@ -245,7 +245,7 @@ National Aviation University | Ukraine | 2016 - 2020
 
 **AI:** Generative AI integration, Model Context Protocol (MCP), AI agent governance (SDD), AI-assisted development
 
-**Domain and SDKs:** ERP, Clinical trials (eCOA), HERE SDK (HNav, HNod, HERE API), IoT, Bluetooth Low Energy (BLE), react-native-ble-plx, MQTT, Blockchain, Web3.js, Atlassian Jira Forge (UI Kit, Custom UI)
+**Domain and SDKs:** ERP, Clinical trials (electronic clinical outcome assessment, eCOA), HERE SDK (HNav, HNod, HERE API), IoT, Bluetooth Low Energy (BLE), react-native-ble-plx, MQTT, Blockchain, Web3.js, Atlassian Jira Forge (UI Kit, Custom UI)
 
 **Leadership and Methodologies:** Team leadership (up to 8 engineers), Mentoring, Code review, System design, Software architecture, Architecture decision records (ADR), Technology stack selection, Technical interviewing, Technical audits, Effort estimation, Presales, Agile, Specification-driven development (SDD), Figma, Jira
 <!-- /generated:skills -->

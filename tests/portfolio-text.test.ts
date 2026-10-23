@@ -91,7 +91,7 @@ test("portfolio_projects: one summary gives several pages; screenshots go to the
   const fused = md.slice(md.indexOf("<!-- project: itjet-fintech/fused -->"), md.indexOf("<!-- project: itjet-fintech/wink -->"));
   assert.match(fused, /image30\.png/);
   assert.doesNotMatch(md.slice(0, md.indexOf("<!-- project: itjet-fintech/fused -->")), /image30\.png/);
-  assert.match(md, /## \*\*Fused \(web, mobile and backend\)\*\*/);
+  assert.match(md, /## \*\*Fused \(React Native, React, Node\.js\)\*\*/);
   edit(dir, "summaries/itjet-fintech.md", "  project: fused\n", "  project: nope\n");
   assert.match(run("validate.ts", dir).out, /project "nope" isn't in portfolio_projects/);
 });

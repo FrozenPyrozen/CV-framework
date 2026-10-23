@@ -134,7 +134,7 @@ categories:
     label: Domain and SDKs
     items:
       - { name: ERP, tags: [erp] }
-      - { name: Clinical trials (eCOA), tags: [healthcare] }
+      - { name: "Clinical trials (electronic clinical outcome assessment, eCOA)", tags: [healthcare] }
       - { name: "HERE SDK (HNav, HNod, HERE API)", tags: [here-sdk, automotive] }
       - { name: IoT, tags: [iot] }
       - { name: Bluetooth Low Energy (BLE), tags: [ble, iot] }

@@ -43,6 +43,7 @@
     "index": "tsx scripts/index.ts",
     "log-application": "tsx scripts/log-application.ts",
     "review-context": "tsx scripts/review-context.ts",
+    "agent-context": "tsx scripts/agent-context.ts",
     "doc-check": "tsx scripts/doc-check.ts",
     "verify": "tsx scripts/verify.ts"
   },

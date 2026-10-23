@@ -22,7 +22,7 @@ portfolio_projects:                # one page per client, as on the published po
   - { id: aspiration-signup, title: "Aspiration signup (React Native Web)" }
   - { id: aspiration-web, title: "Aspiration banking web app (React)" }
   - { id: registart, title: "RegiStart (React web, Node.js backend, CI/CD)" }
-  - { id: fused, title: "Fused (web, mobile and backend)" }
+  - { id: fused, title: "Fused (React Native, React, Node.js)" }
   - { id: wink, title: "Wink (React Native)" }
   - { id: golfuture, title: "Golfuture (React Native)" }
   - { id: oroscopo, title: "Oroscopo (React Native)" }

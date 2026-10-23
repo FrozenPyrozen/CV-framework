@@ -10,7 +10,7 @@ Kyiv, Ukraine (Remote) | Open to B2B contract or full-time employment | Working 
 
 # **SUMMARY**
 
-Senior React engineer and frontend tech lead with 7+ years of experience building React, React Native and TypeScript applications for enterprise resource planning (ERP) SaaS, automotive, healthcare, fintech and blockchain products. <!-- src: calc:years_experience, profile, syspro-saas-erp#1, general-motors-navigation#1, thermo-fisher-dosimeter#1, itjet-fintech#1, velas-wallet#1 --> Built core modules of a schema-driven React 19 runtime that renders 1,800+ ERP programs from data-model definitions inside a zero-trust micro-frontend architecture. <!-- src: syspro-saas-erp#4.1 --> Delivered it through architecture-governed specification-driven development (SDD), working with the lead architect on platform architecture and owning the frontend technology stack. <!-- src: syspro-saas-erp#4.2, syspro-architecture-scope, syspro-tech-stack-ownership --> Led a team of 8 engineers on a React Native automotive app, setting coding standards, running code reviews and owning its modular architecture. <!-- src: general-motors-navigation#4.1, general-motors-navigation#4.2, general-motors-navigation#4.4, calc:team_size_led --> Experienced in OpenID Connect (OIDC) authentication, XState and Zustand state management, OpenTelemetry observability and component testing with Vitest. <!-- src: syspro-saas-erp#4.7, syspro-saas-erp#4.5, syspro-saas-erp#4.8, syspro-saas-erp#4.9 -->
+Senior React engineer and frontend tech lead with 7+ years of experience building React, React Native and TypeScript applications for enterprise resource planning (ERP) software-as-a-service (SaaS), automotive, healthcare, fintech and blockchain products. <!-- src: calc:years_experience, profile, syspro-saas-erp#1, general-motors-navigation#1, thermo-fisher-dosimeter#1, itjet-fintech#1, velas-wallet#1 --> Built core modules of a schema-driven React 19 runtime that renders 1,800+ ERP programs from data-model definitions inside a secure micro-frontend architecture. <!-- src: syspro-saas-erp#4.1 --> Delivered it through architecture-governed specification-driven development (SDD), working with the lead architect on platform architecture and owning the frontend technology stack. <!-- src: syspro-saas-erp#4.2, syspro-architecture-scope, syspro-tech-stack-ownership --> Led a team of 8 engineers on a React Native automotive app, setting coding standards, running code reviews and owning its modular architecture. <!-- src: general-motors-navigation#4.1, general-motors-navigation#4.2, general-motors-navigation#4.4, calc:team_size_led --> Experienced in OpenID Connect (OIDC) authentication, XState and Zustand state management, OpenTelemetry observability and component testing with Vitest. <!-- src: syspro-saas-erp#4.7, syspro-saas-erp#4.5, syspro-saas-erp#4.8, syspro-saas-erp#4.9 -->
 
 # **EXPERIENCE**
 
@@ -23,15 +23,15 @@ Senior React engineer and frontend tech lead with 7+ years of experience buildin
 
 * Delivered the frontend through architecture-governed **specification-driven development (SDD)**, not ad-hoc AI code generation, and helped define it: specification templates, validation and rules for **AI agents** that implement and review code against the specifications across 4 repositories. <!-- src: syspro-saas-erp#4.2, syspro-architecture-scope -->
 
-* Worked with the lead architect on the **platform and solution architecture**: reviewed and co-authored architecture documents and drove open questions to decisions. Owned the **frontend technology stack** for the Login micro-frontend and the schema-driven runtime, including OIDC libraries and the move to **Vitest Browser Mode**. <!-- src: syspro-saas-erp#4.3, syspro-architecture-scope, syspro-tech-stack-ownership -->
+* Worked with the lead architect on the **platform and solution architecture**: reviewed and co-authored architecture documents and got open questions decided. Owned the **frontend technology stack** (architecture decision record, **ADR**) for the Login micro-frontend and the schema-driven runtime, including OIDC libraries and **Vitest Browser Mode**. <!-- src: syspro-saas-erp#4.3, syspro-architecture-scope, syspro-tech-stack-ownership -->
 
-* Designed and built a browser telemetry module on **OpenTelemetry** from scratch: event bus, event taxonomy, payload contracts, an OpenTelemetry Protocol (OTLP) exporter and a redaction stage that strips personally identifiable information (PII) before export. <!-- src: syspro-saas-erp#4.8 -->
+* Designed and built a browser telemetry module on **OpenTelemetry** from scratch that records app events and traces and removes personally identifiable information (**PII**) before sending them. <!-- src: syspro-saas-erp#4.8 -->
 
-* Implemented the runtime's view orchestration layer with **XState** state machines and a **Zustand** global store, each part against its own specification: view session lifecycle, main navigation, context-aware related-program navigation, modal overlays that close without losing the underlying view's state and runtime configuration. <!-- src: syspro-saas-erp#4.5 -->
+* Implemented the part of the runtime that manages open screens with **XState** state machines and a **Zustand** global store, each part against its own specification: session lifecycle, navigation between related screens and modal overlays that keep the screen underneath intact. <!-- src: syspro-saas-erp#4.5 -->
 
 * Built the **Login micro-frontend** from scratch in **React 19** and **TypeScript**: sign-in and password-reset flows, schema-based validation, **CSS Modules**, Web Content Accessibility Guidelines (**WCAG**) typography and **Storybook**. It is the only app that handles a user's password, so no other app ever sees it. <!-- src: syspro-saas-erp#4.6 -->
 
-* Integrated **OpenID Connect (OIDC)** authentication into the Login micro-frontend and the host application using **oidc-client-ts** and **react-oidc-context**, in a **zero-trust**, independently deployable **micro-frontend architecture** where apps never import from each other. <!-- src: syspro-saas-erp#4.7, syspro-saas-erp#4.1 -->
+* Integrated **OpenID Connect (OIDC)** authentication into the Login micro-frontend and the host application using **oidc-client-ts** and **react-oidc-context**, in a secure, independently released **micro-frontend architecture** where apps never import from each other. <!-- src: syspro-saas-erp#4.7, syspro-saas-erp#4.1 -->
 
 * Stack: **React 19, TypeScript, Zustand, XState, TanStack Router, TanStack Query, WebSockets, Vite, KendoReact, SCSS / CSS Modules, OpenTelemetry, Vitest, Playwright, Storybook, Docker, Azure DevOps**. <!-- src: syspro-saas-erp#5 -->
 
@@ -65,7 +65,7 @@ Senior React engineer and frontend tech lead with 7+ years of experience buildin
 
 * Built a new cross-platform wallet in **React Native Web** from scratch, including the architecture for managing tokens and assets. <!-- src: velas-wallet#4.8 -->
 
-* Cut staking page loading from 2 minutes to 5 seconds and made it use 5x less mobile battery by moving filtering to the server and adding a blockchain-node remote procedure call (RPC) fallback. <!-- src: velas-wallet#4.2 -->
+* Cut staking page loading from 2 minutes to 5 seconds and made it use 5x less mobile battery by moving filtering to the server and adding a backup blockchain connection (remote procedure call, RPC). <!-- src: velas-wallet#4.2 -->
 
 * Redesigned the staking-rewards calculation on the **Node.js** backend for stability and speed; user engagement grew 4x afterward. <!-- src: velas-wallet#4.6 -->
 
@@ -96,9 +96,9 @@ Senior React engineer and frontend tech lead with 7+ years of experience buildin
 
 ### **Itjet | Kyiv, Ukraine (Hybrid) | August 2019 - November 2020**
 
-* Built the Wink social app from scratch in **React Native** (Snapchat and phone sign-in, **push notifications**, **CI/CD**, image optimization on a **Node.js** backend); it reached more than 5 million registered users. <!-- src: itjet-fintech#4.8 -->
+* Built the Wink social app from scratch in **React Native** (Snapchat and phone sign-in, **push notifications**, continuous integration and delivery (**CI/CD**), image optimization on a **Node.js** backend); it reached more than 5 million registered users. <!-- src: itjet-fintech#4.8 -->
 
-* Doubled delivery speed for Aspiration by introducing **TypeScript** and an **Atomic Design** component library (**design system**) with automated tests (**Puppeteer, Jest, Cucumber**), and set up **CI/CD** (Bitbucket Pipelines, AWS EC2 / S3) for RegiStart. <!-- src: itjet-fintech#4.3 -->
+* Doubled delivery speed for Aspiration by introducing **TypeScript** and an **Atomic Design** component library (**design system**) with automated tests (**Puppeteer, Jest, Cucumber**). <!-- src: itjet-fintech#4.3 -->
 
 * Built a new mobile-first **React** banking web flow for Aspiration from scratch from the designs, with reusable **Atomic Design** components and a **Plop** generator that scaffolds new components. <!-- src: itjet-fintech#4.13 -->
 
@@ -199,7 +199,7 @@ National Aviation University | Ukraine | 2016 - 2020
 
 **Leadership and Methodologies:** Team leadership (up to 8 engineers), Mentoring, Code review, System design, Software architecture, Architecture decision records (ADR), Technology stack selection, Technical interviewing, Technical audits, Effort estimation, Presales, Agile, Specification-driven development (SDD), Figma, Jira
 
-**Domain and SDKs:** ERP, Clinical trials (eCOA), HERE SDK (HNav, HNod, HERE API), IoT, Bluetooth Low Energy (BLE), react-native-ble-plx, MQTT, Blockchain, Web3.js, Atlassian Jira Forge (UI Kit, Custom UI)
+**Domain and SDKs:** ERP, Clinical trials (electronic clinical outcome assessment, eCOA), HERE SDK (HNav, HNod, HERE API), IoT, Bluetooth Low Energy (BLE), react-native-ble-plx, MQTT, Blockchain, Web3.js, Atlassian Jira Forge (UI Kit, Custom UI)
 <!-- /generated:skills -->
 
 # **LANGUAGES**

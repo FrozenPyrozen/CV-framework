@@ -35,8 +35,8 @@ interface Options { cv?: string; rubric: string; market?: string; jd?: string; p
 
 const rel = (p: string) => relative(rootPath(), p);
 const read = (p: string) => readFileSync(p, "utf8");
-const esc = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-const has = (text: string, phrase: string) => new RegExp(`(?<![\\w-])${esc(phrase)}(?![\\w-])`, "i").test(text);
+export const esc = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+export const has = (text: string, phrase: string) => new RegExp(`(?<![\\w-])${esc(phrase)}(?![\\w-])`, "i").test(text);
 
 // A rubric file without the parts that don't apply: its *Portfolio mode* section outside --portfolio.
 function rubricText(rubric: Rubric, portfolio: boolean): string {
@@ -45,7 +45,7 @@ function rubricText(rubric: Rubric, portfolio: boolean): string {
 }
 
 // The rules every agent follows (AGENTS.md), so a reviewer needn't read the whole entry point.
-function agentRules(): string {
+export function agentRules(): string {
   const file = rootPath("AGENTS.md");
   const rules = existsSync(file) ? read(file).match(/^## Rules for every agent\n([\s\S]*?)(?=^## )/m)?.[1].trim() : undefined;
   return rules ?? "Could not extract the rules: read `AGENTS.md` (rules for every agent) before reviewing.";
@@ -60,7 +60,7 @@ function reportFormat(): string {
 
 // The CV with its line numbers, so findings can cite file:line. Comments are dropped, except entry markers and,
 // when `keepSrc`, the src comments. Lines left empty are skipped.
-function numberedCv(text: string, keepSrc: boolean): string {
+export function numberedCv(text: string, keepSrc: boolean): string {
   const out: string[] = [];
   text.split("\n").forEach((line, i) => {
     let l = line.replace(/<!--[\s\S]*?-->/g, (c) => (/^<!-- entry: /.test(c) || (keepSrc && /^<!--\s*(src|project):/.test(c)) ? c : ""));
@@ -161,7 +161,7 @@ function marketFor(file: string, wanted: string | undefined): Market {
   return m;
 }
 
-const yamlBlock = (v: unknown) => "```yaml\n" + stringify(v, { lineWidth: 0 }).trim() + "\n```";
+export const yamlBlock = (v: unknown) => "```yaml\n" + stringify(v, { lineWidth: 0 }).trim() + "\n```";
 
 // A digest cut to what fact-check compares: the entry line fields, the contributions the CV cites (title and
 // result), and the metrics. Cited confirmed facts are listed once, in their own section.

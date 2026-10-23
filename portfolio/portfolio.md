@@ -37,7 +37,7 @@ React 19, TypeScript, Vite, KendoReact, TanStack Router, Zustand, XState, OpenID
 <!-- project: general-motors-navigation/companion -->
 
 <!-- generated:project-general-motors-navigation/companion -->
-## **Automotive car management app for General Motors (React Native)**
+## **Car management app for General Motors (React Native)**
 <!-- /generated:project-general-motors-navigation/companion -->
 
 The car management app lets owners control their car from their phone, with features such as starting the engine remotely and checking tire pressure. <!-- src: doc:portfolio-2025-09 --> It serves gas and electric vehicles across the Chevrolet, Buick, GMC and Cadillac brands. <!-- src: general-motors-navigation#1 -->
@@ -56,7 +56,7 @@ The car management app lets owners control their car from their phone, with feat
 
 I led the map team of 8 developers (6 React Native, 1 iOS, 1 Android) for a large, complex, high-load app for managing gas and electric cars, built on React Native and the HERE SDK. <!-- src: doc:portfolio-2025-09 --> The team built a reusable map provider module (map display, search, a bottom drawer, markers and charging stations) as a React Native micro-frontend that is integrated into several company products. <!-- src: doc:portfolio-2025-09 --> I coordinated dependencies with the UI team, the backend teams (EV and gas vehicle services, location-based services) and the HERE SDK and HERE API teams: I set scope, deadlines and priorities, led planning, removed blockers, created the integration strategy and set up test automation. <!-- src: doc:portfolio-2025-09 -->
 
-I created and documented the process for delivering and testing our apps inside the parent app (parent app, reusable feature app, map provider app). <!-- src: doc:portfolio-2025-09 --> At the client's request, I changed the architecture to migrate the reusable feature app into the parent app, and planned moving its logic and components to the parent app's patterns (clean architecture, domain-driven design, abstract services, pure components). <!-- src: doc:portfolio-2025-09 --> During the migration, I fixed weak points in the reusable feature's architecture to speed up integration and development: map instances no longer share a global ref, the map provider's global event listener, which caused bugs when several instances were running, became one listener per map, and the map logic moved from the reusable feature into the map provider. <!-- src: doc:portfolio-2025-09 --> I also designed the architecture of a complex search feature reused on different screens, and normalized the state structure that stores markers and search results. <!-- src: doc:portfolio-2025-09 -->
+I created and documented the process for delivering and testing our apps inside the parent app (parent app, reusable feature app, map provider app). <!-- src: doc:portfolio-2025-09 --> At the client's request, I changed the architecture to migrate the reusable feature app into the parent app, and planned moving its logic and components to the parent app's patterns (clean architecture, domain-driven design, abstract services, pure components). <!-- src: doc:portfolio-2025-09 --> During the migration, I fixed weak points in the reusable feature's architecture to speed up integration and development: map instances no longer share a global ref. <!-- src: doc:portfolio-2025-09 --> The map provider's global event listener, which caused bugs when several instances were running, became one listener per map. <!-- src: doc:portfolio-2025-09 --> The map logic also moved from the reusable feature into the map provider. <!-- src: doc:portfolio-2025-09 --> I also designed the architecture of a complex search feature reused on different screens, and normalized the state structure that stores markers and search results. <!-- src: doc:portfolio-2025-09 -->
 
 **Technologies and frameworks**
 
@@ -68,7 +68,7 @@ React Native, HERE SDK, HERE API, Redux Toolkit, TypeScript, React Hooks, Git, A
 ## **Automotive navigation app under NDA for HERE Technologies (React Native, React, Node.js, Android)**
 <!-- /generated:project-general-motors-navigation/navigation -->
 
-The customer works in package delivery and builds on HERE solutions (HNod, HNav, HERE SDK, HERE API). <!-- src: doc:portfolio-2025-09 --> I worked on a customizable Android app built with JavaScript tools (Node.js, React Native, React) and Android tools (Kotlin, Java), connected through gRPC. <!-- src: doc:portfolio-2025-09 --> It is a navigation app for large-truck drivers, installed on the driver's tablet and based on HERE maps. <!-- src: doc:portfolio-2025-09 --> Drivers see the route to their destination and set their truck's parameters, such as width and height, to see the restrictions that apply to it. <!-- src: doc:portfolio-2025-09 --> The app can be extended with custom logic and features through service packages connected to the HERE bundler (gRPC), which add menu items, screens, pop-ups and routing logic with React Native, React and Node.js. <!-- src: doc:portfolio-2025-09 --> In short, the project consists of the HNod library, service packages and an Android native or web app. <!-- src: doc:portfolio-2025-09 -->
+HERE's customer, a package delivery company, builds on HERE solutions (HNod, HNav, HERE SDK, HERE API). <!-- src: doc:portfolio-2025-09 --> I worked on a customizable Android app built with JavaScript tools (Node.js, React Native, React) and Android tools (Kotlin, Java), connected through gRPC. <!-- src: doc:portfolio-2025-09 --> It is a navigation app for large-truck drivers, installed on the driver's tablet and based on HERE maps. <!-- src: doc:portfolio-2025-09 --> Drivers see the route to their destination and set their truck's parameters, such as width and height, to see the restrictions that apply to it. <!-- src: doc:portfolio-2025-09 --> The app can be extended with custom logic and features through service packages connected to the HERE bundler (gRPC), which add menu items, screens, pop-ups and routing logic with React Native, React and Node.js. <!-- src: doc:portfolio-2025-09 --> In short, the project consists of the HNod library, service packages and an Android native or web app. <!-- src: doc:portfolio-2025-09 -->
 
 <!-- generated:media-general-motors-navigation/navigation -->
 ![Navigation app, route view](../sources/media/portfolio-2025-04/image2.jpeg)
@@ -90,7 +90,7 @@ JavaScript, TypeScript, Node.js, gRPC, React Native, React, custom HERE solution
 ## **Car navigation PoC under NDA (Node.js, React)**
 <!-- /generated:project-general-motors-navigation/poc -->
 
-This proof of concept (PoC) is an automotive app that showed the possibilities of the latest HERE technology in Volkswagen AG cars (Audi, Porsche, Volkswagen and others) and integrated the latest features: the Hugo AI assistant, Level 3 automated driving (L3) interaction, advanced driver-assistance systems (ADAS), the Kurviger route planner, the operational design domain (ODD), custom themes, layout support and more. <!-- src: doc:portfolio-2025-09 -->
+This proof of concept (PoC) is an automotive app that showed the possibilities of new HERE technology in Volkswagen AG cars (Audi, Porsche, Volkswagen and others) and integrated features such as the Hugo AI assistant, Level 3 automated driving (L3) interaction, advanced driver-assistance systems (ADAS), the Kurviger route planner, the operational design domain (ODD), custom themes and layout support. <!-- src: doc:portfolio-2025-09 -->
 
 <!-- generated:media-general-motors-navigation/poc -->
 ![Car navigation PoC on the head unit](../sources/media/portfolio-2025-09/p04-1.png)
@@ -132,7 +132,7 @@ React Native Web, React Native, Web3, MobX, TypeScript, GitHub Actions, React Ho
 ## **Jira design generation plugin under NDA (Node.js, React)**
 <!-- /generated:project-designai-jira-plugin -->
 
-This generative AI application speeds up designers' work, letting them quickly create minimum viable product (MVP), proof-of-concept (PoC) and presales designs for customers. <!-- src: doc:portfolio-2025-09 --> It integrates with the client's Jira board. <!-- src: doc:portfolio-2025-09 --> Users describe their requirements in a text prompt, provide a URL and upload photos or style schemas. <!-- src: doc:portfolio-2025-09 --> The system then generates a design (for example, in Figma format), creates a Jira subtask that tracks the request and returns the finished design for the early design and project-planning phases. <!-- src: doc:portfolio-2025-09, designai-jira-plugin#2 -->
+This generative AI application speeds up designers' work, letting them quickly create presales designs for customers, as well as designs for a minimum viable product (MVP) or a proof of concept (PoC). <!-- src: doc:portfolio-2025-09 --> It integrates with the client's Jira board. <!-- src: doc:portfolio-2025-09 --> Users describe their requirements in a text prompt, provide a URL and upload photos or style schemas. <!-- src: doc:portfolio-2025-09 --> The system then generates a design (for example, in Figma format), creates a Jira subtask that tracks the request and returns the finished design for the early design and project-planning phases. <!-- src: doc:portfolio-2025-09, designai-jira-plugin#2 -->
 
 <!-- generated:media-designai-jira-plugin -->
 ![The plugin's design request form with an attached wireframe (plugin name covered)](assets/designai-jira-plugin/form-image-attached.png)
@@ -197,7 +197,7 @@ React Native, TypeScript, React Navigation, React Native Navigation, React Hooks
 <!-- project: thermo-fisher-dosimeter -->
 
 <!-- generated:project-thermo-fisher-dosimeter -->
-## **IoT app with dosimeter under NDA (React Native)**
+## **Dosimeter IoT app under NDA (React Native)**
 <!-- /generated:project-thermo-fisher-dosimeter -->
 
 The app helps medical staff who work with radiation avoid overexposure. <!-- src: doc:portfolio-2025-09, thermo-fisher-dosimeter#1 --> It has three roles (user, admin and superuser), OAuth 2.0 login, 10 screens, and REST API, MQTT and Bluetooth communication. <!-- src: doc:portfolio-2025-09, dosimeter-10-screens --> The app reads data from radiation dosimeters over Bluetooth, sends it to an IoT server over MQTT, and can sync many dosimeters at the same time. <!-- src: doc:portfolio-2025-09 --> A main menu with swipe navigation and bottom pagination leads to the main screen, which shows sync progress, how many dosimeters synced with errors, and the sync time. <!-- src: doc:portfolio-2025-09 --> Another screen shows the details of the current sync, or of the last one when no sync is running, and the last screen holds the history of all syncs, filterable in a full-screen modal by date range, wearer, errors and ID. <!-- src: doc:portfolio-2025-09 --> The history is stored in a local Realm database, and all secure values in the keychain. <!-- src: doc:portfolio-2025-09 --> The app can also update the dosimeter firmware, and menus on the left and right lead to the Profile, Settings and Logs pages (Logs for superusers only). <!-- src: doc:portfolio-2025-09 -->
@@ -232,7 +232,7 @@ Aspiration is a large company that develops a banking app ecosystem for customer
 
 **Responsibilities**
 
-I fixed and refactored the existing signup flow, added new screens and components, and helped native mobile developers integrate React Native into the native apps. <!-- src: doc:portfolio-2025-09 --> I worked with the US developers and product managers, brought solution proposals for the business to project meetings, and reviewed code. <!-- src: doc:portfolio-2025-09 --> I added the API connection logic, covered code with unit tests, created an end-to-end test utility and applied component-driven development (CDD) across the project. <!-- src: doc:portfolio-2025-09 --> I integrated Plaid, Google Places and reCAPTCHA v3, linked React Native libraries manually, wrote a pull request style guide and documentation for easier onboarding, added A/B tests and suggested user experience improvements. <!-- src: doc:portfolio-2025-09 -->
+I fixed and refactored the existing signup flow, added new screens and components, and helped native mobile developers integrate React Native into the native apps. <!-- src: doc:portfolio-2025-09 --> I worked with the US developers and product managers, brought solution proposals for the business to project meetings, and took part in code reviews. <!-- src: doc:portfolio-2025-09 --> I added the API connection logic, covered code with unit tests, created an end-to-end test utility and applied component-driven development (CDD) across the project. <!-- src: doc:portfolio-2025-09 --> I integrated Plaid, Google Places and reCAPTCHA v3, linked React Native libraries manually, wrote a pull request style guide and documentation for easier onboarding, added A/B tests and suggested user experience improvements. <!-- src: doc:portfolio-2025-09 -->
 
 **Technologies and frameworks**
 
@@ -268,7 +268,7 @@ React, Apollo GraphQL, React Hooks, Git, Plaid, Jest, Next.js, Storybook, ESLint
 ## **RegiStart (React web, Node.js backend, CI/CD)**
 <!-- /generated:project-itjet-fintech/registart -->
 
-RegiStart is a nonprofit startup that uses social networks and technology to systematically increase voter registration among 18-year-olds. <!-- src: doc:portfolio-2025-09 --> The app's main goal is to raise voter registration rates in schools that use RegiStart by distributing seniors among student organizers, who motivate them to vote. <!-- src: doc:portfolio-2025-09 --> Its slogan is "Strengthening America by registering voters, educating students on citizenship, and shaping students into citizens." <!-- src: doc:portfolio-2025-09 -->
+RegiStart is a nonprofit startup that uses social networks and technology to systematically increase voter registration among 18-year-olds. <!-- src: doc:portfolio-2025-09 --> The app's main goal is to raise voter registration rates in schools that use RegiStart by distributing high school seniors among student organizers, who motivate them to vote. <!-- src: doc:portfolio-2025-09, itjet-fintech#1 --> Its slogan is "Strengthening America by registering voters, educating students on citizenship, and shaping students into citizens." <!-- src: doc:portfolio-2025-09 -->
 
 <!-- generated:media-itjet-fintech/registart -->
 ![RegiStart, screen 1](../sources/media/portfolio-2025-09/p12-1.png)
@@ -291,7 +291,7 @@ React, Redux, TypeScript, AWS (EC2, S3, RDS), CI/CD with Bitbucket Pipelines, Po
 <!-- project: itjet-fintech/fused -->
 
 <!-- generated:project-itjet-fintech/fused -->
-## **Fused (web, mobile and backend)**
+## **Fused (React Native, React, Node.js)**
 <!-- /generated:project-itjet-fintech/fused -->
 
 Fused is a fitness coaching app where coaches plan workouts for their athletes. <!-- src: fused-product --> It has two roles, coach and athlete, and users can switch roles on the settings screen. <!-- src: doc:portfolio-2025-09 --> Coaches invite athletes, create workouts and exercises for them, build teams from athletes and track their workout progress. <!-- src: doc:portfolio-2025-09 --> To create a subscription, a coach adds card details and a bank account. <!-- src: doc:portfolio-2025-09 --> The app was published on Google Play. <!-- src: doc:portfolio-2025-09 -->
@@ -338,7 +338,7 @@ Wink is a social app for meeting new friends on Snapchat. <!-- src: wink-product
 
 **Responsibilities**
 
-I built the whole app from the designs, including login through Snapchat or a mobile number, integration with the backend API, and push notifications. <!-- src: doc:portfolio-2025-09 --> I optimized and tested the app, configured CI/CD for deployment, added image optimization on the Node.js backend, reviewed code and communicated directly with the customer. <!-- src: doc:portfolio-2025-09 -->
+I built the whole app from the designs, including login through Snapchat or a mobile number, integration with the backend API, and push notifications. <!-- src: doc:portfolio-2025-09 --> I optimized and tested the app, configured CI/CD for deployment, added image optimization on the Node.js backend, did code reviews and worked with the customer. <!-- src: doc:portfolio-2025-09 -->
 
 **Technologies and frameworks**
 
@@ -364,7 +364,7 @@ Golfuture is a form of golf that keeps many elements of traditional golf but tak
 
 **Responsibilities**
 
-I developed the app from scratch based on the designs: I planned and built the components and pages, added the business logic, and connected Stripe and other APIs. <!-- src: doc:portfolio-2025-09 --> I handled optimization and testing, joined project meetings and planning, and presented the results directly to the customer. <!-- src: doc:portfolio-2025-09 -->
+I developed the app from scratch based on the designs: I planned and built the components and pages, added the business logic, and connected Stripe and other APIs. <!-- src: doc:portfolio-2025-09 --> I handled optimization and testing, joined project meetings and planning, and presented the results to the customer. <!-- src: doc:portfolio-2025-09 -->
 
 **Technologies and frameworks**
 

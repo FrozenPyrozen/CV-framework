@@ -16,6 +16,7 @@ overrides:
   itjet-fintech#4.14: { pin: true, text: "Developed the RegiStart voter-registration minimum viable product (MVP) from sketches: a **React** and **Material UI** frontend, a **Node.js** backend with **Sequelize** and **PostgreSQL** on **AWS RDS**, **node-pg-migrate** migrations, and an algorithm that distributes students among organizers." }   # RegiStart MVP: full-stack evidence (compose 2026-10-22)
   itjet-fintech#4.5: { drop: true }   # node-pg-migrate is part of the RegiStart MVP bullet
   itjet-fintech#4.1: { drop: true }   # React Native Web signup: fewest emphasized tags; made room for the MVP (compose 2026-10-22)
+  orion-mobile-clinical-ink#4.4: { drop: true }   # Android 14 migration: least relevant to full-stack readers; the entry keeps 2 bullets (review 2026-10-23-1854 hr-3)
 max_bullets_per_entry: 6
 min_bullets_per_entry: 2
 include_sections: [summary, experience, consulting, education, skills, languages]
