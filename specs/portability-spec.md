@@ -65,7 +65,7 @@ Rules:
    ```
 3. Restore the private files: `npm run restore -- ../private-backup.zip` (or `.zip.enc`, with the password variable set).
 4. `cp framework.local.example.yaml framework.local.yaml`, set this laptop's repo paths and backup folder (see `framework.local.previous.yaml` if a restore created it).
-5. `npm run doctor` and fix what it reports, then `npm run build:all` and `npm run status`.
+5. `npm run doctor` and fix what it reports, then `npm run build:all`, `npm run build:portfolio` (the portfolio's check record is local, so it is checked and built again) and `npm run status`.
 6. **Connect a remote** (when you have one): `git remote add origin <private url>` and `git push -u origin --all && git push origin --tags`. Before the first push, check that the history holds nothing you don't want on that server (see section 6).
 7. Delete the archive copies you no longer need.
 
