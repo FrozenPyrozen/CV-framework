@@ -8,9 +8,9 @@ The essentials, each stated in full in the section named.
 
 - One letter per job ad, in that job's tailored folder next to its CV; there is no general or master letter (section 1).
 - The header is generated from the profile and the market, exactly as on the CV; the agent writes only the body (section 2).
-- Every body sentence ends with a `<!-- src: … -->` comment. A claim about you cites what the tailored CV cites; a statement about the company or the role cites `jd` (the job ad) (section 3).
+- Every body sentence ends with a `<!-- src: … -->` comment. A claim about you cites what the tailored CV cites; a statement about the company or the role cites `jd` (the job ad); your own reason for wanting the job cites `why` (your words, saved verbatim) (section 3).
 - Nothing the tailored CV leaves out or the summaries hide: section 9 terms, hidden clients and unconfirmed numbers stay out (section 3).
-- First person is fine here; filler, hype and generic openings are not; US English; within `checks.cover_letter_max_words` and one page (section 4).
+- Written to pass screening software and read as a person wrote it: the exact job title and company up front, the job ad's required keywords where evidence supports them, no stock phrases (`checks.ai_tell_phrases`), varied sentences, one specific reason in your own words; within `checks.cover_letter_max_words` and one page (section 4).
 - `npm run cover-letter -- check` must pass before `build`; the user reviews the letter before sending (sections 5, 6).
 
 ## 1. Inputs and place
@@ -54,13 +54,16 @@ Kirill Kohan
 - **Every body sentence** ends with its own `src` comment, as in `specs/cv-spec.md` 6. The greeting, the date and the closing need none.
 - **About you:** contribution ids, summary sections, fact ids, `profile` and `calc:` values, as on the CV. Each cited entry must be shown in the tailored CV (an entry the CV dropped is a warning; a claim the CV doesn't support is a reviewer finding).
 - **About the company or the role:** `jd`, meaning `job-description.md` in the folder. Paraphrase it; never invent the company's facts, products or values.
+- **Why you want this job:** `why`, meaning `why.md` in the folder: one to three sentences in your own words, asked for by the agent and saved verbatim. The letter may shorten them but not change their meaning. Without `why.md` the letter has no motivation sentence beyond the job ad.
 - **Numbers:** only those the CV may use (`specs/cv-spec.md` 3 and `specs/sources-spec.md` 4), never rounded up.
 - **Confidentiality:** section 9 terms are blocked unless their `allow_in` lists `cover-letter`; hidden client names never appear; decisions in `facts/decisions.yaml` apply as for the CV.
 
 ## 4. Writing
 
-- **Shape:** open with the role and the reason you fit, give two or three concrete matches between the job ad's requirements (`jd-tags.yaml` `required` first) and your evidence, and close with availability (`profile`) and one sentence asking for a conversation.
-- **Voice:** first person ("I built…") is fine here, past tense for past work; plain words; no filler (`checks.filler_words`), no hype, no "I am writing to apply for…", no repeating the CV line by line.
+- **Shape:** open with the exact job title and the company as the ad writes them, and the reason you fit; give two or three concrete matches between the job ad's requirements (`jd-tags.yaml` `required` first) and your evidence, each with a specific detail (a number, a product, a scale); add your own reason (`why`) where you have one; close with availability (`profile`) and one plain sentence asking for a conversation.
+- **Screening software (ATS):** the job title and company in the first paragraph, the ad's required keywords in the words the ad uses wherever your evidence supports them (at least half of `required`; never one you can't back), selectable text and the header's contact details (the build guarantees both), no tables, columns or images.
+- **Reads as written by a person:** none of `checks.ai_tell_phrases` (stock phrases such as "I am excited to", "proven track record", "seamless", "furthermore"); sentences of different lengths, short ones included; not every sentence starting with "I"; paragraphs starting differently; no balanced lists of three adjectives; concrete facts instead of praise for the company. The user reads it aloud before sending and rewrites anything that doesn't sound like them.
+- **Voice:** first person ("I built…") is fine here, past tense for past work; plain words; no filler (`checks.filler_words`), no hype, no repeating the CV line by line.
 - **Gaps:** don't claim a requirement the gap report lists as missing; you may say you are learning it only if a source says so.
 - **Length:** at most `checks.cover_letter_max_words` words in the body, and one page when built.
 - **Spelling:** US English, checked by the spell check with `facts/dictionary.txt`.
@@ -73,9 +76,10 @@ Errors stop the build:
 - a section 9 term (not allowed in `cover-letter`), a hidden client name, a ticket id, an internal address or a secret;
 - a forbidden character (`checks.forbidden_chars`), a `TODO`, or no body paragraph;
 - a body over `checks.cover_letter_max_words`;
+- a phrase from `checks.ai_tell_phrases`, or `why` without `why.md`;
 - an unknown word in the spell check.
 
-Warnings: a source whose entry the tailored CV doesn't show, filler words, spelling variants (`checks.spelling_variants`), fewer than 3 or more than 4 body paragraphs.
+Warnings: a source whose entry the tailored CV doesn't show, filler words, spelling variants (`checks.spelling_variants`), fewer than 3 or more than 4 body paragraphs, a first paragraph that doesn't cite `jd`, fewer than half of the job ad's `required` keywords in the body, sentences of nearly the same length (six or more sentences), more than half of the sentences starting with "I", two paragraphs starting with the same word.
 
 ## 6. Build and review
 

@@ -85,3 +85,27 @@ test("build --no-pdf renders the Word file with the CV template; a folder withou
   assert.equal(none.code, 2);
   assert.match(none.out.trim(), /^cover-letter: cv\/tailored\/nothing-here\/cv\.md not found: run \/tailor --jd/);
 });
+
+test("screening rules: AI-tell phrases fail, `why` needs why.md, missing keywords and uniform rhythm warn", () => {
+  const dir = jobRepo();
+  run("cover-letter.ts", dir, ["refresh", DIR]);
+  writeBody(dir, [good[0], "Furthermore, I spearheaded a schema-driven React 19 runtime that renders 1,800+ ERP programs. <!-- src: syspro-saas-erp#4.1 -->", good[2], "Your mission is what drew me to Acme. <!-- src: why -->"]);
+  const r = run("cover-letter.ts", dir, ["check", DIR]);
+  assert.equal(r.code, 1);
+  assert.match(r.out, /"furthermore" reads as machine-written/);
+  assert.match(r.out, /"spearheaded" reads as machine-written/);
+  assert.match(r.out, /source "why" but cv\/tailored\/acme-senior-react\/why\.md doesn't exist/);
+
+  writeFileSync(join(dir, DIR, "why.md"), "I use design tools every day and want to build one.\n");
+  writeFileSync(join(dir, DIR, "jd-tags.yaml"), "profile: react\nrequired: [react, graphql, kubernetes, rust]\n");
+  writeBody(dir, [good[0], good[1], good[2], "I use design tools daily and want to build one. <!-- src: why -->"]);
+  const w = run("cover-letter.ts", dir, ["check", DIR]);
+  assert.equal(w.code, 0, w.out);
+  assert.match(w.out, /few of the job ad's required keywords appear in the body \(missing: graphql, kubernetes, rust\)/);
+
+  const same = "I built a large frontend platform for a big client team. <!-- src: syspro-saas-erp#4.1 -->";
+  writeBody(dir, [`${good[0]}`, `${same} ${same} ${same}`, `${same} ${same}`, "I work remotely from Kyiv and would welcome a short call soon. <!-- src: profile -->"]);
+  const u = run("cover-letter.ts", dir, ["check", DIR]).out;
+  assert.match(u, /sentences are all about \d+ words long/);
+  assert.match(u, /sentences start with "I": vary the openings/);
+});

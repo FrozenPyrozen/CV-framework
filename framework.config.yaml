@@ -69,6 +69,42 @@ checks:
   portfolio_max_pages: 40            # page limit of each portfolio PDF (specs/outputs/portfolio.md 6)
   portfolio_max_project_words: 420   # one page per project with its screenshots, as on the published portfolio (up to about 400 words)
   cover_letter_max_words: 350      # body of a cover letter, one page with the header (specs/outputs/cover-letter.md 4)
+  ai_tell_phrases:                  # stock phrases that read as machine-written; an error in a cover letter (specs/outputs/cover-letter.md 4)
+    - "I am writing to"
+    - "I am excited"
+    - "I'm excited"
+    - "thrilled"
+    - "delve"
+    - "fast-paced"
+    - "dynamic team"
+    - "I am confident"
+    - "I'm confident"
+    - "testament to"
+    - "seamless"
+    - "seamlessly"
+    - "spearheaded"
+    - "showcase"
+    - "perfect fit"
+    - "ideal candidate"
+    - "unique blend"
+    - "proven track record"
+    - "track record"
+    - "game-changer"
+    - "eager to contribute"
+    - "welcome the opportunity"
+    - "look forward to the opportunity"
+    - "thank you for considering"
+    - "furthermore"
+    - "moreover"
+    - "in conclusion"
+    - "honed"
+    - "tapestry"
+    - "ever-evolving"
+    - "embark"
+    - "elevate"
+    - "navigate the complexities"
+    - "align with"
+    - "aligns with"
   contacts_on_page_1: true
   export_timeout_s: 60
   forbidden_chars: ["→", "·", "•", "—", "–"]

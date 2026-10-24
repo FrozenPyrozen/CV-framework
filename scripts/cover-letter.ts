@@ -11,7 +11,7 @@ import { readPdf } from "./pdf-check.ts";
 import { renderPreviews } from "./preview.ts";
 import JSZip from "jszip";
 import { renderDocx, setSpacingAndIndent } from "./renderers/docx.ts";
-import { cliPath, isMain, loadConfig, loadSummaries, rootPath } from "./lib/repo.ts";
+import { cliPath, isMain, loadConfig, loadSummaries, readYaml, rootPath } from "./lib/repo.ts";
 import { normalizeText, splitSentences } from "./lib/text.ts";
 import { parseArgs } from "./refresh.ts";
 import { spellcheckText } from "./spellcheck.ts";
@@ -85,6 +85,7 @@ export async function checkLetter(dir: string, market?: string): Promise<Finding
   // Sources: every body sentence has its own; `jd` needs the job ad; cited entries should be shown in the tailored CV.
   const idx = buildSourceIndex();
   const hasJd = existsSync(join(dir, "job-description.md"));
+  const hasWhy = existsSync(join(dir, "why.md")); // the user's own words on why this company (specs/outputs/cover-letter.md 3)
   const shown = new Set(parseCv(readFileSync(join(dir, "cv.md"), "utf8")).sections.flatMap((s) => s.entries.map((e) => e.id)).filter(Boolean));
   for (const p of body) {
     for (const piece of sentencePieces(p.text)) {
@@ -93,6 +94,7 @@ export async function checkLetter(dir: string, market?: string): Promise<Finding
       if (n > 1) add("error", `${n - 1} sentence(s) without their own source before: "${piece.text.slice(0, 50)}"`, p.line);
       for (const id of piece.src) {
         if (id === "jd") { if (!hasJd) add("error", `source "jd" but ${rel(join(dir, "job-description.md"))} doesn't exist`, p.line); continue; }
+        if (id === "why") { if (!hasWhy) add("error", `source "why" but ${rel(join(dir, "why.md"))} doesn't exist (the user's own words, saved verbatim)`, p.line); continue; }
         const r = idx.resolve(id);
         if (!r.ok) add("error", `source "${id}" doesn't resolve to a summary contribution, summary section or fact`, p.line);
         else if (r.entry && !shown.has(r.entry)) add("warning", `source "${id}" is from ${r.entry}, which the tailored CV doesn't show`, p.line);
@@ -118,6 +120,28 @@ export async function checkLetter(dir: string, market?: string): Promise<Finding
   }
   const profileUrls = (ctx.profile.contacts.links ?? []).map((l: any) => l.url);
   for (const s of secretFindings(visible([...body, ...other].map((p) => p.text).join("\n")), ctx, profileUrls, { checkUrls: true })) add("error", `secret scan: ${s}`);
+
+  // Screening software and readers (specs/outputs/cover-letter.md 4): stock phrases that read as machine-written are
+  // errors; the job ad's required keywords, the opening and the rhythm of the sentences are warnings.
+  for (const p of body) {
+    const v = visible(p.text);
+    for (const phrase of cfg.checks.ai_tell_phrases ?? []) if (new RegExp(`(?<![\\w-])${esc(phrase)}(?![\\w-])`, "i").test(v)) add("error", `"${phrase}" reads as machine-written (checks.ai_tell_phrases): say it plainly or specifically`, p.line);
+  }
+  if (body.length && !sentencePieces(body[0].text).some((x) => x.src.includes("jd"))) add("warning", "the first paragraph doesn't cite the job ad (jd): name the exact job title and the company there");
+  const tags = existsSync(join(dir, "jd-tags.yaml")) ? (readYaml(join(dir, "jd-tags.yaml"))?.required ?? []) as string[] : [];
+  const bodyText = visible(body.map((p) => p.text).join(" "));
+  const missing = tags.filter((t) => !new RegExp(`(?<![\\w-])${esc(t).replace(/-/g, "[- ]?")}(?![\\w])`, "i").test(bodyText));
+  if (tags.length && tags.length - missing.length < Math.ceil(tags.length / 2)) add("warning", `few of the job ad's required keywords appear in the body (missing: ${missing.join(", ")}); use them where your evidence supports them`);
+  const sentences = body.flatMap((p) => sentencePieces(p.text).flatMap((x) => splitSentences(visible(x.text)))).map((x) => x.trim()).filter(Boolean);
+  if (sentences.length >= 6) {
+    const lens = sentences.map(words), mean = lens.reduce((a, b) => a + b, 0) / lens.length;
+    const sd = Math.sqrt(lens.reduce((a, b) => a + (b - mean) ** 2, 0) / lens.length);
+    if (sd < 4) add("warning", `sentences are all about ${Math.round(mean)} words long (spread ${sd.toFixed(1)}): vary them, as people do`);
+    const iStarts = sentences.filter((x) => /^I\b/.test(x)).length;
+    if (iStarts / sentences.length > 0.5) add("warning", `${iStarts} of ${sentences.length} sentences start with "I": vary the openings`);
+  }
+  const firstWords = body.map((p) => visible(p.text).trim().split(/\s+/)[0]?.toLowerCase());
+  if (new Set(firstWords).size < firstWords.length) add("warning", "two body paragraphs start with the same word");
 
   const count = body.reduce((n, p) => n + words(visible(p.text)), 0);
   const max = cfg.checks.cover_letter_max_words;

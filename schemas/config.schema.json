@@ -184,6 +184,10 @@
           "type": "integer",
           "minimum": 100
         },
+        "ai_tell_phrases": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 2 }
+        },
         "contacts_on_page_1": {
           "type": "boolean"
         },
