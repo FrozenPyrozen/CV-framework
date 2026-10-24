@@ -105,6 +105,14 @@ checks:
     - "navigate the complexities"
     - "align with"
     - "aligns with"
+    - "your ad asks"
+    - "your ad mentions"
+    - "your posting"
+    - "what you describe"
+    - "you're looking for"
+    - "you are looking for"
+    - "has been part of my"
+    - "were mine to"
   contacts_on_page_1: true
   export_timeout_s: 60
   forbidden_chars: ["→", "·", "•", "—", "–"]

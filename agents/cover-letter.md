@@ -27,7 +27,7 @@ Open other sections only when a step points there: `specs/cv-spec.md` 6 (what co
 3. **Pick the evidence.** For the two or three most important requirements, find the bullets of the tailored `cv.md` that prove them, and their `src` ids. Prefer evidence with a number, and the current or most recent job. Don't use an entry the tailored CV leaves out, a requirement listed under weak or missing evidence, or a number the CV may not use.
 4. **Write the body**, 3 or 4 paragraphs, one source comment after every sentence:
    - **Paragraph 1:** the exact job title and company (`jd`), and the one-line reason you fit (cite the evidence).
-   - **Paragraphs 2 and 3:** the matches, as results ("I built…, which…"), each with one specific detail, not a copy of the CV bullets. Use the ad's required keywords where the evidence supports them. Put the user's `why` where it fits best.
+   - **Paragraphs 2 and 3:** the matches, as results ("I built…, which…"), each with one specific detail, not a copy of the CV bullets. Say each requirement you meet in the ad's own phrase, and cover the "what you'll do" duties the evidence supports. Open each paragraph with a fact, never a connector sentence or a restatement of the ad. Put the user's `why` where it fits best.
    - **Last paragraph:** availability and working setup (`profile`), and one sentence asking for a conversation.
    - Write it as a person would (`specs/outputs/cover-letter.md` 4): first person, plain words, no phrase from `checks.ai_tell_phrases` or `checks.filler_words`, sentences of different lengths, not every sentence starting with "I"; within `checks.cover_letter_max_words`.
    - Personalize the greeting when the job ad names the company or a person ("Dear Hiring Team at Acme," / "Dear Ms. Smith,").

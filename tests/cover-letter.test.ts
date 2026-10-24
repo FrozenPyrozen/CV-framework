@@ -109,3 +109,13 @@ test("screening rules: AI-tell phrases fail, `why` needs why.md, missing keyword
   assert.match(u, /sentences are all about \d+ words long/);
   assert.match(u, /sentences start with "I": vary the openings/);
 });
+
+test("sentences that hand the ad back fail; an over-long sentence and no short one warn", () => {
+  const dir = jobRepo();
+  run("cover-letter.ts", dir, ["refresh", DIR]);
+  const long = `I built core modules of a schema-driven React 19 and TypeScript runtime that renders 1,800+ ERP programs from data-model definitions for a large program of more than twenty five people across several teams and products. <!-- src: syspro-saas-erp#4.1 -->`;
+  writeBody(dir, [good[0], `Your ad asks for design docs before code. ${long}`, good[2], good[3]]);
+  const r = run("cover-letter.ts", dir, ["check", DIR]).out;
+  assert.match(r, /"your ad asks" reads as machine-written/);
+  assert.match(r, /a \d+-word sentence \("I built core modules/);
+});

@@ -137,9 +137,11 @@ export async function checkLetter(dir: string, market?: string): Promise<Finding
     const lens = sentences.map(words), mean = lens.reduce((a, b) => a + b, 0) / lens.length;
     const sd = Math.sqrt(lens.reduce((a, b) => a + (b - mean) ** 2, 0) / lens.length);
     if (sd < 4) add("warning", `sentences are all about ${Math.round(mean)} words long (spread ${sd.toFixed(1)}): vary them, as people do`);
+    if (!lens.some((n) => n <= 10)) add("warning", "no short sentence (10 words or fewer) in the body: one or two make it read as a person wrote it");
     const iStarts = sentences.filter((x) => /^I\b/.test(x)).length;
     if (iStarts / sentences.length > 0.5) add("warning", `${iStarts} of ${sentences.length} sentences start with "I": vary the openings`);
   }
+  for (const x of sentences) if (words(x) > 35) add("warning", `a ${words(x)}-word sentence ("${x.slice(0, 50)}…"): split it`);
   const firstWords = body.map((p) => visible(p.text).trim().split(/\s+/)[0]?.toLowerCase());
   if (new Set(firstWords).size < firstWords.length) add("warning", "two body paragraphs start with the same word");
 
