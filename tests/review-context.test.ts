@@ -24,6 +24,8 @@ test("master CV + ats: the CV, the market header settings, and only the relevant
   assert.doesNotMatch(b, /<!-- src:/); // ats doesn't need sources
   assert.match(b, /Market settings \(`markets\/worldwide\.yaml`\)[\s\S]*show_phone: true/);
   assert.match(b, /cv\/pdf-check\.md/);
+  const cvLines = b.split("\n").filter((l) => /^\s+\d+\| /.test(l)).map((l) => l.replace(/^\s+\d+\| /, ""));
+  assert.ok(cvLines.length > 50 && !cvLines.some((l) => /\S {2,}\S/.test(l))); // removed comments leave no double spaces
 
   const all: { id: string }[] = parse(readFileSync(join(dir, "facts/decisions.yaml"), "utf8")).decisions;
   const listed = [...b.matchAll(/^- \*\*([\w-]+)\*\* \(/gm)].map((m) => m[1]);

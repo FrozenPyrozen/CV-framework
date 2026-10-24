@@ -46,6 +46,19 @@ test("confidentiality allow_in permits a term only in the listed context", () =>
   assert.match(run("lint.ts", dir, [CV]).out, /confidential term "Studio Shell"/); // in a bullet: not allowed
 });
 
+test("confidential terms of four letters or more match in any case; shorter ones only exactly; skills is an allow_in scope", () => {
+  const dir = refreshed();
+  edit(dir, CV, "renders 1,800+ ERP programs", "renders 1,800+ ERP programs in the studio shell, an asp-style host");
+  const r = run("lint.ts", dir, [CV]).out;
+  assert.match(r, /confidential term "Studio Shell"/); // "studio shell" in lower case is caught
+  assert.doesNotMatch(r, /confidential term "ASP"/); // a three-letter term matches only as written
+  edit(dir, CV, "**Frontend:** React 19,", "**Frontend:** Studio Shell, React 19,");
+  edit(dir, CV, "renders 1,800+ ERP programs in the studio shell, an asp-style host", "renders 1,800+ ERP programs");
+  assert.match(run("lint.ts", dir, [CV]).out, /confidential term "Studio Shell"/); // in Skills: not allowed yet
+  edit(dir, "summaries/syspro-saas-erp.md", "- term: Studio Shell\n", "- term: Studio Shell\n  allow_in: [skills]\n");
+  assert.doesNotMatch(run("lint.ts", dir, [CV]).out, /confidential term "Studio Shell"/); // allowed in Skills
+});
+
 test("lint ignores confidential terms inside a comment that spans several lines", () => {
   const dir = refreshed();
   edit(dir, CV, "# **SUMMARY**", "<!--\nnote: studio-shell\n-->\n# **SUMMARY**");

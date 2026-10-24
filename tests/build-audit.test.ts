@@ -28,7 +28,7 @@ test("build --market builds one market; a tailored CV gets only the default mark
 test("round 1 audit: per-entry pending list, --all with --entries-reviewed refused, jd-tags makes a tailored CV stale", () => {
   const dir = tempRepo();
   const V = "cv/variants/fullstack-react-node/cv.md";
-  assert.equal(run("build.ts", dir, [V, "--no-pdf"]).code, 0);
+  assert.equal(run("build.ts", dir, [V, "--no-pdf", "--entries-reviewed"]).code, 0); // a clean record, whatever the live repo has pending
   // Velas changes: the variant lists it; rewriting another entry (Thermo Fisher) keeps Velas listed.
   edit(dir, "summaries/velas-wallet.md", "Developed the Velas blockchain wallet", "Developed the Velas blockchain wallet app");
   assert.match(run("status.ts", dir).out, /entries to rewrite in variants: velas-wallet/);

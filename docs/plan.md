@@ -1,6 +1,6 @@
 # CV Agent Framework: Plan
 
-Status: steps 1–12 and 14 done (section 8; step 12 by full archive on this Mac, its private-file round trip still to rerun once a tailored or sent CV exists); left: step 13 (new laptop + new repo, on the new laptop); agent replay passed 2026-10-23 (B1, B7, B8). Since then: portable harvest (9c) and sources (9d) built, the portfolio specified, its content imported (P2), its summary fields (P1), the portfolio agent and text checks (P3), template, renderer and build (P4), the spell check (P5) and portfolio reviews (P6) built (9e); the portfolio rebuilt on the published 2025-09 structure (change log rows 86–89), its template approved, the portfolio reviewed (`reports/2026-10-23-1633`), an ATS and HR review of all CVs (`reports/2026-10-23-1705`); docs split to save tokens (change log in `docs/changelog.md`, scripts and workflows in `docs/`, fact formats in `specs/facts-spec.md`) · 2026-10-23
+Status: steps 1–12 and 14 done (section 8; step 12 by full archive on this Mac, its private-file round trip still to rerun once a tailored or sent CV exists); left: step 13 (new laptop + new repo, on the new laptop); agent replay passed 2026-10-23 (B1, B7, B8). Since then: portable harvest (9c) and sources (9d) built, the portfolio specified, its content imported (P2), its summary fields (P1), the portfolio agent and text checks (P3), template, renderer and build (P4), the spell check (P5) and portfolio reviews (P6) built (9e); the portfolio rebuilt on the published 2025-09 structure (change log rows 86–89), its template approved, the portfolio reviewed (`reports/2026-10-23-1633`), an ATS and HR review of all CVs (`reports/2026-10-23-1705`); docs split to save tokens (change log in `docs/changelog.md`, scripts and workflows in `docs/`, fact formats in `specs/facts-spec.md`); context bundles for the composer and tailor (`agent-context`), the HERE Technologies navigation work imported by portable harvest into the consulting section · 2026-10-24
 
 ## 1. Goal
 
@@ -198,9 +198,9 @@ Each agent's inputs, outputs and steps are in its definition in `agents/`; the c
 | Agent | Writes | Spec / rubric |
 |---|---|---|
 | Harvester (`agents/harvester.md`) | `summaries/<id>.md`, new or merged (existing numbers, user edits and `cv_*` fields kept); never copies code, internal text, URLs or secrets | `specs/work-summary-spec.md` |
-| Composer (`agents/composer.md`) | the master CV, one entry at a time, from digests (R10), with `reattach-src` and `trace` (R7) | `specs/cv-spec.md` |
-| Tailor (`agents/tailor.md`) | `cv/variants/<profile>/` or `cv/tailored/<company-role>/`: `cv.md` + `gap-report.md`, wording only (selection by `select`, R8) | `specs/tailoring-spec.md` + the profile |
-| Reviewer (`agents/reviewer.md`), once per rubric | `reports/<date-time>/<rubric>.md`; never edits | `specs/rubrics/*`, `specs/review-report-spec.md` |
+| Composer (`agents/composer.md`) | the master CV, one entry at a time, from its `npm run agent-context` bundle (R10), with `reattach-src` and `trace` (R7) | `specs/cv-spec.md` |
+| Tailor (`agents/tailor.md`) | `cv/variants/<profile>/` or `cv/tailored/<company-role>/`: `cv.md` + `gap-report.md`, wording only (selection by `select`, R8), from its `npm run agent-context` bundle | `specs/tailoring-spec.md` + the profile |
+| Reviewer (`agents/reviewer.md`), once per rubric | `reports/<date-time>/<rubric>.md` from its `npm run review-context` bundle; never edits | `specs/rubrics/*`, `specs/review-report-spec.md` |
 | Advisor (`agents/advisor.md`) | your answers, one topic at a time, into `facts/` or a summary, then hands over to the composer; also `/job-change`, `/profile`, `/add-experience`, `/import-docs`, `/portfolio-material` | `specs/facts-spec.md`, `specs/cv-spec.md` + the report's rubric |
 | Template importer (`agents/template-importer.md`) | `templates/<name>/` from a Word CV (PDF input deferred, section 11) | `specs/templates.md` |
 | Portfolio (`agents/portfolio.md`) | the projects' text in `portfolio/portfolio.md`, every sentence sourced from its own project; scripts write the rest | `specs/outputs/portfolio.md` |

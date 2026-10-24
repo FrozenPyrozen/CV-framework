@@ -64,7 +64,8 @@ export function numberedCv(text: string, keepSrc: boolean): string {
   const out: string[] = [];
   text.split("\n").forEach((line, i) => {
     let l = line.replace(/<!--[\s\S]*?-->/g, (c) => (/^<!-- entry: /.test(c) || (keepSrc && /^<!--\s*(src|project):/.test(c)) ? c : ""));
-    l = l.replace(/\s+$/, "");
+    // A comment removed mid-line leaves two spaces ("sentence.  Next"): reviewers would flag them as typos.
+    l = l.replace(/(\S) {2,}(?=\S)/g, "$1 ").replace(/\s+$/, "");
     if (l.trim()) out.push(`${String(i + 1).padStart(4)}| ${l}`);
   });
   return out.join("\n");

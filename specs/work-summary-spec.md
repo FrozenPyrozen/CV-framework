@@ -125,7 +125,7 @@ A section with nothing known yet contains `TODO (needs user input)`. **Never inv
 - term: Project Falcon
 - term: PFX
   allow_in: []                     # optional: where the term may appear in a CV: job ids (inside that job's
-                                   # title, detail line and bullets) and/or `summary` (the summary paragraph);
+                                   # title, detail line and bullets), `summary` (the summary paragraph) and/or `skills` (the skills list);
                                    # `portfolio` for the public portfolio (job ids and `summary` don't apply there)
 - term: billing-web
 - prefix: BIL-                    # ticket prefixes

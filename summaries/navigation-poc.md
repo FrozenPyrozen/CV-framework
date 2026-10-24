@@ -186,7 +186,7 @@ No release, customer, performance, safety, or delivery-speed metrics are inferre
 ## 8. Portfolio material
 
 - image: ../sources/media/portfolio-2025-09/p04-1.png
-  caption: Car navigation PoC on the head unit
+  caption: Car navigation PoC on the in-car display
   public: yes, confirmed by user 2026-10-23
 
 Moved from `general-motors-navigation` section 8 (user 2026-10-23). The portfolio page text comes from `doc:portfolio-2025-09`.
@@ -198,9 +198,9 @@ Moved from `general-motors-navigation` section 8 (user 2026-10-23). The portfoli
 - term: refappkotlin
 - term: service-packages
 - term: HNAV
-  allow_in: [portfolio]   # decision portfolio-here-detail-kept (HERE's components on the portfolio pages)
+  allow_in: [portfolio, skills]   # decisions portfolio-here-detail-kept and here-sdk-names-in-skills
 - term: HNoD
-  allow_in: [portfolio]   # decision portfolio-here-detail-kept (HERE's components on the portfolio pages)
+  allow_in: [portfolio, skills]   # decisions portfolio-here-detail-kept and here-sdk-names-in-skills
 - term: HUGO
   allow_in: [portfolio]   # decision portfolio-poc-names-public
 - term: HERE PoC R&D

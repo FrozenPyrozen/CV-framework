@@ -200,3 +200,9 @@ decisions:
     date: "2026-10-23"
     why: User's answer to HR finding hr-6 (review 2026-10-23-1349); interview preparation, the CV doesn't change.
     matches: [direct employer, services company, outsourcing vendor, staffing agency]
+
+  - id: here-sdk-names-in-skills
+    decision: The CV's skills list keeps "HERE SDK (HNav, HNod, HERE API)"; the HERE harvest's section 9 lists HNAV and HNoD, so they carry allow_in [portfolio, skills] in navigation-poc and navigation-statistics. They stay out of bullets.
+    date: "2026-10-24"
+    why: User's choice; the names were in the previous CV and are on the published portfolio (decision portfolio-here-detail-kept).
+    matches: [HNav, HNod, HNAV, HNoD, HERE SDK component names]

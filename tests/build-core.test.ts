@@ -10,7 +10,8 @@ test("build --no-pdf: refresh, lint, trace warning, both markets rendered, build
   const dir = tempRepo();
   edit(dir, "cv/Kirill_Kohan_CV.md", "July 2023 - December 2025", "07/2023 - 12/2025"); // a stale job line refresh must fix
   edit(dir, "cv/Kirill_Kohan_CV.md", / <!-- src: velas-wallet#4\.1 -->/, ""); // an unsourced claim: only a warning for the master CV
-  const r = run("build.ts", dir, ["--no-pdf"]);
+  // --entries-reviewed: start from a clean record, whatever entries the live repo still has pending.
+  const r = run("build.ts", dir, ["cv/Kirill_Kohan_CV.md", "--no-pdf", "--entries-reviewed"]);
   assert.equal(r.code, 0, r.out);
   assert.match(r.out, /refresh: generated parts updated/);
   assert.match(r.out, /trace: \d+ unsourced claim\(s\) \(warning for the master CV\)/);

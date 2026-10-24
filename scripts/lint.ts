@@ -5,7 +5,7 @@
 // Without a file: lints the master CV, its market versions, every variant, and scans summary bodies.
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join, relative, resolve } from "node:path";
-import { type Context, entriesForSection, loadContext, parseCv, stripComments } from "./lib/cvmd.ts";
+import { type Context, entriesForSection, loadContext, parseCv, sectionIdForHeading, stripComments } from "./lib/cvmd.ts";
 import { masterCvPath, marketCvPath } from "./lib/paths.ts";
 import { readState, sha } from "./lib/buildstate.ts";
 import { type Summary, cliPath, isMain, loadConfig, loadMarkets, loadSummaries, rootPath } from "./lib/repo.ts";
@@ -17,6 +17,9 @@ export interface Finding { level: "error" | "warning"; file: string; line?: numb
 
 interface Blocklist { terms: { term: string; allowIn: string[]; from: string; anyCase?: boolean }[]; prefixes: string[]; urlPatterns: RegExp[] }
 
+// Section 9 terms at least this long match in any case; shorter ones match exactly.
+export const MIN_ANY_CASE = 4;
+
 const escapeRe = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 const globToRe = (g: string) => new RegExp(g.split("*").map(escapeRe).join(".*"), "i");
 
@@ -24,7 +27,8 @@ export function buildBlocklist(summaries: Summary[], ctx: Context): Blocklist {
   const bl: Blocklist = { terms: [], prefixes: [], urlPatterns: ctx.cfg.secret_scan.internal_url_patterns.map(globToRe) };
   for (const s of summaries) {
     for (const r of s.confidentiality) {
-      if (r.term) bl.terms.push({ term: r.term, allowIn: r.allow_in ?? [], from: s.id });
+      // A term matches in any case ("HNAV" catches "HNav"), except short ones ("VW", "L3"), where case avoids false hits.
+      if (r.term) bl.terms.push({ term: r.term, allowIn: r.allow_in ?? [], from: s.id, anyCase: r.term.length >= MIN_ANY_CASE });
       if (r.prefix) bl.prefixes.push(r.prefix);
       if (r.url_pattern) bl.urlPatterns.push(globToRe(r.url_pattern));
     }
@@ -164,11 +168,12 @@ export function lintCv(file: string, ctx: Context, summaries = loadSummaries(ctx
     const em = raw.match(/^<!-- entry: ([\w-]+) -->$/);
     if (em) { currentEntry = em[1]; return; }
     const h1 = raw.match(/^# \*\*(.+)\*\*/);
-    if (h1) currentEntry = h1[1].toUpperCase() === "SUMMARY" ? "summary" : "";
+    // allow_in scopes: an entry id, or the `summary` and `skills` sections.
+    if (h1) { const id = sectionIdForHeading(ctx.cfg, h1[1]); currentEntry = id === "summary" || id === "skills" ? id : ""; }
     const visible = stripComments(raw);
     for (const t of bl.terms) {
       if (t.allowIn.includes(currentEntry)) continue;
-      // Hidden client names match in any case ("clinical ink"); other terms are case-sensitive to avoid false hits on common words.
+      // Hidden client names and terms of MIN_ANY_CASE letters or more match in any case; shorter terms match exactly.
       if (new RegExp(`(?<![\\w-])${escapeRe(t.term)}(?![\\w-])`, t.anyCase ? "i" : "").test(visible)) add("error", `confidential term "${t.term}" (from ${t.from})`, i);
     }
     for (const p of bl.prefixes) if (new RegExp(`(?<![\\w-])${escapeRe(p)}\\d`).test(visible)) add("error", `ticket id with prefix "${p}"`, i);

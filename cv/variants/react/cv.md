@@ -10,7 +10,7 @@ Kyiv, Ukraine (Remote) | Open to B2B contract or full-time employment | Working 
 
 # **SUMMARY**
 
-Senior React engineer and frontend tech lead with 7+ years of experience building React, React Native and TypeScript applications for enterprise resource planning (ERP) software-as-a-service (SaaS), automotive, healthcare, fintech and blockchain products. <!-- src: calc:years_experience, profile, syspro-saas-erp#1, general-motors-navigation#1, thermo-fisher-dosimeter#1, itjet-fintech#1, velas-wallet#1 --> Built core modules of a schema-driven React 19 runtime that renders 1,800+ ERP programs inside a secure micro-frontend architecture. <!-- src: syspro-saas-erp#4.1 --> Delivered it through architecture-governed specification-driven development (SDD), working with the lead architect on platform architecture and owning the frontend technology stack. <!-- src: syspro-saas-erp#4.2, syspro-architecture-scope, syspro-tech-stack-ownership --> Led a team of 8 engineers on a React Native automotive app, setting coding standards, running code reviews and owning its modular architecture. <!-- src: general-motors-navigation#4.1, general-motors-navigation#4.2, general-motors-navigation#4.4, calc:team_size_led --> Experienced in OpenID Connect (OIDC) authentication, XState and Zustand state management, OpenTelemetry observability and component testing with Vitest. <!-- src: syspro-saas-erp#4.7, syspro-saas-erp#4.5, syspro-saas-erp#4.8, syspro-saas-erp#4.9 -->
+Senior React engineer and frontend tech lead with 7+ years of experience building React, React Native and TypeScript applications for enterprise resource planning (ERP) software-as-a-service (SaaS), automotive, healthcare, fintech and blockchain products. <!-- src: calc:years_experience, profile, syspro-saas-erp#1, general-motors-navigation#1, thermo-fisher-dosimeter#1, itjet-fintech#1, velas-wallet#1 --> Built core modules of a schema-driven React 19 runtime that renders 1,800+ ERP programs inside a secure micro-frontend architecture. <!-- src: syspro-saas-erp#4.1 --> Delivered the frontend through architecture-governed specification-driven development (SDD), working with the lead architect on platform architecture and owning the frontend technology stack. <!-- src: syspro-saas-erp#4.2, syspro-architecture-scope, syspro-tech-stack-ownership --> Led a team of 8 engineers on a React Native automotive app, setting coding standards, running code reviews and owning its modular architecture. <!-- src: general-motors-navigation#4.1, general-motors-navigation#4.2, general-motors-navigation#4.4, calc:team_size_led --> Experienced in OpenID Connect (OIDC) authentication, XState and Zustand state management, OpenTelemetry observability and component testing with Vitest. <!-- src: syspro-saas-erp#4.7, syspro-saas-erp#4.5, syspro-saas-erp#4.8, syspro-saas-erp#4.9 -->
 
 # **EXPERIENCE**
 
@@ -19,19 +19,19 @@ Senior React engineer and frontend tech lead with 7+ years of experience buildin
 
 ### **SYSPRO | Remote | December 2025 - Present**
 
-* Built core modules of a schema-driven **React 19 / TypeScript** runtime for SYSPRO's **ERP SaaS** modernization platform (25+ person program) that renders **1,800+ ERP programs** from data-model definitions, cutting screen delivery from days to hours, with no per-screen frontend code. <!-- src: syspro-saas-erp#4.1, syspro-team-size, syspro-speed -->
+* Built core modules of a schema-driven **React 19 / TypeScript** runtime for SYSPRO's **ERP SaaS** modernization platform (25+ person program) that renders **1,800+ ERP programs** from data-model definitions, cutting screen delivery from days to hours without per-screen frontend code. <!-- src: syspro-saas-erp#4.1, syspro-team-size, syspro-speed -->
 
 * Delivered the frontend through architecture-governed **specification-driven development (SDD)**, not ad-hoc AI code generation, and helped define it: specification templates, validation and rules for **AI agents** that implement and review code against the specifications across 4 repositories. <!-- src: syspro-saas-erp#4.2, syspro-architecture-scope -->
 
-* Worked with the lead architect on the **platform and solution architecture**: reviewed and co-authored architecture documents and got open questions decided. Owned the **frontend technology stack** (architecture decision record, **ADR**) for the Login micro-frontend and the schema-driven runtime, including OIDC libraries and **Vitest Browser Mode**. <!-- src: syspro-saas-erp#4.3, syspro-architecture-scope, syspro-tech-stack-ownership -->
+* Reviewed and co-authored **platform and solution architecture** documents with the lead architect and drove open questions to a decision; owned the **frontend technology stack**, recorded in an **architecture decision record (ADR)**, for the Login micro-frontend and schema-driven runtime, including OIDC libraries and **Vitest Browser Mode**. <!-- src: syspro-saas-erp#4.3, syspro-architecture-scope, syspro-tech-stack-ownership -->
 
 * Designed and built a browser telemetry module on **OpenTelemetry** from scratch that records app events and traces and removes personally identifiable information (**PII**) before sending them. <!-- src: syspro-saas-erp#4.8 -->
 
 * Implemented the part of the runtime that manages open screens with **XState** state machines and a **Zustand** global store, each part against its own specification: session lifecycle, navigation between related screens and modal overlays that keep the screen underneath intact. <!-- src: syspro-saas-erp#4.5 -->
 
-* Built the **Login micro-frontend** from scratch in **React 19** and **TypeScript**: sign-in and password-reset flows, schema-based validation, **CSS Modules**, Web Content Accessibility Guidelines (**WCAG**) typography and **Storybook**. It is the only app that handles a user's password, so no other app ever sees it. <!-- src: syspro-saas-erp#4.6 -->
+* Built the **Login micro-frontend** from scratch in **React 19** and **TypeScript**: sign-in and password-reset flows, schema-based validation, **CSS Modules**, Web Content Accessibility Guidelines (**WCAG**) typography and **Storybook**, as the only app that ever handles a user's password. <!-- src: syspro-saas-erp#4.6 -->
 
-* Integrated **OpenID Connect (OIDC)** authentication into the Login micro-frontend and the host application using **oidc-client-ts** and **react-oidc-context**, in a secure, independently released **micro-frontend architecture** where apps never import from each other. <!-- src: syspro-saas-erp#4.7, syspro-saas-erp#4.1 -->
+* Integrated **OIDC** authentication into the Login micro-frontend and the host application using **oidc-client-ts** and **react-oidc-context**, in a secure, independently released **micro-frontend architecture** where apps never import from each other. <!-- src: syspro-saas-erp#4.7, syspro-saas-erp#4.1 -->
 
 * Stack: **React 19, TypeScript, Zustand, XState, TanStack Router, TanStack Query, WebSockets, Vite, KendoReact, SCSS / CSS Modules, OpenTelemetry, Vitest, Playwright, Storybook, Docker, Azure DevOps**. <!-- src: syspro-saas-erp#5 -->
 
@@ -64,7 +64,7 @@ Senior React engineer and frontend tech lead with 7+ years of experience buildin
 
 * Built a new cross-platform wallet in **React Native Web** from scratch, including the architecture for managing tokens and assets. <!-- src: velas-wallet#4.8 -->
 
-* Cut staking page loading from 2 minutes to 5 seconds and made it use 5x less mobile battery by moving filtering to the server and adding a backup blockchain connection (remote procedure call, RPC). <!-- src: velas-wallet#4.2 -->
+* Cut staking page loading from 2 minutes to 5 seconds and made it use 5x less mobile battery by moving filtering to the server and adding a backup blockchain remote procedure call (RPC) connection. <!-- src: velas-wallet#4.2 -->
 
 * Redesigned the staking-rewards calculation on the **Node.js** backend for stability and speed; user engagement grew 4x afterward. <!-- src: velas-wallet#4.6 -->
 
@@ -88,7 +88,7 @@ Senior React engineer and frontend tech lead with 7+ years of experience buildin
 
 * Optimized rendering and offline data access in **Realm** as part of a team-wide **performance** effort that made the app 20% faster. <!-- src: thermo-fisher-dosimeter#4.6 -->
 
-* Worked test-first with test-driven development (**TDD**), covered the code with **unit tests** and reviewed teammates' code. <!-- src: thermo-fisher-dosimeter#4.7 -->
+* Used test-driven development (**TDD**), covered the code with **unit tests** and reviewed teammates' code. <!-- src: thermo-fisher-dosimeter#4.7 -->
 
 <!-- entry: itjet-fintech -->
 ## **Full-Stack Engineer**
@@ -99,13 +99,13 @@ Senior React engineer and frontend tech lead with 7+ years of experience buildin
 
 * Doubled delivery speed for Aspiration by introducing **TypeScript** and an **Atomic Design** component library (**design system**) with automated tests (**Puppeteer, Jest, Cucumber**). <!-- src: itjet-fintech#4.3 -->
 
-* Built a new mobile-first **React** banking web flow for Aspiration from scratch from the designs, with reusable **Atomic Design** components and a **Plop** generator that scaffolds new components. <!-- src: itjet-fintech#4.13 -->
+* Built a new mobile-first **React** banking web flow for Aspiration from scratch, based on the designs, with reusable **Atomic Design** components and a **Plop** generator that scaffolds new components. <!-- src: itjet-fintech#4.13 -->
 
 * Added features to the Oroscopo **React Native** app: API work, UI components, an animated card circle, the zodiac compatibility logic, **AdMob** banner ads and new tarot layout screens. <!-- src: itjet-fintech#4.10 -->
 
 * Wrote a pull request style guide and documentation for Aspiration to make onboarding easier, and built a utility for **E2E tests**. <!-- src: itjet-fintech#4.12 -->
 
-* Built a reusable **React Native Web** signup flow for Aspiration, a fintech product (Forbes top 10), shared by its native mobile and web apps; it made building new flows 3x faster. <!-- src: itjet-fintech#4.1 -->
+* Built a reusable **React Native Web** sign-up flow for Aspiration, a fintech product (Forbes top 10), shared by its native mobile and web apps; it made building new flows 3x faster. <!-- src: itjet-fintech#4.1 -->
 
 <!-- entry: admasters-ecommerce -->
 ## **Full-Stack Engineer and Team Leader**
@@ -127,7 +127,7 @@ Contract, consulting and project work
 
 ### **HERE Technologies | Remote**
 
-* Reworked the voice assistant's client integration for a car navigation proof of concept in **React** and **RxJS**, adding text input alongside voice and processing, completion and error states. <!-- src: navigation-poc#4.1, navigation-poc#1 -->
+* Reworked the voice assistant's client integration for a car navigation proof of concept (PoC) in **React** and **RxJS**, adding text input alongside voice, and presenting processing, completion and error states. <!-- src: navigation-poc#4.1, navigation-poc#1 -->
 
 * Implemented a passenger second-screen feature in **React** for a luxury car brand, showing live trip data. <!-- src: navigation-poc#4.3 -->
 
@@ -135,7 +135,7 @@ Contract, consulting and project work
 
 * Made a **React** and **TypeScript** demo control panel configuration-driven, with schema-validated demo definitions loaded outside the bundle, so demos changed without a rebuild. <!-- src: navigation-poc#4.10 -->
 
-* Built driver warning cards and extended their **Android** service contracts for confirming, rejecting and dismissing warnings. <!-- src: navigation-poc#4.2 -->
+* Built driver warning cards and extended their service contracts to the **Android** layer for confirming, rejecting and dismissing warnings. <!-- src: navigation-poc#4.2 -->
 
 * Added route-progress markers with clustering and migrated assisted-driving status icons and notifications. <!-- src: navigation-poc#4.4 -->
 
@@ -167,11 +167,11 @@ Contract, consulting and project work
 
 ### **Generative AI Jira Plugin | Remote**
 
-* Created the **Atlaskit** design generation form: description, reference images, product requirements document (PRD) and user-flow uploads, website URL, **MCP (Model Context Protocol)** server URL and design-system selection. <!-- src: designai-jira-plugin#4.2 -->
+* Created the **Atlaskit** design generation form: description, reference images, product requirements document (PRD) and user-flow uploads, website URL, **Model Context Protocol (MCP)** server URL and design-system selection. <!-- src: designai-jira-plugin#4.2 -->
 
-* Built an **Atlassian Jira Forge** app from scratch with **React**, **TypeScript** and **Node.js** resolvers (Forge UI Kit, then **Forge Custom UI**) that started **generative AI** design generation from a Jira issue and tracked the result in a subtask. <!-- src: designai-jira-plugin#4.1 -->
+* Built an **Atlassian Jira Forge** app from scratch with **React**, **TypeScript** and **Node.js** resolvers (Forge UI Kit, then **Forge Custom UI**) that triggered **generative AI** design generation from a Jira issue and tracked the result in a subtask. <!-- src: designai-jira-plugin#4.1 -->
 
-* Added ESLint, TypeScript and a pre-commit lint hook, enabled Atlassian design tokens, and fixed a **SonarQube** error. <!-- src: designai-jira-plugin#4.4 -->
+* Added **ESLint**, **TypeScript** and a pre-commit lint hook, enabled Atlassian design tokens, and fixed a **SonarQube** error. <!-- src: designai-jira-plugin#4.4 -->
 
 * Moved file handling to direct **Azure Blob Storage** uploads, removing the app's backend dependency and allowing larger images. <!-- src: designai-jira-plugin#4.3 -->
 
@@ -181,7 +181,7 @@ Contract, consulting and project work
 
 ### **Various Clients | Remote**
 
-* Conducted senior-level **technical interviews** for **React, React Native, JavaScript and TypeScript** roles at enterprise clients, with coding assignments. <!-- src: consulting-interviews -->
+* Conducted senior-level **technical interviews** for **React, React Native, JavaScript and TypeScript** roles at enterprise clients, using coding assignments and technical questions. <!-- src: consulting-interviews -->
 
 * Led scaling and optimization work for client teams, cutting operational costs by up to 50% through refactoring, caching and unit tests. <!-- src: consulting-optimization -->
 

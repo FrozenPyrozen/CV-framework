@@ -56,7 +56,7 @@ The car management app lets owners control their car from their phone, with feat
 
 I led the map team of 8 developers (6 React Native, 1 iOS, 1 Android) for a large, complex, high-load app for managing gas and electric cars, built on React Native and the HERE SDK. <!-- src: doc:portfolio-2025-09 --> The team built a reusable map provider module (map display, search, a bottom drawer, markers and charging stations) as a React Native micro-frontend that is integrated into several company products. <!-- src: doc:portfolio-2025-09 --> I coordinated dependencies with the UI team, the backend teams (EV and gas vehicle services, location-based services) and the HERE SDK and HERE API teams: I set scope, deadlines and priorities, led planning, removed blockers, created the integration strategy and set up test automation. <!-- src: doc:portfolio-2025-09 -->
 
-I created and documented the process for delivering and testing our apps inside the parent app (parent app, reusable feature app, map provider app). <!-- src: doc:portfolio-2025-09 --> At the client's request, I changed the architecture to migrate the reusable feature app into the parent app, and planned moving its logic and components to the parent app's patterns (clean architecture, domain-driven design, abstract services, pure components). <!-- src: doc:portfolio-2025-09 --> During the migration, I fixed weak points in the reusable feature's architecture to speed up integration and development: map instances no longer share a global ref. <!-- src: doc:portfolio-2025-09 --> The map provider's global event listener, which caused bugs when several instances were running, became one listener per map. <!-- src: doc:portfolio-2025-09 --> The map logic also moved from the reusable feature into the map provider. <!-- src: doc:portfolio-2025-09 --> I also designed the architecture of a complex search feature reused on different screens, and normalized the state structure that stores markers and search results. <!-- src: doc:portfolio-2025-09 -->
+I created and documented the process for delivering and testing our apps inside the parent app (parent app, reusable feature app, map provider app). <!-- src: doc:portfolio-2025-09 --> At the client's request, I changed the architecture to migrate the reusable feature app into the parent app, and planned the move of its logic and components to the parent app's patterns (clean architecture, domain-driven design, abstract services, pure components). <!-- src: doc:portfolio-2025-09 --> During the migration, I fixed weak points in the reusable feature app's architecture to speed up integration and development: map instances no longer share a global ref. <!-- src: doc:portfolio-2025-09 --> The map provider's global event listener, which caused bugs when several instances were running, became one listener per map. <!-- src: doc:portfolio-2025-09 --> The map logic also moved from the reusable feature app into the map provider. <!-- src: doc:portfolio-2025-09 --> I also designed the architecture of a complex search feature reused on different screens, and normalized the state structure that stores markers and search results. <!-- src: doc:portfolio-2025-09 -->
 
 **Technologies and frameworks**
 
@@ -68,7 +68,7 @@ React Native, HERE SDK, HERE API, Redux Toolkit, TypeScript, React Hooks, Git, A
 ## **Automotive navigation app under NDA for HERE Technologies (React Native, React, Node.js, Android)**
 <!-- /generated:project-navigation-statistics -->
 
-HERE's customer, a package delivery company, builds on HERE solutions (HNod, HNav, HERE SDK, HERE API). <!-- src: doc:portfolio-2025-09 --> I worked on a customizable Android app built with JavaScript tools (Node.js, React Native, React) and Android tools (Kotlin, Java), connected through gRPC. <!-- src: doc:portfolio-2025-09 --> It is a navigation app for large-truck drivers, installed on the driver's tablet and based on HERE maps. <!-- src: doc:portfolio-2025-09 --> Drivers see the route to their destination and set their truck's parameters, such as width and height, to see the restrictions that apply to it. <!-- src: doc:portfolio-2025-09 --> The app can be extended with custom logic and features through service packages connected to the HERE bundler (gRPC), which add menu items, screens, pop-ups and routing logic with React Native, React and Node.js. <!-- src: doc:portfolio-2025-09 --> In short, the project consists of the HNod library, service packages and an Android native or web app. <!-- src: doc:portfolio-2025-09 -->
+A customizable Android navigation app for large-truck drivers, installed on the driver's tablet and based on HERE maps. <!-- src: doc:portfolio-2025-09 --> HERE's customer, a package delivery company, builds on HERE solutions (HNod, HNav, HERE SDK, HERE API). <!-- src: doc:portfolio-2025-09 --> The app is built with JavaScript tools (Node.js, React Native, React) and Android tools (Kotlin, Java), connected through gRPC. <!-- src: doc:portfolio-2025-09 --> Drivers see the route to their destination and set their truck's parameters, such as width and height, to see the restrictions that apply to it. <!-- src: doc:portfolio-2025-09 --> The app can be extended with custom logic and features through service packages connected to the HERE bundler, which add menu items, screens, pop-ups and routing logic with React Native, React and Node.js. <!-- src: doc:portfolio-2025-09 --> In short, the project consists of the HNod library, service packages and an Android app, native or web-based. <!-- src: doc:portfolio-2025-09 -->
 
 <!-- generated:media-navigation-statistics -->
 ![Navigation app, route view](../sources/media/portfolio-2025-04/image2.jpeg)
@@ -78,7 +78,7 @@ HERE's customer, a package delivery company, builds on HERE solutions (HNod, HNa
 
 **Responsibilities**
 
-I handled route deviations, when a truck driver leaves the planned route: collecting these cases and sending them to a reporting endpoint. <!-- src: doc:portfolio-2025-09 --> I extended the HERE HNod library to submit route-change events (new route started, previous route restored, route edited, alternative route selected, driver deviated from route, route refreshed, driver parking). <!-- src: doc:portfolio-2025-09 --> I then handled these events, compared the route data to detect deviations, and sent that data to the customer. <!-- src: doc:portfolio-2025-09 --> This route-deviation work and a redesigned search UI I built used the HERE navigation SDK in TypeScript and on Android, with HNav, HNod and HERE's service packages. <!-- src: navigation-statistics#4.5, navigation-statistics#5, navigation-statistics#7 -->
+I worked on route deviations, the cases when a truck driver leaves the planned route: I collected them and sent them to a reporting endpoint. <!-- src: doc:portfolio-2025-09 --> I extended the HNod library to submit route-change events (new route started, previous route restored, route edited, alternative route selected, driver deviated from route, route refreshed, driver parking). <!-- src: doc:portfolio-2025-09 --> I then processed these events, compared the route data to detect deviations, and sent that data to the customer. <!-- src: doc:portfolio-2025-09 --> I also built a redesigned search UI. <!-- src: navigation-statistics#4.5 --> Both pieces used the HERE navigation SDK in TypeScript and on Android, with HNod, HNav and HERE's service packages. <!-- src: navigation-statistics#4.5, navigation-statistics#5, navigation-statistics#7 -->
 
 I made route changes explainable: the guidance statistics report not only which route is active but why it changed, such as a driver's choice, a route refresh or a parking approach. <!-- src: navigation-statistics#1, navigation-statistics#4.1 --> I separated the developer tools and their React diagnostic displays from the core statistics service and updated the shared contracts (Protocol Buffers), keeping the old operations for existing users. <!-- src: navigation-statistics#4.2, navigation-statistics#4.3 --> I added regression tests for each route-change reason and fixed integration failures. <!-- src: navigation-statistics#4.4 -->
 
@@ -92,17 +92,19 @@ JavaScript, TypeScript, Node.js, React Native, React, Android, RxJS, Protocol Bu
 ## **Car navigation PoC under NDA (Node.js, React)**
 <!-- /generated:project-navigation-poc -->
 
-This proof of concept (PoC) is an automotive app that showed the possibilities of new HERE technology in Volkswagen AG cars (Audi, Porsche, Volkswagen and others) and integrated features such as the Hugo AI assistant, Level 3 automated driving (L3) interaction, advanced driver-assistance systems (ADAS), the Kurviger route planner, the operational design domain (ODD), custom themes and layout support. <!-- src: doc:portfolio-2025-09 --> It combines a React and TypeScript layer with HERE's navigation SDK on Android, so it can be tried across car brands and in-car displays. <!-- src: navigation-poc#1 -->
+This proof of concept (PoC) is an automotive app that demonstrated what new HERE technology can do in Volkswagen AG cars (Audi, Porsche, Volkswagen and others). <!-- src: doc:portfolio-2025-09 --> It integrated features such as the Hugo AI assistant, Level 3 automated driving (L3) interaction, advanced driver-assistance systems, the Kurviger route planner, custom themes and layout support. <!-- src: doc:portfolio-2025-09 --> It combined a React and TypeScript layer with HERE's navigation SDK on Android, so it could be tried across car brands and in-car displays. <!-- src: navigation-poc#1 -->
 
 <!-- generated:media-navigation-poc -->
-![Car navigation PoC on the head unit](../sources/media/portfolio-2025-09/p04-1.png)
+![Car navigation PoC on the in-car display](../sources/media/portfolio-2025-09/p04-1.png)
 <!-- /generated:media-navigation-poc -->
 
 **Responsibilities**
 
 I implemented the L3 interaction feature and the Hugo AI assistant feature, which builds routes and shows nearby places. <!-- src: doc:portfolio-2025-09 --> For the assistant, I added typed input next to voice and built clear processing, completion and error states, so a conversation could run alongside the map. <!-- src: navigation-poc#4.1 --> I built the driver warning cards, which let the driver confirm, reject or dismiss a warning. <!-- src: navigation-poc#4.2 --> For a luxury car brand, I built a second screen for the passenger with live trip data from the car, nearby places and a recenter control. <!-- src: navigation-poc#4.3 --> I added route-progress markers that highlight the next one ahead, and the icons and notifications that show the assisted-driving status. <!-- src: navigation-poc#4.4 -->
 
-I also implemented the Porsche theme and layout, and added debug car-data settings for electric cars. <!-- src: doc:portfolio-2025-09 --> I built brand themes with day and night variants and kept the shared cockpit layout consistent across brands. <!-- src: navigation-poc#4.7 --> I added curvy-route controls and fixed alternative-route selection from the map; in a separate Kotlin reference app for motorcycle navigation, I built a route-curviness slider and screen orientation handling during guidance. <!-- src: navigation-poc#4.5 --> For search and parking demos, I added ratings, parking details and a QR-code booking card. <!-- src: navigation-poc#4.6 --> For the web control panel that runs the demos, I moved its settings and scenarios into a configuration that is checked when it loads and can change without rebuilding the app. <!-- src: navigation-poc#4.10 --> I wrote a script that replaced inefficient manual steps and made the build 3x faster. <!-- src: doc:portfolio-2025-09, gm-poc-build-3x -->
+I also implemented the Porsche theme and layout, and added debug car-data settings for electric cars. <!-- src: doc:portfolio-2025-09 --> I built brand themes with day and night variants and kept the shared cockpit layout consistent across brands. <!-- src: navigation-poc#4.7 -->
+
+I added curvy-route controls and fixed alternative-route selection from the map. <!-- src: navigation-poc#4.5 --> In a separate Kotlin reference app for motorcycle navigation, I built a curviness slider and screen orientation handling during guidance. <!-- src: navigation-poc#4.5 --> For search and parking demos, I added ratings, parking details and a QR-code booking card. <!-- src: navigation-poc#4.6 --> For the web control panel that runs the demos, I moved its settings and scenarios into a configuration that is checked when it loads and can change without rebuilding the app. <!-- src: navigation-poc#4.10 --> I wrote a script that replaced inefficient manual steps and made the build 3x faster. <!-- src: doc:portfolio-2025-09, gm-poc-build-3x -->
 
 **Technologies and frameworks**
 
@@ -124,7 +126,7 @@ Velas Wallet is a fully open-source, non-custodial, multi-language crypto wallet
 
 **Responsibilities**
 
-I removed performance bottlenecks across the wallet: staking page loading went from 2 minutes to 5 seconds, and I eliminated unnecessary component re-renders to make the app faster and easier to use. <!-- src: doc:portfolio-2025-09, velas-wallet#4.2 --> I optimized backend responses for speed by removing unused fields and adding filters and pagination. <!-- src: doc:portfolio-2025-09 --> I configured building and signing of the wallets in CI/CD with GitHub Actions, added end-to-end tests for the mobile wallet with Detox, and published the app to the F-Droid and Snap stores. <!-- src: doc:portfolio-2025-09 --> I also designed the architecture of the new wallet and set up unit tests with Jest. <!-- src: doc:portfolio-2025-09 -->
+I removed performance bottlenecks across the wallet: staking page loading went from 2 minutes to 5 seconds, and I eliminated unnecessary component re-renders to make the app faster and easier to use. <!-- src: doc:portfolio-2025-09, velas-wallet#4.2 --> I optimized backend responses for speed by removing unused fields and adding filters and pagination. <!-- src: doc:portfolio-2025-09 --> I configured wallet builds and signing in CI/CD with GitHub Actions, added end-to-end tests for the mobile wallet with Detox, and published the app to the F-Droid and Snap stores. <!-- src: doc:portfolio-2025-09 --> I also designed the architecture of the new wallet and set up unit tests with Jest. <!-- src: doc:portfolio-2025-09 -->
 
 **Technologies and frameworks**
 
@@ -260,7 +262,7 @@ The banking web app lets customers plant trees with their transactions and chang
 
 **Responsibilities**
 
-I wrote the application from the ground up to match the designs, with a mobile-first approach and reusable components following Atomic Design, and added a scaffolding generator for the file structure. <!-- src: doc:portfolio-2025-09 --> I worked with the remote team in the US, contributed to grooming sessions and retrospectives, solved communication problems between the remote teams, and planned the scope of tasks for the next period. <!-- src: doc:portfolio-2025-09 -->
+I wrote the application from the ground up to match the designs, with a mobile-first approach and reusable components following Atomic Design, and added a scaffolding generator for the file structure. <!-- src: doc:portfolio-2025-09 --> I worked with the remote team in the US, contributed to backlog grooming sessions and retrospectives, solved communication problems between the remote teams, and planned the scope of tasks for the next period. <!-- src: doc:portfolio-2025-09 -->
 
 **Technologies and frameworks**
 
@@ -316,7 +318,7 @@ Fused is a fitness coaching app where coaches plan workouts for their athletes. 
 
 **Responsibilities**
 
-I added new features and worked with the API: I built the athlete flow in the web version (previously coach-only), moved all payment logic from the mobile app to the web version, added backend endpoints for removing cards, made the web version fully responsive, and fixed existing bugs in the mobile app. <!-- src: doc:portfolio-2025-09 --> On the web and backend side, I migrated the dev and production databases to AWS RDS, fully configured the CI/CD process and created the dev backend EC2 instance. <!-- src: doc:portfolio-2025-09 --> I also wrote documentation and communicated directly with the client. <!-- src: doc:portfolio-2025-09 -->
+I added new features and worked with the API: I built the athlete flow in the web version (previously coach-only), moved all payment logic from the mobile app to the web version, added backend endpoints for removing cards, made the web version fully responsive, and fixed existing bugs in the mobile app. <!-- src: doc:portfolio-2025-09 --> On the web and backend side, I migrated the development and production databases to AWS RDS, fully configured the CI/CD process and created the development backend EC2 instance. <!-- src: doc:portfolio-2025-09 --> I also wrote documentation and communicated directly with the client. <!-- src: doc:portfolio-2025-09 -->
 
 **Technologies and frameworks**
 
@@ -342,7 +344,7 @@ Wink is a social app for meeting new friends on Snapchat. <!-- src: wink-product
 
 **Responsibilities**
 
-I built the whole app from the designs, including login through Snapchat or a mobile number, integration with the backend API, and push notifications. <!-- src: doc:portfolio-2025-09 --> I optimized and tested the app, configured CI/CD for deployment, added image optimization on the Node.js backend, did code reviews and worked with the customer. <!-- src: doc:portfolio-2025-09 -->
+I built the whole app from the designs, including login through Snapchat or a mobile number, integration with the backend API, and push notifications. <!-- src: doc:portfolio-2025-09 --> I optimized and tested the app, configured CI/CD for deployment, added image optimization on the Node.js backend, reviewed code and worked with the customer. <!-- src: doc:portfolio-2025-09 -->
 
 **Technologies and frameworks**
 
@@ -390,7 +392,7 @@ Oroscopo is a tarot and astrology mobile app that makes predictions for zodiac s
 
 **Responsibilities**
 
-I added new features and worked with the app's API: UI components, an animated card circle, the zodiac compatibility logic, banner ads and new screens with tarot layouts. <!-- src: doc:portfolio-2025-09 --> I also worked on optimization and testing, took part in project meetings and demoed my work to the customer. <!-- src: doc:portfolio-2025-09 -->
+I added new features: UI components, an animated card circle, the zodiac compatibility logic, banner ads and new screens with tarot layouts. <!-- src: doc:portfolio-2025-09 --> I worked with the app's API, optimization and testing, took part in project meetings and demonstrated my work to the customer. <!-- src: doc:portfolio-2025-09 -->
 
 **Technologies and frameworks**
 

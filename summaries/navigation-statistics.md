@@ -142,9 +142,9 @@ Moved from `general-motors-navigation` section 8 (user 2026-10-23). The portfoli
 - term: service-packages
   allow_in: [portfolio]   # decision portfolio-here-detail-kept (HERE's components on the portfolio pages)
 - term: HNoD
-  allow_in: [portfolio]   # decision portfolio-here-detail-kept (HERE's components on the portfolio pages)
+  allow_in: [portfolio, skills]   # decisions portfolio-here-detail-kept and here-sdk-names-in-skills
 - term: HNAV
-  allow_in: [portfolio]   # decision portfolio-here-detail-kept (HERE's components on the portfolio pages)
+  allow_in: [portfolio, skills]   # decisions portfolio-here-detail-kept and here-sdk-names-in-skills
 - term: GuidanceStatisticsService
 - term: GuidanceStatisticsDockService
 - term: GuidanceStatisticsModel

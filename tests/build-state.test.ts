@@ -19,13 +19,15 @@ test("status warns once about a sent CV that changed, until acknowledged", () =>
 
 test("build records per-entry hashes; status names only the entries that changed", () => {
   const dir = tempRepo();
-  run("build.ts", dir, ["--no-pdf"]);
+  run("build.ts", dir, ["cv/Kirill_Kohan_CV.md", "--no-pdf", "--entries-reviewed"]); // a clean record, whatever the live repo has pending
   const state = JSON.parse(readFileSync(join(dir, "cv/.build-state.json"), "utf8"));
   assert.ok(state["cv/Kirill_Kohan_CV.md"].entries["various-clients"]);
   edit(dir, "facts/confirmed.yaml", "giving technical consulting and educational webinars.", "giving technical consulting, workshops and educational webinars.");
+  edit(dir, "summaries/designai-jira-plugin.md", /^cv_order: \d+$/m, "cv_order: 9"); // moves the entry; its text needs no rewrite
   const st = run("status.ts", dir).out;
-  assert.match(st, /entries to update: various-clients$/m); // the master CV (composer)
+  assert.match(st, /entries to update: various-clients$/m); // the master CV (composer); not designai-jira-plugin
   assert.match(st, /run \/compose for the master CV and \/variants for role variants first/);
+  edit(dir, "summaries/designai-jira-plugin.md", /^cv_order: 9$/m, "cv_order: 4"); // back, so the builds below pass lint's order check
   edit(dir, "facts/decisions.yaml", "decision: Keep the master CV's current length", "decision: Keep the master CV's present length");
   assert.doesNotMatch(run("status.ts", dir).out, /decisions\.yaml/);
   // A rebuild without rewriting the CV keeps the entry listed; --entries-reviewed (or an edited CV) clears it.
