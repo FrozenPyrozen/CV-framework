@@ -2,7 +2,7 @@
 
 description: Turns a Word CV into a reusable template (templates/<name>/) by labeling its paragraph types, then test-builds the user's CV with it for approval.
 
-**Never commits.** PDF input is not supported yet (planned after Word import); ask the user for a Word version, or say it's pending.
+**Never commits.** PDF input is specified (`specs/templates.md` 4.3) but not built yet: ask the user for a Word version, or offer to build the PDF import first.
 
 ## Read first
 - `AGENTS.md` (rules for every agent)

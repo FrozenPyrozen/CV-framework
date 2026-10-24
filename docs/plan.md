@@ -373,7 +373,7 @@ P1–P6 are done and the `portfolio-classic` template is approved (2026-10-23). 
 
 ## 11. Out of scope for now
 
-- **PDF input for `/import-template`:** Word input works; PDF input (planned in `specs/templates.md` 4) is deferred until you need a template from a PDF CV.
+- **PDF input for `/import-template`:** Word input works; PDF input is specified in `specs/templates.md` 4.3 (measure with `pdfjs-dist`, label with the Word paragraph types, rebuild as WordprocessingML with `jszip` as `scripts/portfolio-template.ts` does, compare the test build within a tolerance; its acceptance list is there) and gets built when you need a template from a PDF CV.
 - **Portfolio output:** built (`specs/outputs/portfolio.md`, section 9e, P1–P6, 2026-10-23). The `portfolio-classic` template is approved (2026-10-23); what's left is content, not scope: choosing projects and screenshots (`/portfolio-material`), writing (`/portfolio`), building and reviewing.
 - Cover-letter agent (the format leaves room to add it later).
 - Pulling history from remote GitHub or Azure DevOps (local clones only, while you have access).

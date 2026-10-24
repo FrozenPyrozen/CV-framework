@@ -97,7 +97,7 @@ Supported fix types (each fix has `id`, `why`, `found`, `set`):
 | Input | Method |
 |---|---|
 | Word (`.docx`) | `npm run template-import -- <file.docx> <name>` lists every paragraph (index, style, list/drawing/tab flags, text). The template-importer agent labels the types in `templates/<name>/import-map.yaml` (paragraph index per type, plus `keep`, `jc`, `size`, `bold`, `date_tab`), then `npm run template-import -- <file.docx> <name> --map templates/<name>/import-map.yaml` builds `template.docx` and `style-map.yaml`. One sample per type is kept and all other content removed. |
-| PDF (not built yet; planned after `build` works end to end) | Extract fonts, sizes, colors, positions, margins and line spacing with `pdfjs-dist`. The agent compares them with a page preview, and the template is rebuilt as a new Word file with the `docx` npm package. Fine details may differ, and `import-report.md` lists them. |
+| PDF (specified in 4.3, not built yet) | Measure fonts, sizes, colors, positions, margins, spacing and drawn lines with `pdfjs-dist`; the agent labels the measured lines with the same paragraph types as for Word, and the template is rebuilt as a new Word file. Fine details may differ, and `import-report.md` lists them. |
 
 ### 4.1 Rules
 
@@ -125,6 +125,44 @@ Source: <file name only> (Word | PDF) · Imported: <date>
 ## Test build
 Pages: N · pdf-check: pass/fail · Preview: preview/page-1.png …
 ```
+
+### 4.3 PDF input (specified; build it when a template is needed from a PDF CV)
+
+A PDF has no paragraphs or styles, only positioned text and drawings. So a PDF import **measures** the look and **rebuilds** it; it never copies the file. The output is the same as a Word import (`template.docx`, `style-map.yaml`, `fixes.yaml`, `import-report.md`), so rendering, `build`, `pdf-check` and approval (4.1) work unchanged.
+
+**Steps**
+
+1. **Measure (script).** `template-import` gets a PDF branch, chosen by the file extension (same command, no new flag). With `pdfjs-dist` it reads every page:
+   - **Text runs:** position, width, font name, size, color (fill operator) and baseline.
+   - **Lines:** runs on one baseline are joined into a line, and a gap wider than a few spaces marks a tab, so a right-aligned run becomes a tab stop.
+   - **Drawings:** horizontal lines and thin rectangles from the operator list, with position, length and width.
+   - **Page:** the page size, and margins from the outermost text and drawings across all pages.
+   - **Output:** the measurements go to `.cv-runs/template-import-<name>/measure.json`, git-ignored because it holds the source's text, plus page previews (the same renderer as `preview`). The script prints one numbered line per text line (index, font, size, bold or italic from the font name, color, x-indent, alignment, gap above, tab position, bullet glyph if any) **with the text cut to its first few words**, so the agent can label without the full text being stored.
+2. **Label (agent).** The template-importer looks at the previews and the numbered lines and writes `templates/<name>/import-map.yaml` with the same paragraph types as section 2. Each type points to one sample line (`line: <index>`), drawn lines are typed as `section_rule` or `header_rule` with `drawing: <index>`, and per type it may override what the measurement can't tell (`keep`, `date_tab`, `bold`). One sample per type, as for Word.
+3. **Rebuild (script).** `template-import <file.pdf> <name> --map …` writes `template.docx` as WordprocessingML with `jszip`, the way `scripts/portfolio-template.ts` generates the `portfolio-classic` template (no new dependency), one sample paragraph per type in the section 2 order, each holding its placeholder. The mapping:
+   - **Page and margins:** from the measured page size and margins.
+   - **Run properties:** font family, size (to the nearest half point), bold, italic and color from the sample line. A font that isn't installed is reported, and the user picks a substitute.
+   - **Alignment:** left, centered or right from the line's position within the margins.
+   - **Indent:** left indent from the x-offset, and the hanging indent and bullet glyph for bullets.
+   - **Spacing:** space before from the gap to the previous line of another type; line spacing from the baseline distance within a multi-line block.
+   - **Tab stops:** a right tab at the measured position where `date_tab` applies.
+   - **Rules:** a paragraph bottom border with the measured width and color, where `keep` applies.
+4. **Compare (script, then agent).** The test build of 4.1 rule 4 renders the master CV with the new template. The script measures that PDF the same way and compares it per paragraph type (font, size, color, indent, gaps, rule width) with the source, within a small tolerance. Every difference beyond it goes into `import-report.md` under *Not copied exactly*, along with what the source had and what the rebuild has. The agent fixes what it can with `fixes.yaml` (section 3) and shows the user both previews side by side.
+
+**Limits** (reported, not silently approximated)
+
+- **No layout to copy:** multi-column text, text in images (scans; ask for a text PDF), tables used for layout, and graphics other than straight lines. They are ATS warnings anyway (4.1 rule 2), so the import offers the one-column look.
+- **Header and footer:** text repeated at the same position on every page is treated as a header or footer. A contact line found only there triggers the ATS warning.
+- **Fonts:** embedded subset names (`ABCDEF+Cambria-Bold`) are reduced to the family and weight. Unknown or unlicensed fonts are never copied out of the PDF.
+- **Privacy:** rule 1 of 4.1 applies. The source PDF stays where the user keeps it, and `measure.json` and the previews stay in `.cv-runs/`. `templates/<name>/` holds only measurements, labels and placeholders, never the source's words, except your own old CV, which may be kept as `source.pdf`.
+
+**Done when** (the acceptance for building it)
+
+- A test PDF (the `classic` template's own test build) imports to a template whose test build passes `pdf-check`.
+- The comparison reports no difference beyond tolerance for name, section heading, entry title, entry details (with the date tab), bullet and body.
+- A two-column PDF yields the ATS warning and the one-column offer.
+- No text of the source appears in `templates/<name>/`.
+- Tests cover the measuring, the label-to-docx mapping and the comparison. The fixtures use a generated PDF, not a real CV.
 
 ## 5. Rendering rules
 
