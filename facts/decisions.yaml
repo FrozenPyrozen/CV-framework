@@ -212,3 +212,21 @@ decisions:
     date: "2026-10-24"
     why: User's choice ("keep them") after the portfolio confidentiality reviews 2026-10-23-1855 and 2026-10-24-1014.
     matches: [DEBUG banner, debug build banner, build version string in screenshot]
+
+  - id: wink-user-count-public
+    decision: The Itjet entry keeps "it reached more than 5 million registered users" for Wink, in the master CV and every variant; the figure is fine to share.
+    date: "2026-10-24"
+    why: User's choice during /improve on reports/2026-10-24-1044 (confidentiality-3, carried over from 2026-10-23-1349).
+    matches: [5 million registered users, Wink user count, client user numbers]
+
+  - id: velas-tabnabbing-fix-kept
+    decision: The Velas entry keeps "Fixed a reverse tabnabbing vulnerability (tab hijacking) across several Velas web projects"; naming that past, fixed weakness is fine.
+    date: "2026-10-24"
+    why: User's choice during /improve on reports/2026-10-24-1044 (confidentiality-4).
+    matches: [reverse tabnabbing, tab hijacking, Velas security weakness, past vulnerability]
+
+  - id: security-detail-kept
+    decision: "The security detail in the bullets stays as written: the OMO face-recognition unlock fix, MQTT over TLS with client certificates (Thermo Fisher), the SQLCipher upgrade and SSL certificate pinning rotation (Clinical Ink)."
+    date: "2026-10-24"
+    why: "User's choice during /improve on reports/2026-10-24-1044 (confidentiality-5): common techniques, useful keywords."
+    matches: [face-recognition unlock, insecure unlock, MQTT over TLS, client certificates, SQLCipher, certificate pinning, security mechanics]
