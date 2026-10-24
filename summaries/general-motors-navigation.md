@@ -29,13 +29,13 @@ cv_location: Remote
 
 ## 1. Project overview
 
-A vehicle companion app for General Motors owners: from their phone, drivers control and check their car, for example by starting the engine remotely or checking tire pressure, for gas and electric vehicles across the Chevrolet, Buick, GMC and Cadillac brands. Inside it, a reusable map feature (map display, search, a bottom drawer, markers and EV charging stations) ships as a React Native micro-frontend built on the HERE SDK and is reused by several company products. The map team had 8 developers: 6 React Native, 1 iOS and 1 Android. It worked with the UI team, the backend teams for the EV and gas vehicle services and the location-based services, and with HERE as the vendor of the map SDK and APIs (doc:portfolio-2025-04; the user confirmed on 2026-10-22 that the portfolio is the more detailed description for now). The work also included in-car navigation features on the HERE SDK and a passenger second-screen feature for a luxury car brand (from the CV).
+A vehicle companion app for General Motors owners: from their phone, drivers control and check their car, for example by starting the engine remotely or checking tire pressure, for gas and electric vehicles across the Chevrolet, Buick, GMC and Cadillac brands. Inside it, a reusable map feature (map display, search, a bottom drawer, markers and EV charging stations) ships as a React Native micro-frontend built on the HERE SDK and is reused by several company products. The map team had 8 developers: 6 React Native, 1 iOS and 1 Android. It worked with the UI team, the backend teams for the EV and gas vehicle services and the location-based services, and with HERE as the vendor of the map SDK and APIs (doc:portfolio-2025-04; the user confirmed on 2026-10-22 that the portfolio is the more detailed description for now). (The in-car navigation features and the passenger second screen moved to the HERE Technologies summaries navigation-statistics and navigation-poc, user 2026-10-23.)
 
 TODO (needs user input): the wider organization context; more detail the user will add later.
 
 ## 2. Main features
 
-In-car navigation, including route-deviation handling and search (from the CV). Remote vehicle control and status from the phone (for example remote engine start and tire pressure), for gas and electric vehicles; a map with search, a bottom drawer, markers and EV charging stations (doc:portfolio-2025-04).
+Remote vehicle control and status from the phone (for example remote engine start and tire pressure), for gas and electric vehicles; a map with search, a bottom drawer, markers and EV charging stations (doc:portfolio-2025-04).
 
 ## 3. My role and responsibilities
 
@@ -127,7 +127,7 @@ Source: doc:portfolio-2025-04
 
 - **Language:** TypeScript (hands-on)
 - **Mobile and UI:** React Native (hands-on), Storybook (hands-on), Figma (hands-on), Styled Components (hands-on, confirmed by user 2026-10-16)
-- **Maps and navigation:** HERE SDK, HERE HNav / HNod SDK (hands-on), HERE API (hands-on, confirmed by user 2026-10-22, from doc:portfolio-2025-04)
+- **Maps and navigation:** HERE SDK, HERE API (hands-on, confirmed by user 2026-10-22, from doc:portfolio-2025-04)
 - **Architecture:** React Native micro-frontends (hands-on), clean architecture and domain-driven design (hands-on, confirmed by user 2026-10-22, from doc:portfolio-2025-04)
 - **State and data:** Redux Saga (hands-on), Redux Toolkit (hands-on, confirmed by user 2026-10-22, from doc:portfolio-2025-04), RxJS (hands-on)
 - **Backend:** Node.js (hands-on)
@@ -135,7 +135,6 @@ Source: doc:portfolio-2025-04
 - **CI/CD:** Fastlane (hands-on), Bitrise (hands-on), Azure and Azure Pipelines (used by the project, confirmed by user 2026-10-22, from doc:portfolio-2025-04)
 - **Native code:** native iOS and Android modules of the map provider (used by the project; built by the team's iOS and Android developers)
 - **Monitoring:** Bugsnag (hands-on), Kibana (hands-on)
-- **AI:** voice AI assistant (hands-on, proof of concept)
 
 ## 6. Skills demonstrated
 

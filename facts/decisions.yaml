@@ -166,10 +166,10 @@ decisions:
     matches: [clinical trial description, client product wording, clinical screenshots crop, code-editor fragments]
 
   - id: portfolio-screenshots-test-data
-    decision: The OMO device IDs and Armed status, the Fused profile photo and body data, the GM and Golfuture phone numbers, the RegiStart names and the Velas wallet data in the portfolio screenshots are test accounts and sample data.
+    decision: The OMO device IDs and Armed status, the Fused profile photo and body data, the GM and Golfuture phone numbers, the RegiStart names, the Velas wallet data and the "dima@gmail.com" account email on the Fused settings screen (user 2026-10-24) in the portfolio screenshots are test accounts and sample data.
     date: "2026-10-23"
     why: User confirmed (portfolio review 2026-10-23-1633, confidentiality-4, -6, -8, -9).
-    matches: [test data, device IDs, phone numbers in screenshots, face photo, RegiStart names, Velas wallet balances]
+    matches: [test data, device IDs, phone numbers in screenshots, face photo, RegiStart names, Velas wallet balances, dima@gmail.com, Fused email]
 
   - id: portfolio-here-detail-kept
     decision: The HERE navigation page keeps HERE's components (HNod library, HERE bundler, HERE runner, HNav) and the project's structure, as the published portfolio did.
@@ -206,3 +206,9 @@ decisions:
     date: "2026-10-24"
     why: User's choice; the names were in the previous CV and are on the published portfolio (decision portfolio-here-detail-kept).
     matches: [HNav, HNod, HNAV, HNoD, HERE SDK component names]
+
+  - id: portfolio-debug-banners-kept
+    decision: The red "DEBUG" build banners on the HERE navigation app screenshots (image2.jpeg, image3.jpeg) and the car navigation PoC screenshot (p04-1.png) stay as they are in the portfolio.
+    date: "2026-10-24"
+    why: User's choice ("keep them") after the portfolio confidentiality reviews 2026-10-23-1855 and 2026-10-24-1014.
+    matches: [DEBUG banner, debug build banner, build version string in screenshot]

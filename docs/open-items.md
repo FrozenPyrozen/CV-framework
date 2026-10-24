@@ -25,8 +25,6 @@ Kept in the repo (not in any AI tool's memory) so it travels to every laptop (`s
 
 | Item | Question | Where it goes | Since |
 |---|---|---|---|
-| Fused email | The Fused settings screenshot shows "dima@gmail.com" (portfolio page 15, `sources/media/portfolio-2025-09/p13-3.png`): blur it, or is it test data (then add it to decision `portfolio-screenshots-test-data`)? | the image or `facts/decisions.yaml` | 2026-10-23 |
-| DEBUG banners | The red "DEBUG \| …" build banners on the HERE navigation screenshots (image2.jpeg, image3.jpeg) and the PoC one (p04-1.png): crop them, or keep them as a decision? | the images or `facts/decisions.yaml` | 2026-10-23 |
 | OMO description | The OMO page repeats video surveillance and motion-sensor scenarios; what did "traffic monitoring" mean for a home? (proofreading-4) | `omo-systems-smart-home` and its portfolio text | 2026-10-23 |
 
 ## Questions from the first review (`reports/2026-10-16-1201/`)

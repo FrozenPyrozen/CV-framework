@@ -178,7 +178,7 @@ Tags: here-sdk, automotive, voice-ai
 - 4.6: TODO (needs user input): search/parking demo outcome and whether any booking handoff was validated.
 - 4.7: TODO (needs user input): confirmed variant coverage and any design or demonstration acceptance.
 - 4.8: TODO (needs user input): integration outcome and confirmed use of the electric-vehicle data view.
-- 4.9: TODO (needs user input): measured setup, build/install, or debugging improvements and automation adoption.
+- 4.9: a script that replaced manual build steps made the build 3x faster (fact gm-poc-build-3x, user 2026-10-23). Other setup or debugging improvements: TODO (needs user input).
 - 4.10: TODO (needs user input): confirmed demo use, operator feedback, configuration-maintenance benefit, and any measured preparation-time savings.
 
 No release, customer, performance, safety, or delivery-speed metrics are inferred from git. Line counts are omitted because imported theme assets and repeated revisions would distort the interpretation. No matched authored commits were found in service-packages, and the reference-app work does not establish a connection to the earlier guidance-statistics assignment.

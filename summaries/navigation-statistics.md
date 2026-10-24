@@ -127,7 +127,7 @@ No business-impact, performance, defect-reduction, or adoption numbers are infer
 ## 8. Portfolio material
 
 - image: ../sources/media/portfolio-2025-04/image2.jpeg
-  caption: Navigation app, route view
+  caption: Navigation app, destination details with nearby parking
   public: yes, confirmed by user 2026-10-23
 - image: ../sources/media/portfolio-2025-04/image3.jpeg
   caption: Navigation app, search
