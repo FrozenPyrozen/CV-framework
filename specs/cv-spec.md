@@ -160,7 +160,7 @@ Not allowed (lint fails): italics, tables, nested lists, numbered lists, images,
 - Terms listed in a summary's *Confidentiality notes* (internal project names, repo names, ticket ids such as `OR-`, `ENGAGE-`, `VEL-`, internal URLs) never appear in a CV's **rendered text** (what reaches Word, PDF and the reader).
 - HTML comments (`<!-- entry: … -->`, `<!-- src: … -->`, generated markers) are never rendered, so summary ids and source ids in them may contain such terms (e.g. `orion-mobile-clinical-ink`). The CV Markdown stays in the private repo; only the built files are sent.
 - When `cv_client_label` differs from `client`, the real client name never appears in the CV.
-- `lint` enforces this with a blocklist and secret scan. Hidden client names match in any case; other confidential terms are case-sensitive. The confidentiality reviewer checks the meaning ("could a reader identify the client from this description?").
+- `lint` enforces this with a blocklist and secret scan. Hidden client names, and confidential terms of four letters or more, match in any case; shorter terms match as written (so "VW" doesn't catch "vw" in a word). The confidentiality reviewer checks the meaning ("could a reader identify the client from this description?").
 - Facts (`facts/confirmed.yaml`) may hold internal names for context; a CV built from them paraphrases those names, and `lint` blocks any section 9 term that slips through.
 
 ## 12. How agents edit a CV
@@ -179,7 +179,7 @@ The current decisions live in `facts/decisions.yaml`. At the time of writing:
 - Keep the current length of the master CV (within `checks.max_words`, 3 to 4 pages). Role variants follow their profile's `max_pages` and `max_words`.
 - Keep the Google Drive portfolio link.
 - Keep the job title step from Team Leader (General Motors) to Senior Software Engineer (SYSPRO).
-- The consulting section shows no dates, and the Velocity AI client is hidden behind its label (Clinical Ink is named, `hidden-clients`). The HERE Technologies navigation work (truck navigation app, car navigation PoC) is two consulting entries, not General Motors bullets (`gm-project-names`); the skills list and the HERE entries name the HNav and HNod SDKs (`here-sdk-names-in-skills`).
+- The consulting section shows no dates, and the Velocity AI client is hidden behind its label (Clinical Ink is named, `hidden-clients`). The HERE Technologies navigation work (truck navigation app, car navigation PoC) is two consulting entries, not General Motors bullets (`gm-project-names`); the skills list and the HERE entries name the HNav and HNod SDKs (`here-sdk-names-in-skills`); the PoC entry and the portfolio may name Bentley and Daimler (`portfolio-poc-names-public`).
 - All jobs are full-time, so no entry carries "(Contract)" except the consulting contracts (decision `all-full-time`).
 - SYSPRO work is presented as architecture-governed SDD, with AI agents implementing and reviewing code against the specifications under human review (decisions `sdd-not-vibe-coding`, `ai-agents-wording`).
 - The summary paragraph names no companies and uses past tense without timing words (`summary-no-company-names`).
