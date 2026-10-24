@@ -149,7 +149,7 @@ Contract, consulting and project work
 <!-- entry: orion-mobile-clinical-ink -->
 ## **Senior React Native Engineer (Contract)**
 
-### **Clinical Trials Patient App | Remote**
+### **Clinical Ink | Remote**
 
 * Migrated the native Android app to **Android 14 (SDK 34)**: Gradle 8, Java 17, alarm and notification changes, and **Jenkins** build fixes. <!-- src: orion-mobile-clinical-ink#4.4 -->
 

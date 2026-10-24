@@ -65,10 +65,10 @@ React Native, HERE SDK, HERE API, Redux Toolkit, TypeScript, React Hooks, Git, A
 <!-- project: navigation-statistics -->
 
 <!-- generated:project-navigation-statistics -->
-## **Automotive navigation app under NDA for HERE Technologies (React Native, React, Node.js, Android)**
+## **Automotive navigation app for HERE Technologies (React Native, React, Node.js, Android)**
 <!-- /generated:project-navigation-statistics -->
 
-A customizable Android navigation app for large-truck drivers, installed on the driver's tablet and based on HERE maps. <!-- src: doc:portfolio-2025-09 --> HERE's customer, a package delivery company, builds on HERE solutions (HNod, HNav, HERE SDK, HERE API). <!-- src: doc:portfolio-2025-09 --> The app is built with JavaScript tools (Node.js, React Native, React) and Android tools (Kotlin, Java), connected through gRPC. <!-- src: doc:portfolio-2025-09 --> Drivers see the route to their destination and set their truck's parameters, such as width and height, to see the restrictions that apply to it. <!-- src: doc:portfolio-2025-09 --> The app can be extended with custom logic and features through service packages connected to the HERE bundler, which add menu items, screens, pop-ups and routing logic with React Native, React and Node.js. <!-- src: doc:portfolio-2025-09 --> In short, the project consists of the HNod library, service packages and an Android app, native or web-based. <!-- src: doc:portfolio-2025-09 -->
+A customizable Android navigation app for large-truck drivers, installed on the driver's tablet and based on HERE maps. <!-- src: doc:portfolio-2025-09 --> HERE's customer, a package delivery company, builds on HERE solutions (HNav, HNod, HERE SDK, HERE API). <!-- src: doc:portfolio-2025-09 --> The app is built with JavaScript tools (Node.js, React Native, React) and Android tools (Kotlin, Java), connected through gRPC. <!-- src: doc:portfolio-2025-09 --> Drivers see the route to their destination and set their truck's parameters, such as width and height, to see the restrictions that apply to it. <!-- src: doc:portfolio-2025-09 --> The app can be extended with custom logic and features through service packages connected to the HERE bundler, which add menu items, screens, pop-ups and routing logic with React Native, React and Node.js. <!-- src: doc:portfolio-2025-09 --> In short, the project consists of the HNod library, service packages and an Android app, native or web-based. <!-- src: doc:portfolio-2025-09 -->
 
 <!-- generated:media-navigation-statistics -->
 ![Navigation app, route view](../sources/media/portfolio-2025-04/image2.jpeg)
@@ -78,21 +78,21 @@ A customizable Android navigation app for large-truck drivers, installed on the 
 
 **Responsibilities**
 
-I worked on route deviations, the cases when a truck driver leaves the planned route: I collected them and sent them to a reporting endpoint. <!-- src: doc:portfolio-2025-09 --> I extended the HNod library to submit route-change events (new route started, previous route restored, route edited, alternative route selected, driver deviated from route, route refreshed, driver parking). <!-- src: doc:portfolio-2025-09 --> I then processed these events, compared the route data to detect deviations, and sent that data to the customer. <!-- src: doc:portfolio-2025-09 --> I also built a redesigned search UI. <!-- src: navigation-statistics#4.5 --> Both pieces used the HERE navigation SDK in TypeScript and on Android, with HNod, HNav and HERE's service packages. <!-- src: navigation-statistics#4.5, navigation-statistics#5, navigation-statistics#7 -->
+I worked on route deviations, the cases when a truck driver leaves the planned route: I collected them and sent them to a reporting endpoint. <!-- src: doc:portfolio-2025-09 --> I extended the HNod library to submit route-change events (new route started, previous route restored, route edited, alternative route selected, driver deviated from route, route refreshed, driver parking). <!-- src: doc:portfolio-2025-09 --> I then processed these events, compared the route data to detect deviations, and sent that data to the customer. <!-- src: doc:portfolio-2025-09 --> I also built a redesigned search UI. <!-- src: navigation-statistics#4.5 --> Both pieces used HERE's HNav and HNod SDKs, written in TypeScript and Kotlin, with HERE's service packages. <!-- src: navigation-statistics#4.5, navigation-statistics#5, navigation-statistics#7 -->
 
 I made route changes explainable: the guidance statistics report not only which route is active but why it changed, such as a driver's choice, a route refresh or a parking approach. <!-- src: navigation-statistics#1, navigation-statistics#4.1 --> I separated the developer tools and their React diagnostic displays from the core statistics service and updated the shared contracts (Protocol Buffers), keeping the old operations for existing users. <!-- src: navigation-statistics#4.2, navigation-statistics#4.3 --> I added regression tests for each route-change reason and fixed integration failures. <!-- src: navigation-statistics#4.4 -->
 
 **Technologies and frameworks**
 
-JavaScript, TypeScript, Node.js, React Native, React, Android, RxJS, Protocol Buffers, HERE navigation SDK, Jest, Git. <!-- src: navigation-statistics#5, doc:portfolio-2025-09 -->
+JavaScript, TypeScript, Node.js, React Native, React, Android, RxJS, Protocol Buffers, HNav and HNod SDKs, Kotlin, Jest, Git. <!-- src: navigation-statistics#5, doc:portfolio-2025-09 -->
 
 <!-- project: navigation-poc -->
 
 <!-- generated:project-navigation-poc -->
-## **Car navigation PoC under NDA (Node.js, React)**
+## **Car navigation PoC for HERE Technologies (Node.js, React)**
 <!-- /generated:project-navigation-poc -->
 
-This proof of concept (PoC) is an automotive app that demonstrated what new HERE technology can do in Volkswagen AG cars (Audi, Porsche, Volkswagen and others). <!-- src: doc:portfolio-2025-09 --> It integrated features such as the Hugo AI assistant, Level 3 automated driving (L3) interaction, advanced driver-assistance systems, the Kurviger route planner, custom themes and layout support. <!-- src: doc:portfolio-2025-09 --> It combined a React and TypeScript layer with HERE's navigation SDK on Android, so it could be tried across car brands and in-car displays. <!-- src: navigation-poc#1 -->
+This proof of concept (PoC) is an automotive app that demonstrated what new HERE technology can do in Volkswagen AG cars (Audi, Porsche, Volkswagen and others). <!-- src: doc:portfolio-2025-09 --> It integrated features such as the Hugo AI assistant, Level 3 automated driving (L3) interaction, advanced driver-assistance systems, the Kurviger route planner, custom themes and layout support. <!-- src: doc:portfolio-2025-09 --> It combined a React and TypeScript layer with HERE's HNav and HNod SDKs on Android, so it could be tried across car brands and in-car displays. <!-- src: navigation-poc#1, navigation-poc#5 -->
 
 <!-- generated:media-navigation-poc -->
 ![Car navigation PoC on the in-car display](../sources/media/portfolio-2025-09/p04-1.png)
@@ -108,7 +108,7 @@ I added curvy-route controls and fixed alternative-route selection from the map.
 
 **Technologies and frameworks**
 
-JavaScript, TypeScript, Node.js, React, RxJS, Protocol Buffers, gRPC, HERE navigation SDK, HERE SDK for Android, Kotlin, Android, Jetpack Compose, Jest, Git. <!-- src: navigation-poc#5 -->
+JavaScript, TypeScript, Node.js, React, RxJS, Protocol Buffers, gRPC, HNav and HNod SDKs, Kotlin, Android, Jetpack Compose, Jest, Git. <!-- src: navigation-poc#5 -->
 
 <!-- project: velas-wallet -->
 
@@ -157,7 +157,7 @@ JavaScript, Node.js, TypeScript, React, Jira, Atlaskit, Forge Custom UI, Docker.
 <!-- project: orion-mobile-clinical-ink -->
 
 <!-- generated:project-orion-mobile-clinical-ink -->
-## **Clinical trial app under NDA (React Native, React, Android)**
+## **Clinical trial app for Clinical Ink (React Native, React, Android)**
 <!-- /generated:project-orion-mobile-clinical-ink -->
 
 The app makes it easier to take part in a clinical trial. <!-- src: doc:portfolio-2025-09 --> Depending on the trial, it may provide some or all of the following: help with addresses and directions for upcoming visits; reminders to take medication or complete trial tasks; videos and other content that explain the trial or help participants prepare for upcoming tasks and appointments; and questionnaires about how they are feeling, along with other trial tasks. <!-- src: doc:portfolio-2025-09 -->

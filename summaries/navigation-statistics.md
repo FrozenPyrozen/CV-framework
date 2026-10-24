@@ -24,7 +24,7 @@ cv_order: 2   # first in consulting, after the PoC (user 2026-10-23)
 cv_client_label: HERE Technologies
 show_in_portfolio: true
 portfolio_order: 3
-portfolio_title: "Automotive navigation app under NDA for HERE Technologies (React Native, React, Node.js, Android)"
+portfolio_title: "Automotive navigation app for HERE Technologies (React Native, React, Node.js, Android)"   # "under NDA" dropped, user 2026-10-24
 cv_location: Remote
 cv_emphasis:
   - Navigation-services engineering across guidance state, route-change reasons, and service contracts.
@@ -83,7 +83,7 @@ Tags: testing, typescript, debugging, code-quality, automotive
 
 ### 4.5 In-car navigation features (truck navigation app)
 
-Implemented in-car navigation features with the HERE HNav / HNod SDK, including route-deviation handling on the truck navigation app for HERE Technologies, and a redesigned search UI. The HERE navigation SDK work was in TypeScript and on Android (user 2026-10-23). Moved from `general-motors-navigation` 4.6 (user 2026-10-23: this work belongs to the HERE consulting entry; project name confirmed for the CV and portfolio, decision gm-project-names).
+Implemented in-car navigation features with HERE's HNav and HNod SDKs (TypeScript and Kotlin), including route-deviation handling on the truck navigation app for HERE Technologies, and a redesigned search UI. The SDK work was in TypeScript and on Android (user 2026-10-23); the SDKs are HNav and HNod, written in TypeScript and Kotlin (user 2026-10-24). Moved from `general-motors-navigation` 4.6 (user 2026-10-23: this work belongs to the HERE consulting entry; project name confirmed for the CV and portfolio, decision gm-project-names).
 
 Tags: here-sdk, automotive, react-native, typescript, android
 
@@ -93,7 +93,8 @@ Tags: here-sdk, automotive, react-native, typescript, android
 - Reactive state and services: RxJS and observable-based navigation models, **hands-on**.
 - UI: React and diagnostic components, **hands-on**.
 - Contracts: Protocol Buffers and generated service interfaces, **hands-on**.
-- Navigation: HERE navigation SDK (TypeScript and Android) and internal navigation-service integration, **hands-on** (TypeScript and Android: user 2026-10-23).
+- Navigation: HERE's HNav and HNod SDKs (TypeScript and Kotlin) and internal navigation-service integration, **hands-on** (user 2026-10-23 and 2026-10-24).
+- Kotlin: **hands-on** on the SDK work (user 2026-10-24: keep it in the portfolio's technology list).
 - Testing: Jest 29 and test mocks, **hands-on**; exact minor versions may have changed.
 - Tooling: Node.js, npm, pnpm, monorepo tooling, ESLint, Prettier, Husky, and Git, **hands-on**. Lerna, Yarn, and the native runtime are **used by the project**; specific hands-on use was not separately confirmed.
 
@@ -142,9 +143,9 @@ Moved from `general-motors-navigation` section 8 (user 2026-10-23). The portfoli
 - term: service-packages
   allow_in: [portfolio]   # decision portfolio-here-detail-kept (HERE's components on the portfolio pages)
 - term: HNoD
-  allow_in: [portfolio, skills]   # decisions portfolio-here-detail-kept and here-sdk-names-in-skills
+  allow_in: [portfolio, skills, navigation-poc, navigation-statistics]   # decisions portfolio-here-detail-kept and here-sdk-names-in-skills
 - term: HNAV
-  allow_in: [portfolio, skills]   # decisions portfolio-here-detail-kept and here-sdk-names-in-skills
+  allow_in: [portfolio, skills, navigation-poc, navigation-statistics]   # decisions portfolio-here-detail-kept and here-sdk-names-in-skills
 - term: GuidanceStatisticsService
 - term: GuidanceStatisticsDockService
 - term: GuidanceStatisticsModel

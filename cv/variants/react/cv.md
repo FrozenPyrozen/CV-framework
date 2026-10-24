@@ -152,10 +152,12 @@ Contract, consulting and project work
 
 * Added and repaired **Jest** tests for route-change reasons across guidance, route edits and parking approach. <!-- src: navigation-statistics#4.4 -->
 
+* Implemented car navigation features with HERE's **HNav** and **HNod** SDKs, including route-deviation handling and a redesigned search UI. <!-- src: navigation-statistics#4.5 -->
+
 <!-- entry: orion-mobile-clinical-ink -->
 ## **Senior React Native Engineer (Contract)**
 
-### **Clinical Trials Patient App | Remote**
+### **Clinical Ink | Remote**
 
 * Refactored the legacy documents library screen from JavaScript into small **TypeScript** components for speed, adding ~1,000 lines of **Jest** and **React Native Testing Library** tests. <!-- src: orion-mobile-clinical-ink#4.2 -->
 

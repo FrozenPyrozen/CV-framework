@@ -38,7 +38,7 @@ const broken: [string, (d: string) => void, RegExp][] = [
   ["a public value without the user's confirmation", (d) => edit(d, "summaries/itjet-fintech.md", "public: yes, confirmed by user 2026-10-22", "public: yes"), /public must be "no" or "yes, confirmed by user YYYY-MM-DD"/],
   ["an image without a caption", (d) => edit(d, "summaries/itjet-fintech.md", /  caption: Fused web app, the coach's workout schedule\n/, ""), /needs a caption/],
   ["a link that isn't a URL", (d) => edit(d, "summaries/itjet-fintech.md", "## 8. Portfolio material\n", "## 8. Portfolio material\n\n- link: example.org\n  label: Site\n  public: no\n"), /must start with http/],
-  ["a portfolio_label naming a hidden client", (d) => edit(d, "summaries/orion-mobile-clinical-ink.md", "cv_client_label: Clinical Trials Patient App", "cv_client_label: Clinical Trials Patient App\nportfolio_label: Clinical Ink patient app"), /names the client the CV hides/],
+  ["a portfolio_label naming a hidden client", (d) => edit(d, "summaries/designai-jira-plugin.md", "cv_client_label: Generative AI Jira Plugin", "cv_client_label: Generative AI Jira Plugin\nportfolio_label: Velocity AI Jira app"), /names the client the CV hides/],
   ["an unknown portfolio field", (d) => edit(d, "summaries/itjet-fintech.md", "show_in_cv: true", "show_in_cv: true\nportfolio_subtitle: x"), /must NOT have additional properties/],
 ];
 for (const [name, breakIt, expected] of broken) {

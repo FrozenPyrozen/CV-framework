@@ -25,7 +25,7 @@ cv_order: 1   # first in consulting (user 2026-10-23)
 cv_client_label: HERE Technologies
 show_in_portfolio: true
 portfolio_order: 4
-portfolio_title: "Car navigation PoC under NDA (Node.js, React)"
+portfolio_title: "Car navigation PoC for HERE Technologies (Node.js, React)"   # user 2026-10-24
 cv_location: Remote
 cv_emphasis:
   - Substantial ownership of automotive proof-of-concept application logic, not only demo assembly.
@@ -139,7 +139,7 @@ Tags: here-sdk, automotive, voice-ai
 - Control-panel configuration and builds: Zod 4 schema validation and Vite 7, **used by the project**; personal hands-on use of these libraries and tools was not separately confirmed.
 - Reactive models: RxJS 7.8 and observable service integration, **hands-on**.
 - Contracts: Protocol Buffers and generated service interfaces, **hands-on**. gRPC is **used by the project**; independent hands-on use beyond the generated interfaces was not separately confirmed.
-- Navigation: HERE navigation SDK and HERE SDK for Android, **hands-on**. The reference-app README identifies SDK 4.25; authored dependency versions may differ by revision.
+- Navigation: HERE's HNav and HNod SDKs, written in TypeScript and Kotlin, **hands-on** (SDK names and languages: user 2026-10-24). The reference-app README identifies SDK 4.25; authored dependency versions may differ by revision.
 - Native UI and builds: Android, Jetpack Compose, Kotlin, and Gradle, **hands-on**.
 - Tooling: Node.js, npm, pnpm, monorepo tooling, ESLint, Prettier, Husky, and Git, **hands-on** where used in the respective repositories.
 - Testing: Jest and test mocks, **hands-on**, as confirmed by the user. PoC-specific authored evidence chiefly establishes UI test identifiers and validation hooks, not a complete authored Jest suite.
@@ -198,9 +198,9 @@ Moved from `general-motors-navigation` section 8 (user 2026-10-23). The portfoli
 - term: refappkotlin
 - term: service-packages
 - term: HNAV
-  allow_in: [portfolio, skills]   # decisions portfolio-here-detail-kept and here-sdk-names-in-skills
+  allow_in: [portfolio, skills, navigation-poc, navigation-statistics]   # decisions portfolio-here-detail-kept and here-sdk-names-in-skills
 - term: HNoD
-  allow_in: [portfolio, skills]   # decisions portfolio-here-detail-kept and here-sdk-names-in-skills
+  allow_in: [portfolio, skills, navigation-poc, navigation-statistics]   # decisions portfolio-here-detail-kept and here-sdk-names-in-skills
 - term: HUGO
   allow_in: [portfolio]   # decision portfolio-poc-names-public
 - term: HERE PoC R&D

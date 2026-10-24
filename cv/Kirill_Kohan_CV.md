@@ -173,14 +173,14 @@ Contract, consulting and project work
 
 * Propagated route-change reasons through the guidance flow of a **truck navigation app** in **TypeScript** and **RxJS**, covering dynamic routing, route restoration and parking approach. <!-- src: navigation-statistics#4.1 -->
 
-* Implemented car navigation features with the **HERE SDK**, including route-deviation handling and a redesigned search UI. <!-- src: navigation-statistics#4.5 -->
+* Implemented car navigation features with HERE's **HNav** and **HNod** SDKs, including route-deviation handling and a redesigned search UI. <!-- src: navigation-statistics#4.5 -->
 
 * Separated developer diagnostics from core guidance services, updating **Protocol Buffers** contracts while keeping older operations backward compatible. <!-- src: navigation-statistics#4.2 -->
 
 <!-- entry: orion-mobile-clinical-ink -->
 ## **Senior React Native Engineer (Contract)**
 
-### **Clinical Trials Patient App | Remote**
+### **Clinical Ink | Remote**
 
 * Developed and maintained a patient-facing **clinical trial** mobile app for electronic clinical outcome assessment (**eCOA**) built with **React Native, Expo and TypeScript**, and its native **Android (Java / Kotlin)** counterpart. <!-- src: orion-mobile-clinical-ink#4.1 -->
 

@@ -1,6 +1,6 @@
 # Gap report: nodejs
 
-Built: 2026-10-23 · Profile: nodejs · Job ad: no
+Built: 2026-10-24 · Profile: nodejs · Job ad: no
 
 ## Strong evidence
 - **Node.js backend and REST APIs:** Fused subscription flow with Node.js REST APIs (Express, Sequelize) and Stripe, plus card-removal endpoints (`itjet-fintech#4.6`, `#4.15`); RegiStart minimum viable product with a Node.js, Sequelize and PostgreSQL backend (`itjet-fintech#4.14`); Velas staking-rewards calculation on the Node.js backend, 4x engagement (`velas-wallet#4.6`); lighter REST API responses with filters and pagination (`velas-wallet#4.10`); server-side filtering and a backup blockchain connection (RPC), staking page loading from 2 minutes to 5 seconds (`velas-wallet#4.2`); Jira Forge Node.js resolvers in TypeScript (`designai-jira-plugin#4.1`).
@@ -24,6 +24,7 @@ Built: 2026-10-23 · Profile: nodejs · Job ad: no
 | Backend testing and API design | No source for API design, load testing or backend tests | Only if true |
 
 ## Selection disagreements
+- **HERE and Clinical Ink (2026-10-24):** Clinical Ink is now named (`cv_client_label`, decision `hidden-clients`); the bullets kept their wording. The HERE entries name the HNav and HNod SDKs instead of "HERE SDK" (decision `here-sdk-names-in-skills`); the General Motors map library keeps "HERE SDK". This variant selects no HERE bullet that named the SDK, so only the Clinical Ink label changed (**1,786 of 1,800 words**).
 - **General Motors:** `#4.9` (delivery and testing process for nested apps) and `#4.10` (moving a feature app into the host app) are mobile architecture work; acceptable for the leadership and architecture story, but they add mobile weight to a backend-leaning CV.
 - **Velas:** `#4.10` (lighter API responses) now leads the entry; fine for this profile.
 - **Clinical Trials:** limited to 2 bullets by the profile (`entry_max_bullets`); the selected ones (`#4.4` Android 14 migration, `#4.5` SQLCipher and certificate pinning) are native Android work. `#4.1` (the app with React Native, Expo and TypeScript) would explain the contract better than `#4.4`.

@@ -17,7 +17,7 @@ const lintCases: [string, (dir: string) => void, RegExp][] = [
   ["italics", (d) => edit(d, CV, "* Delivered the research and development (R&D) department's core **React Native** app", "* Delivered the *core* mobile app"), /italics are not supported/],
   ["a table", (d) => edit(d, CV, "# **SUMMARY**\n", "# **SUMMARY**\n\n| a | b |\n"), /tables are not supported/],
   ["unbalanced bold", (d) => edit(d, CV, "* Delivered the research and development (R&D) department's core **React Native** app", "* Delivered the **core mobile app"), /unbalanced \*\*/],
-  ["a hidden client name", (d) => edit(d, CV, "* Delivered the research and development (R&D) department's core **React Native** app", "* Delivered for Clinical Ink the core mobile app"), /confidential term "Clinical Ink"/],
+  ["a hidden client name", (d) => edit(d, CV, "* Delivered the research and development (R&D) department's core **React Native** app", "* Delivered for Velocity AI the core mobile app"), /confidential term "Velocity AI"/],
   ["an internal code name", (d) => edit(d, CV, "* Delivered the research and development (R&D) department's core **React Native** app", "* Delivered the Studio Shell core mobile app"), /confidential term "Studio Shell"/],
   ["a ticket id", (d) => edit(d, CV, "* Delivered the research and development (R&D) department's core **React Native** app", "* Delivered OR-22199 and the core mobile app"), /ticket id with prefix "OR-"/],
   ["a foreign URL", (d) => edit(d, CV, "* Delivered the research and development (R&D) department's core **React Native** app", "* Delivered https://example.com/x the core mobile app"), /URL not from profile\.yaml/],

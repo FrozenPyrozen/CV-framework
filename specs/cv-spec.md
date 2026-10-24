@@ -56,7 +56,7 @@ Sections appear in the order of `cv_sections` in `framework.config.yaml`, using 
 
 `### **<cv_client_label> | <cv_location> | <dates>**`
 
-- `cv_client_label` comes from the summary. It may hide the real client, e.g. "Clinical Trials Patient App".
+- `cv_client_label` comes from the summary. It may hide the real client, e.g. "Generative AI Jira Plugin".
 - `cv_location` comes from the summary, e.g. "Remote" or "Kyiv, Ukraine (Hybrid)".
 - `dates` appears only when the entry's `show_dates_in_cv` (or its section's `show_dates` default) is true. Format: `display.date_format` + `display.date_range_separator` + end date or `display.present_label`, e.g. `December 2025 - Present`.
 - Parts are joined with `display.field_separator` (` | `).
@@ -179,7 +179,7 @@ The current decisions live in `facts/decisions.yaml`. At the time of writing:
 - Keep the current length of the master CV (within `checks.max_words`, 3 to 4 pages). Role variants follow their profile's `max_pages` and `max_words`.
 - Keep the Google Drive portfolio link.
 - Keep the job title step from Team Leader (General Motors) to Senior Software Engineer (SYSPRO).
-- The consulting section shows no dates, and the Clinical Ink and Velocity AI clients are hidden behind their labels. The HERE Technologies navigation work (truck navigation app, car navigation PoC) is two consulting entries, not General Motors bullets (`gm-project-names`); the skills list may name HNav and HNod (`here-sdk-names-in-skills`).
+- The consulting section shows no dates, and the Velocity AI client is hidden behind its label (Clinical Ink is named, `hidden-clients`). The HERE Technologies navigation work (truck navigation app, car navigation PoC) is two consulting entries, not General Motors bullets (`gm-project-names`); the skills list and the HERE entries name the HNav and HNod SDKs (`here-sdk-names-in-skills`).
 - All jobs are full-time, so no entry carries "(Contract)" except the consulting contracts (decision `all-full-time`).
 - SYSPRO work is presented as architecture-governed SDD, with AI agents implementing and reviewing code against the specifications under human review (decisions `sdd-not-vibe-coding`, `ai-agents-wording`).
 - The summary paragraph names no companies and uses past tense without timing words (`summary-no-company-names`).

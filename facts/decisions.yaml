@@ -22,7 +22,7 @@ decisions:
     matches: ["1,800+ ERP programs", mock backend count, current employer detail, SYSPRO platform detail]
 
   - id: hidden-client-details-ok
-    decision: The Generative AI Jira Plugin and Clinical Trials Patient App entries keep their feature details (eCOA, Expo plus native Android, Jira issue to design, PRD uploads, MCP URL, Azure Blob); only the client names stay hidden.
+    decision: The Generative AI Jira Plugin and Clinical Trials Patient App entries keep their feature details (eCOA, Expo plus native Android, Jira issue to design, PRD uploads, MCP URL, Azure Blob); only the Velocity AI client name stays hidden (Clinical Ink is named since 2026-10-24, decision hidden-clients).
     date: "2026-10-16"
     why: User's choice ("just don't tell the name").
     matches: [hidden client identifiable, narrow down the client, Velocity AI, Clinical Ink, feature list identifies]
@@ -76,7 +76,7 @@ decisions:
     matches: [missing dates in consulting, freelance dates]
 
   - id: hidden-clients
-    decision: The Clinical Ink and Velocity AI clients stay hidden behind their CV labels.
+    decision: The Velocity AI client stays hidden behind its CV label. Clinical Ink is named in the CV and the portfolio since 2026-10-24 (the user said its name is not confidential).
     date: "2026-10-15"
     why: User removed the client names from the CV.
     matches: [client name missing, unnamed client]
@@ -100,7 +100,7 @@ decisions:
     matches: [Aspiration, RegiStart, Fused, Wink, client names, Itjet clients]
 
   - id: portfolio-client-names
-    decision: The public portfolio may name General Motors, Thermo Fisher Scientific and the Itjet clients (Aspiration, RegiStart, Fused, Wink, Golfuture, Oroscopo), as the CV does, even though the April 2025 portfolio marked the GM and dosimeter apps "under NDA". Clinical Ink stays hidden (cv_client_label "Clinical Trials Patient App"), including its "Clinical inc" spelling.
+    decision: The public portfolio may name General Motors, Thermo Fisher Scientific and the Itjet clients (Aspiration, RegiStart, Fused, Wink, Golfuture, Oroscopo), as the CV does, even though the April 2025 portfolio marked the GM and dosimeter apps "under NDA". Clinical Ink was hidden until 2026-10-24; since then it is named too (decision hidden-clients), and so is HERE Technologies.
     date: "2026-10-22"
     why: User said the clients may be named in the portfolio too (portfolio import, doc:portfolio-2025-04, question 3).
     matches: [under NDA, General Motors, Thermo Fisher Scientific, client names in portfolio]
@@ -202,7 +202,7 @@ decisions:
     matches: [direct employer, services company, outsourcing vendor, staffing agency]
 
   - id: here-sdk-names-in-skills
-    decision: The CV's skills list keeps "HERE SDK (HNav, HNod, HERE API)"; the HERE harvest's section 9 lists HNAV and HNoD, so they carry allow_in [portfolio, skills] in navigation-poc and navigation-statistics. They stay out of bullets.
+    decision: The CV's skills list keeps "HERE SDK (HNav, HNod, HERE API)"; the HERE harvest's section 9 lists HNAV and HNoD, so they carry allow_in [portfolio, skills, navigation-poc, navigation-statistics]. Since 2026-10-24 the HERE entries' bullets and the portfolio name the HNav and HNod SDKs (TypeScript and Kotlin) instead of "HERE navigation SDK" or "HERE SDK for Android" (user); the HERE SDK of the GM map library is a different product.
     date: "2026-10-24"
     why: User's choice; the names were in the previous CV and are on the published portfolio (decision portfolio-here-detail-kept).
     matches: [HNav, HNod, HNAV, HNoD, HERE SDK component names]

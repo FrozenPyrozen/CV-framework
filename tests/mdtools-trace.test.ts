@@ -121,9 +121,9 @@ test("round 1 audit: unsourced summary sentence, partial reattach, refresh guard
   assert.match(run("refresh.ts", dir2, [CV]).out, /replaced: "\*\*Principal Engineer\*\*"/);
   // Hidden client names and company names in the summary match in any case.
   const dir3 = refreshed();
-  edit(dir3, CV, "Core contributor to", "For clinical ink, core contributor at syspro to");
+  edit(dir3, CV, "Core contributor to", "For velocity ai, core contributor at syspro to");
   const l = run("lint.ts", dir3, [CV]).out;
-  assert.match(l, /confidential term "Clinical Ink"/);
+  assert.match(l, /confidential term "Velocity AI"/);
   assert.match(l, /summary names "SYSPRO"/);
   // Clear messages instead of stack traces.
   assert.match(run("select.ts", dir3, ["cv/variants/react", "--tags", "nope.yaml"]).out, /tags file not found/);

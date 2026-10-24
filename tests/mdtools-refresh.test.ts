@@ -13,7 +13,7 @@ test("refresh generates header, entry lines and blocks, and keeps every bullet",
   assert.match(after, /<!-- generated:header -->\n# \*\*Kirill Kohan\*\*/);
   assert.match(after, /<!-- entry: general-motors-navigation -->\n## \*\*Team Leader\*\*\n\n### \*\*General Motors \| Remote \| July 2023 - December 2025\*\*/);
   assert.match(after, /<!-- entry: syspro-saas-erp -->\n## \*\*Senior Software Engineer\*\*\n\n### \*\*SYSPRO \| Remote \| December 2025 - Present\*\*/);
-  assert.match(after, /### \*\*Clinical Trials Patient App \| Remote\*\*/); // consulting: no dates
+  assert.match(after, /### \*\*Clinical Ink \| Remote\*\*/); // consulting: no dates
   assert.match(after, /## \*\*Senior React Native Engineer \(Contract\)\*\*/); // real contract keeps label (worldwide)
   assert.doesNotMatch(after, /Team Leader \(Contract\)/);
   assert.match(after, /<!-- generated:skills -->\n\*\*Languages:\*\*/);

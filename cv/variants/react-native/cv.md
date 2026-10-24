@@ -144,14 +144,14 @@ Contract, consulting and project work
 
 ### **HERE Technologies | Remote**
 
-* Implemented navigation features for a **truck navigation app** with the **HERE SDK**, including route-deviation handling and a redesigned search UI. <!-- src: navigation-statistics#4.5 -->
+* Implemented navigation features for a **truck navigation app** with HERE's **HNav** and **HNod** SDKs, including route-deviation handling and a redesigned search UI. <!-- src: navigation-statistics#4.5 -->
 
 * Propagated route-change reasons through the guidance flow in **TypeScript** and **RxJS**, covering dynamic routing, route restoration and parking approach. <!-- src: navigation-statistics#4.1 -->
 
 <!-- entry: orion-mobile-clinical-ink -->
 ## **Senior React Native Engineer (Contract)**
 
-### **Clinical Trials Patient App | Remote**
+### **Clinical Ink | Remote**
 
 * Worked with the team on upgrading the app to **React Native 0.76** and **Expo SDK 52** to improve performance. <!-- src: orion-mobile-clinical-ink#4.7 -->
 
