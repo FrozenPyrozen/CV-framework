@@ -203,6 +203,7 @@ Each agent's inputs, outputs and steps are in its definition in `agents/`; the c
 | Reviewer (`agents/reviewer.md`), once per rubric | `reports/<date-time>/<rubric>.md` from its `npm run review-context` bundle; never edits | `specs/rubrics/*`, `specs/review-report-spec.md` |
 | Advisor (`agents/advisor.md`) | your answers, one topic at a time, into `facts/` or a summary, then hands over to the composer; also `/job-change`, `/profile`, `/add-experience`, `/import-docs`, `/portfolio-material` | `specs/facts-spec.md`, `specs/cv-spec.md` + the report's rubric |
 | Template importer (`agents/template-importer.md`) | `templates/<name>/` from a Word CV (PDF input deferred, section 11) | `specs/templates.md` |
+| Cover letter (`agents/cover-letter.md`) | `cover-letter.md` in a job folder (`cv/tailored/<company-role>/`), every body sentence sourced from what its tailored CV cites or `jd` (the job ad); `npm run cover-letter` writes the header, checks and builds it | `specs/outputs/cover-letter.md` |
 | Portfolio (`agents/portfolio.md`) | the projects' text in `portfolio/portfolio.md`, every sentence sourced from its own project; scripts write the rest | `specs/outputs/portfolio.md` |
 
 Reviewer set: **ATS** (with a job-ad mode), **HR**, **proofreading**, **fact-check**, **confidentiality**, **layout**, taken from the reviews done in the 2026-10-15 chat. They run in parallel when the tool supports it, otherwise one after another.
@@ -375,7 +376,6 @@ P1–P6 are done and the `portfolio-classic` template is approved (2026-10-23). 
 
 - **PDF input for `/import-template`:** Word input works; PDF input is specified in `specs/templates.md` 4.3 (measure with `pdfjs-dist`, label with the Word paragraph types, rebuild as WordprocessingML with `jszip` as `scripts/portfolio-template.ts` does, compare the test build within a tolerance; its acceptance list is there) and gets built when you need a template from a PDF CV.
 - **Portfolio output:** built (`specs/outputs/portfolio.md`, section 9e, P1–P6, 2026-10-23). The `portfolio-classic` template is approved (2026-10-23); what's left is content, not scope: choosing projects and screenshots (`/portfolio-material`), writing (`/portfolio`), building and reviewing.
-- Cover-letter agent (the format leaves room to add it later).
 - Pulling history from remote GitHub or Azure DevOps (local clones only, while you have access).
 - A fully code-driven pipeline (Agent SDK CLI). It can wrap the same `agents/*.md` later.
 - Translating the CV into other languages. If a local market ever needs a Ukrainian CV, it fits as a market setting (`language: uk`) with an agent translation that you review.

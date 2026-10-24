@@ -68,6 +68,7 @@ checks:
   max_bullet_words: 45
   portfolio_max_pages: 40            # page limit of each portfolio PDF (specs/outputs/portfolio.md 6)
   portfolio_max_project_words: 420   # one page per project with its screenshots, as on the published portfolio (up to about 400 words)
+  cover_letter_max_words: 350      # body of a cover letter, one page with the header (specs/outputs/cover-letter.md 4)
   contacts_on_page_1: true
   export_timeout_s: 60
   forbidden_chars: ["→", "·", "•", "—", "–"]

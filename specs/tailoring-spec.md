@@ -143,4 +143,4 @@ The gap report never suggests claiming something that isn't true. "Add as a fact
 | Kind | Folder | In git |
 |---|---|---|
 | Role variant | `cv/variants/<profile-id>/` | `cv.md` and `gap-report.md` committed; built files ignored |
-| Job-specific CV | `cv/tailored/<company-role>/` (`<company-role>` lowercase-kebab, e.g. `example-corp-senior-rn`) | whole folder git-ignored |
+| Job-specific CV | `cv/tailored/<company-role>/` (`<company-role>` lowercase-kebab, e.g. `example-corp-senior-rn`); its cover letter goes in the same folder (`specs/outputs/cover-letter.md`) | whole folder git-ignored |

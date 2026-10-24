@@ -180,6 +180,10 @@
           "type": "integer",
           "minimum": 50
         },
+        "cover_letter_max_words": {
+          "type": "integer",
+          "minimum": 100
+        },
         "contacts_on_page_1": {
           "type": "boolean"
         },

@@ -14,7 +14,7 @@ The full design is in `docs/plan.md`. The rules are in `specs/`.
 
 ## Rules for every agent
 
-1. **Specs first.** Follow the specs in `specs/` (`cv-spec.md`, `work-summary-spec.md`, `facts-spec.md`, `tailoring-spec.md`, `templates.md`, `review-report-spec.md`, `portability-spec.md`, `sources-spec.md`, `outputs/portfolio.md`) and the rubrics in `specs/rubrics/`; read the sections your agent's *Read first* list names (and a spec's *Rules at a glance*), opening others only when a step points there. If a spec and a request conflict, say so and ask; don't silently deviate.
+1. **Specs first.** Follow the specs in `specs/` (`cv-spec.md`, `work-summary-spec.md`, `facts-spec.md`, `tailoring-spec.md`, `templates.md`, `review-report-spec.md`, `portability-spec.md`, `sources-spec.md`, `outputs/portfolio.md`, `outputs/cover-letter.md`) and the rubrics in `specs/rubrics/`; read the sections your agent's *Read first* list names (and a spec's *Rules at a glance*), opening others only when a step points there. If a spec and a request conflict, say so and ask; don't silently deviate.
 2. **Every claim needs a source.** Never write a CV claim without a summary contribution, summary section or confirmed fact behind it. If the user wants something unsourced in the CV, it becomes a confirmed fact first (`/add-experience`).
 3. **Never invent.** Unknowns are `TODO (needs user input)` in summaries, or a question to the user. No invented numbers, dates, titles or technologies.
 4. **The user's manual edits are kept.** Start from files as they are on disk. Edit CVs one entry at a time and run `npm run reattach-src -- <file> --save` before the first edit.
@@ -56,6 +56,7 @@ The full design is in `docs/plan.md`. The rules are in `specs/`.
 
 - `agents/advisor.md`: Talks with the user, one topic at a time, to turn review findings, new experience, profile changes and job changes into confirmed facts, decisions and summary updates, then hands the changes to the composer.
 - `agents/composer.md`: Updates the master CV from the summaries and confirmed facts, one entry at a time, keeping the user's wording and every source comment.
+- `agents/cover-letter.md`: Writes a cover letter for one job ad (cv/tailored/<company-role>/cover-letter.md) from the same sources as its tailored CV, with a source on every sentence; a script writes the header, checks and builds it.
 - `agents/harvester.md`: Writes or merges a work summary (summaries/<id>.md) from a local git repo, asking the user for everything git can't know.
 - `agents/portfolio.md`: Writes the public portfolio's text (portfolio/portfolio.md) from the opted-in summaries, one project at a time, with a source on every sentence; the scripts write everything else.
 - `agents/reviewer.md`: Reviews a CV against one rubric and writes a report; never edits anything. Run once per rubric (ats, hr, proofreading, fact-check, confidentiality, layout).
@@ -90,5 +91,6 @@ The full design is in `docs/plan.md`. The rules are in `specs/`.
 
 ### Output specs (`specs/outputs/`)
 
+- `cover-letter.md`: Cover Letter Spec
 - `portfolio.md`: Portfolio Spec
 <!-- /generated:index -->

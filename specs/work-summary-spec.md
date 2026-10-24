@@ -126,7 +126,8 @@ A section with nothing known yet contains `TODO (needs user input)`. **Never inv
 - term: PFX
   allow_in: []                     # optional: where the term may appear in a CV: job ids (inside that job's
                                    # title, detail line and bullets), `summary` (the summary paragraph) and/or `skills` (the skills list);
-                                   # `portfolio` for the public portfolio (job ids and `summary` don't apply there)
+                                   # `portfolio` for the public portfolio (job ids and `summary` don't apply there);
+                                   # `cover-letter` for cover letters (specs/outputs/cover-letter.md 3)
 - term: billing-web
 - prefix: BIL-                    # ticket prefixes
 - url_pattern: "*.acme.internal"

@@ -44,6 +44,7 @@
     "log-application": "tsx scripts/log-application.ts",
     "review-context": "tsx scripts/review-context.ts",
     "agent-context": "tsx scripts/agent-context.ts",
+    "cover-letter": "tsx scripts/cover-letter.ts",
     "doc-check": "tsx scripts/doc-check.ts",
     "verify": "tsx scripts/verify.ts"
   },
