@@ -1,0 +1,77 @@
+---
+schema_version: 1
+rubric: fact-check
+cv: cv/Kirill_Kohan_CV.md
+job_ad: null
+market: worldwide
+reviewed_at: 2026-10-24T10:44
+verdict: pass-with-issues
+score: 8.5
+---
+
+# Fact check review
+
+## Verdict
+Every claim in the master CV has a source, and no claim is unsupported. All numbers, titles and calculated values match their sources. The two new HERE Technologies entries and the reduced GM entry follow their summaries closely. One exception: the first car navigation PoC bullet credits the whole PoC, including its voice AI assistant, to the user, while the same summary says his work was the client-side assistant integration inside an R&D team. The Itjet rewording also attaches three skills that the summary lists only for the job as a whole (Redux Thunk, Styled Components, PM2 and Nginx) to specific client projects. In the variants, the Node.js summary's first sentence says the blockchain and Jira projects were "Node.js REST APIs on PostgreSQL and AWS", which the sources don't say.
+
+## Claims checked
+- **Claims checked:** 79 (4 summary sentences and 75 experience bullets, including 4 Stack lines). There are also 12 entry lines (title, client label, location, dates), 2 calculated values and 1 education honor.
+- **Supported:** 73
+- **Partly supported:** 6 (navigation-poc bullet 1; Itjet bullets 2, 4 and 6; navigation-statistics bullets 1 and 2)
+- **Unsupported:** 0
+- **Entry lines:** all 12 match the summary front matter. Both HERE entries are "Senior Software Engineer | HERE Technologies | Remote" (`role`, `cv_client_label`, `cv_location`) with no dates and no "(Contract)" (their `engagement` is full-time). GM "July 2023 - December 2025" matches the period 2023-07 to 2025-12. The Clinical Ink label matches `cv_client_label: Clinical Ink`. "Full-Stack Engineer (Contract)" on the Jira plugin matches `role: Full-Stack Engineer` and `engagement: contract`.
+- **Calculated values:** "7+ years" is correct (the earliest `counts_as_experience` start is The Admasters, 2019-04, which gives 7.5 years, rounded down; the HERE entries have `counts_as_experience: false`). "a team of 8 engineers" and "up to 8 engineers" are correct (the highest `team_size_led` is 8, General Motors; both HERE entries have 0).
+- **Emphasis:** the SYSPRO `cv_emphasis` points come first and in order (bullets 1 and 2). navigation-poc: PoC ownership (bullet 1), reactive state and contracts (bullets 2 and 4), cross-layer React / Android / Kotlin (bullets 2, 4 and 5). navigation-statistics: guidance state, route-change reasons and contracts (bullet 1), navigation behavior (bullet 2), service interfaces (bullet 3). All are in order.
+- **Changes since the last fact-check (reports/2026-10-23-1349), checked against the source text:**
+  - navigation-poc: bullet 2 matches 4.1 (client integration, text input alongside voice, processing, completion and error states). Bullet 3 matches 4.3 ("connected them to live Android trip data"). Bullet 4 matches 4.2 ("Evolved service contracts and Android event exchanges for ... confirming, rejecting, dismissing"). Bullet 5 matches 4.5. Bullet 6 matches 4.9 and fact `gm-poc-build-3x`. Bullet 1: see fact-check-1.
+  - navigation-statistics: bullet 3 matches 4.2 ("Retained deprecated dock operations on the older interface for backward compatibility"). For bullets 1 and 2, see fact-check-4 and fact-check-5.
+  - GM: the removed 4.6 to 4.8 bullets are gone. The summary's "HERE SDK map features" now cites #4.3 (last report's fact-check-4 is fixed). Bullet 5 matches 4.11.
+  - SYSPRO: "recorded in an architecture decision record (ADR)" matches 4.3 ("frontend technology-stack decision record"). "Secure, independently released setup" matches section 1 ("three independently deployable applications under a zero-trust ... architecture"). Telemetry "records app events and traces and removes ... PII" matches 4.8. KendoReact "lookups and search-as-you-type" matches 4.4 (smart-tag field, predictive search). "Mismatches between code and specification" matches 4.2.
+  - Velas: "backup blockchain remote procedure call (RPC) connection" matches 4.2 ("Node RPC fallback"). "Switching when one was slow or unreachable" matches 4.3. "Staking page loading" now matches the confirmed figure (last report's fact-check-6 is fixed).
+  - Itjet: "Doubled delivery speed for Aspiration" now covers Aspiration only and RegiStart CI/CD moved to the RegiStart bullet (last report's fact-check-1 is fixed, as 4.3 and 4.14 say). "Raised database performance 2x" matches 4.4. Docker for "Fused and RegiStart" matches 4.7. See fact-check-2 for the added technologies.
+  - Clinical Ink: "alarm and notification changes" matches 4.4 (exact alarms, PendingIntent notification changes). Redux Persist in the Stack line is hands-on in section 5 (confirmed 2026-10-22). Bullet 7 now cites #4.4 for the bisecting (last report's fact-check-5 is fixed).
+  - Jira plugin: "triggered" matches 4.1. "Transfer image data in chunks" matches fact `jira-blob-chunks`.
+  - Various clients: interview and presales rewording matches `consulting-interviews` and `consulting-presales`.
+- **Numbers checked against sources:** 7+, 1,800+ (source: 1,891), 25+, ~17, 4 repositories, 8 (6 / 1 / 1), 20%, 15%, 95%, 2 minutes to 5 seconds, 5x, 3x (Velas new users), 4x, 3x (Android), 10x, about 3, 30%, 20% (Thermo Fisher), 3x (Itjet flows), 2x (Aspiration delivery speed, Fused database), more than 5 million, Forbes top 10, 3 engineers, ~1,000 lines, 0.76, SDK 52, Android 14 / SDK 34, Java 17, Gradle 8, 3x (PoC build), up to 50%. All match. No number appears without a source.
+
+## Findings
+| id | severity | location | issue | suggestion | needs_user_input |
+|---|---|---|---|---|---|
+| fact-check-1 | medium | cv/Kirill_Kohan_CV.md:157 (HERE Technologies, car navigation PoC, bullet 1) | The CV says "Built the **car navigation proof of concept (PoC)**: search, routing, guidance and a **voice AI assistant** that builds routes and finds places from speech." The cited 4.11 says the same ("Built the car navigation PoC ... and a voice AI assistant"; moved from the GM summary, previous-CV wording). But the rest of the same summary limits this. Section 1: "I worked within the HERE PoC R&D team as an individual contributor". Section 2: "These are product features, not a claim that I built every subsystem". 4.1: "client-side integration and interaction work, not a claim to have built the assistant backend or its speech models". Section 5: "My evidenced work is the application-facing voice/text integration, not model development". Read alone, bullet 1 says he built the whole PoC and the voice AI assistant. Bullet 2 then describes the real scope correctly. | Ask the user. If the PoC was team work, use something like "Built core features of the **car navigation proof of concept (PoC)** (search, routing, guidance) in the HERE R&D team, including the client side of its **voice AI assistant**, which builds routes and finds places from speech." If he built the PoC largely alone, record that as a confirmed fact and keep the bullet, but don't say he built the assistant itself. | yes |
+| fact-check-2 | medium | cv/Kirill_Kohan_CV.md:121, 125, 129 (Itjet, bullets 2, 4 and 6) | Three technologies were added to specific client projects, but the summary links them only to Itjet as a whole. Wink: "(Snapchat and phone sign-in, **Redux Thunk**, ...)". 4.8 doesn't mention Redux, and section 5 lists "Styled Components, Redux Thunk, Keychain (hands-on, confirmed by user 2026-10-16)" with no project. Aspiration: "an **Atomic Design** component library (**design system**) **in Styled Components**". 4.3 and Aspiration's portfolio list in section 5 don't mention Styled Components. RegiStart: "**PostgreSQL** on **AWS RDS** behind **PM2** and **Nginx**". 4.14 doesn't mention them, and section 5 says only "PM2 process manager and Nginx for running and serving the Node.js services" with no project. docs/open-items.md still lists "More detail on Styled Components, Redux Thunk, Keychain ..." as open. The RegiStart wording also puts PM2 and Nginx in front of PostgreSQL. In the source they run and serve the Node.js services, not the database. | Confirm with the user which projects used each tool, and record that in summaries/itjet-fintech.md. Until then, remove the three attributions, or move them to a project-neutral place (the Skills list already has all three). For RegiStart, if confirmed: "a **Node.js** backend run with **PM2** behind **Nginx**, with **Sequelize** and **PostgreSQL** on **AWS RDS**". | yes |
+| fact-check-3 | medium | cv/variants/nodejs/cv.md:13 (Node.js variant, summary sentence 1) | The CV says "7+ years of TypeScript and JavaScript experience building **Node.js REST APIs on PostgreSQL and AWS for fitness, non-profit, blockchain and Jira integration projects**". PostgreSQL and AWS are sourced for Fused (fitness, 4.4, 4.6) and RegiStart (non-profit, 4.14). The blockchain work (Velas 4.6, 4.10) is a Node.js backend with no PostgreSQL or AWS in its summary. The Jira plugin (designai-jira-plugin 4.1, 4.3) uses Forge resolvers and Azure Blob Storage, not REST APIs on PostgreSQL and AWS. | Split the claim, for example: "building Node.js REST APIs on PostgreSQL and AWS for fitness and non-profit projects, plus Node.js backends for a blockchain wallet and a Jira Forge app, and React and React Native frontends". | no |
+| fact-check-4 | low | cv/Kirill_Kohan_CV.md:174 (HERE Technologies, truck navigation app, bullet 1) | "Propagated route-change reasons through the guidance flow **of a truck navigation app**" cites only `navigation-statistics#4.1`, which describes "the guidance-statistics flow" without naming the app. The truck navigation app is named in 4.5 (user, 2026-10-23). The claim is supported, but by a section the `src` comment doesn't cite. | Add `navigation-statistics#4.5` to the src comment. | no |
+| fact-check-5 | low | cv/Kirill_Kohan_CV.md:176 (HERE Technologies, truck navigation app, bullet 2) | "Implemented **car navigation features** with HERE's HNav and HNod SDKs". 4.5 says "in-car navigation features ... on the truck navigation app". "Car navigation" on this entry can be confused with the car navigation PoC in the entry above. The React Native variant already words it correctly ("navigation features for a **truck navigation app**", cv/variants/react-native/cv.md:147). | Use "in-car navigation features" or the React Native variant's wording (and keep bullet 1's "truck navigation app" so the name isn't repeated, or move the name to this bullet). | no |
+| fact-check-6 | low | cv/Kirill_Kohan_CV.md:36 (SYSPRO, bullet 8) | "the **monorepo** tooling (npm workspaces, ESLint, Prettier, **Husky**, ...)" cites 4.9, 4.10, 4.11 and a fact. None of these mentions Husky. Husky is in section 5 ("Husky 9.x, Pre-commit hooks, **hands-on**") and section 6. | Add `syspro-saas-erp#5` to the src comment. | no |
+| fact-check-7 | low | cv/Kirill_Kohan_CV.md:93 (OMO Systems, bullet 4) | "by patching **react-native-keychain** and a native **Android biometrics** library" reads as two patched libraries. 4.4 says "patching in a native Android biometrics library. The fix was a patch to react-native-keychain". That is one patch to react-native-keychain that added a native biometrics library. | "by patching **react-native-keychain** to use a native **Android biometrics** library". | no |
+
+## Variants
+A lighter pass over cv/variants/{fullstack-react-node,nodejs,react,react-native}/cv.md. It covers only the bullets whose wording differs from the master bullet with the same `src`, the bullets with no master counterpart, and each summary paragraph. Everything not listed below matches its source.
+
+- **Summaries:**
+  - fullstack-react-node:13 is supported (Stripe REST APIs 4.6, RDS 2x 4.4, staking rewards 4.6, Next.js / GraphQL / Docker 4.7, SDD with AI agents "implementing and reviewing code against the specifications under human review", as in decision `ai-agents-wording`, team of 8 and system design GM 4.1, 4.2, 4.4).
+  - react:13 is supported.
+  - react-native:13 is supported (2 minutes to 5 seconds, 5x, 3x, 30%, 20% / 15% all match).
+  - nodejs:13, sentence 1: see fact-check-3. The rest is supported.
+- **Bullets that differ from the master:**
+  - Supported: the SYSPRO orchestration, OIDC, Login and mock-backend bullets (4.5, 4.6, 4.7, 4.11). The nodejs Stack line adds Node.js (section 5, mock server and OTLP receiver, hands-on). GM 4.9 and 4.10. Velas 4.10 and 4.11. Thermo Fisher 4.7 and 4.8. OMO 4.6. The Itjet 4.9, 4.10, 4.12, 4.13, 4.15 bullets. navigation-poc 4.4, 4.5, 4.7, 4.8 and 4.10. navigation-statistics 4.3, 4.4 and 4.5 (react-native:147, which is better than the master's wording). The shortened Clinical Ink, Jira and consulting bullets.
+  - In fullstack-react-node:100 and nodejs:102, "Doubled delivery speed for Aspiration ..., and set up **CI/CD** for RegiStart" keeps the 2x on Aspiration only, as 4.3 says.
+  - Wink in the variants has no "Redux Thunk", and RegiStart has no "PM2 and Nginx". So fact-check-2 applies to the master only.
+  - react-native:74 ("patching in a native **Android biometrics** library") follows the source wording (compare fact-check-7).
+- **Low points:**
+  - fullstack-react-node:134 and nodejs:132: "**Added** ... a QR-code booking card" is a little stronger than navigation-poc 4.6, which says he "refined a QR-code booking card and its configuration path". Suggest "Added truck-parking details and search ratings to the demo UI and refined a QR-code booking card".
+  - react:34: "where apps never import from each other" cites `syspro-saas-erp#4.7, #4.1`. The no-cross-app-import rule is in section 1 (summaries/syspro-saas-erp.md:45). Suggest adding `syspro-saas-erp#1`, as fullstack-react-node:30 already does.
+
+## Decided (not raised again)
+- The two HERE Technologies entries sit in the consulting section while their summaries record `engagement: full-time` (section 3 says this is "a presentation choice, not a claim of contract employment"), and they have no dates. The employer and period are an open item in docs/open-items.md: gm-project-names, consulting-no-dates
+- "HNav" and "HNod" in the HERE bullets and the Skills list: here-sdk-names-in-skills
+- "passenger second-screen feature for a luxury car brand" and "voice AI assistant" mentioned in the CV: gm-features-public
+- Summary sentence 4 "... native Android migrations, delivered through architecture-governed specification-driven development (SDD)": sdd-summary-sentence
+- "renders 1,800+ ERP programs" (summary sentence 2, SYSPRO bullet 3), counted as 1,891 menu items on a mock backend: keep-erp-programs-figure
+- Previous-CV numbers "Forbes top 10", "company income grew 10x", "tripled the number of new users", "user engagement grew 4x": keep-previous-cv-metrics
+- Itjet bullets naming Aspiration, RegiStart, Fused and Wink: itjet-client-names
+- Clinical Ink named, with its eCOA, Expo and native Android detail: hidden-clients, hidden-client-details-ok
+- Stack line on the Clinical Ink entry: orion-stack-line
+- AI agent wording at SYSPRO (bullet 1 "rules for **AI agents** that implement and review code against the specifications"; bullet 4 "AI agents flagging rule violations ... for human decision"): ai-agents-wording, sdd-not-vibe-coding
+- Playwright named only as the Vitest Browser Mode provider at SYSPRO: playwright-browser-mode-only
+- SDD bullet first in the master and React Native variant, runtime bullet first in the other variants: syspro-runtime-bullet-first

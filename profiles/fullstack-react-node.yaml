@@ -18,6 +18,9 @@ overrides:
   itjet-fintech#4.1: { drop: true }   # React Native Web signup: fewest emphasized tags; made room for the MVP (compose 2026-10-22)
   orion-mobile-clinical-ink#4.4: { drop: true }   # Android 14 migration: least relevant to full-stack readers; the entry keeps 2 bullets (review 2026-10-23-1854 hr-3)
 max_bullets_per_entry: 6
+entry_max_bullets:
+  navigation-poc: 3                 # page 3 overflow: fit on 2 pages (user, reports/2026-10-24-1044 layout-1)
+  navigation-statistics: 2          # page 3 overflow: fit on 2 pages (user, reports/2026-10-24-1044 layout-1)
 min_bullets_per_entry: 2
 include_sections: [summary, experience, consulting, education, skills, languages]
 max_pages: 3

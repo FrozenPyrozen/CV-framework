@@ -123,32 +123,20 @@ Contract, consulting and project work
 
 ### **HERE Technologies | Remote**
 
-* Reworked the voice assistant's client integration for a car navigation proof of concept (PoC) in **React** and **RxJS**, adding text input alongside voice, and presenting processing, completion and error states. <!-- src: navigation-poc#4.1, navigation-poc#1 -->
+* Reworked the client integration of the **voice AI assistant** in **React** and **RxJS** for a car navigation proof of concept (PoC) built in HERE's R&D team, adding text input alongside voice, and presenting processing, completion and error states. <!-- src: navigation-poc#4.1, navigation-poc#1, navigation-poc#3 -->
 
-* Implemented a passenger second-screen feature in **React** for a luxury car brand, showing live trip data. <!-- src: navigation-poc#4.3 -->
+* Implemented a passenger second-screen feature in **React** for Bentley, showing live trip data. <!-- src: navigation-poc#4.3 -->
 
 * Built driver warning cards and extended their service contracts to the **Android** layer for confirming, rejecting and dismissing warnings. <!-- src: navigation-poc#4.2 -->
-
-* Added route-progress markers with clustering and migrated assisted-driving status icons and notifications. <!-- src: navigation-poc#4.4 -->
-
-* Added truck-parking details, a QR-code booking card and search ratings to the demo UI. <!-- src: navigation-poc#4.6 -->
-
-* Implemented brand-specific day and night **themes** and shared cockpit layouts across PoC variants. <!-- src: navigation-poc#4.7 -->
 
 <!-- entry: navigation-statistics -->
 ## **Senior Software Engineer**
 
 ### **HERE Technologies | Remote**
 
-* Propagated route-change reasons through the guidance flow of a **truck navigation app** in **TypeScript** and **RxJS**, covering dynamic routing, route restoration and parking approach. <!-- src: navigation-statistics#4.1 -->
+* Propagated route-change reasons through the guidance flow of a **truck navigation app** in **TypeScript** and **RxJS**, covering dynamic routing, route restoration and parking approach. <!-- src: navigation-statistics#4.1, navigation-statistics#4.5 -->
 
-* Separated developer diagnostics from core guidance services, updating **Protocol Buffers** contracts and keeping older operations backward compatible. <!-- src: navigation-statistics#4.2 -->
-
-* Adapted the **React** diagnostic display and developer menu to the new service boundaries. <!-- src: navigation-statistics#4.3 -->
-
-* Added and repaired **Jest** tests for route-change reasons across guidance, route edits and parking approach. <!-- src: navigation-statistics#4.4 -->
-
-* Implemented car navigation features with HERE's **HNav** and **HNod** SDKs, including route-deviation handling and a redesigned search UI. <!-- src: navigation-statistics#4.5 -->
+* Separated developer diagnostics from core guidance services, updating **protobuf.js**-generated contracts and keeping older operations backward compatible. <!-- src: navigation-statistics#4.2, navigation-statistics#5 -->
 
 <!-- entry: orion-mobile-clinical-ink -->
 ## **Senior React Native Engineer (Contract)**
@@ -172,6 +160,7 @@ Contract, consulting and project work
 * Added **ESLint**, **TypeScript** and a pre-commit lint hook, enabled Atlassian design tokens, and fixed a **SonarQube** error. <!-- src: designai-jira-plugin#4.4 -->
 
 * Sent image data in chunks to work around Atlassian Forge's file upload limits. <!-- src: jira-blob-chunks -->
+
 <!-- entry: various-clients -->
 ## **Software Engineering Consultant**
 

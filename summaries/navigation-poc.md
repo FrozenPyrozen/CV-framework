@@ -78,7 +78,7 @@ Tags: typescript, react, rxjs, android, automotive, debugging
 
 ### 4.3 Passenger-display features and live trip data
 
-Implemented passenger-oriented layouts and trip-summary UI, connected them to live Android trip data, and added recentering, nearby-place content, icons, and compass-related handling. Separated passenger-display responsibilities from the trip-summary service and evolved the corresponding protocol definitions and feature configuration. Adapted brand-specific integration, including weather-feature configuration and later cockpit controls, while repairing card visibility and layout behavior. This is the passenger second-screen feature for a luxury car brand (moved from `general-motors-navigation` 4.8; user 2026-10-23).
+Implemented passenger-oriented layouts and trip-summary UI, connected them to live Android trip data, and added recentering, nearby-place content, icons, and compass-related handling. Separated passenger-display responsibilities from the trip-summary service and evolved the corresponding protocol definitions and feature configuration. Adapted brand-specific integration, including weather-feature configuration and later cockpit controls, while repairing card visibility and layout behavior. This is the passenger second-screen feature for a luxury car brand, Bentley (brand: user 2026-10-24; moved from `general-motors-navigation` 4.8; user 2026-10-23).
 
 Tags: typescript, react, rxjs, android, architecture, automotive
 
@@ -96,7 +96,7 @@ Tags: typescript, react, android, here-sdk, automotive
 
 ### 4.6 Search and parking demonstrations
 
-Adapted search attribution and ratings presentation, including icon placement, review styling, and integration with updated SDK layout support. Added truck-parking detail integration to expose facility information in the demo UI, and refined a QR-code booking card and its configuration path. These are presentation and integration contributions; transaction processing, booking completion, and end-user adoption are not established by git.
+Adapted search attribution and ratings presentation, including icon placement, review styling, and integration with updated SDK layout support. Added truck-parking detail integration (a Daimler truck-parking demo; user 2026-10-24) to expose facility information in the demo UI, and refined a QR-code booking card and its configuration path. These are presentation and integration contributions; transaction processing, booking completion, and end-user adoption are not established by git.
 
 Tags: typescript, react, automotive
 
@@ -138,7 +138,7 @@ Tags: here-sdk, automotive, voice-ai
 - Web UI: React 18 in the navigation PoC and React 19 in the control panel, CSS, and Stitches 1.2, **hands-on**. Material UI 7 and Emotion 11 in the control panel are **used by the project**; personal hands-on use was not separately confirmed.
 - Control-panel configuration and builds: Zod 4 schema validation and Vite 7, **used by the project**; personal hands-on use of these libraries and tools was not separately confirmed.
 - Reactive models: RxJS 7.8 and observable service integration, **hands-on**.
-- Contracts: Protocol Buffers and generated service interfaces, **hands-on**. gRPC is **used by the project**; independent hands-on use beyond the generated interfaces was not separately confirmed.
+- Contracts: protobuf.js, generating the Protocol Buffers (proto) service interfaces, **hands-on** (protobuf.js in both HERE projects: user 2026-10-24). gRPC is **used by the project**; independent hands-on use beyond the generated interfaces was not separately confirmed.
 - Navigation: HERE's HNav and HNod SDKs, written in TypeScript and Kotlin, **hands-on** (SDK names and languages: user 2026-10-24). The reference-app README identifies SDK 4.25; authored dependency versions may differ by revision.
 - Native UI and builds: Android, Jetpack Compose, Kotlin, and Gradle, **hands-on**.
 - Tooling: Node.js, npm, pnpm, monorepo tooling, ESLint, Prettier, Husky, and Git, **hands-on** where used in the respective repositories.
@@ -209,7 +209,9 @@ Moved from `general-motors-navigation` section 8 (user 2026-10-23). The portfoli
 - term: Porsche
   allow_in: [portfolio]   # decision portfolio-poc-names-public
 - term: Bentley
+  allow_in: [portfolio, navigation-poc]   # decision portfolio-poc-names-public (user 2026-10-24)
 - term: Daimler
+  allow_in: [portfolio, navigation-poc]   # decision portfolio-poc-names-public (user 2026-10-24)
 - term: VW
   allow_in: [portfolio]   # decision portfolio-poc-names-public
 - term: Kurviger

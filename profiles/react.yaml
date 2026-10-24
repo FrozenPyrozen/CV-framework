@@ -16,9 +16,13 @@ overrides:
   velas-wallet#4.10: { pin: true }    # re-renders and lighter API responses (review 2026-10-23-1705)
   general-motors-navigation#4.1: { pin: true }   # team of 8: evidence for the tech-lead headline
   itjet-fintech#4.8: { pin: true }   # Wink, 5M+ registered users: in every CV (user 2026-10-22)
+  itjet-fintech#4.10: { drop: true }  # Oroscopo React Native features: weakest for React readers; fit on 2 pages (user, reports/2026-10-24-1044 layout-1)
 max_bullets_per_entry: 6
 entry_max_bullets:
   syspro-saas-erp: 7                 # brings back the OpenTelemetry bullet (2026-10-16)
+  navigation-poc: 3                 # page 3 overflow: fit on 2 pages (user, reports/2026-10-24-1044 layout-1)
+  itjet-fintech: 5                  # with the itjet-fintech#4.10 drop: one Itjet bullet fewer (no replacement); fit on 2 pages (user, reports/2026-10-24-1044 layout-1)
+  navigation-statistics: 2          # page 3 overflow: fit on 2 pages (user, reports/2026-10-24-1044 layout-1)
 min_bullets_per_entry: 2
 include_sections: [summary, experience, consulting, education, skills, languages]
 max_pages: 3

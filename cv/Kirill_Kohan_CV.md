@@ -33,7 +33,7 @@ Senior software engineer and tech lead with 7+ years of experience building Reac
 
 * Designed and built a browser telemetry module on **OpenTelemetry** from scratch that records app events and traces and removes personally identifiable information (**PII**) before sending them. <!-- src: syspro-saas-erp#4.8 -->
 
-* Tested implementations with **Vitest** and **Vitest Browser Mode** (**Playwright** provider), maintained a **Node.js** mock backend and the **monorepo** tooling (npm workspaces, ESLint, Prettier, **Husky**, small **Azure Pipelines** changes) and fixed schema-to-TypeScript **code generation** bugs, proposing improvements the lead agreed to add. <!-- src: syspro-saas-erp#4.9, syspro-saas-erp#4.10, syspro-saas-erp#4.11, syspro-codegen-fixes -->
+* Tested implementations with **Vitest** and **Vitest Browser Mode** (**Playwright** provider), maintained a **Node.js** mock backend and the **monorepo** tooling (npm workspaces, ESLint, Prettier, **Husky**, small **Azure Pipelines** changes) and fixed schema-to-TypeScript **code generation** bugs, proposing improvements the lead agreed to add. <!-- src: syspro-saas-erp#4.9, syspro-saas-erp#4.10, syspro-saas-erp#4.11, syspro-codegen-fixes, syspro-saas-erp#5 -->
 
 * Stack: **React 19, TypeScript, KendoReact, Zustand, XState, TanStack Router, TanStack Query, WebSockets, Vite, SCSS / CSS Modules, OpenTelemetry, Vitest, Playwright, Storybook, Docker, Azure DevOps**. <!-- src: syspro-saas-erp#5 -->
 
@@ -90,7 +90,7 @@ Senior software engineer and tech lead with 7+ years of experience building Reac
 
 * Built an automated monthly payment flow with a payment gate in **React** that restricts features for unpaid users; company income grew 10x after launch. <!-- src: omo-systems-smart-home#4.3 -->
 
-* Fixed insecure face-recognition unlock on specific Android devices by patching **react-native-keychain** and a native **Android biometrics** library. <!-- src: omo-systems-smart-home#4.4 -->
+* Fixed insecure face-recognition unlock on specific Android devices by patching **react-native-keychain** to use a native **Android biometrics** library. <!-- src: omo-systems-smart-home#4.4 -->
 
 * Led and mentored a team of about 3 engineers: ran **code reviews**, set coding standards and onboarded new engineers. <!-- src: omo-systems-smart-home#4.5 -->
 
@@ -126,7 +126,7 @@ Senior software engineer and tech lead with 7+ years of experience building Reac
 
 * Raised database performance 2x for Fused by migrating **PostgreSQL** from EC2 to **AWS RDS** and optimizing slow SQL queries. <!-- src: itjet-fintech#4.4 -->
 
-* Developed the RegiStart voter-registration minimum viable product (MVP) from sketches: a **React** and **Material UI** frontend, a **Node.js** backend with **Sequelize** and **PostgreSQL** on **AWS RDS** behind **PM2** and **Nginx**, **node-pg-migrate** migrations, Bitbucket Pipelines **CI/CD** to EC2/S3, and an algorithm that distributes students among organizers. <!-- src: itjet-fintech#4.14, itjet-fintech#4.5, itjet-fintech#4.3, itjet-fintech#5 -->
+* Developed the RegiStart voter-registration minimum viable product (MVP) from sketches: a **React** and **Material UI** frontend, a **Node.js** backend run with **PM2** behind **Nginx**, with **Sequelize** and **PostgreSQL** on **AWS RDS**, **node-pg-migrate** migrations, Bitbucket Pipelines **CI/CD** to EC2/S3, and an algorithm distributing students among organizers. <!-- src: itjet-fintech#4.14, itjet-fintech#4.5, itjet-fintech#4.3, itjet-fintech#5 -->
 
 * Implemented the automated monthly subscription flow for Fused with **Stripe**, **Node.js REST APIs** (**Express**, **Sequelize**), **React** and **React Native**. <!-- src: itjet-fintech#4.6 -->
 
@@ -154,11 +154,11 @@ Contract, consulting and project work
 
 ### **HERE Technologies | Remote**
 
-* Built the **car navigation proof of concept (PoC)**: search, routing, guidance and a **voice AI assistant** that builds routes and finds places from speech. <!-- src: navigation-poc#4.11 -->
+* Built core features of the **car navigation proof of concept (PoC)** in HERE's R&D team, including the client side of its **voice AI assistant** that builds routes and finds places from speech. <!-- src: navigation-poc#4.11, navigation-poc#1, navigation-poc#3, navigation-poc#4.1 -->
 
 * Reworked the voice assistant's client integration in **React** and **RxJS**, adding text input alongside voice, and presenting processing, completion and error states. <!-- src: navigation-poc#4.1 -->
 
-* Implemented a passenger second-screen feature for a luxury car brand, showing live trip data. <!-- src: navigation-poc#4.3 -->
+* Implemented a passenger second-screen feature for Bentley, showing live trip data. <!-- src: navigation-poc#4.3 -->
 
 * Built driver warning cards and extended their service contracts to the **Android** layer for confirming, rejecting and dismissing warnings. <!-- src: navigation-poc#4.2 -->
 
@@ -171,11 +171,11 @@ Contract, consulting and project work
 
 ### **HERE Technologies | Remote**
 
-* Propagated route-change reasons through the guidance flow of a **truck navigation app** in **TypeScript** and **RxJS**, covering dynamic routing, route restoration and parking approach. <!-- src: navigation-statistics#4.1 -->
+* Propagated route-change reasons through the guidance flow of a **truck navigation app** in **TypeScript** and **RxJS**, covering dynamic routing, route restoration and parking approach. <!-- src: navigation-statistics#4.1, navigation-statistics#4.5 -->
 
-* Implemented car navigation features with HERE's **HNav** and **HNod** SDKs, including route-deviation handling and a redesigned search UI. <!-- src: navigation-statistics#4.5 -->
+* Implemented in-car navigation features with HERE's **HNav** and **HNod** SDKs, including route-deviation handling and a redesigned search UI. <!-- src: navigation-statistics#4.5 -->
 
-* Separated developer diagnostics from core guidance services, updating **Protocol Buffers** contracts while keeping older operations backward compatible. <!-- src: navigation-statistics#4.2 -->
+* Separated developer diagnostics from core guidance services, updating **protobuf.js**-generated contracts while keeping older operations backward compatible. <!-- src: navigation-statistics#4.2, navigation-statistics#5 -->
 
 <!-- entry: orion-mobile-clinical-ink -->
 ## **Senior React Native Engineer (Contract)**

@@ -10,7 +10,7 @@ Kyiv, Ukraine (Remote) | Open to B2B contract or full-time employment | Working 
 
 # **SUMMARY**
 
-Senior full-stack engineer and tech lead with 7+ years of TypeScript and JavaScript experience building Node.js REST APIs on PostgreSQL and AWS for fitness, non-profit, blockchain and Jira integration projects, plus React and React Native frontends. <!-- src: calc:years_experience, profile, itjet-fintech#1, itjet-fintech#4.6, itjet-fintech#4.4, itjet-fintech#4.14, velas-wallet#4.6, designai-jira-plugin#4.1 --> Built Node.js REST APIs for Stripe subscriptions, set up PostgreSQL schema migrations, moved PostgreSQL to AWS RDS with query tuning that doubled database performance, and redesigned a Node.js staking-rewards calculation. <!-- src: itjet-fintech#1, itjet-fintech#4.6, itjet-fintech#4.5, itjet-fintech#4.4, velas-wallet#4.6 --> Built core modules of a schema-driven React 19 and TypeScript runtime that renders 1,800+ enterprise resource planning (ERP) programs, working with the lead architect on platform and solution architecture in an architecture-governed, specification-driven development (SDD) process. <!-- src: syspro-saas-erp#4.1, syspro-architecture-scope, syspro-saas-erp#4.2 --> Also integrated OpenID Connect (OIDC) authentication and built OpenTelemetry instrumentation with personally identifiable information (PII) redaction. <!-- src: syspro-saas-erp#4.7, syspro-saas-erp#4.8 --> Led a team of 8 engineers on an automotive app, running code reviews, setting coding standards and owning its modular architecture. <!-- src: general-motors-navigation#4.1, general-motors-navigation#4.2, general-motors-navigation#4.4, calc:team_size_led -->
+Senior full-stack engineer and tech lead with 7+ years of TypeScript and JavaScript experience building Node.js REST APIs on PostgreSQL and AWS for fitness and non-profit projects, plus Node.js backends for a blockchain wallet and a Jira Forge app, and React and React Native frontends. <!-- src: calc:years_experience, profile, itjet-fintech#1, itjet-fintech#4.6, itjet-fintech#4.4, itjet-fintech#4.14, velas-wallet#4.6, designai-jira-plugin#4.1 --> Built Node.js REST APIs for Stripe subscriptions, set up PostgreSQL schema migrations, moved PostgreSQL to AWS RDS with query tuning that doubled database performance, and redesigned a Node.js staking-rewards calculation. <!-- src: itjet-fintech#1, itjet-fintech#4.6, itjet-fintech#4.5, itjet-fintech#4.4, velas-wallet#4.6 --> Built core modules of a schema-driven React 19 and TypeScript runtime that renders 1,800+ enterprise resource planning (ERP) programs, working with the lead architect on platform and solution architecture in an architecture-governed, specification-driven development (SDD) process. <!-- src: syspro-saas-erp#4.1, syspro-architecture-scope, syspro-saas-erp#4.2 --> Also integrated OpenID Connect (OIDC) authentication and built OpenTelemetry instrumentation with personally identifiable information (PII) redaction. <!-- src: syspro-saas-erp#4.7, syspro-saas-erp#4.8 --> Led a team of 8 engineers on an automotive app, running code reviews, setting coding standards and owning its modular architecture. <!-- src: general-motors-navigation#4.1, general-motors-navigation#4.2, general-motors-navigation#4.4, calc:team_size_led -->
 
 # **EXPERIENCE**
 
@@ -121,30 +121,26 @@ Contract, consulting and project work
 
 ### **HERE Technologies | Remote**
 
-* Reworked the voice assistant's client integration for a car navigation proof of concept (PoC) in **React** and **RxJS**, adding text input alongside voice, and presenting processing, completion and error states. <!-- src: navigation-poc#4.1, navigation-poc#1 -->
+* Reworked the client integration of the **voice AI assistant** in **React** and **RxJS** for a car navigation proof of concept (PoC) built in HERE's R&D team, adding text input alongside voice, and presenting processing, completion and error states. <!-- src: navigation-poc#4.1, navigation-poc#1, navigation-poc#3 -->
 
-* Implemented a passenger second-screen feature in **React** for a luxury car brand, showing live trip data. <!-- src: navigation-poc#4.3 -->
+* Implemented a passenger second-screen feature in **React** for Bentley, showing live trip data. <!-- src: navigation-poc#4.3 -->
 
 * Built driver warning cards and extended their service contracts to the **Android** layer for confirming, rejecting and dismissing warnings. <!-- src: navigation-poc#4.2 -->
 
 * Added route-progress markers with clustering and migrated assisted-driving status icons and notifications. <!-- src: navigation-poc#4.4 -->
 
-* Added truck-parking details, a QR-code booking card and search ratings to the demo UI. <!-- src: navigation-poc#4.6 -->
-
-* Made a **React** and **TypeScript** demo control panel configuration-driven, with schema-validated demo definitions loaded outside the bundle, so demos changed without a rebuild. <!-- src: navigation-poc#4.10 -->
+* Added Daimler truck-parking details and search ratings to the demo UI, and refined a QR-code booking card. <!-- src: navigation-poc#4.6 -->
 
 <!-- entry: navigation-statistics -->
 ## **Senior Software Engineer**
 
 ### **HERE Technologies | Remote**
 
-* Propagated route-change reasons through the guidance flow of a **truck navigation app** in **TypeScript** and **RxJS**, covering dynamic routing, route restoration and parking approach. <!-- src: navigation-statistics#4.1 -->
+* Propagated route-change reasons through the guidance flow of a **truck navigation app** in **TypeScript** and **RxJS**, covering dynamic routing, route restoration and parking approach. <!-- src: navigation-statistics#4.1, navigation-statistics#4.5 -->
 
-* Separated developer diagnostics from core guidance services, updating **Protocol Buffers** contracts and keeping older operations backward compatible. <!-- src: navigation-statistics#4.2 -->
+* Separated developer diagnostics from core guidance services, updating **protobuf.js**-generated contracts and keeping older operations backward compatible. <!-- src: navigation-statistics#4.2, navigation-statistics#5 -->
 
 * Adapted the **React** diagnostic display and developer menu to the new service boundaries. <!-- src: navigation-statistics#4.3 -->
-
-* Added and repaired **Jest** tests for route-change reasons across guidance, route edits and parking approach. <!-- src: navigation-statistics#4.4 -->
 
 <!-- entry: orion-mobile-clinical-ink -->
 ## **Senior React Native Engineer (Contract)**

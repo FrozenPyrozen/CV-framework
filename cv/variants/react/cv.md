@@ -31,7 +31,7 @@ Senior React engineer and frontend tech lead with 7+ years of experience buildin
 
 * Built the **Login micro-frontend** from scratch in **React 19** and **TypeScript**: sign-in and password-reset flows, schema-based validation, **CSS Modules**, Web Content Accessibility Guidelines (**WCAG**) typography and **Storybook**, as the only app that ever handles a user's password. <!-- src: syspro-saas-erp#4.6 -->
 
-* Integrated **OIDC** authentication into the Login micro-frontend and the host application using **oidc-client-ts** and **react-oidc-context**, in a secure, independently released **micro-frontend architecture** where apps never import from each other. <!-- src: syspro-saas-erp#4.7, syspro-saas-erp#4.1 -->
+* Integrated **OIDC** authentication into the Login micro-frontend and the host application using **oidc-client-ts** and **react-oidc-context**, in a secure, independently released **micro-frontend architecture** where apps never import from each other. <!-- src: syspro-saas-erp#4.7, syspro-saas-erp#4.1, syspro-saas-erp#1 -->
 
 * Stack: **React 19, TypeScript, Zustand, XState, TanStack Router, TanStack Query, WebSockets, Vite, KendoReact, SCSS / CSS Modules, OpenTelemetry, Vitest, Playwright, Storybook, Docker, Azure DevOps**. <!-- src: syspro-saas-erp#5 -->
 
@@ -101,8 +101,6 @@ Senior React engineer and frontend tech lead with 7+ years of experience buildin
 
 * Built a new mobile-first **React** banking web flow for Aspiration from scratch, based on the designs, with reusable **Atomic Design** components and a **Plop** generator that scaffolds new components. <!-- src: itjet-fintech#4.13 -->
 
-* Added features to the Oroscopo **React Native** app: API work, UI components, an animated card circle, the zodiac compatibility logic, **AdMob** banner ads and new tarot layout screens. <!-- src: itjet-fintech#4.10 -->
-
 * Wrote a pull request style guide and documentation for Aspiration to make onboarding easier, and built a utility for **E2E tests**. <!-- src: itjet-fintech#4.12 -->
 
 * Built a reusable **React Native Web** sign-up flow for Aspiration, a fintech product (Forbes top 10), shared by its native mobile and web apps; it made building new flows 3x faster. <!-- src: itjet-fintech#4.1 -->
@@ -127,32 +125,20 @@ Contract, consulting and project work
 
 ### **HERE Technologies | Remote**
 
-* Reworked the voice assistant's client integration for a car navigation proof of concept (PoC) in **React** and **RxJS**, adding text input alongside voice, and presenting processing, completion and error states. <!-- src: navigation-poc#4.1, navigation-poc#1 -->
+* Reworked the client integration of the **voice AI assistant** in **React** and **RxJS** for a car navigation proof of concept (PoC) built in HERE's R&D team, adding text input alongside voice, and presenting processing, completion and error states. <!-- src: navigation-poc#4.1, navigation-poc#1, navigation-poc#3 -->
 
-* Implemented a passenger second-screen feature in **React** for a luxury car brand, showing live trip data. <!-- src: navigation-poc#4.3 -->
+* Implemented a passenger second-screen feature in **React** for Bentley, showing live trip data. <!-- src: navigation-poc#4.3 -->
 
 * Implemented brand-specific day and night **themes** and shared cockpit layouts across PoC variants. <!-- src: navigation-poc#4.7 -->
-
-* Made a **React** and **TypeScript** demo control panel configuration-driven, with schema-validated demo definitions loaded outside the bundle, so demos changed without a rebuild. <!-- src: navigation-poc#4.10 -->
-
-* Built driver warning cards and extended their service contracts to the **Android** layer for confirming, rejecting and dismissing warnings. <!-- src: navigation-poc#4.2 -->
-
-* Added route-progress markers with clustering and migrated assisted-driving status icons and notifications. <!-- src: navigation-poc#4.4 -->
 
 <!-- entry: navigation-statistics -->
 ## **Senior Software Engineer**
 
 ### **HERE Technologies | Remote**
 
-* Propagated route-change reasons through the guidance flow of a **truck navigation app** in **TypeScript** and **RxJS**, covering dynamic routing, route restoration and parking approach. <!-- src: navigation-statistics#4.1 -->
+* Propagated route-change reasons through the guidance flow of a **truck navigation app** in **TypeScript** and **RxJS**, covering dynamic routing, route restoration and parking approach. <!-- src: navigation-statistics#4.1, navigation-statistics#4.5 -->
 
-* Separated developer diagnostics from core guidance services, updating **Protocol Buffers** contracts and keeping older operations backward compatible. <!-- src: navigation-statistics#4.2 -->
-
-* Adapted the **React** diagnostic display and developer menu to the new service boundaries. <!-- src: navigation-statistics#4.3 -->
-
-* Added and repaired **Jest** tests for route-change reasons across guidance, route edits and parking approach. <!-- src: navigation-statistics#4.4 -->
-
-* Implemented car navigation features with HERE's **HNav** and **HNod** SDKs, including route-deviation handling and a redesigned search UI. <!-- src: navigation-statistics#4.5 -->
+* Separated developer diagnostics from core guidance services, updating **protobuf.js**-generated contracts and keeping older operations backward compatible. <!-- src: navigation-statistics#4.2, navigation-statistics#5 -->
 
 <!-- entry: orion-mobile-clinical-ink -->
 ## **Senior React Native Engineer (Contract)**
@@ -178,6 +164,7 @@ Contract, consulting and project work
 * Moved file handling to direct **Azure Blob Storage** uploads, removing the app's backend dependency and allowing larger images. <!-- src: designai-jira-plugin#4.3 -->
 
 * Sent image data to Azure Blob Storage in chunks to work around Atlassian Forge's file upload limits. <!-- src: jira-blob-chunks -->
+
 <!-- entry: various-clients -->
 ## **Software Engineering Consultant**
 

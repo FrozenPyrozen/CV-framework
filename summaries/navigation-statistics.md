@@ -92,7 +92,7 @@ Tags: here-sdk, automotive, react-native, typescript, android
 - Languages: TypeScript 5.1.6 and JavaScript, **hands-on**. The version is from the inspected manifest, not a claim that it was constant throughout the assignment.
 - Reactive state and services: RxJS and observable-based navigation models, **hands-on**.
 - UI: React and diagnostic components, **hands-on**.
-- Contracts: Protocol Buffers and generated service interfaces, **hands-on**.
+- Contracts: protobuf.js, generating the Protocol Buffers (proto) service interfaces, **hands-on** (protobuf.js in both HERE projects: user 2026-10-24).
 - Navigation: HERE's HNav and HNod SDKs (TypeScript and Kotlin) and internal navigation-service integration, **hands-on** (user 2026-10-23 and 2026-10-24).
 - Kotlin: **hands-on** on the SDK work (user 2026-10-24: keep it in the portfolio's technology list).
 - Testing: Jest 29 and test mocks, **hands-on**; exact minor versions may have changed.

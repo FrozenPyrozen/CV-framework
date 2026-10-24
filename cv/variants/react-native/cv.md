@@ -10,7 +10,7 @@ Kyiv, Ukraine (Remote) | Open to B2B contract or full-time employment | Working 
 
 # **SUMMARY**
 
-Senior React Native engineer and tech lead with 7+ years of experience building React Native, React and TypeScript apps for automotive, healthcare (including clinical trials), Internet of Things (IoT), fintech, blockchain and enterprise resource planning (ERP) products. <!-- src: calc:years_experience, profile, general-motors-navigation#1, orion-mobile-clinical-ink#1, thermo-fisher-dosimeter#1, omo-systems-smart-home#1, itjet-fintech#1, velas-wallet#1, syspro-saas-erp#1 --> Led a team of 8 engineers building the HERE SDK map features of an automotive React Native companion app; after release, user engagement rose 20% and crashes fell 15%. <!-- src: general-motors-navigation#4.1, general-motors-navigation#4.3, calc:team_size_led --> Built an offline-first IoT healthcare app on Android and iOS with Realm from scratch, with Bluetooth Low Energy (BLE), MQTT over Transport Layer Security (TLS) and background-job features. <!-- src: thermo-fisher-dosimeter#4.1, thermo-fisher-dosimeter#4.2, thermo-fisher-dosimeter#4.3, thermo-fisher-dosimeter#4.4 --> Made mobile apps measurably faster: a 3x faster first interaction in an Android wallet, staking page loading cut from 2 minutes to 5 seconds with 5x less battery use, and 30% faster device data transfer in the IoT app. <!-- src: velas-wallet#4.9, velas-wallet#4.2, thermo-fisher-dosimeter#4.2 --> Also worked in native Android (Java / Kotlin), including an Android 14 migration, and released a wallet app on F-Droid and Snapcraft. <!-- src: orion-mobile-clinical-ink#4.1, orion-mobile-clinical-ink#4.4, velas-wallet#4.5 --> Built core modules of a schema-driven React 19 runtime that renders 1,800+ ERP programs through architecture-governed specification-driven development (SDD). <!-- src: syspro-saas-erp#4.1, syspro-saas-erp#4.2 -->
+Senior React Native engineer and tech lead with 7+ years of experience building React Native, React and TypeScript apps for automotive, healthcare, Internet of Things (IoT), fintech, blockchain and enterprise resource planning (ERP) products. <!-- src: calc:years_experience, profile, general-motors-navigation#1, orion-mobile-clinical-ink#1, thermo-fisher-dosimeter#1, omo-systems-smart-home#1, itjet-fintech#1, velas-wallet#1, syspro-saas-erp#1 --> Led a team of 8 engineers building the HERE SDK map features of an automotive React Native app; after release, user engagement rose 20% and crashes fell 15%. <!-- src: general-motors-navigation#4.1, general-motors-navigation#4.3, calc:team_size_led --> Built an offline-first IoT healthcare app with Realm, Bluetooth Low Energy (BLE), MQTT over TLS and background jobs. <!-- src: thermo-fisher-dosimeter#4.1, thermo-fisher-dosimeter#4.2, thermo-fisher-dosimeter#4.3, thermo-fisher-dosimeter#4.4 --> Made mobile apps faster: 3x faster first interaction in an Android wallet, staking page loading cut from 2 minutes to 5 seconds, and 30% faster IoT data transfer. <!-- src: velas-wallet#4.9, velas-wallet#4.2, thermo-fisher-dosimeter#4.2 --> Worked in native Android (Java / Kotlin), including an Android 14 migration, and released a wallet on F-Droid and Snapcraft. <!-- src: orion-mobile-clinical-ink#4.1, orion-mobile-clinical-ink#4.4, velas-wallet#4.5 --> Built core modules of a schema-driven React 19 runtime that renders 1,800+ ERP programs through architecture-governed specification-driven development (SDD). <!-- src: syspro-saas-erp#4.1, syspro-saas-erp#4.2 -->
 
 # **EXPERIENCE**
 
@@ -60,8 +60,6 @@ Senior React Native engineer and tech lead with 7+ years of experience building 
 
 * Cut staking page loading from 2 minutes to 5 seconds and made it use 5x less mobile battery by moving filtering to the server and adding a backup blockchain remote procedure call (RPC) connection. <!-- src: velas-wallet#4.2 -->
 
-* Redesigned the staking-rewards calculation on the **Node.js** backend for stability and speed; user engagement grew 4x afterward. <!-- src: velas-wallet#4.6 -->
-
 <!-- entry: omo-systems-smart-home -->
 ## **Team Leader**
 
@@ -71,7 +69,7 @@ Senior React Native engineer and tech lead with 7+ years of experience building 
 
 * Delivered the research and development (R&D) department's core **React Native** app for controlling smart-home **IoT** devices. <!-- src: omo-systems-smart-home#4.1 -->
 
-* Fixed insecure face-recognition unlock on specific Android devices by patching in a native **Android biometrics** library. <!-- src: omo-systems-smart-home#4.4 -->
+* Fixed insecure face-recognition unlock on specific Android devices by patching **react-native-keychain** to use a native **Android biometrics** library. <!-- src: omo-systems-smart-home#4.4 -->
 
 * Led and mentored a team of about 3 engineers: ran **code reviews**, set coding standards and onboarded new engineers. <!-- src: omo-systems-smart-home#4.5 -->
 
@@ -90,8 +88,6 @@ Senior React Native engineer and tech lead with 7+ years of experience building 
 
 * Optimized rendering and offline data access in **Realm** as part of a team-wide **performance** effort that made the app 20% faster. <!-- src: thermo-fisher-dosimeter#4.6 -->
 
-* Implemented a secure **OAuth 2.0** login flow and local storage of dosimeter data with efficient filtering. <!-- src: thermo-fisher-dosimeter#4.5 -->
-
 <!-- entry: itjet-fintech -->
 ## **Full-Stack Engineer**
 
@@ -103,11 +99,7 @@ Senior React Native engineer and tech lead with 7+ years of experience building 
 
 * Built the Golfuture **React Native** app from scratch, based on the designs, including its business logic and **Stripe** and API integrations, and presented results directly to the client. <!-- src: itjet-fintech#4.9 -->
 
-* Raised database performance 2x for Fused by migrating **PostgreSQL** from EC2 to **Amazon Web Services (AWS) RDS** and optimizing slow SQL queries. <!-- src: itjet-fintech#4.4 -->
-
 * Implemented the automated monthly subscription flow for Fused with **Stripe**, **Node.js REST APIs** (**Express**, **Sequelize**), **React** and **React Native**. <!-- src: itjet-fintech#4.6 -->
-
-* Added features to the Oroscopo **React Native** app: API work, UI components, an animated card circle, the zodiac compatibility logic, **AdMob** banner ads and new tarot layout screens. <!-- src: itjet-fintech#4.10 -->
 
 <!-- entry: admasters-ecommerce -->
 ## **Full-Stack Engineer and Team Leader**
@@ -127,24 +119,18 @@ Contract, consulting and project work
 
 ### **HERE Technologies | Remote**
 
-* Reworked the voice assistant's client integration for a car navigation proof of concept (PoC) in **React** and **RxJS**, adding text input alongside voice, and presenting processing, completion and error states. <!-- src: navigation-poc#4.1, navigation-poc#1 -->
+* Reworked the client integration of the **voice AI assistant** in **React** and **RxJS** for a car navigation proof of concept (PoC) built in HERE's R&D team, adding text input alongside voice, and presenting processing, completion and error states. <!-- src: navigation-poc#4.1, navigation-poc#1, navigation-poc#3 -->
 
 * Built driver warning cards and extended their service contracts to the **Android** layer for confirming, rejecting and dismissing warnings. <!-- src: navigation-poc#4.2 -->
 
-* Implemented a passenger second-screen feature in **React** for a luxury car brand, showing live trip data. <!-- src: navigation-poc#4.3 -->
-
-* Integrated curvy-route controls into the PoC and added a route-curviness slider to a **Kotlin** reference app. <!-- src: navigation-poc#4.5 -->
-
-* Connected electric-vehicle data to the **TypeScript** UI through **Android** model and protocol updates, and maintained navigation SDK versions. <!-- src: navigation-poc#4.8 -->
-
-* Updated build and SDK preparation scripts; a script replacing manual build steps made the build **3x faster**. <!-- src: navigation-poc#4.9, gm-poc-build-3x -->
+* Implemented a passenger second-screen feature in **React** for Bentley, showing live trip data. <!-- src: navigation-poc#4.3 -->
 
 <!-- entry: navigation-statistics -->
 ## **Senior Software Engineer**
 
 ### **HERE Technologies | Remote**
 
-* Implemented navigation features for a **truck navigation app** with HERE's **HNav** and **HNod** SDKs, including route-deviation handling and a redesigned search UI. <!-- src: navigation-statistics#4.5 -->
+* Implemented in-car navigation features for a **truck navigation app** with **HNav** and **HNod** SDKs, including route-deviation handling and a redesigned search UI. <!-- src: navigation-statistics#4.5 -->
 
 * Propagated route-change reasons through the guidance flow in **TypeScript** and **RxJS**, covering dynamic routing, route restoration and parking approach. <!-- src: navigation-statistics#4.1 -->
 
@@ -166,6 +152,7 @@ Contract, consulting and project work
 * Migrated the native Android app to **Android 14 (SDK 34)**: Gradle 8, Java 17, alarm and notification changes, and **Jenkins** build fixes. <!-- src: orion-mobile-clinical-ink#4.4 -->
 
 * Stack: **React Native, Expo, TypeScript, Apollo Client, GraphQL, AWS Amplify, AppSync, Cognito, Redux Toolkit, Redux Saga, Realm, MMKV, Firebase Cloud Messaging, Sentry, Jest**. <!-- src: orion-mobile-clinical-ink#5 -->
+
 <!-- entry: designai-jira-plugin -->
 ## **Full-Stack Engineer (Contract)**
 

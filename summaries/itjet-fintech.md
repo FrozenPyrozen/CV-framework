@@ -173,6 +173,7 @@ Source: doc:portfolio-2025-04
 - **CI/CD:** Bitbucket Pipelines (hands-on)
 - **Testing:** Puppeteer (hands-on), Jest (hands-on), Cucumber (hands-on), React Testing Library (hands-on, confirmed by user 2026-10-16)
 - **Styling, state and security:** Styled Components, Redux Thunk, Keychain (hands-on, confirmed by user 2026-10-16)
+- **By project** (user 2026-10-24, checked against doc:portfolio-2025-09): Redux Thunk on Wink, Golfuture and Oroscopo; Styled Components on the Aspiration banking web app; PM2 and Nginx serving the Node.js backends of RegiStart and Fused
 - **Analytics:** A/B testing (hands-on)
 - **Client projects, from the portfolio:** Apollo Client (GraphQL), React Navigation, Plaid, Google Places API, reCAPTCHA v3, PlanOut A/B testing, Storybook, Plop scaffolding, CSS Grid, component-driven development and domain-driven design (Aspiration); Redux, Formik, Material UI (RegiStart) (hands-on, confirmed by user 2026-10-22, from doc:portfolio-2025-04). CircleCI, Segment, Rollbar and Crashlytics (Aspiration) (used by the project, confirmed by user 2026-10-22, from doc:portfolio-2025-04)
 

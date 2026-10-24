@@ -142,10 +142,10 @@ decisions:
     matches: [SYSPRO two pages, portfolio project over one page, SYSPRO page break]
 
   - id: portfolio-poc-names-public
-    decision: The car navigation PoC page may name Volkswagen AG and its brands (Audi, Porsche, Volkswagen), the Hugo AI assistant, Kurviger and the Porsche theme and layout, as the published 2025-09 portfolio did.
+    decision: The car navigation PoC page may name Volkswagen AG and its brands (Audi, Porsche, Volkswagen), the Hugo AI assistant, Kurviger and the Porsche theme and layout, as the published 2025-09 portfolio did. Since 2026-10-24 the CV and the portfolio also name Bentley (the passenger second screen) and Daimler (the truck-parking demo).
     date: "2026-10-23"
     why: User said to keep the names (portfolio review 2026-10-23-1633, confidentiality-1).
-    matches: [Volkswagen AG, Audi, Porsche, Hugo AI, Kurviger, PoC client names, under NDA PoC]
+    matches: [Volkswagen AG, Audi, Porsche, Hugo AI, Kurviger, Bentley, Daimler, luxury car brand, truck parking, PoC client names, under NDA PoC]
 
   - id: portfolio-wink-mockups
     decision: The Wink screenshots are design mockups with stock photos and made-up names (Joe Viola, jviola29, Sarah); they may be public.
