@@ -38,6 +38,7 @@ test("master CV + ats: the CV, the market header settings, and only the relevant
 
 test("fact-check bundle keeps the src comments and holds the digests and cited facts", () => {
   const dir = tempRepo();
+  run("validate.ts", dir); // writes the digests (git-ignored)
   const r = run("review-context.ts", dir, ["cv/Kirill_Kohan_CV.md", "fact-check"]);
   assert.equal(r.code, 0, r.out);
   const b = bundle(dir, r.out);

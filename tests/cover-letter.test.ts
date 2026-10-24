@@ -62,7 +62,9 @@ test("a sourced letter passes; unsourced, jd without a job ad, too long, confide
   assert.match(bad.out, /5 body paragraphs \(3 or 4 expected\)/);
 
   writeBody(dir, [...good.slice(0, 3), `${"Plenty of words here. ".repeat(80)}<!-- src: profile -->`]);
-  assert.match(run("cover-letter.ts", dir, ["check", DIR]).out, /words in the body \(max \d+, checks\.cover_letter_max_words\)/);
+  const long = run("cover-letter.ts", dir, ["check", DIR]);
+  assert.equal(long.code, 1); // an error, not a warning (specs/outputs/cover-letter.md 5)
+  assert.match(long.out, /ERROR\s+\S+ \d+ words in the body \(max \d+, checks\.cover_letter_max_words\)/);
 
   writeBody(dir, good);
   const p = join(dir, DIR, "cover-letter.md");

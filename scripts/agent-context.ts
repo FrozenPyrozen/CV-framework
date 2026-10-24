@@ -39,7 +39,13 @@ const read = (p: string) => readFileSync(p, "utf8");
 export function specSection(text: string, id: string): string | undefined {
   const lines = text.split("\n");
   const top = /^\d+$/.test(id);
-  const start = lines.findIndex((l) => id === "Rules at a glance" ? l === "## Rules at a glance" : top ? l.startsWith(`## ${id}. `) : l.startsWith(`### ${id} `));
+  // The start heading outside fenced code: an example "## 8. Portfolio material" inside a code block isn't section 8.
+  let inFence = false, start = -1;
+  for (let i = 0; i < lines.length && start < 0; i++) {
+    if (/^(```|~~~)/.test(lines[i].trim())) { inFence = !inFence; continue; }
+    const l = lines[i];
+    if (!inFence && (id === "Rules at a glance" ? l === "## Rules at a glance" : top ? l.startsWith(`## ${id}. `) : l.startsWith(`### ${id} `))) start = i;
+  }
   if (start < 0) return undefined;
   const level = top || id === "Rules at a glance" ? 2 : 3;
   let fence = false, end = lines.length;

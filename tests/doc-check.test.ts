@@ -1,7 +1,8 @@
 // npm run doc-check: deterministic drift check between the docs and the code and config.
 import { test } from "node:test";
+import { spawnSync } from "node:child_process";
 import assert from "node:assert/strict";
-import { constants, cpSync, existsSync } from "node:fs";
+import { constants, cpSync, existsSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { edit, REPO, run, tempRepo } from "./helpers.ts";
 
@@ -42,9 +43,9 @@ test("an unknown config key is an error; an optional key from the schema passes"
   assert.doesNotMatch(r.out, /portfolio\.name/); // optional, in schemas/config.schema.json
 });
 
-test("a missing repo path is an error; placeholders and generated outputs are skipped", () => {
+test("a missing repo path is an error; placeholders, generated outputs and per-laptop *.local.* files are skipped", () => {
   const dir = docRepo();
-  edit(dir, "docs/workflows.md", /^/, "See `specs/no-such-spec.md`, `summaries/<id>.md`, `cv/variants/react/cv.md` and `facts/applications.yaml`.\n\n");
+  edit(dir, "docs/workflows.md", /^/, "See `specs/no-such-spec.md`, `summaries/<id>.md`, `cv/variants/react/cv.md`, `facts/applications.yaml` and the per-laptop `.claude/prefs.local.md`.\n\n");
   const r = run("doc-check.ts", dir);
   assert.equal(r.code, 1, r.out);
   assert.match(r.out, /ERROR  docs\/workflows\.md:1: `specs\/no-such-spec\.md` doesn't exist/);
@@ -96,4 +97,14 @@ test("an unknown snake_case field name is a warning only", () => {
   const r = run("doc-check.ts", dir);
   assert.equal(r.code, 0, r.out);
   assert.match(r.out, /warn   docs\/workflows\.md:1: field `portfolio_titel` is not a property in any schemas\/\*\.json/);
+});
+
+test("a git-ignored path is skipped (per-laptop files) in a git checkout", () => {
+  const dir = docRepo();
+  writeFileSync(join(dir, ".gitignore"), "private/\n");
+  for (const a of [["init", "-q"], ["config", "user.email", "t@t"], ["config", "user.name", "t"]]) spawnSync("git", a, { cwd: dir });
+  edit(dir, "docs/workflows.md", /^/, "Keep notes in `private/notes.md` and see `specs/no-such-spec.md`.\n\n");
+  const r = run("doc-check.ts", dir);
+  assert.match(r.out, /`specs\/no-such-spec\.md` doesn't exist/);
+  assert.doesNotMatch(r.out, /private\/notes\.md/); // git-ignored: skipped
 });

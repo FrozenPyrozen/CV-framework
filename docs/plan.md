@@ -1,6 +1,6 @@
 # CV Agent Framework: Plan
 
-Status: steps 1–12 and 14 done (section 8; step 12 by full archive on this Mac, its private-file round trip still to rerun once a tailored or sent CV exists); left: step 13 (new laptop + new repo, on the new laptop); agent replay passed 2026-10-23 (B1, B7, B8). Since then: portable harvest (9c) and sources (9d) built, the portfolio specified, its content imported (P2), its summary fields (P1), the portfolio agent and text checks (P3), template, renderer and build (P4), the spell check (P5) and portfolio reviews (P6) built (9e); the portfolio rebuilt on the published 2025-09 structure (change log rows 86–89), its template approved, the portfolio reviewed (`reports/2026-10-23-1633`), an ATS and HR review of all CVs (`reports/2026-10-23-1705`); docs split to save tokens (change log in `docs/changelog.md`, scripts and workflows in `docs/`, fact formats in `specs/facts-spec.md`); context bundles for the composer and tailor (`agent-context`), the HERE Technologies navigation work imported by portable harvest into the consulting section; the cover-letter agent; alignment checks (`npm run impact`, the auditor and `/align`); context bundles for the cover-letter, portfolio and advisor agents and `npm run test:changed` for `verify --fast` · 2026-10-24
+Status: steps 1–12 and 14 done (section 8; step 12 by full archive on this Mac, its private-file round trip still to rerun once a tailored or sent CV exists); left: step 13 (new laptop + new repo, on the new laptop); agent replay passed 2026-10-24 (B1–B9, B17, B22, B23; B10 needs the user live). Since then: portable harvest (9c) and sources (9d) built, the portfolio specified, its content imported (P2), its summary fields (P1), the portfolio agent and text checks (P3), template, renderer and build (P4), the spell check (P5) and portfolio reviews (P6) built (9e); the portfolio rebuilt on the published 2025-09 structure (change log rows 86–89), its template approved, the portfolio reviewed (`reports/2026-10-23-1633`), an ATS and HR review of all CVs (`reports/2026-10-23-1705`); docs split to save tokens (change log in `docs/changelog.md`, scripts and workflows in `docs/`, fact formats in `specs/facts-spec.md`); context bundles for the composer and tailor (`agent-context`), the HERE Technologies navigation work imported by portable harvest into the consulting section; the cover-letter agent; alignment checks (`npm run impact`, the auditor and `/align`); context bundles for the cover-letter, portfolio and advisor agents and `npm run test:changed` for `verify --fast` · 2026-10-24
 
 ## 1. Goal
 
@@ -44,10 +44,7 @@ CV/
 ├── framework.local.example.yaml   # committed example of the file above
 ├── .nvmrc                         # Node version
 ├── package-lock.json              # exact dependency versions (committed; install with `npm ci`)
-├── package.json                   # scripts: build, build:all, render, pdf, pdf-check, preview, lint, trace,
-│                                  #          check, status, validate, index, template-import, test, doctor, refresh, market,
-│                                  #          backup, restore, digest, git-digest, select, reattach-src, typecheck,
-│                                  #          log-application, harvest-prompt, import-summary, import-doc
+├── package.json                   # the npm scripts: every one has its row in docs/scripts.md (doc-check enforces it)
 ├── tsconfig.json                  # TypeScript settings (type check only; scripts run with tsx)
 ├── specs/
 │   ├── cv-spec.md                 # CV structure and writing rules (seeded from this chat)
@@ -58,7 +55,8 @@ CV/
 │   ├── templates.md               # template import rules and style-map format
 │   ├── review-report-spec.md      # shared format for every reviewer report
 │   ├── portability-spec.md        # moving to another laptop: backup, full archive, restore, remotes
-│   ├── outputs/                   # specs for further output types: portfolio.md (built, 9e); later linkedin.md, cover-letter.md; the CV's
+│   ├── alignment-spec.md          # keeping framework changes aligned: impact map, auditor checklist
+│   ├── outputs/                   # specs for further output types: portfolio.md (built, 9e), cover-letter.md (built); later linkedin.md; the CV's
 │   │                              # output specs are cv-spec.md and tailoring-spec.md
 │   └── rubrics/
 │       ├── ats.md                 # AI ATS screener rubric (+ job-ad match mode)
@@ -74,7 +72,9 @@ CV/
 │   ├── reviewer.md                # one generic reviewer, run once per rubric
 │   ├── advisor.md                 # interactive: findings -> questions -> confirmed facts -> composer
 │   ├── template-importer.md       # labels paragraphs of a sample CV to create a style map
-│   └── portfolio.md               # writes the public portfolio's text from opted-in summaries (9e P3)
+│   ├── portfolio.md               # writes the public portfolio's text from opted-in summaries (9e P3)
+│   ├── cover-letter.md            # writes a job's cover letter from its tailored CV's sources
+│   └── auditor.md                 # checks a framework change is aligned with the plan and specs; reports only
 ├── facts/
 │   ├── profile.yaml               # the only place for personal details; the CV header is generated from it (facts-spec 1)
 │   ├── confirmed.yaml             # facts you confirmed, each with id, source, entry and tags (facts-spec 2)
@@ -152,16 +152,24 @@ CV/
 │   ├── lib/buildstate.ts          # build records: source/output hashes
 │   ├── lib/sources.ts             # imported documents: the sources index and text extraction (.docx, .pdf, .md, .txt, .pages) (9d)
 │   ├── validate.ts                # JSON Schema validation of all inputs
+│   ├── doc-check.ts               # docs against code and config: scripts, flags, keys, values, paths, sections
+│   ├── impact.ts                  # required co-changes of a framework change (alignment-spec 3)
+│   ├── verify.ts                  # the check after every change: validate, doc-check, index, impact, check, status, tests
+│   ├── test-changed.ts            # only the tests a change can affect (verify --fast)
+│   ├── review-context.ts          # one bundle per CV and rubric for the reviewer
+│   ├── agent-context.ts           # one bundle for the composer, tailor, cover-letter, portfolio or advisor agent
+│   ├── cover-letter.ts            # a cover letter's header, checks and build
 │   ├── index.ts                   # regenerates the agents/rubrics/profiles/markets/templates/outputs list in AGENTS.md
 │   └── migrations/                # (created when the first format change needs one)
 ├── tests/                         # *.test.ts (node:test); helpers.ts runs scripts on a temp copy of the repo (CV_ROOT)
 │   └── fixtures/                  # for hand-made inputs if a test ever needs them; today every test copies the
 │                                  # real repo to a temp folder and breaks it on purpose (empty, not tracked)
 └── .claude/
+    ├── settings.json              # plugins off in this repo; allowlist for npm run, the script runners and read-only git
     ├── agents/                    # thin wrappers -> agents/*.md
     └── commands/                  # /harvest /compose /tailor /variants /review /improve /add-experience
                                    # /profile /job-change /add-repo /import-template /build /status /log-application /doctor
-                                   # /harvest-prompt /import-summary /import-docs /portfolio-material /portfolio
+                                   # /harvest-prompt /import-summary /import-docs /portfolio-material /portfolio /cover-letter /align
 ```
 
 ## 4. Data formats

@@ -37,7 +37,7 @@ decisions:
     decision: The email kiril.kohan@gmail.com is correct; React.js stays in Skills as an extra keyword.
     date: "2026-10-16"
     why: User confirmed.
-    matches: [email spelling, React.js duplicate keyword]
+    matches: [email spelling, React.js duplicate keyword, React.js, React 19 and React.js, two forms of React]
 
   - id: ai-agents-wording
     decision: At SYSPRO, describe the AI agents truthfully as implementing and reviewing code against the specifications under human review (e.g. "rules for AI agents that implement and review code against the specifications"). Never "AI review agents" or "only as reviewers" (narrower than the source), never AI as the designer, never ad-hoc code generation. Skill name "AI agent governance (SDD)".

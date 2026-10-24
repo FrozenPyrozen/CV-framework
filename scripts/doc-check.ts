@@ -9,14 +9,15 @@
 //                framework.config.yaml exists there or in schemas/config.schema.json;
 //   4. values:   a number copied next to a config key ("`checks.max_words` (2200)", "is 2200", "= 2200") equals the
 //                config value;
-//   5. paths:    backticked repo paths (scripts/, specs/, docs/ …) exist; placeholders and generated or git-ignored
-//                outputs are skipped;
+//   5. paths:    backticked repo paths (scripts/, specs/, docs/ …) exist; placeholders, generated or git-ignored
+//                outputs and per-laptop files (*.local.*) are skipped;
 //   6. sections: "`specs/cv-spec.md` 14", "cv-spec.md section 2.1" point to a numbered heading in that file;
 //   7. fields:   a backticked snake_case name next to "field" is a property in some schemas/*.json (warning only).
 // docs/changelog.md is history and is not checked. Fenced code blocks are skipped.
 // Prints one ERROR/warn line per finding; exits 1 on errors.
+import { spawnSync } from "node:child_process";
 import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
-import { dirname, join, relative, resolve } from "node:path";
+import { basename, dirname, join, relative, resolve } from "node:path";
 import { isMain, loadConfig, rootPath, ROOT } from "./lib/repo.ts";
 
 export interface DocIssue { level: "error" | "warning"; file: string; line: number; message: string }
@@ -203,6 +204,8 @@ function checkConfig(docs: Map<string, string>, issues: DocIssue[]): void {
 
 // ---------- paths, section references, schema fields ----------
 
+const gitIgnored = (p: string) => spawnSync("git", ["check-ignore", "-q", "--", p], { cwd: rootPath() }).status === 0;
+
 function checkPaths(docs: Map<string, string>, issues: DocIssue[]): void {
   for (const [file, text] of docs) {
     for (const m of text.matchAll(/`([^`\s]+)`/g)) {
@@ -211,6 +214,8 @@ function checkPaths(docs: Map<string, string>, issues: DocIssue[]): void {
       if (/[<>*{}…]|YYYY|\.\.\./.test(p)) continue; // placeholders
       p = p.replace(/[:,]+$/, "").replace(/#.*$/, "");
       if (OPTIONAL_PATHS.some((o) => p === o || p.startsWith(o + "/"))) continue;
+      // Per-laptop files (named *.local.*, or git-ignored) exist on some machines only: a fresh clone mustn't fail.
+      if (/\.local\./.test(basename(p)) || (!existsSync(rootPath(p)) && gitIgnored(p))) continue;
       if (!existsSync(rootPath(p))) issues.push({ level: "error", file, line: lineOf(text, m.index!), message: `\`${p}\` doesn't exist` });
     }
   }

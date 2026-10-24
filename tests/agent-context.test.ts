@@ -5,11 +5,15 @@ import { cpSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs"
 import { join } from "node:path";
 import { parse } from "yaml";
 import { REPO, edit, run, tempRepo } from "./helpers.ts";
+import { specSection } from "../scripts/agent-context.ts";
 
 // The bundle reads the agent definitions, AGENTS.md and the open items, which tempRepo() leaves out.
 const repo = () => {
   const dir = tempRepo();
   for (const p of ["agents", "AGENTS.md", "docs/open-items.md"]) cpSync(join(REPO, p), join(dir, p), { recursive: true });
+  // Generated, git-ignored inputs a fresh clone doesn't have: the digests and the react variant's selection.
+  run("validate.ts", dir);
+  run("select.ts", dir, ["cv/variants/react", "--profile", "react"]);
   return dir;
 };
 
@@ -46,6 +50,7 @@ test("composer --entry: the Read first spec sections, the entry's CV lines, summ
 
 test("composer without --entry takes the entries status lists, and an open item rides along", () => {
   const dir = repo();
+  run("build.ts", dir, ["cv/Kirill_Kohan_CV.md", "--no-pdf", "--entries-reviewed"]); // a build record (git-ignored)
   const before = run("agent-context.ts", dir, ["composer"]);
   assert.equal(before.code, 0, before.out);
   assert.doesNotMatch(bundle(dir, before.out), /Entries in scope: [^\n]*admasters-ecommerce/); // in scope only after its summary changes
@@ -131,4 +136,12 @@ test("cover-letter, portfolio and advisor bundles: their Read first sections and
   assert.match(ab, /^## Open items \(`docs\/open-items\.md`\)$/m);
   assert.match(ab, /^## Findings: `reports\/run\/hr\.md` \(pass, 8\)[\s\S]*\| hr-1 \| low \|[\s\S]*\| fact-check-1 \| medium \|/m); // ids with a hyphen too
   assert.match(ab, /^- \*\*keep-length\*\*: /m);
+});
+
+test("specSection skips headings inside fenced code, at the start and at the end", () => {
+  const text = "## 7. Seven\n\n```markdown\n## 8. Example in a fence\n```\n\n## 8. Real\nbody\n```\n## 9. Also fenced\n```\nmore\n\n## 9. Nine\n";
+  const s8 = specSection(text, "8")!;
+  assert.match(s8, /^## 8\. Real\nbody/);
+  assert.match(s8, /Also fenced[\s\S]*more$/); // the fenced "## 9." doesn't end it
+  assert.doesNotMatch(s8, /## 9\. Nine/);
 });
