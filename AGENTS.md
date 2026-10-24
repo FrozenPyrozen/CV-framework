@@ -14,7 +14,7 @@ The full design is in `docs/plan.md`. The rules are in `specs/`.
 
 ## Rules for every agent
 
-1. **Specs first.** Follow the specs in `specs/` (`cv-spec.md`, `work-summary-spec.md`, `facts-spec.md`, `tailoring-spec.md`, `templates.md`, `review-report-spec.md`, `portability-spec.md`, `sources-spec.md`, `outputs/portfolio.md`, `outputs/cover-letter.md`) and the rubrics in `specs/rubrics/`; read the sections your agent's *Read first* list names (and a spec's *Rules at a glance*), opening others only when a step points there. If a spec and a request conflict, say so and ask; don't silently deviate.
+1. **Specs first.** Follow the specs in `specs/` (`cv-spec.md`, `work-summary-spec.md`, `facts-spec.md`, `tailoring-spec.md`, `templates.md`, `review-report-spec.md`, `portability-spec.md`, `sources-spec.md`, `alignment-spec.md`, `outputs/portfolio.md`, `outputs/cover-letter.md`) and the rubrics in `specs/rubrics/`; read the sections your agent's *Read first* list names (and a spec's *Rules at a glance*), opening others only when a step points there. If a spec and a request conflict, say so and ask; don't silently deviate.
 2. **Every claim needs a source.** Never write a CV claim without a summary contribution, summary section or confirmed fact behind it. If the user wants something unsourced in the CV, it becomes a confirmed fact first (`/add-experience`).
 3. **Never invent.** Unknowns are `TODO (needs user input)` in summaries, or a question to the user. No invented numbers, dates, titles or technologies.
 4. **The user's manual edits are kept.** Start from files as they are on disk. Edit CVs one entry at a time and run `npm run reattach-src -- <file> --save` before the first edit.
@@ -27,6 +27,7 @@ The full design is in `docs/plan.md`. The rules are in `specs/`.
 11. **Don't use `cns:*` skills in this repo.** They belong to a different project.
 12. **Ask the user** for job details, numbers, employment types, new tags, approvals and anything only they can know. Ask one topic at a time, with suggested answers.
 13. **Specs name config keys, not their values** (`checks.max_words`, not its number); `npm run doc-check` catches copied values that drifted, plus unknown scripts, flags, paths and section numbers.
+14. **A framework change updates everything it implies.** `npm run impact` (part of `verify`) lists the required co-changes (changelog row, tests, docs rows, wrappers, plan rows); after changing a spec, an agent, a command or a script's behavior, run `/align` for the judgment of meaning (`specs/alignment-spec.md`).
 
 ## Commands and scripts
 
@@ -55,6 +56,7 @@ The full design is in `docs/plan.md`. The rules are in `specs/`.
 ### Agents (`agents/`)
 
 - `agents/advisor.md`: Talks with the user, one topic at a time, to turn review findings, new experience, profile changes and job changes into confirmed facts, decisions and summary updates, then hands the changes to the composer.
+- `agents/auditor.md`: Checks that a framework change is aligned: the code does what the specs say, the plan describes what exists, and every file the change implies was updated; reports gaps and never edits.
 - `agents/composer.md`: Updates the master CV from the summaries and confirmed facts, one entry at a time, keeping the user's wording and every source comment.
 - `agents/cover-letter.md`: Writes a cover letter for one job ad (cv/tailored/<company-role>/cover-letter.md) from the same sources as its tailored CV, with a source on every sentence; a script writes the header, checks and builds it.
 - `agents/harvester.md`: Writes or merges a work summary (summaries/<id>.md) from a local git repo, asking the user for everything git can't know.
