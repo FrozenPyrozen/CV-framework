@@ -1,12 +1,15 @@
 // npm run agent-context -- composer [--entry <id>[,<id>…]] [--all]
 // npm run agent-context -- tailor <cv-dir | cv.md | profile-id> [--entry <id>[,<id>…]] [--all]
+// npm run agent-context -- cover-letter <cv/tailored/<company-role>>
+// npm run agent-context -- portfolio [--entry <page-id>[,…]] [--all]
+// npm run agent-context -- advisor [<reports/<run>>[,<reports/<run>>…]]
 // Writes one Markdown bundle for a writing agent to .cv-runs/agent-context/<agent>-<target>.md, like review-context
 // does for reviewers: the rules for every agent, the spec sections the agent's *Read first* list names (parsed from
 // agents/<agent>.md, so the bundle follows that list), and only the entries that need work, each with its CV lines,
 // summary text, cited facts and open items, plus the decisions that fit. Entries in scope: --entry, else the ones the
 // agent's own steps would pick (status, entries missing from the CV, a changed selection); --all takes every entry.
 // Deterministic: no AI calls.
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { basename, dirname, join, relative } from "node:path";
 import { calculate, parseCv, profileIdForFile, tailoredSettings } from "./lib/cvmd.ts";
 import { masterCvPath } from "./lib/paths.ts";
@@ -17,8 +20,11 @@ import { markdownVisibleText } from "./lib/text.ts";
 import { parseArgs } from "./refresh.ts";
 import { agentRules, esc, has, numberedCv, UsageError, yamlBlock } from "./review-context.ts";
 import { cvStatuses } from "./status.ts";
+import { buildBlocklist } from "./lint.ts";
+import { loadContext } from "./lib/cvmd.ts";
+import { pageItems, parsePortfolio, portfolioPages, portfolioPath, portfolioStatus } from "./portfolio.ts";
 
-export const AGENTS = ["composer", "tailor"] as const;
+export const AGENTS = ["composer", "tailor", "cover-letter", "portfolio", "advisor"] as const;
 export type Agent = (typeof AGENTS)[number];
 interface Options { agent: string; target?: string; entries?: string[]; all?: boolean }
 interface Decision { id: string; decision: string; date?: string; why?: string; matches?: string[] }
@@ -53,6 +59,11 @@ export function readFirstSections(agent: string): { file: string; ids: string[] 
   const list = def.match(/^## Read first\n((?:[-\s].*\n)*)/m)?.[1] ?? "";
   const out: { file: string; ids: string[] }[] = [];
   for (const line of list.split("\n")) {
+    // "- *Rules at a glance* of `specs/a.md` and of `specs/b.md`": the Rules at a glance of each.
+    if (/^- \*Rules at a glance\* of /.test(line)) {
+      for (const f of line.matchAll(/`(specs\/[\w/.-]+\.md)`/g)) out.push({ file: f[1], ids: ["Rules at a glance"] });
+      continue;
+    }
     const m = line.match(/^- `(specs\/[\w/.-]+\.md)`(.*)$/);
     if (!m) continue;
     const rest = m[2].replace(/\([^)]*\)/g, "");
@@ -166,6 +177,9 @@ function decisionsSection(ids: string[], names: string[], text: string): string 
 
 export function agentContext(opts: Options): { file: string; text: string; scope: string[] } {
   if (!(AGENTS as readonly string[]).includes(opts.agent)) throw new UsageError(`unknown agent "${opts.agent}" (one of: ${AGENTS.join(", ")})`);
+  if (opts.agent === "cover-letter") return coverLetterContext(opts);
+  if (opts.agent === "portfolio") return portfolioContext(opts);
+  if (opts.agent === "advisor") return advisorContext(opts);
   const agent = opts.agent as Agent;
   const cfg = loadConfig();
   const summaries = loadSummaries(cfg);
@@ -316,11 +330,141 @@ export function agentContext(opts: Options): { file: string; text: string; scope
   return { file: outFile, text, scope };
 }
 
+// ---------- cover-letter, portfolio, advisor ----------
+
+const save = (slug: string, out: string[]) => {
+  const file = rootPath(loadConfig().paths.runs, "agent-context", `${slug}.md`);
+  const text = out.join("\n").replace(/\n{3,}/g, "\n\n").trim() + "\n";
+  mkdirSync(dirname(file), { recursive: true });
+  writeFileSync(file, text);
+  return { file, text };
+};
+const fenced = (p: string, lang = "") => "```" + lang + "\n" + read(p).trim() + "\n```";
+const termLine = (s: Summary, scope: string) => s.confidentiality.map((c) => c.term ? `"${c.term}"${c.allow_in?.includes(scope) ? ` (allowed in ${scope})` : ""}` : c.prefix ? `prefix "${c.prefix}"` : `url "${c.url_pattern}"`).join("; ") || (s.confidentialityNone ? "none known" : "section empty");
+
+// Cover letter (specs/outputs/cover-letter.md): the job folder's inputs, the tailored CV with what its sources say,
+// the terms to keep out and the screening rules, in one file.
+function coverLetterContext(opts: Options) {
+  if (!opts.target) throw new UsageError("cover-letter needs a job folder (cv/tailored/<company-role>)");
+  const cfg = loadConfig();
+  const dir = cliPath(opts.target).replace(/\/(cv|cover-letter)\.md$/, "");
+  const cvFile = join(dir, "cv.md");
+  if (!existsSync(cvFile)) throw new UsageError(`${rel(cvFile)} not found: run /tailor --jd for this job first`);
+  const cvText = read(cvFile);
+  const summaries = loadSummaries(cfg);
+  const { raw } = loadConfirmed(cfg);
+  const shown = parseCv(cvText).sections.flatMap((s) => s.entries.map((e) => e.id)).filter(Boolean) as string[];
+  const out: string[] = [];
+  const section = (t: string, ...b: string[]) => out.push(`## ${t}`, "", ...b, "");
+  out.push(`# Agent context: cover-letter · \`${rel(dir)}\``, "", "Generated by `npm run agent-context`; read this instead of the files it replaces and open a full file only where it points. Never commit.", "");
+  section("Rules for every agent (`AGENTS.md`)", agentRules());
+  section("Spec sections (`agents/cover-letter.md` *Read first*)", specText("cover-letter" as Agent));
+  for (const f of ["job-description.md", "jd-tags.yaml", "why.md", "gap-report.md"]) {
+    const p = join(dir, f);
+    section(`\`${rel(p)}\``, existsSync(p) ? (f.endsWith(".yaml") ? fenced(p, "yaml") : read(p).trim().replace(/^#{1,3} /gm, (h) => "###" + h.slice(h.indexOf(" ")))) : f === "why.md" ? "Not there yet: ask the user (agent step 2) and save the answer verbatim." : "Not found.");
+  }
+  section(`Tailored CV (\`${rel(cvFile)}\`, numbered, with sources)`, numberedCv(cvText, true));
+  // What each cited source says, so a sentence can be checked without opening the summaries.
+  const ids = new Set([...cvText.matchAll(/<!--\s*src:\s*([^>]*?)\s*-->/g)].flatMap((m) => m[1].split(",").map((x) => x.trim())));
+  const lines: string[] = [];
+  for (const id of [...ids].sort()) {
+    const m = id.match(/^([\w-]+)#(4\.\d+)$/);
+    const sm = m && summaries.find((x) => x.id === m[1]);
+    const c = sm && sm.contributions.find((x) => x.number === m![2]);
+    if (c) { lines.push(`- **${id}** ${c.title}${c.result ? `. Result: ${c.result}` : ""}`); continue; }
+    const fact = (raw?.facts ?? []).find((f: any) => f.id === id);
+    if (fact) lines.push(`- **${id}** (fact): ${fact.fact}`);
+  }
+  section("What the CV's sources say (titles and results; open the summary's `### 4.N` for the full text)", lines.join("\n") || "None.");
+  const prof = loadContext({ cvFile }).profile;
+  section("Profile (availability and location, for the last paragraph)", yamlBlock({ location: prof.location, work: prof.work }));
+  section("Keep out of the letter (section 9 of the shown entries, hidden clients)",
+    summaries.filter((s) => shown.includes(s.id)).map((s) => `- ${s.id}: ${termLine(s, "cover-letter")}`).join("\n"),
+    "", `Hidden clients: ${buildBlocklist(summaries, loadContext({ cvFile })).terms.filter((t) => /hidden client/.test(t.from)).map((t) => t.term).join(", ") || "none"}`);
+  section("Screening rules (`npm run cover-letter -- check` enforces them)",
+    `Body at most ${cfg.checks.cover_letter_max_words} words (\`checks.cover_letter_max_words\`), one page.`,
+    `Errors: ${(cfg.checks.ai_tell_phrases ?? []).map((x: string) => `"${x}"`).join(", ")} (\`checks.ai_tell_phrases\`).`,
+    `Warnings: ${(cfg.checks.filler_words ?? []).join(", ")} (\`checks.filler_words\`); a sentence over 35 words; no short sentence; most sentences starting with "I".`);
+  const letter = join(dir, "cover-letter.md");
+  section(`Current letter (\`${rel(letter)}\`)`, existsSync(letter) ? numberedCv(read(letter), true) : "Not created yet: `npm run cover-letter -- refresh`.");
+  section("Decisions (`facts/decisions.yaml`)", decisionsSection(shown, [], cvText));
+  return { ...save(`cover-letter-${basename(dir)}`, out), scope: shown };
+}
+
+// Portfolio (specs/outputs/portfolio.md): only the pages that need writing, each with its summary text, public
+// items, terms and current text; the other pages listed by id.
+function portfolioContext(opts: Options) {
+  const pages = portfolioPages();
+  const st = portfolioStatus();
+  const want = opts.entries?.length ? opts.entries : opts.all ? pages.map((p) => p.id) : [...new Set([...st.toWrite, ...st.toRewrite, ...st.notInFile])];
+  for (const id of want) if (!pages.some((p) => p.id === id)) throw new UsageError(`unknown portfolio page "${id}" (one of: ${pages.map((p) => p.id).join(", ")})`);
+  const current = existsSync(portfolioPath()) ? parsePortfolio(read(portfolioPath())).projects : new Map<string, string>();
+  const out: string[] = [];
+  const section = (t: string, ...b: string[]) => out.push(`## ${t}`, "", ...b, "");
+  out.push("# Agent context: portfolio", "", "Generated by `npm run agent-context`; read this instead of the files it replaces and open a full file only where it points. Never commit.", "",
+    `- Pages in scope: ${want.join(", ") || "none: nothing to write. Pass `--entry <page-id>` for a requested change"}`,
+    `- Other pages (leave as they are): ${pages.filter((p) => !want.includes(p.id)).map((p) => p.id).join(", ") || "none"}`, "");
+  section("Rules for every agent (`AGENTS.md`)", agentRules());
+  section("Spec sections (`agents/portfolio.md` *Read first*)", specText("portfolio" as Agent));
+  for (const page of pages.filter((p) => want.includes(p.id))) {
+    const s = page.summary;
+    const body = [`Title: ${page.title} · Label: ${page.label} · Role: ${page.role}`, "",
+      ...[1, 2, 3].flatMap((n) => [`### ${n}. ${s.sections.find((x) => x.number === n)?.title ?? ""}`, summarySection(s, n), ""]),
+      "### 4. Contributions", "", ...s.contributions.filter((c) => !c.removed).flatMap((c) => [`#### ${s.id}#${c.number} ${c.title}`, c.body, ...(c.result ? [`Result: ${c.result}`] : []), ""]),
+      "### 5. Technologies and frameworks", summarySection(s, 5), "", "### 7. Metrics and outcomes", summarySection(s, 7), "",
+      "### Public items for this page (section 8)", yamlBlock(pageItems(page)), "",
+      `### 9. Keep out unless allowed in the portfolio`, termLine(s, "portfolio"), "",
+      "### Current page text", current.get(page.id)?.trim() || "Not written yet."];
+    section(`Page: ${page.id}`, ...body);
+  }
+  const all: Decision[] = loadDecisions()?.decisions ?? [];
+  const ids = want.map((w) => w.split("/")[0]);
+  const keep = all.filter((d) => d.id.startsWith("portfolio-") || /\bportfolio\b/i.test(d.decision) || ids.some((i) => `${d.decision} ${d.why ?? ""}`.includes(i)));
+  section("Decisions (`facts/decisions.yaml`)", `${keep.length} of ${all.length} decisions are about the portfolio or these pages; follow them.`, "", ...keep.map((d) => `- **${d.id}**: ${d.decision}`), "",
+    `Not listed: ${all.filter((d) => !keep.includes(d)).map((d) => d.id).join(", ")}.`);
+  return { ...save("portfolio", out), scope: want };
+}
+
+// Advisor (agents/advisor.md): open items, the decisions and facts already recorded (by id, one line each), the
+// entries, and the findings of the reports to go through.
+function advisorContext(opts: Options) {
+  const cfg = loadConfig();
+  const out: string[] = [];
+  const section = (t: string, ...b: string[]) => out.push(`## ${t}`, "", ...b, "");
+  out.push("# Agent context: advisor", "", "Generated by `npm run agent-context`; read this instead of the files it replaces and open a full file only where it points. Never commit.", "");
+  section("Rules for every agent (`AGENTS.md`)", agentRules());
+  section("Spec sections (`agents/advisor.md` *Read first*)", specText("advisor" as Agent));
+  const oi = rootPath("docs", "open-items.md");
+  section("Open items (`docs/open-items.md`)", existsSync(oi) ? read(oi).replace(/^# .*\n+/, "").replace(/^## /gm, "### ").trim() : "Not found.");
+  // Default: the latest report run (reports/<YYYY-MM-DD-HHmm>/), as agents/advisor.md /improve says.
+  const runs = existsSync(rootPath("reports")) ? readdirSync(rootPath("reports")).filter((d) => /^\d{4}-\d{2}-\d{2}-\d{4}$/.test(d)).sort() : [];
+  const reports = opts.target ? opts.target.split(",").map((x) => x.trim()).filter(Boolean) : runs.length ? [`reports/${runs[runs.length - 1]}`] : [];
+  if (!reports.length) section("Reports", "No report run found under `reports/`; nothing to go through for /improve.");
+  for (const r of reports) {
+    const dir = cliPath(r);
+    if (!existsSync(dir)) throw new UsageError(`${rel(dir)} not found`);
+    const files = existsSync(join(dir)) && !dir.endsWith(".md") ? readdirSync(dir).filter((f) => f.endsWith(".md")).map((f) => join(dir, f)) : [dir];
+    for (const f of files) {
+      const t = read(f);
+      const verdict = t.match(/^verdict: (.+)$/m)?.[1] ?? "?", score = t.match(/^score: (.+)$/m)?.[1] ?? "?";
+      const rows = (t.match(/^## Findings\n([\s\S]*?)(?=^## |$(?![\s\S]))/m)?.[1] ?? "").split("\n").filter((l) => /^\| [a-z][\w-]*-\d+ /i.test(l)); // ats-1, fact-check-1
+      section(`Findings: \`${rel(f)}\` (${verdict}, ${score})`, rows.length ? ["| id | severity | location | issue | suggestion | needs_user_input |", "|---|---|---|---|---|---|", ...rows].join("\n") : "No findings.");
+    }
+  }
+  const decisions: Decision[] = loadDecisions()?.decisions ?? [];
+  section("Decisions already recorded (`facts/decisions.yaml`; a finding that matches one is settled)", decisions.map((d) => `- **${d.id}**: ${d.decision}`).join("\n"));
+  const { raw } = loadConfirmed(cfg);
+  section("Confirmed facts (`facts/confirmed.yaml`, by id)", (raw?.facts ?? []).map((f: any) => `- ${f.id}${f.entry ? ` (${f.entry})` : ""}: ${String(f.fact ?? f.cv_client_label ?? "").slice(0, 140)}`).join("\n"));
+  const entries = loadEntries(cfg);
+  section("CV entries", entries.map((e) => `- ${e.id}: ${e.role}, ${e.label}${e.label !== e.client ? ` (client ${e.client}, hidden)` : ""}, ${e.period?.start} to ${e.period?.end}, ${e.section}`).join("\n"));
+  return { ...save("advisor", out), scope: reports };
+}
+
 if (isMain(import.meta.url)) {
   const { args, positional } = parseArgs(process.argv.slice(2));
   const [agent, target] = positional;
   if (!agent) {
-    console.error("usage: npm run agent-context -- composer [--entry <id>[,<id>…]] [--all] | -- tailor <cv-dir | cv.md | profile-id> [--entry <id>[,<id>…]] [--all]");
+    console.error("usage: npm run agent-context -- composer [--entry <id>[,<id>…]] [--all] | -- tailor <cv-dir | cv.md | profile-id> [--entry <id>[,<id>…]] [--all] | -- cover-letter <job dir> | -- portfolio [--entry <page>[,…]] [--all] | -- advisor [<reports dir>[,…]]");
     process.exit(2);
   }
   try {

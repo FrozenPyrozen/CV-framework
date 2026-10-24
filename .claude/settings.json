@@ -2,5 +2,19 @@
   "enabledPlugins": {
     "cns@syspro-plugin-marketplace": false,
     "syspro-webfrontend@syspro-plugin-marketplace": false
+  },
+  "permissions": {
+    "allow": [
+      "Bash(npm run *)",
+      "Bash(npx tsx scripts/*)",
+      "Bash(node --import tsx --test *)",
+      "Bash(git status *)",
+      "Bash(git diff *)",
+      "Bash(git log *)",
+      "Bash(git show *)",
+      "Bash(git ls-files *)",
+      "Bash(git grep *)",
+      "Bash(git rev-parse *)"
+    ]
   }
 }

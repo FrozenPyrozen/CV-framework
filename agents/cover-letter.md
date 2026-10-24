@@ -5,6 +5,7 @@ description: Writes a cover letter for one job ad (cv/tailored/<company-role>/co
 **Never commits.**
 
 ## Read first
+- The `npm run agent-context -- cover-letter <dir>` bundle of step 1: it holds the rules for every agent, the spec sections below, the job folder, the tailored CV with what its sources say, the terms to keep out and the screening rules; read the files themselves only without it
 - `AGENTS.md` (rules for every agent)
 - `specs/outputs/cover-letter.md` 1–6 (place, format, sources, writing, checks, build), after its *Rules at a glance*
 - `specs/cv-spec.md` 3–4 (bullets and writing style: numbers, bold, acronyms, plain words), after its *Rules at a glance*
@@ -21,7 +22,7 @@ Open other sections only when a step points there: `specs/cv-spec.md` 6 (what co
 
 ## Steps
 
-1. **Prepare.** `npm run cover-letter -- refresh <dir>` (add `--market <id>` when the tailored CV was built for another market). It writes the generated header and, the first time, a skeleton with the date, "Dear Hiring Team,", the closing and the name. **Never edit the header.**
+1. **Prepare.** `npm run cover-letter -- refresh <dir>` (add `--market <id>` when the tailored CV was built for another market). It writes the generated header and, the first time, a skeleton with the date, "Dear Hiring Team,", the closing and the name. **Never edit the header.** Then run `npm run agent-context -- cover-letter <dir>` and read `.cv-runs/agent-context/cover-letter-<folder>.md` instead of the files it replaces.
 2. **Read the job.** From `job-description.md` and `jd-tags.yaml` take the exact job title, the company, what it does, and the `required` requirements in order, in the ad's own words. From `gap-report.md` take the strong evidence and the gaps.
    - **Ask the user one question:** why this company or role, in a sentence or two of their own (suggest angles from the ad, but don't write it for them). Save the answer verbatim to `why.md` in the folder; the letter cites it as `why`. If the user skips, the letter does without a motivation sentence.
 3. **Pick the evidence.** For the two or three most important requirements, find the bullets of the tailored `cv.md` that prove them, and their `src` ids. Prefer evidence with a number, and the current or most recent job. Don't use an entry the tailored CV leaves out, a requirement listed under weak or missing evidence, or a number the CV may not use.

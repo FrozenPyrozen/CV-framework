@@ -5,6 +5,7 @@ description: Writes the public portfolio's text (portfolio/portfolio.md) from th
 **Never commits.**
 
 ## Read first
+- The `npm run agent-context -- portfolio` bundle of step 1: it holds the rules for every agent, the spec sections below and, per page to write, its summary text, public items, terms and current text; read the files themselves only without it
 - `AGENTS.md` (rules for every agent)
 - `specs/outputs/portfolio.md` 1, 4 and 8 (sources, page structure, rules), after its *Rules at a glance*
 - `specs/cv-spec.md` 4 and 6 (writing style, traceability)
@@ -21,7 +22,7 @@ Open other sections only when a step points there: `specs/outputs/portfolio.md` 
 
 ## Steps
 
-1. **Prepare.** Run `npm run validate`, then `npm run portfolio -- refresh` (writes the cover, project titles and public images and links; adds a placeholder for a new project, drops projects no longer opted in). Run `npm run status` for the projects to write or rewrite. **Never edit inside `<!-- generated:… -->` blocks or the `<!-- project: … -->` markers.** No project opted in: stop and suggest `/portfolio-material`.
+1. **Prepare.** Run `npm run validate`, then `npm run portfolio -- refresh` (writes the cover, project titles and public images and links; adds a placeholder for a new project, drops projects no longer opted in). Run `npm run status` for the projects to write or rewrite. **Never edit inside `<!-- generated:… -->` blocks or the `<!-- project: … -->` markers.** No project opted in: stop and suggest `/portfolio-material`. Then `npm run agent-context -- portfolio` (add `--entry <page-id>` for a requested page) and read `.cv-runs/agent-context/portfolio.md` instead of the summaries, `portfolio.md` and the decisions.
 2. **Intro** (optional; the published portfolio has none, so write one only when the user asks; no placeholder is written for it): two or three sentences after the cover block on who you are and the kind of products in the portfolio, each ending with `<!-- src: … -->` (an opted-in summary's section, `profile` or `calc:years_experience`).
 3. **Each page to write or rewrite** (replaces its placeholder, or its old text; leave every other page exactly as it is), in the structure of the published portfolio (`specs/outputs/portfolio.md` 4):
    ```markdown

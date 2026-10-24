@@ -13,6 +13,7 @@
     "typecheck": "tsc -p tsconfig.json",
     "test": "node --import tsx --test --test-reporter=dot tests/*.test.ts",
     "test:fast": "CV_FAST=1 node --import tsx --test --test-reporter=dot tests/*.test.ts",
+    "test:changed": "tsx scripts/test-changed.ts",
     "test:verbose": "node --import tsx --test --test-reporter=spec tests/*.test.ts",
     "refresh": "tsx scripts/refresh.ts",
     "market": "tsx scripts/market.ts",

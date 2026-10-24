@@ -2,7 +2,7 @@
 // One command for agents after a change: runs validate, doc-check, index --check, impact, check, status and the tests (in that
 // order, each as its own npm script) and prints one line per step ("ok  validate (0.8 s)" or "FAIL validate"), followed
 // only by that step's ERROR / warn / ✖ lines (at most 40) and the failing tests' details, then a summary line. status STALE, NEW and
-// SENT lines are warnings, not failures. --fast runs test:fast (skips the Pages, PDF and full-backup tests) instead of test.
+// SENT lines are warnings, not failures. --fast runs test:changed (only the tests the change can affect, without the Pages, PDF and full-backup tests) instead of test.
 // Exits 1 if any step fails.
 import { spawnSync } from "node:child_process";
 import { dirname, resolve } from "node:path";
@@ -46,7 +46,7 @@ function steps(fast: boolean): Step[] {
     { name: "impact", script: "impact", filter: issues },
     { name: "check", script: "check", filter: issues },
     { name: "status", script: "status", filter: statusLines },
-    { name: fast ? "test:fast" : "test", script: fast ? "test:fast" : "test", filter: testLines },
+    { name: fast ? "test:changed" : "test", script: fast ? "test:changed" : "test", filter: testLines },
   ];
 }
 

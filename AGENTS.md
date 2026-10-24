@@ -28,6 +28,7 @@ The full design is in `docs/plan.md`. The rules are in `specs/`.
 12. **Ask the user** for job details, numbers, employment types, new tags, approvals and anything only they can know. Ask one topic at a time, with suggested answers.
 13. **Specs name config keys, not their values** (`checks.max_words`, not its number); `npm run doc-check` catches copied values that drifted, plus unknown scripts, flags, paths and section numbers.
 14. **A framework change updates everything it implies.** `npm run impact` (part of `verify`) lists the required co-changes (changelog row, tests, docs rows, wrappers, plan rows); after changing a spec, an agent, a command or a script's behavior, run `/align` for the judgment of meaning (`specs/alignment-spec.md`).
+15. **Short hand-backs.** A subagent's reply is what the session pays for again: at most about 15 lines with counts, each change or finding in one line, the paths written, and any failure; details stay in the files and reports it wrote. Read a context bundle (`npm run agent-context` or `npm run review-context`) when your agent has one, instead of the files it replaces.
 
 ## Commands and scripts
 

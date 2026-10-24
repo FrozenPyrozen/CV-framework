@@ -1,7 +1,7 @@
 // npm run agent-context: one bundle for the composer or the tailor (agents/composer.md, agents/tailor.md step 1).
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { cpSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { cpSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { parse } from "yaml";
 import { REPO, edit, run, tempRepo } from "./helpers.ts";
@@ -90,5 +90,45 @@ test("tailor errors are one line (exit 2): no selection.json, an entry not selec
   assert.match(nosel.out.trim(), /^agent-context: cv\/variants\/react\/selection\.json not found: run npm run select first/);
   const who = run("agent-context.ts", dir, ["harvester"]);
   assert.equal(who.code, 2);
-  assert.equal(who.out.trim(), 'agent-context: unknown agent "harvester" (one of: composer, tailor)');
+  assert.equal(who.out.trim(), 'agent-context: unknown agent "harvester" (one of: composer, tailor, cover-letter, portfolio, advisor)');
+});
+
+test("cover-letter, portfolio and advisor bundles: their Read first sections and only what the agent needs", () => {
+  const dir = repo();
+  // Cover letter: a job folder as /tailor --jd leaves it.
+  const job = join(dir, "cv/tailored/acme");
+  cpSync(join(dir, "cv/variants/react"), job, { recursive: true });
+  writeFileSync(join(job, "jd-tags.yaml"), "profile: react\nrequired: [react]\n");
+  writeFileSync(join(job, "job-description.md"), "# Senior React Engineer at Acme\n\nAcme builds a design tool.\n");
+  const c = run("agent-context.ts", dir, ["cover-letter", "cv/tailored/acme"]);
+  assert.equal(c.code, 0, c.out);
+  const cb = bundle(dir, c.out);
+  assert.match(cb, /### `specs\/outputs\/cover-letter\.md` \(Rules at a glance, 1, 2, 3, 4, 5, 6\)/);
+  assert.match(cb, /Not there yet: ask the user \(agent step 2\)/); // no why.md
+  assert.match(cb, /^- \*\*syspro-saas-erp#4\.1\*\* Schema-driven runtime/m); // what a cited source says
+  assert.match(cb, /Errors: .*"I am writing to"/);
+  assert.doesNotMatch(cb, /^## Strong evidence$/m); // the gap report's headings are nested in the bundle
+
+  // Portfolio: one page, its summary text and current text; portfolio decisions; an unknown page is an error.
+  const p = run("agent-context.ts", dir, ["portfolio", "--entry", "navigation-poc"]);
+  assert.equal(p.code, 0, p.out);
+  const pb = bundle(dir, p.out);
+  assert.match(pb, /^## Page: navigation-poc$/m);
+  assert.match(pb, /^#### navigation-poc#4\.1 /m);
+  assert.match(pb, /- \*\*portfolio-poc-names-public\*\*/);
+  assert.match(pb, /Other pages \(leave as they are\): syspro-saas-erp/);
+  const bad = run("agent-context.ts", dir, ["portfolio", "--entry", "nope"]);
+  assert.equal(bad.code, 2);
+  assert.match(bad.out, /unknown portfolio page "nope"/);
+
+  // Advisor: the Rules at a glance of two specs from one Read first line, open items, and a report's findings.
+  mkdirSync(join(dir, "reports/run"), { recursive: true });
+  writeFileSync(join(dir, "reports/run/hr.md"), "---\nverdict: pass\nscore: 8\n---\n# HR\n\n## Findings\n| id | severity | location | issue | suggestion | needs_user_input |\n|---|---|---|---|---|---|\n| hr-1 | low | cv.md:1 | x | y | no |\n| fact-check-1 | medium | cv.md:2 | z | w | no |\n\n## Decided\n");
+  const a = run("agent-context.ts", dir, ["advisor", "reports/run"]);
+  assert.equal(a.code, 0, a.out);
+  const ab = bundle(dir, a.out);
+  assert.match(ab, /### `specs\/cv-spec\.md` \(Rules at a glance\)[\s\S]*### `specs\/work-summary-spec\.md` \(Rules at a glance\)/);
+  assert.match(ab, /^## Open items \(`docs\/open-items\.md`\)$/m);
+  assert.match(ab, /^## Findings: `reports\/run\/hr\.md` \(pass, 8\)[\s\S]*\| hr-1 \| low \|[\s\S]*\| fact-check-1 \| medium \|/m); // ids with a hyphen too
+  assert.match(ab, /^- \*\*keep-length\*\*: /m);
 });

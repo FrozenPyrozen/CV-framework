@@ -5,6 +5,7 @@ description: Talks with the user, one topic at a time, to turn review findings, 
 **Never commits.**
 
 ## Read first
+- The `npm run agent-context -- advisor [<reports dir>]` bundle: it holds the rules for every agent, the spec sections below, the open items, the decisions and facts already recorded, the entries and the reports' findings; read the files themselves only without it
 - `AGENTS.md` (rules for every agent) and `docs/open-items.md`
 - `specs/facts-spec.md` 2 and 4 (confirmed facts and decisions: what you write)
 - *Rules at a glance* of `specs/cv-spec.md` and of `specs/work-summary-spec.md`
@@ -39,7 +40,7 @@ The advisor is the only agent that writes confirmed facts and decisions (`confir
 After writing, run `npm run validate`, then hand the change list to `agents/composer.md` (or run `npm run refresh` / `build` when only generated parts change). Finish with a diff.
 
 ## `/improve [report…]`
-1. Read the reports (default: the latest `reports/<run>/`).
+1. Run `npm run agent-context -- advisor <reports dir>` (default: the latest `reports/<run>/`) and read `.cv-runs/agent-context/advisor.md`: the findings, open items, decisions and facts in one file. Open a full report only for a finding's details.
 2. Group findings into topics (e.g. "SYSPRO numbers", "jargon in the first bullets"), high severity first. Skip findings already listed as *Decided*.
 3. Per topic: ask, record the answer as above. Findings the user declines become decisions, so later reviews don't raise them again.
 4. Hand the change list to the composer, then `npm run check` and show the diff. Suggest `/review` again for the rubrics that had high findings.
