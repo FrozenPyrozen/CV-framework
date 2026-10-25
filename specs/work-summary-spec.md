@@ -117,6 +117,8 @@ The body may start with one optional `# Title` line, then always has these nine 
 
 A section with nothing known yet contains `TODO (needs user input)`. **Never invent content to fill a section.**
 
+A required front-matter field that takes only set values (`engagement`, `cv_section`, `period`) can't hold that text: it gets the most likely value with a `# TODO (needs user input): confirm` comment on the same line, and the summary stays `show_in_cv: false` until the user confirms it. The harvester or advisor asks about every such comment, and `validate` accepts the file meanwhile.
+
 ### 3.1 Confidentiality notes format
 
 ```markdown

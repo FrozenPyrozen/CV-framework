@@ -12,12 +12,16 @@ export const REPO = resolve(import.meta.dirname, "..");
 const made: string[] = [];
 process.on("exit", () => { for (const d of made) rmSync(d, { recursive: true, force: true }); });
 
+// Your git-ignored personal files (job-specific CVs, sent PDFs, the application log) never reach a test copy: they
+// would change what a test sees once you start applying. A test that needs one writes its own.
+const PERSONAL = ["cv/tailored", "cv/sent", "facts/applications.yaml"];
+
 export function tempRepo(): string {
   const dir = mkdtempSync(join(tmpdir(), "cv-test-"));
   made.push(dir);
   for (const p of ["framework.config.yaml", "facts", "summaries", "schemas", "markets", "specs", "cv", "templates", "profiles", "sources", "portfolio/assets"]) {
     // Copy-on-write clones where the file system supports them (APFS), plain copies elsewhere.
-    if (existsSync(join(REPO, p))) cpSync(join(REPO, p), join(dir, p), { recursive: true, mode: constants.COPYFILE_FICLONE });
+    if (existsSync(join(REPO, p))) cpSync(join(REPO, p), join(dir, p), { recursive: true, mode: constants.COPYFILE_FICLONE, filter: (src) => !PERSONAL.some((x) => src === join(REPO, x)) });
   }
   return dir;
 }

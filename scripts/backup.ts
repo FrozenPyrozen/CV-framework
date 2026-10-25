@@ -127,7 +127,7 @@ export function restoreSteps(privateName: string): string {
     `3. npm run restore -- ../${privateName}${privateName.endsWith(".enc") ? "   (set the backup password variable first)" : ""}`,
     "4. cp framework.local.example.yaml framework.local.yaml, then set this laptop's repo paths and backup folder",
     "   (the old laptop's settings are in framework.local.previous.yaml).",
-    "5. npm run doctor, fix what it reports, then npm run build:all and npm run status.",
+    "5. npm run doctor, fix what it reports, then npm run build:all, npm run build:portfolio and npm run status.",
     "6. Later, connect a private remote: git remote add origin <private url>",
     "   then git push -u origin --all && git push origin --tags",
     "   Pushing sends the whole history: check it first (specs/portability-spec.md, section 6).",

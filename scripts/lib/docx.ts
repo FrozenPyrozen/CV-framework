@@ -1,7 +1,8 @@
 // Word (.docx) helpers: open/save the zip, split document.xml into top-level paragraphs, and small XML
 // utilities. Word files are edited as XML strings, never re-serialized, so unknown markup survives intact.
 import JSZip from "jszip";
-import { readFileSync, writeFileSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
+import { dirname } from "node:path";
 
 export interface DocxParts {
   zip: JSZip;
@@ -39,6 +40,7 @@ export async function saveDocx(parts: DocxParts, body: string, path: string, ext
   parts.zip.file("word/document.xml", parts.head + body + parts.tail);
   for (const [name, content] of Object.entries(extra)) parts.zip.file(name, content);
   const buf = await parts.zip.generateAsync({ type: "nodebuffer", compression: "DEFLATE" });
+  mkdirSync(dirname(path), { recursive: true }); // --out may name a folder that doesn't exist yet
   writeFileSync(path, buf);
 }
 

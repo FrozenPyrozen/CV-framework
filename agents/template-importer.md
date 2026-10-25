@@ -28,6 +28,8 @@ Open other sections only when a step points there: `specs/templates.md` 2 (parag
    - `jc`, `size` or `bold` only when a sample needs adjusting
 
    Prefer samples with direct formatting typical of the type. Skip decorative paragraphs that only add space.
+   - **Bullet and body samples without "keep with next"** (`w:keepNext` in the paragraph): every rendered bullet copies its sample, so a kept sample chains a whole section onto the next page. Pick another sample; headings may keep it.
+   - **`fonts`: only the fonts the visible text uses.** A font used only in an emptied header or footer isn't embedded in the PDF, and `pdf-check` fails on a listed font that isn't there.
 3. **Build the template.** `npm run template-import -- <file.docx> <name> --map templates/<name>/import-map.yaml`.
 4. **Check ATS risks.** Inspect the source file (paragraph listing, drawings, tables in the XML, header and footer) for multi-column layouts, text boxes holding text, layout tables, contact details only in the header or footer, icons instead of words, unusual fonts. Any of these: offer a one-column alternative.
 5. **Test build, in a separate folder** (never overwrite the real CV's outputs). With `T=.cv-runs/template-test-<name>/worldwide`:
