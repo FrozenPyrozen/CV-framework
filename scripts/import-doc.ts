@@ -32,7 +32,7 @@ export async function importDoc(file: string, opts: { date: string; kind?: strin
   const dir = sourcesDir(cfg);
   const index = loadSources(cfg);
   const sha256 = createHash("sha256").update(readFileSync(file)).digest("hex");
-  const same = index.documents.find((d) => d.sha256 === sha256);
+  const same = index.documents.find((d) => d.sha256 === sha256 || d.original_sha256 === sha256); // a recompressed original still counts
   if (same) throw new Error(`this file is already imported as "${same.id}"`);
   if (index.documents.some((d) => d.id === id)) throw new Error(`id "${id}" is already used in ${dir}/index.yaml; pass another --id`);
 

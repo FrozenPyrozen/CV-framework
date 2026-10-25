@@ -2,6 +2,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { appendFileSync, existsSync, readFileSync, writeFileSync } from "node:fs";
+import { createHash } from "node:crypto";
 import { join } from "node:path";
 import { edit, REPO, run, tempRepo } from "./helpers.ts";
 import { parseSummary } from "../scripts/lib/repo.ts";
@@ -85,4 +86,22 @@ test("import-doc names what .pages needs when Pages can't be used, and leaves no
   const r = run("import-doc.ts", dir, [f, "--date", "2020", "--kind", "portfolio"]);
   assert.match(r.out, /needs Pages on macOS/);
   assert.ok(!existsSync(join(dir, "sources/index.yaml")));
+});
+
+test("a losslessly recompressed original keeps its id; import-doc still refuses the imported file", () => {
+  const dir = tempRepo();
+  assert.equal(importCv(dir).code, 0);
+  const idx = join(dir, "sources/index.yaml");
+  // Stand-in for the recompressed file: new bytes, the imported file's hash kept as original_sha256.
+  const sha = (f: string) => createHash("sha256").update(readFileSync(f)).digest("hex");
+  const file = join(dir, "sources/files/cv-2025-10.docx");
+  const before = sha(file);
+  appendFileSync(file, "\n");
+  edit(dir, "sources/index.yaml", `sha256: ${before}`, `sha256: ${sha(file)}\n    original_sha256: ${before}\n    recompressed: 2026-10-25`);
+  const v = run("validate.ts", dir);
+  assert.equal(v.code, 0, v.out);
+  assert.match(importCv(dir, ["--id", "other"]).out, /already imported as "cv-2025-10"/);
+  edit(dir, "sources/index.yaml", "recompressed: 2026-10-25", "recompressed: October");
+  assert.equal(run("validate.ts", dir).code, 1);
+  assert.ok(readFileSync(idx, "utf8").includes("original_sha256"));
 });

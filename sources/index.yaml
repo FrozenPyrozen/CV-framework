@@ -18,7 +18,9 @@ documents:
     title: Portfolio, April 2025
     file: sources/files/portfolio-2025-04.pages
     text: sources/text/portfolio-2025-04.md
-    sha256: b7b9a51a61b79dcc8d894723bc830ba5d87e2de9650a2f7a323201a2a8c93fff
+    sha256: 9facfad913d522925085ecfa3f459d0e86341e5de82882e39003e4ff2d7383d6
+    original_sha256: b7b9a51a61b79dcc8d894723bc830ba5d87e2de9650a2f7a323201a2a8c93fff
+    recompressed: 2026-10-25
     imported_at: 2026-10-22
     status: imported
     media: sources/media/portfolio-2025-04

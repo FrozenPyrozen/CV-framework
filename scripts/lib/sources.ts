@@ -18,6 +18,8 @@ export interface SourceDoc {
   imported_at: string;
   status: "imported" | "reviewed";
   media?: string; // folder with the images extracted from the document (.pages through pandoc)
+  original_sha256?: string; // the imported file's hash, when the original was later recompressed losslessly (sources-spec 6)
+  recompressed?: string; // when (YYYY-MM-DD)
 }
 
 export const sourcesDir = (cfg = loadConfig()) => cfg.paths.sources ?? "sources";
