@@ -24,8 +24,9 @@ test("every npm script the agent docs mention exists in package.json", () => {
 test("every repo file and agent the docs point to exists", () => {
   for (const d of docs()) {
     for (const m of read(d).matchAll(/`((?:agents|specs|schemas|scripts|facts|templates\/classic|docs)\/[\w./-]+\.(?:md|yaml|ts|json))`/g)) {
-      // Written later: the acceptance checklist (build step 10) and the git-ignored application log (first /log-application).
-      if (["docs/acceptance.md", "facts/applications.yaml"].includes(m[1])) continue;
+      // Written later: the acceptance checklist (build step 10), the git-ignored application log (first /log-application)
+      // and the release log (first npm run release).
+      if (["docs/acceptance.md", "facts/applications.yaml", "facts/releases.yaml"].includes(m[1])) continue;
       assert.ok(existsSync(join(REPO, m[1])), `${d}: ${m[1]} doesn't exist`);
     }
   }

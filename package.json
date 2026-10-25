@@ -43,6 +43,7 @@
     "build:portfolio": "tsx scripts/build-portfolio.ts",
     "index": "tsx scripts/index.ts",
     "log-application": "tsx scripts/log-application.ts",
+    "release": "tsx scripts/release.ts",
     "review-context": "tsx scripts/review-context.ts",
     "agent-context": "tsx scripts/agent-context.ts",
     "cover-letter": "tsx scripts/cover-letter.ts",

@@ -2,7 +2,8 @@
 // Also the public portfolio (plan 9e P3): projects to write or rewrite, generated parts out of date, unchecked changes.
 // Lists which CVs are out of date and why (docs/scripts.md, plan R14), by comparing cv/.build-state.json with the current
 // sources, the CV Markdown and the outputs. Also warns, once per application, when a CV you already sent
-// has changed since (facts/applications.yaml); --ack <company> records that you know.
+// has changed since (facts/applications.yaml); --ack <company> records that you know. And says when a released PDF
+// (facts/releases.yaml, npm run release) has new text, so the shared copy should be replaced.
 import { existsSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join, relative } from "node:path";
 import { parse as parseYaml, stringify } from "yaml";
@@ -93,6 +94,17 @@ export function applicationWarnings(ack?: string): string[] {
   return out;
 }
 
+// The latest release (specs/facts-spec.md 6): a PDF whose Markdown changed since is out of date where you shared it.
+// A rebuild with the same text (a new PDF hash only) is not reported: exporters write slightly different files.
+export function releaseWarnings(): string[] {
+  const f = rootPath(loadConfig().paths.facts, "releases.yaml");
+  if (!existsSync(f)) return [];
+  const last = ((parseYaml(readFileSync(f, "utf8")) as { releases?: { date: string; files: { path: string; source: string; source_sha256: string }[] }[] })?.releases ?? []).at(-1);
+  if (!last) return [];
+  const changed = last.files.filter((x) => !existsSync(rootPath(x.source)) || sha(rootPath(x.source)) !== x.source_sha256).map((x) => x.path);
+  return changed.length ? [`text changed since the release of ${last.date}: ${changed.join(", ")}; build, share the new PDF(s), then npm run release`] : [];
+}
+
 if (isMain(import.meta.url)) {
   const { args } = parseArgs(process.argv.slice(2));
   const list = cvStatuses();
@@ -105,6 +117,7 @@ if (isMain(import.meta.url)) {
   const warnings = applicationWarnings(args.ack as string | undefined);
   if (args.ack && !readApplications().some((x) => (x.company ?? "").toLowerCase() === String(args.ack).toLowerCase())) console.log(`status: no application to "${args.ack}" in facts/applications.yaml; nothing acknowledged`);
   for (const w of warnings) console.log(`SENT   ${w}`);
+  for (const w of releaseWarnings()) console.log(`SHARED ${w}`);
   // The public portfolio (plan 9e P3): only once a project is opted in or the file exists.
   const ps = portfolioStatus();
   const portfolioTodo: string[] = [];

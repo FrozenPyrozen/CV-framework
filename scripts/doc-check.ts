@@ -23,7 +23,7 @@ import { isMain, loadConfig, rootPath, ROOT } from "./lib/repo.ts";
 export interface DocIssue { level: "error" | "warning"; file: string; line: number; message: string }
 
 // Repo paths that docs may name although they don't exist in a fresh checkout (git-ignored or written later).
-const OPTIONAL_PATHS = ["facts/applications.yaml", "summaries/.digests", "framework.local.yaml"];
+const OPTIONAL_PATHS = ["facts/applications.yaml", "facts/releases.yaml", "summaries/.digests", "framework.local.yaml"];
 const PATH_PREFIXES = ["scripts/", "specs/", "agents/", "docs/", "schemas/", "templates/", "profiles/", "markets/", "facts/", "summaries/", "tests/", ".claude/"];
 const ARRAY_METHODS = new Set(["join", "length", "slice", "map", "filter", "push", "includes", "indexOf", "some", "every", "find", "forEach", "concat"]);
 

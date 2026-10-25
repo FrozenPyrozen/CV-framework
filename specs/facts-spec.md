@@ -1,6 +1,6 @@
 # Facts Spec
 
-Status: v1 · Applies to: `facts/profile.yaml`, `facts/confirmed.yaml`, `facts/skills.yaml`, `facts/decisions.yaml` and the optional, git-ignored `facts/applications.yaml`; written by the advisor (`/add-experience`, `/profile`, `/job-change`, `/improve`), `/harvest` (identities, skills) and `npm run log-application`
+Status: v1 · Applies to: `facts/profile.yaml`, `facts/confirmed.yaml`, `facts/skills.yaml`, `facts/decisions.yaml` the optional, git-ignored `facts/applications.yaml` and `facts/releases.yaml`; written by the advisor (`/add-experience`, `/profile`, `/job-change`, `/improve`), `/harvest` (identities, skills), `npm run log-application` and `npm run release`
 
 The facts files hold what no repo history shows. Their structure is checked by `npm run validate` against `schemas/` (`profile`, `confirmed`, `skills`, `decisions`); this spec gives the meaning and the rules. Every file except the application log carries `schema_version`.
 
@@ -119,3 +119,23 @@ Records what each recruiter received, so "which CV did I send them?" has an answ
 ```
 
 `npm run status` warns once per application when a PDF you sent has since been rebuilt with changes (or is gone with no kept copy), so you know a recruiter has an older version; `status --ack <company>` records that you know. CVs whose sources changed but aren't rebuilt yet show up as stale. The file is git-ignored like tailored CVs and travels in backups (`portability-spec.md`).
+
+## 6. Releases (`facts/releases.yaml`, optional)
+
+The CV and portfolio versions you accepted and shared (the PDF behind the portfolio link in the header, the CV you hand out), so "is the shared copy current?" has an answer. `npm run release [--note "<text>"]` adds an entry after a build; it refuses while the master CV or the portfolio is out of date (`npm run status`) or tracked files have uncommitted changes, so the commit names the sources. It's in git: nothing in it is private.
+
+```yaml
+schema_version: 1
+releases:                                       # newest last
+  - date: 2026-10-25
+    commit: bcb57eb                             # git commit of the sources
+    note: Uploaded to the Drive portfolio link  # optional
+    files:                                      # the master CV in every market, the portfolio in every page size
+      - path: cv/Kirill_Kohan_CV.pdf
+        sha256: "…"                             # the PDF as shared
+        source: cv/Kirill_Kohan_CV.md           # the Markdown it was built from (a market's own Markdown for a market PDF)
+        source_sha256: "…"
+        exporter: pages
+```
+
+`npm run status` compares the latest release with the current Markdown: when a released file's text changed, it says to build, share the new PDF and run `npm run release` again. A rebuild with the same text isn't reported (exporters write slightly different PDFs each time). Sources are untouched: a release is a record of an output, never a source (`sources-spec.md` 3).
