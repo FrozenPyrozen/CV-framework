@@ -21,7 +21,7 @@ The full design is in `docs/plan.md`. The rules are in `specs/`.
 5. **Never commit.** Leave changes uncommitted, show a diff and a short change log. The user reviews and commits.
 6. **Every AI step ends with a deterministic check.** After a change: `npm run verify -- --fast` while iterating, `npm run verify` before handing back. After editing a CV, run `npm run reattach-src -- <file>` first; `npm run build -- <file>` builds one CV. Report failures; don't hide them.
 7. **Confidentiality.** The repo is local or on a private remote only. Summaries describe work in your own words: no source code, copied internal documents, internal URLs or secrets. Terms in a summary's *Confidentiality notes* never appear in a CV (lint enforces it).
-8. **Employment type is a fact.** `engagement` records the real employment type; "(Contract)" appears only when it's true (decision `all-full-time`).
+8. **Employment type is a fact.** `engagement` records the real employment type; "(Contract)" appears only when it's true (decision `all-full-time`). A commit email's domain says nothing about the employer or the employment type (people work under a client's or a vendor's account): never infer either from it; ask.
 9. **Decisions in `facts/decisions.yaml` are settled.** Follow them; reviewers list matching findings as *Decided*.
 10. **US English.** Plain words for a mixed audience; no filler words (`checks.filler_words`).
 11. **Don't use `cns:*` skills in this repo.** They belong to a different project.
