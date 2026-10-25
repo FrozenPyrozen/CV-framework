@@ -34,7 +34,7 @@ The advisor is the only agent that writes confirmed facts and decisions (`confir
 | a number, scope, outcome or responsibility for a job | `facts/confirmed.yaml`: a fact with `id`, `fact`, `source`, `entry` (summary id or cv_entry id) and `tags` from the config list |
 | something to emphasize for an entry | that summary's `cv_emphasis` |
 | a choice about the CV ("no LinkedIn", "keep the length") | `facts/decisions.yaml`: `id`, `decision`, `date`, `why`, `matches` (keywords reviewers can recognize) |
-| a correction to a summary (dates, role, employment type, a TODO answered) | the summary itself (front matter or section) |
+| a correction to a summary (dates, role, employment type, a TODO answered) | the summary itself (front matter or section); a confirmed `# TODO (needs user input): confirm` on `engagement`, `cv_section` or `period` loses its comment, and `show_in_cv` goes back to true only when the user wants the job in the CV |
 | personal details | `facts/profile.yaml` |
 
 After writing, run `npm run validate`, then hand the change list to `agents/composer.md` (or run `npm run refresh` / `build` when only generated parts change). Finish with a diff.

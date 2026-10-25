@@ -8,7 +8,7 @@ The essentials, each stated in full in the section named. Agents that only need 
 
 - One summary per job or project, `summaries/<id>.md`; the id never changes once created (section 1).
 - `engagement` is the real employment type; `repos` holds repo names only, never remote URLs or local paths (section 2).
-- The body has the nine numbered `##` sections, in order; a section with nothing known is `TODO (needs user input)`, never invented content (section 3).
+- The body has the nine numbered `##` sections, in order; a section with nothing known is `TODO (needs user input)`, never invented content; an unknown `engagement`, `cv_section` or `period` gets the most likely value with a `# TODO (needs user input): confirm` comment and `show_in_cv: false` until the user confirms (section 3).
 - Contributions are `### 4.N`, numbered by importance; numbers never change once used (a removed one stays as `(removed)`); each has a `Tags:` line with tags from the config list only (section 4).
 - Every number in a `Result:` line is also in section 7 with its source and confidence (section 4).
 - Your own words only: no code, copied internal text or commit messages, internal URLs, hostnames or secrets (section 5).
@@ -117,7 +117,7 @@ The body may start with one optional `# Title` line, then always has these nine 
 
 A section with nothing known yet contains `TODO (needs user input)`. **Never invent content to fill a section.**
 
-A required front-matter field that takes only set values (`engagement`, `cv_section`, `period`) can't hold that text: it gets the most likely value with a `# TODO (needs user input): confirm` comment on the same line, and the summary stays `show_in_cv: false` until the user confirms it. The harvester or advisor asks about every such comment, and `validate` accepts the file meanwhile.
+A required front-matter field with a fixed form (`engagement` and `cv_section` take a value from a list, `period` a date range) can't hold that text: it gets the most likely value with a `# TODO (needs user input): confirm` comment on the same line, and the summary stays `show_in_cv: false` until the user confirms it. The harvester or advisor asks about every such comment, and `validate` accepts the file meanwhile.
 
 ### 3.1 Confidentiality notes format
 

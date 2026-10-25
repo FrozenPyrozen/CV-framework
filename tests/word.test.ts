@@ -1,7 +1,7 @@
 // Tests for template import and the Word renderer (step 5, part 3a).
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import JSZip from "jszip";
 import { edit, run, tempRepo } from "./helpers.ts";
@@ -185,3 +185,11 @@ test("the classic template's strip_header_text fix leaves no text in the page he
   }
 });
 
+
+test("render --out creates a folder that doesn't exist yet", () => {
+  const dir = tempRepo();
+  const out = join(dir, "new", "nested", "cv.docx");
+  const r = run("render.ts", dir, ["--out", out]);
+  assert.equal(r.code, 0, r.out);
+  assert.ok(existsSync(out), out);
+});

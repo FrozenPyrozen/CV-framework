@@ -168,7 +168,9 @@ test("backup --full: one plain zip with the repo bundle, private backup, manifes
   const manifest = JSON.parse(await zip.file("manifest.json")!.async("string"));
   assert.equal(manifest.branch, "main");
   assert.equal(manifest.private_files, 2);
-  assert.match(await zip.file("RESTORE.txt")!.async("string"), /git clone repo\.bundle CV/);
+  const restore = await zip.file("RESTORE.txt")!.async("string");
+  assert.match(restore, /git clone repo\.bundle CV/);
+  assert.match(restore, /npm run build:all, npm run build:portfolio and npm run status/); // step 5 also builds the portfolio
   // The new laptop: clone the bundle, then restore the private part straight from the full archive.
   const target = mkdtempSync(join(tmpdir(), "cv-new-laptop-"));
   writeFileSync(join(target, "repo.bundle"), await zip.file("repo.bundle")!.async("nodebuffer"));
@@ -197,4 +199,16 @@ test("status: a sent PDF that is missing is reported; build --no-pdf keeps a sen
 test("tokens rejoin a word broken after a slash at a line end (CI/ + CD)", async () => {
   const { tokens } = await import("../scripts/lib/text.ts");
   assert.deepEqual(tokens("set up CI/\nCD pipelines"), ["set", "up", "ci/cd", "pipelines"]);
+});
+
+test("test copies leave out your personal files: job-specific CVs, sent PDFs and the application log", () => {
+  const src = mkdtempSync(join(tmpdir(), "cv-personal-"));
+  for (const f of ["cv/Kirill_Kohan_CV.md", "cv/tailored/acme-dev/cv.md", "cv/sent/acme.pdf", "facts/applications.yaml", "facts/decisions.yaml"]) {
+    mkdirSync(join(src, f, ".."), { recursive: true });
+    writeFileSync(join(src, f), "x\n");
+  }
+  const dir = tempRepo(src);
+  assert.ok(existsSync(join(dir, "cv/Kirill_Kohan_CV.md")) && existsSync(join(dir, "facts/decisions.yaml")));
+  for (const f of ["cv/tailored", "cv/sent", "facts/applications.yaml"]) assert.ok(!existsSync(join(dir, f)), `${f} was copied`);
+  rmSync(src, { recursive: true, force: true });
 });

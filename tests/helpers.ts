@@ -16,12 +16,13 @@ process.on("exit", () => { for (const d of made) rmSync(d, { recursive: true, fo
 // would change what a test sees once you start applying. A test that needs one writes its own.
 const PERSONAL = ["cv/tailored", "cv/sent", "facts/applications.yaml"];
 
-export function tempRepo(): string {
+// `from` is the repo to copy (the real one; a test of this filter passes its own).
+export function tempRepo(from = REPO): string {
   const dir = mkdtempSync(join(tmpdir(), "cv-test-"));
   made.push(dir);
   for (const p of ["framework.config.yaml", "facts", "summaries", "schemas", "markets", "specs", "cv", "templates", "profiles", "sources", "portfolio/assets"]) {
     // Copy-on-write clones where the file system supports them (APFS), plain copies elsewhere.
-    if (existsSync(join(REPO, p))) cpSync(join(REPO, p), join(dir, p), { recursive: true, mode: constants.COPYFILE_FICLONE, filter: (src) => !PERSONAL.some((x) => src === join(REPO, x)) });
+    if (existsSync(join(from, p))) cpSync(join(from, p), join(dir, p), { recursive: true, mode: constants.COPYFILE_FICLONE, filter: (src) => !PERSONAL.some((x) => src === join(from, x)) });
   }
   return dir;
 }

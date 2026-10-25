@@ -40,7 +40,7 @@ name: classic
 approved: true                     # set only after the user confirms the test build
 approved_at: 2026-10-15            # date of that approval (optional, recorded with approved)
 page: { width_twips: 12240, height_twips: 15840, margins_twips: { top: 580, bottom: 280, left: 720, right: 720 } }
-fonts: [Cambria, Arial]            # every font the template uses; checked by doctor and pdf-check
+fonts: [Cambria, Arial]            # every font the visible text uses (not fonts only named in unused styles); checked by doctor and pdf-check
 links: { color: "1155cc", underline: true }
 paragraphs:                        # paragraph type -> position of its sample paragraph in template.docx (classic's real map)
   name:            { sample: 0 }

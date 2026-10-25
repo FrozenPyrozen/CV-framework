@@ -39,7 +39,7 @@ Open other sections only when a step points there: `specs/work-summary-spec.md` 
    - **Technologies** (section 5): hands-on vs used by the project.
    - **Metrics** (section 7): each number with its source (`git` or `user`) and confidence. Every number in a contribution's `Result:` line must also be listed here (`specs/work-summary-spec.md` 4); check before finishing.
    - **Confidentiality notes** (section 9): internal product and module names, repo names, ticket prefixes and internal URL patterns. Read the remote with `git -C <path> remote get-url origin` only to derive a host pattern (e.g. `*dev.azure.com*<org>*`); never store the URL itself.
-   - Unknowns: `TODO (needs user input)`.
+   - Unknowns: `TODO (needs user input)`. An unknown `engagement`, `cv_section` or `period` gets the most likely value with a `# TODO (needs user input): confirm` comment on the same line, and the summary gets `show_in_cv: false` until the user confirms (`specs/work-summary-spec.md` 3).
    - Your own words only: no code, copied commit messages, internal URLs or secrets.
 7. **Merge into an existing summary** (`specs/work-summary-spec.md` 7):
    - Add the repo to `repos` and update `harvested_at`.
@@ -51,7 +51,7 @@ Open other sections only when a step points there: `specs/work-summary-spec.md` 
     - how many of the user's commits were matched (from the digest)
     - the diff
     - the contributions you wrote (number and title)
-    - the TODOs left
+    - the TODOs left, each `# TODO (needs user input): confirm` on `engagement`, `cv_section` or `period` as a question to the user
     - the identities and tags added
     - the next step: `/compose`, or `/add-repo` continues automatically
 
