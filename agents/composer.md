@@ -34,7 +34,7 @@ Open other sections only when a step points there: `specs/cv-spec.md` 2.3 (entry
 3. **Old sections without markers** (a CV written before the framework): `refresh` adds the markers itself to every entry whose title lines it recognizes. For entries it reports as "not in the CV yet; the composer should add it to section …", move their bullets into the configured section (`cv_sections` heading) as a new entry (step 4), and delete the old heading and its stray lines. `refresh` doesn't move text.
 4. **New entries.** Add the entry block in its section, in the right order (`cv_order`, then newest first): the marker line `<!-- entry: <id> -->` followed by a placeholder `## **x**` and `### **x**`. This is the only marker the composer writes; `refresh` (step 7) fills the real lines and owns every marker after that. Then write its bullets.
 5. **Write bullets, one entry at a time.**
-   - **Shape:** action, then technology, then outcome; a past-tense verb first; one achievement per bullet; about 45 words at most.
+   - **Shape:** action, then technology, then outcome; a past-tense verb first; one achievement per bullet; at most `checks.max_bullet_words` words (`lint` warns).
    - **Numbers:** only from the source, never rounded up. A number whose only source is an imported document (`doc:<id>` in section 7) is used only once it says "confirmed by user" (`specs/sources-spec.md` 4).
    - **Bold:** key technologies and terms.
    - **Acronyms:** spelled out once with the acronym (e.g. "OpenID Connect (OIDC)").
@@ -46,7 +46,7 @@ Open other sections only when a step points there: `specs/cv-spec.md` 2.3 (entry
    - **More new material than fits `checks.max_words`:** prefer contributions that make a `cv_emphasis` point, carry a number, or show a skill or tag the CV doesn't show yet; list the ones left out in the report (they stay in the summaries for variants, tailored CVs and the portfolio).
    - **Numbers only in section 7** (not in a contribution's text or Result): usable, citing `<id>#7`, worded with their confidence ("about" for approximate).
    - **Confidential terms in facts:** a fact may name internal products or modules (section 9 terms); keep them out of the CV wording and paraphrase (`lint` would block them).
-6. **Summary paragraph.** Update only if the entries changed what it should say. One `src` comment per sentence; calculated values cite `calc:years_experience` / `calc:team_size_led`, profile facts cite `profile`. Use the calculated values (lint checks "7+ years" and "up to N engineers").
+6. **Summary paragraph.** Update only if the entries changed what it should say. One `src` comment per sentence; calculated values cite `calc:years_experience` / `calc:team_size_led`, profile facts cite `profile`. Use the calculated values (lint checks "N+ years" and "up to N engineers").
 7. **Check.**
    - **Self-check against the sources:** reread every bullet you wrote or kept next to the contribution or fact its `src` cites, as the fact-check rubric does; fix any verb or scope stronger than the source.
    - `npm run refresh -- <cv>`, then `npm run reattach-src -- <cv>`, then `npm run check`.

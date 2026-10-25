@@ -47,14 +47,14 @@ export function isMasterFile(cvFile: string, cfg = loadConfig()): boolean {
 
 // A job-specific CV's jd-tags.yaml may name the role profile it starts from and a headline fitting the job ad
 // (specs/tailoring-spec.md 2). Both are optional.
-export function tailoredSettings(cvFile: string, cfg = loadConfig()): { profile?: string; headline?: string } {
+export function tailoredSettings(cvFile: string, cfg = loadConfig()): { profile?: string; headline?: string; overrides?: Record<string, unknown> } {
   const tailored = rootPath(cfg.output.tailored_dir) + "/";
   const abs = resolve(cvFile);
   if (!abs.startsWith(tailored)) return {};
   const tags = join(tailored, abs.slice(tailored.length).split("/")[0], "jd-tags.yaml");
   if (!existsSync(tags)) return {};
   const t = readYaml(tags) ?? {};
-  return { profile: t.profile ?? undefined, headline: t.headline ?? undefined };
+  return { profile: t.profile ?? undefined, headline: t.headline ?? undefined, overrides: t.overrides ?? undefined };
 }
 
 export function loadContext(opts: { market?: string; headline?: string; profileId?: string; cvFile?: string } = {}): Context {
@@ -65,20 +65,23 @@ export function loadContext(opts: { market?: string; headline?: string; profileI
   const markets = loadMarkets(cfg).map((m) => m.market);
   const market = opts.market ? markets.find((m) => m.id === opts.market) : markets.find((m) => m.default);
   if (!market) throw new Error(`unknown market "${opts.market ?? "(default)"}"`);
+  const tailored = opts.cvFile ? tailoredSettings(opts.cvFile, cfg) : {};
+  const rpFields = roleProfileFields(cfg, opts.profileId ?? (opts.cvFile ? profileIdForFile(opts.cvFile, cfg) : undefined), opts.headline ?? tailored.headline);
+  // A job ad's overrides (jd-tags.yaml) apply on top of the profile's for that CV, as in select (tailoring-spec 4).
+  if (tailored.overrides) rpFields.roleProfile = { ...(rpFields.roleProfile ?? {}), overrides: { ...((rpFields.roleProfile as any)?.overrides ?? {}), ...tailored.overrides } };
   return {
     cfg,
     profile: loadProfile(cfg),
     skills: loadSkills(cfg),
     entries,
     market,
-    ...roleProfileFields(cfg, opts.profileId ?? (opts.cvFile ? profileIdForFile(opts.cvFile, cfg) : undefined),
-      opts.headline ?? (opts.cvFile ? tailoredSettings(opts.cvFile, cfg).headline : undefined)),
+    ...rpFields,
     calculated: calculate(entries, confirmed.facts, new Date()),
     isMaster: opts.cvFile ? isMasterFile(opts.cvFile, cfg) : undefined,
   };
 }
 
-function roleProfileFields(cfg: Config, profileId: string | undefined, headline?: string) {
+function roleProfileFields(cfg: Config, profileId: string | undefined, headline?: string): { roleProfile?: any; headline?: string; skillsOrder?: string[] } {
   if (!profileId) return { headline };
   const file = rootPath(cfg.paths.profiles, `${profileId}.yaml`);
   if (!existsSync(file)) throw new Error(`role profile "${profileId}" not found (${cfg.paths.profiles}/${profileId}.yaml)`);

@@ -98,6 +98,13 @@ test("a profile's <id>#5: { drop: true } removes the current job's Stack line; l
   // The same CV without its SYSPRO Stack line: a warning for the master, none for the profile that drops it.
   writeFileSync(join(dir, "cv/variants/t/cv.md"), readFileSync(join(dir, CV), "utf8").replace(/\n\* Stack: \*\*React 19[^\n]*\n/, "\n"));
   assert.doesNotMatch(run("lint.ts", dir, ["cv/variants/t/cv.md"]).out, /current job syspro-saas-erp has no "Stack:" bullet/);
+  // A job ad may drop it too (jd-tags.yaml overrides, applied by select): lint reads them for that tailored CV.
+  mkdirSync(join(dir, "cv/tailored/acme"), { recursive: true });
+  writeFileSync(join(dir, "cv/tailored/acme/cv.md"), readFileSync(join(dir, "cv/variants/t/cv.md"), "utf8"));
+  writeFileSync(join(dir, "cv/tailored/acme/jd-tags.yaml"), "profile: t\nrequired: [react]\noverrides:\n  syspro-saas-erp#5: { pin: true }\n");
+  assert.match(run("lint.ts", dir, ["cv/tailored/acme/cv.md"]).out, /current job syspro-saas-erp has no "Stack:" bullet/); // the job ad's pin wins over the profile's drop
+  writeFileSync(join(dir, "cv/tailored/acme/jd-tags.yaml"), "required: [react]\noverrides:\n  syspro-saas-erp#5: { drop: true }\n");
+  assert.doesNotMatch(run("lint.ts", dir, ["cv/tailored/acme/cv.md"]).out, /current job syspro-saas-erp has no "Stack:" bullet/);
   edit(dir, CV, /\n\* Stack: \*\*React 19[^\n]*\n/, "\n");
   assert.match(run("lint.ts", dir, [CV]).out, /current job syspro-saas-erp has no "Stack:" bullet/);
   profile("{ pin: true, drop: true }");

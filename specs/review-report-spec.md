@@ -1,6 +1,6 @@
 # Review Report Spec
 
-Status: v1 · Applies to: every reviewer run (`/review`), one report per rubric in `reports/<YYYY-MM-DD-HHmm>/<rubric>.md`
+Status: v1 · Applies to: every reviewer run (`/review`), one report per rubric in `reports/<YYYY-MM-DD-HHmm>/<rubric>.md`; a run over several CVs writes one report per rubric and CV, `<rubric>-<cv>.md` (`<cv>`: `master`, a profile id such as `react`, the tailored folder's name, or `portfolio`)
 
 All rubrics in `specs/rubrics/` produce reports in this format, so the advisor (`/improve`), reviewers in later runs and any AI tool can read them the same way.
 

@@ -18,6 +18,7 @@ test("master CV + ats: the CV, the market header settings, and only the relevant
   assert.equal(r.code, 0, r.out);
   assert.match(r.out, /\.cv-runs\/review-context\/kirill_kohan_cv-ats\.md \([\d.]+ KB/);
   const b = bundle(dir, r.out);
+  assert.match(b, /Write the report to `reports\/<run>\/ats\.md` \(`reports\/<run>\/ats-master\.md` when the run reviews several CVs\)/);
   assert.match(b, /# Rubric: AI ATS screener/);
   assert.match(b, /schema_version: 1\nrubric: ats/); // report format
   assert.match(b, /^\s+\d+\| # \*\*EXPERIENCE\*\*$/m); // the CV, with line numbers
@@ -56,4 +57,11 @@ test("an unknown rubric, or ats on the portfolio, is a one-line error (exit 2)",
   const p = run("review-context.ts", dir, ["--portfolio", "ats"]);
   assert.equal(p.code, 2);
   assert.match(p.out.trim(), /^review-context: rubric "ats" doesn't apply to the portfolio/);
+});
+
+test("a variant's bundle names its per-CV report by the profile id", () => {
+  const dir = tempRepo();
+  const r = run("review-context.ts", dir, ["cv/variants/react/cv.md", "layout"]);
+  assert.equal(r.code, 0, r.out);
+  assert.match(bundle(dir, r.out), /`reports\/<run>\/layout-react\.md` when the run reviews several CVs/);
 });

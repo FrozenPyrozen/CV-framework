@@ -7,11 +7,11 @@ Status: v1 · Owner: Kirill Kohan · Applies to: the master CV, role variants an
 The essentials, each stated in full in the section named. Agents that only need these can stop here.
 
 - Nothing goes into a CV without a source (section 1); every bullet and summary sentence ends with its own `<!-- src: … -->` comment, and a claim without a source isn't written (section 6).
-- Bullets: one achievement each, a past-tense verb first, action then technology then outcome, about 45 words at most; numbers only from a source, never invented or rounded up (section 3).
+- Bullets: one achievement each, a past-tense verb first, action then technology then outcome, at most `checks.max_bullet_words` words (lint warns); numbers only from a source, never invented or rounded up (section 3).
 - US English, no first person, no company names in the summary paragraph, internal jargon explained, no filler words (`checks.filler_words`) (section 4).
 - `cv_emphasis` points go into an entry's first bullets; "(Contract)" only when `engagement` really is `contract` (section 5).
 - Years of experience and team sizes are calculated values, never guessed (section 7).
-- Generated blocks, section headings, entry title and detail lines and `<!-- entry -->` markers are written by `npm run refresh`, never by hand (sections 2.2, 8).
+- Generated blocks, section headings, entry title and detail lines and `<!-- entry -->` markers are written by `npm run refresh`, never by hand (sections 2.2, 8); the one exception is a new entry's marker line, which the composer adds before refresh fills its title and detail lines.
 - Only the Markdown of section 9; none of `checks.forbidden_chars`; length within `checks.max_words` and `checks.max_pages` (sections 9, 10).
 - Confidentiality-notes terms and hidden client names never reach the rendered text (section 11).
 - Edit one entry at a time from the file on disk, keep the user's wording unless its source changed, and never commit (section 12); decisions in `facts/decisions.yaml` are settled (section 13).
@@ -78,8 +78,8 @@ Each entry is a list of `*` bullets (one level, no nesting).
 - **Numbers:** use them whenever a source provides one (`1,800+`, `12x`, `95%`, `25+ person program`). Never invent or round up a number. "~" is allowed when the source says "about".
 - **Bold:** bold the technologies and key terms a screener searches for (`**React Native**`, `**OpenID Connect (OIDC)**`), and important numbers or outcomes when they're the point of the bullet. Don't bold whole sentences.
 - **Acronyms:** spell out once with the acronym in brackets where screeners may search either form: `**specification-driven development (SDD)**`, `**OpenID Connect (OIDC)**`.
-- **Stack line:** an entry may end with `* Stack: **A, B, C**` listing the main technologies, sourced from its summary's section 5 (expected for the current job, and `lint` warns when it's missing; older jobs keep one they already have, and get a new one only when the user asks for that job's technologies to show, recorded as a decision such as `orion-stack-line`). A role profile can drop the current job's Stack line with `<id>#5: { drop: true }` in its `overrides` (`tailoring-spec.md`); `lint` then doesn't warn. It doesn't count toward bullet limits.
-- **Length:** a bullet should fit in about 2 lines of the rendered CV (roughly 45 words at most).
+- **Stack line:** an entry may end with `* Stack: **A, B, C**` listing the main technologies, sourced from its summary's section 5 (expected for the current job, and `lint` warns when it's missing; older jobs keep one they already have, and get a new one only when the user asks for that job's technologies to show, recorded as a decision such as `orion-stack-line`). A role profile can drop the current job's Stack line with `<id>#5: { drop: true }` in its `overrides`, and a job ad in its `jd-tags.yaml` `overrides` (`tailoring-spec.md`); `lint` then doesn't warn. It doesn't count toward bullet limits.
+- **Length:** a bullet should fit in about 2 lines of the rendered CV: at most `checks.max_bullet_words` words, which `lint` warns about.
 - **Limits:** `cv_max_bullets` in the summary caps an entry in the master CV. Profiles set their own limits (see the tailoring spec).
 - **Source:** every bullet ends with a source comment (section 6).
 
@@ -131,7 +131,7 @@ These parts are produced by `npm run refresh` (and every `build`) and kept in th
 <!-- /generated:header -->
 ```
 
-Blocks: `header`, `education`, `skills`, `languages`. `refresh` also writes, outside these markers, the section headings (from `cv_sections`), each section's intro line, the `<!-- entry: <id> -->` markers and every entry's title and detail lines; `lint` fails when they differ from their sources. Agents never edit inside the blocks or these lines. A change goes into the source file (`profile.yaml`, `skills.yaml`, config), followed by `npm run refresh`.
+Blocks: `header`, `education`, `skills`, `languages`. `refresh` also writes, outside these markers, the section headings (from `cv_sections`), each section's intro line, the `<!-- entry: <id> -->` markers and every entry's title and detail lines; `lint` fails when they differ from their sources. Agents never edit inside the blocks or these lines; the one exception is a new entry's `<!-- entry: <id> -->` marker, which the composer adds (with placeholder title lines) so that `refresh` can fill it. A change goes into the source file (`profile.yaml`, `skills.yaml`, config), followed by `npm run refresh`.
 
 ## 9. Supported Markdown
 

@@ -17,7 +17,7 @@ The design is in `docs/plan.md`, the rules in `specs/`, and the entry point for 
 
 - **Node.js** in the version from `.nvmrc` (22). `nvm install` reads it.
 - **A PDF exporter:** Pages or Microsoft Word on macOS, LibreOffice (`soffice`) on Windows and Linux. The order is set in `framework.config.yaml` (`pdf_exporters`) or per laptop in `framework.local.yaml`.
-- **The template's fonts:** Cambria and Arial (`templates/classic/style-map.yaml`). `doctor` checks them.
+- **The templates' fonts:** Cambria and Arial for the CV (`templates/classic/style-map.yaml`); DIN Condensed, Rockwell, Charter and Avenir Next for the portfolio (`templates/portfolio-classic/style-map.yaml`, all part of macOS). `doctor` checks them.
 - **An AI agent tool that reads `AGENTS.md`** (Claude Code, Codex, Cursor, Gemini CLI …) for the slash commands. The scripts run without one; writing, tailoring and reviewing need it.
 
 ## First run (this laptop)
@@ -56,9 +56,9 @@ The rules are in `specs/portability-spec.md`. Committed files travel with git; p
    - from a remote: `git clone <private url> CV && cd CV`
    - from a full archive: unzip it, then `git clone repo.bundle CV && cd CV && git remote remove origin`
 3. `npm ci`
-4. `npm run restore -- <backup>` (for a full archive: `../private-backup.zip` or `.zip.enc`, with the password variable set). It never overwrites a newer local file (`--force` does), and it saves the old laptop's settings as `framework.local.previous.yaml`.
+4. `npm run restore -- <backup>` (for a full archive: `../private-backup.zip` or `.zip.enc`; for an encrypted one set `CV_BACKUP_PASSWORD` to its password first, since `framework.local.yaml` doesn't exist yet). It never overwrites a newer local file (`--force` does), and it saves the old laptop's settings as `framework.local.previous.yaml`.
 5. `cp framework.local.example.yaml framework.local.yaml` and set this laptop's repo paths and backup folder.
-6. `npm run doctor`, fix what it reports, then `npm run build:all`.
+6. `npm run doctor`, fix what it reports, then `npm run build:all`, `npm run build:portfolio` and `npm run status` (the same steps as the archive's `RESTORE.txt`).
 7. **Connect a remote later** (when you have one): `git remote add origin <private url>`, then `git push -u origin --all && git push origin --tags`. Pushing sends the whole history, so first check it holds nothing that should stay local (`specs/portability-spec.md` 6). Use a private remote only: the summaries describe client work.
 
 ## Everyday tasks
@@ -80,10 +80,12 @@ Slash commands run in your AI agent tool (`.claude/commands/` for Claude Code; o
 | Change phone, country, availability | `/profile` |
 | Start or leave a job (leaving: final harvest first) | `/job-change` |
 | Make a CV for one job ad | `/tailor --jd <file or pasted text> [--profile react-native]` |
+| Write a cover letter for that job ad (sourced, one page, checked for ATS and AI-sounding phrases) | `/cover-letter <job folder>` |
 | Check the CV like an ATS, a recruiter, a proofreader … | `/review [rubric…]`, then `/improve` to go through the findings |
 | See what is out of date and why | `/status` (or `npm run status`) |
 | Rebuild everything | `npm run build:all` |
 | Record a CV you sent | `/log-application` |
+| Record the CV and portfolio PDFs you accepted and shared (e.g. uploaded to the Drive link); `status` then says when they need sharing again | `npm run release` (commit first) |
 | Use another Word CV's look | `/import-template <file.docx> <name>` |
 
 A script that fails prints one line with the reason; run it with `CV_DEBUG=1` in front to see the full stack trace.
@@ -92,10 +94,10 @@ All scripts and their flags are listed in `docs/scripts.md`, all commands in `do
 
 ```bash
 npm run build -- [cv] [--market ukraine] [--no-pdf]   # one CV
-npm run check                                         # lint + source trace for every CV
+npm run check                                         # lint, source trace and spell check for every CV
 npm run validate                                      # all inputs against schemas/
 npm test                                              # the framework's own tests
-npm run verify                                        # validate, doc-check, check, status and tests in one go
+npm run verify                                        # validate, doc-check, index --check, impact, check, status and tests in one go
 ```
 
 ## How it stays truthful
@@ -111,10 +113,12 @@ npm run verify                                        # validate, doc-check, che
 | Path | Contents |
 |---|---|
 | `summaries/` | one work summary per job or project (the lasting record) |
-| `facts/` | profile, skills, confirmed facts, decisions, application log (git-ignored) |
+| `facts/` | profile, skills, confirmed facts, decisions, the spelling dictionary (`dictionary.txt`), the release log (`releases.yaml`), the application log (git-ignored) |
 | `profiles/`, `markets/`, `templates/` | role variants, market rules, Word templates |
 | `specs/`, `agents/`, `AGENTS.md` | rules, agent definitions, the agent entry point |
-| `cv/` | CVs (Markdown committed, built files ignored) |
+| `cv/` | CVs (Markdown committed, built files ignored); job folders in `cv/tailored/` with their cover letters (git-ignored) |
+| `portfolio/` | the public portfolio's text (`portfolio.md`) and images (`assets/`); built files ignored |
+| `sources/` | imported old CVs and portfolios: originals, their text and images |
 | `reports/` | reviewer reports |
 | `docs/plan.md`, `docs/changelog.md`, `docs/acceptance.md` | design, change log, acceptance checklist |
 | `docs/open-items.md` | what you said you'll add or answer later |

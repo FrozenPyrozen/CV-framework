@@ -59,3 +59,10 @@ function spawnHashes(dir: string): Record<string, string> {
   const r = spawnSync(process.execPath, ["--import", "tsx", "-e", "import('./scripts/lib/buildstate.ts').then(m => console.log(JSON.stringify(m.entryHashes())))"], { cwd: REPO, env: { ...process.env, CV_ROOT: dir }, encoding: "utf8" });
   return JSON.parse(r.stdout.trim().split("\n").pop()!);
 }
+
+test("a front-matter value to confirm: validate warns while the summary shows in the CV, status lists it", () => {
+  const dir = tempRepo();
+  edit(dir, "summaries/velas-wallet.md", /^engagement: (.+)$/m, "engagement: $1  # TODO (needs user input): confirm");
+  assert.match(run("validate.ts", dir).out, /summaries\/velas-wallet\.md: engagement still to confirm .* show_in_cv isn't false/);
+  assert.match(run("status.ts", dir).out, /^CONFIRM summaries\/velas-wallet\.md: engagement /m);
+});

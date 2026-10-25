@@ -1,6 +1,6 @@
 # CV Agent Framework: Plan
 
-Status: steps 1–12 and 14 done (section 8). Step 12 was done by full archive on this Mac; its private-file round trip passed on 2026-10-24 (acceptance C1–C1b). Left: step 13 (new laptop and a new repo, done on the new laptop), and the live runs with the user of B13 `/profile`, B14 `/job-change`, B16 `/import-docs`, B18 `/portfolio-material`, B24 `/add-experience` and `/add-repo` (`docs/acceptance.md`). Agent replay passed 2026-10-24 (B1–B10, B17, B22, B23; B10 live with the user); the 2026-10-25 sweep ran all 41 npm scripts as documented and passed B11 `/harvest` and B12 `/import-template`. Since step 14: portable harvest (9c) and sources (9d) built; the portfolio specified, imported (P2), given its summary fields (P1), agent and text checks (P3), template, renderer and build (P4), spell check (P5) and reviews (P6) (9e); the portfolio rebuilt on the published 2025-09 structure (change log rows 86–89), reviewed (`reports/2026-10-23-1633`); an ATS and HR review of all CVs (`reports/2026-10-23-1705`); docs split to save tokens (`docs/changelog.md`, `docs/scripts.md`, `docs/workflows.md`, `specs/facts-spec.md`); the HERE Technologies navigation work imported by portable harvest into the consulting section; the cover-letter agent; alignment checks (`npm run impact`, the auditor, `/align`); context bundles (`agent-context`) for the composer, tailor, cover-letter, portfolio and advisor agents; `npm run test:changed` for `verify --fast` · 2026-10-25
+Status: steps 1–12 and 14 done (section 8). Step 12 was done by full archive on this Mac; its private-file round trip passed on 2026-10-24 (acceptance C1–C1b). Left: step 13 (new laptop and a new repo, done on the new laptop); the first `npm run release` (`docs/open-items.md`); and the live runs with the user of B13 `/profile`, B14 `/job-change`, B15 `/harvest-prompt` + `/import-summary` (used live in change log row 99, never logged), B16 `/import-docs`, B18 `/portfolio-material`, B20 `/portfolio` on a new project, B24 `/add-experience` and `/add-repo` (`docs/acceptance.md`; B19 and B21 are scripts, covered by `npm test`). Agent replay passed 2026-10-24 (B1–B10, B17, B22, B23; B10 live with the user); the 2026-10-25 sweep ran all 41 npm scripts as documented and passed B11 `/harvest` and B12 `/import-template`. Since step 14: portable harvest (9c) and sources (9d) built; the portfolio specified, imported (P2), given its summary fields (P1), agent and text checks (P3), template, renderer and build (P4), spell check (P5) and reviews (P6) (9e); the portfolio rebuilt on the published 2025-09 structure (change log rows 86–89), reviewed (`reports/2026-10-23-1633`); an ATS and HR review of all CVs (`reports/2026-10-23-1705`); docs split to save tokens (`docs/changelog.md`, `docs/scripts.md`, `docs/workflows.md`, `specs/facts-spec.md`); the HERE Technologies navigation work imported by portable harvest into the consulting section; the cover-letter agent; alignment checks (`npm run impact`, the auditor, `/align`); context bundles (`agent-context`) for the composer, tailor, cover-letter, portfolio and advisor agents; `npm run test:changed` for `verify --fast`; `npm run release` (facts-spec 6, change log row 122); lossless recompression of sources (sources-spec 6, row 123); two full alignment audits and their fixes (rows 124–125) · 2026-10-25
 
 ## 1. Goal
 
@@ -35,7 +35,7 @@ Every step done by hand in the 2026-10-15 chat maps to a framework capability (`
 ```
 CV/
 ├── AGENTS.md                      # entry point for any AI tool: rules, where things are, generated registry
-├── CLAUDE.md                      # "Read AGENTS.md" + "do not use cns:* skills in this repo"
+├── CLAUDE.md                      # "Read AGENTS.md" + "do not use cns:* skills in this repo" + "never commit"
 ├── README.md                      # for humans: what this is, how to run it
 ├── docs/                          # plan.md (this file), changelog.md (one row per change), scripts.md (every npm script),
 │                                  # workflows.md (every command), acceptance.md (replay checklist for agents), open-items.md (to add or answer later)
@@ -81,6 +81,7 @@ CV/
 │   ├── skills.yaml                # the SKILLS section's only source (facts-spec 3)
 │   ├── decisions.yaml             # choices you made about the CV (e.g. "no LinkedIn"), so reviewers stop re-raising them
 │   ├── dictionary.txt             # project word list for spellcheck: names, products, technologies (9e P5)
+│   ├── releases.yaml              # optional, in git: the CV and portfolio PDFs you accepted and shared (facts-spec 6, npm run release)
 │   └── applications.yaml          # optional log: which CV/PDF went to which company and when (facts-spec 5)
 ├── sources/                       # imported old CVs and portfolios: index.yaml, files/ (originals), text/ (extracted), media/ (images) (9d)
 ├── portfolio/                     # (9e) assets/<summary-id>/ images (P1), portfolio.md (P3); built .docx/.pages/PDFs git-ignored (P4)
@@ -95,7 +96,7 @@ CV/
 │   ├── markets/<market-id>/       # non-default market versions of the master CV (generated, git-ignored; cv-spec 14)
 │   ├── variants/<profile-id>/     # role-based CVs (generated, not hand-edited): cv.md + gap-report.md committed; built files git-ignored
 │   │   └── markets/<market-id>/   # non-default market versions of each variant (generated, git-ignored)
-│   ├── tailored/<company-role>/   # per job ad (git-ignored): cv.md, .docx, .pdf, job-description.md, jd-tags.yaml, gap-report.md
+│   ├── tailored/<company-role>/   # per job ad (git-ignored): cv.md, .docx, .pdf, job-description.md, jd-tags.yaml, gap-report.md, cover-letter.md (+ its built files), why.md
 │   ├── sent/                      # optional exact copies of PDFs you sent (git-ignored, included in backups; facts-spec 5)
 │   └── .build-state.json          # per built CV: template, CV Markdown hash, source, output and per-entry hashes (local, git-ignored)
 ├── templates/
@@ -110,9 +111,9 @@ CV/
 │       └── import-report.md       # ATS warnings + test build, written by the template-importer agent (step 7);
 │                                  # classic predates it and has none
 ├── reports/<YYYY-MM-DD-HHmm>/     # reviewer reports for one run: ats.md, hr.md, proofreading.md, ...
-├── .cv-runs/                      # working files (git-ignored): <run-id>/ (state.json, git-digest.md), export.lock, snapshots/, doctor/, template-test-<name>/
+├── .cv-runs/                      # working files (git-ignored): <run-id>/ (state.json, git-digest.md), export.lock, snapshots/, doctor/, template-test-<name>/, agent-context/, review-context/, align/, import/ (a portable summary waiting for its merge: merge it before moving laptops), replay-*/, import-docs-*/, harvest-prompt-*.md
 ├── schemas/                       # common, config, summary, confirmed, decisions, profile, skills, market, style-map,
-│                                  # fixes, report, role-profile, sources
+│                                  # fixes, report, role-profile, sources, releases
 ├── scripts/                       # Node/TypeScript CLIs
 │   ├── lib/repo.ts                # shared loader: config, summaries, facts, profile, skills, markets, entries, CLI paths
 │   ├── lib/cvmd.ts                # CV Markdown model: generated parts (header, entry lines, blocks) per market and role profile
@@ -145,6 +146,7 @@ CV/
 │   ├── doctor.ts                  # environment check with a tiny real export (R3, R12)
 │   ├── backup.ts                  # backup (--full: whole-project archive) and restore (npm run restore = backup.ts --restore)
 │   ├── log-application.ts         # records a sent CV in facts/applications.yaml (facts-spec 5)
+│   ├── release.ts                 # records the accepted and shared CV and portfolio PDFs in facts/releases.yaml (facts-spec 6)
 │   ├── spellcheck.ts              # dictionary spelling check of CVs and the portfolio (9e P5)
 │   ├── portfolio.ts               # portfolio refresh (generated parts) and check (sources, confidentiality, spelling) (9e P3)
 │   ├── portfolio-template.ts      # generates templates/portfolio-classic (9e P4)
@@ -185,6 +187,7 @@ Each format has one owner; this table only says where to look. Structure is chec
 | Skills `facts/skills.yaml` | `specs/facts-spec.md` 3 | `schemas/skills.schema.json` |
 | Decisions `facts/decisions.yaml` | `specs/facts-spec.md` 4, `specs/review-report-spec.md` | `schemas/decisions.schema.json` |
 | Application log `facts/applications.yaml` (optional, git-ignored) | `specs/facts-spec.md` 5 | written by `npm run log-application` |
+| Release log `facts/releases.yaml` (optional, in git) | `specs/facts-spec.md` 6 | `schemas/releases.schema.json`, written by `npm run release` |
 | Calculated values (years of experience, team size led, "Present") | `specs/cv-spec.md` 7 | |
 | Generated parts of the CV Markdown (header, education, skills, languages, entry lines, `<!-- entry: -->` markers) | `specs/cv-spec.md` 2.2, 8 | |
 | Supported Markdown | `specs/cv-spec.md` 9 | enforced by `lint` |
@@ -209,7 +212,7 @@ Each agent's inputs, outputs and steps are in its definition in `agents/`; the c
 | Harvester (`agents/harvester.md`) | `summaries/<id>.md`, new or merged (existing numbers, user edits and `cv_*` fields kept); never copies code, internal text, URLs or secrets | `specs/work-summary-spec.md` |
 | Composer (`agents/composer.md`) | the master CV, one entry at a time, from its `npm run agent-context` bundle (R10), with `reattach-src` and `trace` (R7) | `specs/cv-spec.md` |
 | Tailor (`agents/tailor.md`) | `cv/variants/<profile>/` or `cv/tailored/<company-role>/`: `cv.md` + `gap-report.md`, wording only (selection by `select`, R8), from its `npm run agent-context` bundle | `specs/tailoring-spec.md` + the profile |
-| Reviewer (`agents/reviewer.md`), once per rubric | `reports/<date-time>/<rubric>.md` from its `npm run review-context` bundle; never edits | `specs/rubrics/*`, `specs/review-report-spec.md` |
+| Reviewer (`agents/reviewer.md`), once per rubric | `reports/<date-time>/<rubric>.md` (`<rubric>-<cv>.md` in a run over several CVs) from its `npm run review-context` bundle; never edits | `specs/rubrics/*`, `specs/review-report-spec.md` |
 | Advisor (`agents/advisor.md`) | from its `npm run agent-context` bundle, your answers, one topic at a time, into `facts/` or a summary, then hands over to the composer; also `/job-change`, `/profile`, `/add-experience`, `/import-docs`, `/portfolio-material` | `specs/facts-spec.md`, `specs/cv-spec.md` + the report's rubric |
 | Template importer (`agents/template-importer.md`) | `templates/<name>/` from a Word CV (PDF input deferred, section 11) | `specs/templates.md` |
 | Auditor (`agents/auditor.md`) | nothing but a report (`.cv-runs/align/`): whether a framework change is aligned with the plan and specs and updated everything it implies, after `doc-check`, `index --check` and `impact` | `specs/alignment-spec.md` |
@@ -293,7 +296,7 @@ What travels and how (git, backups, per-laptop `framework.local.yaml` made from 
 
 **Other operating systems:** on macOS, PDF export uses Pages or Word. On Windows or Linux, LibreOffice (`soffice`) is the supported exporter. Previews use the same Node renderer (`pdfjs-dist` + `@napi-rs/canvas`, text drawn from the PDF's embedded fonts) on every OS; macOS Quick Look is only a page-1 fallback. `doctor` shows which path is active.
 
-**Fonts:** each template lists its fonts in `style-map.yaml` (for `classic`: Cambria, Arial). `doctor` checks them with a real test export (the fonts must be embedded in the PDF), and `pdf-check` fails if the PDF used a substitute.
+**Fonts:** each template lists its fonts in `style-map.yaml` (for `classic`: Cambria, Arial). `doctor` checks them with a real test export (the fonts must be embedded in the PDF), and `pdf-check` fails if the PDF used a substitute. Exception: the portfolio template's fonts (`portfolio-classic`, all part of macOS) are only looked up in the system font folders, the method R3 warns about; its `pdf-check` still fails on a substitute.
 
 **Reproducibility:** `package-lock.json` plus `npm ci` installs the exact same dependency versions, and `.nvmrc` pins the Node version. PDFs from different exporters can differ slightly in layout. `pdf-check` confirms the content is identical, and `applications.yaml` records the exporter used for every sent PDF.
 
@@ -305,7 +308,7 @@ Problems expected when the flows actually run, found by simulating every flow ag
 | # | Risk | Mitigation | Step |
 |---|---|---|---|
 | R1 | Pages exports one document at a time. Parallel exports in `build:all` collide, and a Pages dialog (missing font, conversion notice) can hang the export forever. | All PDF exports go through one queue with a lock file, one at a time, with a timeout per file (config `checks.export_timeout_s`, default 60). On timeout, Pages is closed without saving and the build fails with a clear message. | 5 |
-| R16 | Pages is sandboxed: an export into a folder it has lost write access to hangs at 0% with no error (seen 2026-10-24 for `cv/`) | The Pages exporter exports into Pages' own container and moves the PDF into place (`scripts/exporters/pages.ts`) | 5 |
+| R16 | Pages is sandboxed: an export into a folder it has lost write access to hangs at 0% with no error (seen 2026-10-24 for `cv/`); and a document it opens can be re-saved in place in its own format (seen 2026-10-25: a source original no longer matched its sha256) | The Pages exporter exports into Pages' own container and moves the PDF into place (`scripts/exporters/pages.ts`); `.pages` imports hand Pages a copy in that container, never the original (`pagesWorkCopy` in `scripts/lib/sources.ts`) | 5 |
 | R2 | The classic template uses direct formatting (font size and color set on each piece of text, section lines as drawings), not real Word styles, so a style map that names styles would lose the look | `style-map.yaml` stores a **sample paragraph with full formatting** for each paragraph type, copied and filled in by the renderer, which is the approach that worked in this chat. Named styles are used only when a template really has them. | 5 |
 | R3 | Font checks by searching font folders give false "missing" results: Cambria isn't in the macOS font folders, yet Pages embeds it | `doctor` checks fonts by exporting a tiny test document with the active exporter and reading which fonts are embedded in the PDF | 5 |
 | R4 | `pdf-check` text comparison gives false failures: joined letters ("ﬁ"), line-end hyphenation, link text vs URL ("Portfolio" in the PDF, a URL in the Markdown), different quote and dash characters | A shared text normalizer: Unicode NFKC (splits joined letters), rejoins hyphenated line breaks, unifies quotes, dashes and whitespace, and compares link *text* rather than URLs | 5 |
@@ -347,7 +350,7 @@ Older CVs and portfolios often hold more detail about past jobs than the summari
 1. `/import-docs <file…>`: `npm run import-doc` copies each file to `sources/files/`, extracts its text to `sources/text/<id>.md` and lists it in `sources/index.yaml` with the date it was written.
 2. **Precedence:** your answers and confirmed facts, then git, then the current summaries and CV (the originals), then imported documents, newest first. A document only fills gaps; it never overrides anything above it.
 3. The advisor proposes, per summary: filled `TODO` sections, new contributions (`Source: doc:<id>`), technologies, portfolio material, numbers (section 7 `doc:<id>`; in the CV only once you confirm them) and conflicts (listed; the current value stays unless you say otherwise, and then it's recorded as your answer). Jobs no summary covers become `source: cv` summaries hidden from the CV until you decide.
-4. `validate` checks the index, that each original is unchanged (sha256), and that every `doc:<id>` names an imported document. Then `/compose`, `/variants`, `build:all`.
+4. `validate` checks the index, that each original is unchanged (sha256; a lossless recompression keeps the id and records `original_sha256`, `specs/sources-spec.md` 6), and that every `doc:<id>` names an imported document. Then `/compose`, `/variants`, `build:all`.
 
 ## 9e. Portfolio (built in phases P1–P6)
 
@@ -362,7 +365,7 @@ The portfolio is a second output of the same sources: a multi-page document (cov
 | P5 (**done 2026-10-23**) | `npm run spellcheck`: a dictionary spell check (US English) with the project word list `facts/dictionary.txt`, for the portfolio **and** the CV, in `build` and `check` (cspell-lib with bundled English, software-term and company dictionaries) | nothing |
 | P6 (**done 2026-10-23**) | Portfolio checks and reviews: images (exist and public-confirmed; an image in `portfolio.md` must be a public item of its own project; unused files in `assets/` warned; shown at most at 150 dpi, warned under 1.5 inches, instead of a pixel minimum that phone screenshots can't meet), `lint` as for the CV except that section 9 terms are allowed only with `allow_in: [portfolio]` (in `portfolio check` since P3); the phone number left out unless decided; `/review --portfolio` (proofreading, fact-check, confidentiality with public rules and screenshots, layout for both sizes; `validate` refuses other rubrics); acceptance B17 | P4 |
 
-P1–P6 are done and the `portfolio-classic` template is approved (2026-10-23). What's left is content: `/portfolio-material` (choose projects and screenshots), `/portfolio`, `npm run build:portfolio` and `/review --portfolio`.
+P1–P6 are done and the `portfolio-classic` template is approved (2026-10-23). The content is written too: 16 pages from 10 opted-in summaries, built and reviewed (`reports/2026-10-23-1633`, `reports/2026-10-23-1855`). What's left: the open item before replacing the Drive PDF (`docs/open-items.md`), the first `npm run release`, and a live run of B18 `/portfolio-material`.
 
 ## 10. Decisions
 
@@ -385,7 +388,7 @@ P1–P6 are done and the `portfolio-classic` template is approved (2026-10-23). 
 ## 11. Out of scope for now
 
 - **PDF input for `/import-template`:** Word input works; PDF input is specified in `specs/templates.md` 4.3 (measure with `pdfjs-dist`, label with the Word paragraph types, rebuild as WordprocessingML with `jszip` as `scripts/portfolio-template.ts` does, compare the test build within a tolerance; its acceptance list is there) and gets built when you need a template from a PDF CV.
-- **Portfolio output:** built (`specs/outputs/portfolio.md`, section 9e, P1–P6, 2026-10-23). The `portfolio-classic` template is approved (2026-10-23); what's left is content, not scope: choosing projects and screenshots (`/portfolio-material`), writing (`/portfolio`), building and reviewing.
+- **Portfolio output:** built (`specs/outputs/portfolio.md`, section 9e, P1–P6, 2026-10-23). The `portfolio-classic` template is approved and the content written, built and reviewed (2026-10-23); nothing is out of scope here any more (what's left is in section 9e).
 - Pulling history from remote GitHub or Azure DevOps (local clones only, while you have access).
 - A fully code-driven pipeline (Agent SDK CLI). It can wrap the same `agents/*.md` later.
 - Translating the CV into other languages. If a local market ever needs a Ukrainian CV, it fits as a market setting (`language: uk`) with an agent translation that you review.

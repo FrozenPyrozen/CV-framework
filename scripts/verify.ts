@@ -1,8 +1,8 @@
 // npm run verify [--fast]
 // One command for agents after a change: runs validate, doc-check, index --check, impact, check, status and the tests (in that
 // order, each as its own npm script) and prints one line per step ("ok  validate (0.8 s)" or "FAIL validate"), followed
-// only by that step's ERROR / warn / ✖ lines (at most 40) and the failing tests' details, then a summary line. status STALE, NEW and
-// SENT lines are warnings, not failures. --fast runs test:changed (only the tests the change can affect, without the Pages, PDF and full-backup tests) instead of test.
+// only by that step's ERROR / warn / ✖ lines (at most 40) and the failing tests' details, then a summary line. status STALE, NEW,
+// SENT, SHARED and CONFIRM lines are warnings, not failures. --fast runs test:changed (only the tests the change can affect, without the Pages, PDF and full-backup tests) instead of test.
 // Exits 1 if any step fails.
 import { spawnSync } from "node:child_process";
 import { dirname, resolve } from "node:path";
@@ -19,12 +19,12 @@ const clip = (l: string) => (l.length > MAX_LINE ? l.slice(0, MAX_LINE) + " …"
 // ERROR / warn / FAIL / ✖ lines; a script that failed without such a line shows its last lines instead.
 const issues = (out: string) => out.split("\n").filter((l) => /(^|\s)(ERROR|WARN|warn|FAIL)\b|✖/.test(l));
 
-// status: STALE / NEW / SENT lines with their indented reasons, and the closing advice line.
-function statusLines(out: string): string[] {
+// status: STALE / NEW / SENT / SHARED / CONFIRM lines with their indented reasons, and the closing advice line.
+export function statusLines(out: string): string[] {
   const lines: string[] = [];
   let inBlock = false;
   for (const l of out.split("\n")) {
-    if (/^(STALE|NEW|SENT)\b/.test(l)) { inBlock = true; lines.push(l); }
+    if (/^(STALE|NEW|SENT|SHARED|CONFIRM)\b/.test(l)) { inBlock = true; lines.push(l); }
     else if (inBlock && /^\s{4,}\S/.test(l)) lines.push(l);
     else { inBlock = false; if (/^status: /.test(l) && !/everything is up to date/.test(l)) lines.push(l); }
   }

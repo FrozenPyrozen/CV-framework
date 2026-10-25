@@ -9,9 +9,9 @@ Old CVs, portfolios and similar documents often say more about past jobs than th
 ```
 sources/
 ├── index.yaml          # one entry per document (section 2)
-├── files/<id>.<ext>    # the original file, unchanged
+├── files/<id>.<ext>    # the original file, unchanged (or recompressed losslessly, section 6)
 ├── text/<id>.md        # its text, extracted by import-doc (never edited by hand)
-└── media/<id>/         # images extracted from the document (.pages), linked from its text
+└── media/<id>/         # images extracted from the document (.pages), linked from its text; for a PDF, images saved from it by hand (not linked from its text)
 ```
 
 The originals are private and stay in the private repo, in git, like `facts/` and `summaries/`.
@@ -35,7 +35,7 @@ documents:
     recompressed: 2026-10-25     # and when
 ```
 
-Accepted files: `.docx`, `.pdf`, `.md`, `.txt`, and `.pages` on macOS with Pages: Pages exports it to Word, and pandoc (when installed) turns that into Markdown with headings, lists, links, captions and images (`media/<id>/`, listed as `media:` in the index). Other formats (`.doc`, `.pptx`, `.key`) are exported to PDF first. The same file (by `sha256`) is imported only once.
+Accepted files: `.docx`, `.pdf`, `.md`, `.txt`, and `.pages` on macOS with Pages: Pages exports a copy of it (in Pages' own folder; the original is never opened, since opening can make Pages re-save it) to Word, and pandoc (when installed) turns that into Markdown with headings, lists, links, captions and images (`media/<id>/`, listed as `media:` in the index). Other formats (`.doc`, `.pptx`, `.key`) are exported to PDF first. The same file (by `sha256`) is imported only once. A `.pages` document saved as a folder (package) is refused: save it as a single file, or export it to PDF.
 
 ## 3. Precedence
 
@@ -69,4 +69,4 @@ A document that disagrees with a higher source (dates, titles, team sizes, numbe
 - Text kept from a published portfolio may cite that document directly in `portfolio/portfolio.md` (`<!-- src: doc:<id> -->`, `specs/outputs/portfolio.md` 4); numbers still follow section 4 (used only once confirmed).
 - Text from documents is still written in your own words in summaries, with the same writing rules (`work-summary-spec.md` 5). Internal names found in a document go to the summary's section 9.
 - The extracted text is regenerated, never edited. To correct a document, import a new version under a new id.
-- **Lossless recompression.** To save space, an original (and the images in its `media/` folder) may be recompressed without losing anything: every image stays identical pixel for pixel with the same color profile (e.g. uncompressed TIFF re-saved as LZW TIFF), the file keeps its format, names and structure (for `.pages`, the same entries in the same order, stored the same way), and extracting it gives exactly the same text and images. The entry keeps its id, its `sha256` becomes the new file's, `original_sha256` keeps the imported file's (import-doc still refuses that file as already imported) and `recompressed` says when. Anything lossy is a new version: import it under a new id.
+- **Lossless recompression.** To save space, an original (and the images in its `media/` folder) may be recompressed without losing anything: every image stays identical pixel for pixel with the same color profile (e.g. uncompressed TIFF re-saved as LZW TIFF), the file keeps its format, names and structure (for `.pages`, the same entries in the same order, stored the same way), and extracting it gives exactly the same text and images. The entry keeps its id, its `sha256` becomes the new file's, `original_sha256` keeps the imported file's (import-doc still refuses that file as already imported) and `recompressed` says when; `validate` requires the two together and `original_sha256` different from `sha256`. Anything lossy is a new version: import it under a new id.

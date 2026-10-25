@@ -10,14 +10,17 @@ import { cliPath, isMain, loadConfig, loadEntries, loadProfile, loadSummaries, r
 import { parseArgs } from "./refresh.ts";
 
 // Confidentiality terms (section 9) and hidden client names of every summary except the one being extended,
-// matched like lint's blocklist: terms case-sensitive, hidden clients in any case.
+// matched like lint's blocklist: terms case-sensitive, hidden clients in any case. A term the extended summary also
+// lists in its own section 9 is known where the prompt goes (two summaries of one client share terms), so it's no leak.
 export function leakedTerms(text: string, merge?: string): string[] {
   const cfg = loadConfig();
   const re = (t: string) => t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   const found: string[] = [];
-  for (const s of loadSummaries(cfg)) {
+  const summaries = loadSummaries(cfg);
+  const own = new Set(summaries.find((s) => s.id === merge)?.confidentiality.map((r) => r.term).filter(Boolean) ?? []);
+  for (const s of summaries) {
     if (s.id === merge) continue;
-    for (const r of s.confidentiality) if (r.term && new RegExp(`(?<![\\w-])${re(r.term)}(?![\\w-])`).test(text)) found.push(`"${r.term}" (${s.id})`);
+    for (const r of s.confidentiality) if (r.term && !own.has(r.term) && new RegExp(`(?<![\\w-])${re(r.term)}(?![\\w-])`).test(text)) found.push(`"${r.term}" (${s.id})`);
   }
   for (const e of loadEntries(cfg)) {
     if (e.id === merge || !e.client || e.label === e.client) continue;
@@ -69,18 +72,18 @@ export function harvestPrompt(opts: { merge?: string; today?: string } = {}): st
     "",
     "## Read the history with plain git (instead of my framework's git-digest)",
     "",
-    "Use `--branches --remotes`, not `--all`: `--all` counts stash entries as commits. **My commit count** is the non-merge count below (`shortlog` includes merges). An identity that only has merges still counts as mine. Lockfiles are left out of line counts.",
+    "Use `--branches --remotes --tags --tags`, not `--all`: `--all` counts stash entries as commits. **My commit count** is the non-merge count below (`shortlog` includes merges). An identity that only has merges still counts as mine. Lockfiles are left out of line counts.",
     "",
     "```bash",
-    "git shortlog -sne --branches --remotes              # all authors: confirm which are me",
+    "git shortlog -sne --branches --remotes --tags              # all authors: confirm which are me",
     `ME=(${authorArgs})                   # bash or zsh array`,
-    "git log --branches --remotes --no-merges \"${ME[@]}\" --oneline | wc -l                                   # my commits",
-    "git log --branches --remotes --no-merges \"${ME[@]}\" --date=short --pretty=format:%ad | sort | sed -n '1p;$p'   # first and last date",
-    "git log --branches --remotes --no-merges \"${ME[@]}\" --pretty=format: --name-only | awk -F/ 'NF>1{n=(NF>4?4:NF-1); a=$1; for(i=2;i<=n;i++) a=a\"/\"$i; print a}' | sort | uniq -c | sort -rn | head -60   # files I changed, per folder (up to 4 levels)",
-    "git log --branches --remotes --no-merges \"${ME[@]}\" --date=short --pretty=format:\"%h %ad %s\"                 # my commit subjects",
-    "git log --branches --remotes --no-merges \"${ME[@]}\" --pretty=format:\"%h %s\" -- '*.md' '*.yaml' '*.yml'      # my docs, specs, pipelines, config",
-    "git log --branches --remotes --no-merges \"${ME[@]}\" --numstat --pretty=format:\"%h %s\" -- . ':(exclude)*lock*' # lines per file (no lockfiles)",
-    "git log --branches --remotes --merges \"${ME[@]}\" --date=short --pretty=format:\"%h %ad %s\" | grep -iv \"merge branch\\|merge remote\" | head -60   # pull requests I completed (no branch syncs)",
+    "git log --branches --remotes --tags --no-merges \"${ME[@]}\" --oneline | wc -l                                   # my commits",
+    "git log --branches --remotes --tags --no-merges \"${ME[@]}\" --date=short --pretty=format:%ad | sort | sed -n '1p;$p'   # first and last date",
+    "git log --branches --remotes --tags --no-merges \"${ME[@]}\" --pretty=format: --name-only | awk -F/ 'NF>1{n=(NF>4?4:NF-1); a=$1; for(i=2;i<=n;i++) a=a\"/\"$i; print a}' | sort | uniq -c | sort -rn | head -60   # files I changed, per folder (up to 4 levels)",
+    "git log --branches --remotes --tags --no-merges \"${ME[@]}\" --date=short --pretty=format:\"%h %ad %s\"                 # my commit subjects",
+    "git log --branches --remotes --tags --no-merges \"${ME[@]}\" --pretty=format:\"%h %s\" -- '*.md' '*.yaml' '*.yml'      # my docs, specs, pipelines, config",
+    "git log --branches --remotes --tags --no-merges \"${ME[@]}\" --numstat --pretty=format:\"%h %s\" -- . ':(exclude)*lock*' # lines per file (no lockfiles)",
+    "git log --branches --remotes --tags --merges \"${ME[@]}\" --date=short --pretty=format:\"%h %ad %s\" | grep -iv \"merge branch\\|merge remote\" | head -60   # pull requests I completed (no branch syncs)",
     "```",
     "",
     "## Front matter you must set",
@@ -112,7 +115,7 @@ export function harvestPrompt(opts: { merge?: string; today?: string } = {}): st
     "",
   ].join("\n");
   const leaks = leakedTerms(text, opts.merge);
-  if (leaks.length) throw new Error(`the prompt would carry confidential names from other summaries: ${leaks.join(", ")}; make the spec's examples neutral (specs/work-summary-spec.md) and generate it again`);
+  if (leaks.length) throw new Error(`the prompt would carry confidential names from other summaries: ${leaks.join(", ")}; ${opts.merge ? `they are in the spec's examples or in ${opts.merge}; make the spec's examples neutral (specs/work-summary-spec.md), or add the term to ${opts.merge}'s section 9 if that job uses it too,` : "make the spec's examples neutral (specs/work-summary-spec.md) and"} generate it again`);
   return text;
 }
 

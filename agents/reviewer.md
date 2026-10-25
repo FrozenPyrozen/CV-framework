@@ -27,7 +27,7 @@ Open other files only when the bundle or a step points there: `specs/review-repo
 4. **For each rubric** (independently; in parallel if your tool supports it):
    - Read the rubric and apply every check in its table to the CV, quoting exact text and pointing to `file:line` plus a readable location ("SYSPRO, bullet 2").
    - Before reporting a finding, check the decisions in the bundle (and `facts/decisions.yaml` for an id it lists as not relevant). A finding that matches a decision (its `matches` keywords or meaning) goes under *Decided*, not *Findings*.
-   - Write `reports/<run>/<rubric>.md` exactly in the report format: front matter (`schema_version`, `rubric`, `cv`, `job_ad`, `market`, `reviewed_at`, `verdict`, `score`; `npm run validate` checks it), the rubric's required sections, the findings table (`id`, `severity`, `location`, `issue`, `suggestion`, `needs_user_input`), the *Decided* list.
+   - Write `reports/<run>/<rubric>.md` (in a run over several CVs, `<rubric>-<cv>.md`: `master`, the profile id or the tailored folder; `specs/review-report-spec.md`) exactly in the report format: front matter (`schema_version`, `rubric`, `cv`, `job_ad`, `market`, `reviewed_at`, `verdict`, `score`; `npm run validate` checks it), the rubric's required sections, the findings table (`id`, `severity`, `location`, `issue`, `suggestion`, `needs_user_input`), the *Decided* list.
    - Rank findings high, then medium, then low. Set `needs_user_input: yes` when only the user can resolve it (a number, a choice, a fact to confirm).
 5. **Summary to the user.**
    - A table: rubric, verdict, score, number of findings by severity.

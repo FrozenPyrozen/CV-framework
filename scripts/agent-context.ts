@@ -14,8 +14,9 @@ import { basename, dirname, join, relative } from "node:path";
 import { calculate, parseCv, profileIdForFile, tailoredSettings } from "./lib/cvmd.ts";
 import { masterCvPath } from "./lib/paths.ts";
 import {
-  type Summary, cliPath, isMain, loadConfig, loadConfirmed, loadDecisions, loadEntries, loadSummaries, readYaml, rootPath,
+  type Summary, cliPath, isMain, loadConfig, loadConfirmed, loadDecisions, loadEntries, loadSummaries, readYaml, rootPath, unconfirmedFields,
 } from "./lib/repo.ts";
+import { loadSources } from "./lib/sources.ts";
 import { markdownVisibleText } from "./lib/text.ts";
 import { parseArgs } from "./refresh.ts";
 import { agentRules, esc, has, numberedCv, UsageError, yamlBlock } from "./review-context.ts";
@@ -228,15 +229,20 @@ export function agentContext(opts: Options): { file: string; text: string; scope
   } else {
     for (const id of statusEntries(file)) if (known.includes(id)) add(id, "status: sources changed");
     for (const id of known) if (!ranges.has(id)) add(id, "not in the CV yet");
-    // Compared by the entry's contributions (<id>#4.N) and Stack line (<id>#5): a bullet may keep facts and summary
-    // sections merged from the master wording.
+    // Compared by the entry's contributions (<id>#4.N) and its Stack line (<id>#5 on a "Stack:" bullet only): a bullet
+    // may keep facts and summary sections merged from the master wording, and a contribution of the same entry that the
+    // master bullet of a selected one merges (tailoring-spec 3, "Master bullets with several sources").
+    const masterEntries = parseCv(masterText).sections.flatMap((s) => s.entries);
     if (agent === "tailor") for (const e of selection.entries as any[]) {
-      const own = (s: string) => s.startsWith(`${e.id}#4.`) || s === `${e.id}#5`;
-      const want = new Set<string>(e.bullets.flatMap((b: any) => b.src.split(",").map((x: string) => x.trim())).filter(own));
+      const contrib = (s: string) => s.startsWith(`${e.id}#4.`);
+      const ids = (bs: { text: string; src: string[] }[]) => bs.flatMap((b) => b.src.filter((s) => contrib(s) || (s === `${e.id}#5` && /^Stack:/.test(b.text))));
+      const want = new Set<string>(e.bullets.flatMap((b: any) => b.src.split(",").map((x: string) => x.trim())).filter(contrib));
       if (e.stack) want.add(e.stack);
       const r = ranges.get(e.id);
-      const have = new Set(r ? parseCv(cvText).sections.flatMap((s) => s.entries).find((x) => x.id === e.id)!.bullets.flatMap((b) => b.src).filter(own) : []);
-      if (r && (want.size !== have.size || [...want].some((s) => !have.has(s)))) add(e.id, "selection changed");
+      if (!r) continue;
+      const have = new Set(ids(parseCv(cvText).sections.flatMap((s) => s.entries).find((x) => x.id === e.id)!.bullets));
+      const merged = new Set(ids((masterEntries.find((x) => x.id === e.id)?.bullets ?? []).filter((b) => b.src.some((s) => want.has(s)))));
+      if ([...want].some((s) => !have.has(s)) || [...have].some((s) => !want.has(s) && !merged.has(s))) add(e.id, "selection changed");
     }
   }
   const scope = known.filter((id) => reasons.has(id));
@@ -384,7 +390,7 @@ function coverLetterContext(opts: Options) {
   section("What the CV's sources say (titles and results; open the summary's `### 4.N` for the full text)", lines.join("\n") || "None.");
   const prof = loadContext({ cvFile }).profile;
   section("Profile (availability and location, for the last paragraph)", yamlBlock({ location: prof.location, work: prof.work }));
-  section("Keep out of the letter (section 9 of the shown entries, hidden clients)",
+  section("Keep out of the letter (section 9 of the shown entries, hidden clients; `cover-letter check` also blocks every other summary's terms)",
     summaries.filter((s) => shown.includes(s.id)).map((s) => `- ${s.id}: ${termLine(s, "cover-letter")}`).join("\n"),
     "", `Hidden clients: ${buildBlocklist(summaries, loadContext({ cvFile })).terms.filter((t) => /hidden client/.test(t.from)).map((t) => t.term).join(", ") || "none"}`);
   section("Screening rules (`npm run cover-letter -- check` enforces them)",
@@ -405,6 +411,8 @@ function portfolioContext(opts: Options) {
   const want = opts.entries?.length ? opts.entries : opts.all ? pages.map((p) => p.id) : [...new Set([...st.toWrite, ...st.toRewrite, ...st.notInFile])];
   for (const id of want) if (!pages.some((p) => p.id === id)) throw new UsageError(`unknown portfolio page "${id}" (one of: ${pages.map((p) => p.id).join(", ")})`);
   const current = existsSync(portfolioPath()) ? parsePortfolio(read(portfolioPath())).projects : new Map<string, string>();
+  // The newest imported portfolio is the published one whose pages the agent keeps (specs/outputs/portfolio.md 4).
+  const published = loadSources().documents.filter((d) => d.kind === "portfolio").sort((a, b) => b.date.localeCompare(a.date))[0];
   const out: string[] = [];
   const section = (t: string, ...b: string[]) => out.push(`## ${t}`, "", ...b, "");
   out.push("# Agent context: portfolio", "", "Generated by `npm run agent-context`; read this instead of the files it replaces and open a full file only where it points. Never commit.", "",
@@ -420,7 +428,8 @@ function portfolioContext(opts: Options) {
       "### 5. Technologies and frameworks", summarySection(s, 5), "", "### 7. Metrics and outcomes", summarySection(s, 7), "",
       "### Public items for this page (section 8)", yamlBlock(pageItems(page)), "",
       `### 9. Keep out unless allowed in the portfolio`, termLine(s, "portfolio"), "",
-      "### Current page text", current.get(page.id)?.trim() || "Not written yet."];
+      "### Current page text", current.get(page.id)?.trim() || "Not written yet.", "",
+      "### Published portfolio text", published ? `\`${published.text}\` (\`doc:${published.id}\`): open it at this page's title; keep its content (step 3).` : "No published portfolio is imported."];
     section(`Page: ${page.id}`, ...body);
   }
   const all: Decision[] = loadDecisions()?.decisions ?? [];
@@ -442,6 +451,11 @@ function advisorContext(opts: Options) {
   section("Spec sections (`agents/advisor.md` *Read first*)", specText("advisor" as Agent));
   const oi = rootPath("docs", "open-items.md");
   section("Open items (`docs/open-items.md`)", existsSync(oi) ? read(oi).replace(/^# .*\n+/, "").replace(/^## /gm, "### ").trim() : "Not found.");
+  // Front-matter values still to confirm (work-summary-spec 3; status prints them as CONFIRM lines): ask about each.
+  const toConfirm = loadSummaries().map((s) => ({ s, f: unconfirmedFields(read(rootPath(s.file))) })).filter((x) => x.f.length);
+  section("Front-matter values to confirm (`# TODO (needs user input): confirm`)", toConfirm.length
+    ? toConfirm.map(({ s, f }) => `- ${s.file}: ${f.map((k) => `\`${k}: ${typeof s.frontMatter[k] === "object" ? JSON.stringify(s.frontMatter[k]) : s.frontMatter[k]}\``).join(", ")} (show_in_cv: ${s.frontMatter.show_in_cv ?? true})`).join("\n")
+    : "None.");
   // Default: the latest report run (reports/<YYYY-MM-DD-HHmm>/), as agents/advisor.md /improve says.
   const runs = existsSync(rootPath("reports")) ? readdirSync(rootPath("reports")).filter((d) => /^\d{4}-\d{2}-\d{2}-\d{4}$/.test(d)).sort() : [];
   const reports = opts.target ? opts.target.split(",").map((x) => x.trim()).filter(Boolean) : runs.length ? [`reports/${runs[runs.length - 1]}`] : [];

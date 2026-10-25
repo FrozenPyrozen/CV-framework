@@ -242,6 +242,14 @@ function unquote(s: string): string {
   return s.replace(/^["']|["']$/g, "");
 }
 
+// Front-matter values to confirm (work-summary-spec 3): `<field>: <value>  # TODO (needs user input): confirm` on
+// engagement, cv_section or period. YAML drops comments, so they're read from the raw text.
+export const CONFIRM_FIELDS = ["engagement", "cv_section", "period"];
+export function unconfirmedFields(text: string): string[] {
+  const fm = text.match(/^---\n([\s\S]*?)\n---/)?.[1] ?? "";
+  return CONFIRM_FIELDS.filter((f) => new RegExp(`^${f}:.*#\\s*TODO \\(needs user input\\): confirm`, "m").test(fm));
+}
+
 export function loadSummaries(cfg = loadConfig()): Summary[] {
   const dir = rootPath(cfg.paths.summaries);
   return readdirSync(dir)

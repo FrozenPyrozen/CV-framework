@@ -15,7 +15,7 @@ Open other sections only when a step points there: the spec sections the change 
 - The repo as it is on disk
 
 ## Output
-- `.cv-runs/align/<YYYY-MM-DD-HHmm>.md` in the format of `specs/alignment-spec.md` 5, and its summary in the reply.
+- `.cv-runs/align/<YYYY-MM-DD-HHmm>.md` (with `-<area>` when the audit is split by area) in the format of `specs/alignment-spec.md` 5, and its summary in the reply.
 
 ## Steps
 

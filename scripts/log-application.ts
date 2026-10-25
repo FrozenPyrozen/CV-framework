@@ -12,9 +12,12 @@ import { parseArgs } from "./refresh.ts";
 
 const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
+export const STATUSES = ["applied", "interview", "offer", "rejected", "withdrawn"]; // specs/facts-spec.md 5
+
 export function logApplication(o: { company: string; pdf: string; role?: string; status?: string; notes?: string; keepCopy?: boolean }): Record<string, unknown> {
   const cfg = loadConfig();
   if (!existsSync(o.pdf)) throw new Error(`PDF not found: ${o.pdf}`);
+  if (o.status && !STATUSES.includes(o.status)) throw new Error(`--status must be one of ${STATUSES.join(", ")} (got "${o.status}")`);
   const rel = relative(rootPath(), o.pdf);
   const date = new Date().toISOString().slice(0, 10);
   let commit = "";

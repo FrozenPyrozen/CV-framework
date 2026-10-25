@@ -2,9 +2,9 @@
 // .docx, .pdf, .md, .txt and (on macOS with Pages) .pages files.
 import JSZip from "jszip";
 import { spawnSync } from "node:child_process";
-import { cpSync, existsSync, mkdtempSync, readFileSync, readdirSync, rmSync } from "node:fs";
-import { tmpdir } from "node:os";
-import { extname, join } from "node:path";
+import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync } from "node:fs";
+import { homedir } from "node:os";
+import { extname, join, resolve } from "node:path";
 import { loadConfig, readYaml, rootPath } from "./repo.ts";
 
 export interface SourceDoc {
@@ -60,12 +60,23 @@ export const pandocBin = (): string | undefined =>
   ["pandoc", "/opt/homebrew/bin/pandoc", "/usr/local/bin/pandoc"].find((b) => spawnSync(b, ["--version"], { encoding: "utf8" }).status === 0);
 export const hasPandoc = () => !!pandocBin();
 
+// Pages gets a copy in its own container, never the original: opening a document can make Pages re-save it in its
+// own format (seen 2026-10-25: a source original changed, so its sha256 no longer matched), and the sandbox may block
+// other folders (R16). Returns the working folder and the copy's absolute path.
+export function pagesWorkCopy(file: string, base = join(homedir(), "Library", "Containers", "com.apple.iWork.Pages", "Data", "tmp")): { dir: string; copy: string } {
+  mkdirSync(base, { recursive: true });
+  const dir = mkdtempSync(join(base, "cv-pages-"));
+  const copy = join(dir, `in${extname(file)}`);
+  cpSync(resolve(file), copy, { recursive: true }); // a .pages document can be a folder (package) or a zip
+  return { dir, copy };
+}
+
 async function pagesToText(file: string, media?: { dir: string; link: string }): Promise<string> {
   if (process.platform !== "darwin" || !existsSync("/Applications/Pages.app")) throw new Error(`${file}: reading .pages needs Pages on macOS; export it to PDF or Word first`);
-  const tmp = mkdtempSync(join(tmpdir(), "cv-pages-"));
+  const { dir: tmp, copy } = pagesWorkCopy(file);
   try {
     const docx = join(tmp, "doc.docx");
-    const r = spawnSync("osascript", ["-e", PAGES_TO_DOCX, file, docx], { encoding: "utf8", timeout: 660_000 });
+    const r = spawnSync("osascript", ["-e", PAGES_TO_DOCX, copy, docx], { encoding: "utf8", timeout: 660_000 });
     if (r.status !== 0 || !existsSync(docx)) throw new Error(`Pages couldn't export ${file} to Word: ${(r.stderr || r.error?.message || "").trim()}`);
     if (!hasPandoc()) return await extractText(docx);
     const p = spawnSync(pandocBin()!, ["doc.docx", "-t", "gfm", "--wrap=none", "--extract-media=media"], { cwd: tmp, encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });

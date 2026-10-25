@@ -112,6 +112,11 @@ test("an edited old changelog row isn't a new one; a new top-level key counts; I
   put(d3, "docs/changelog.md", "| # | Request | Change |\n| 1 | variants | colour |\n");
   rmSync(join(d3, "agents/old.md"));
   const r3 = run("impact.ts", d3).out;
+  // A new agent named elsewhere in the plan, not in section 5's table, still fails I4.
+  const d4 = repo();
+  put(d4, "docs/plan.md", "## 5. Agents\n\n## 6. Later\nSee `agents/later.md`.\n");
+  put(d4, "agents/later.md", "# Later\n\n## Read first\n");
+  assert.match(run("impact.ts", d4).out, /\[I4\] agents\/later\.md is new but docs\/plan\.md section 5/);
   assert.doesNotMatch(r3, /spelling_variants\.colour/);
   assert.match(r3, /\[I9\] agents\/old\.md was removed but is still named in docs\/plan\.md/);
 });

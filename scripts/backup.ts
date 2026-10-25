@@ -39,13 +39,16 @@ export function backupPaths(): string[] {
 // Word and PDF files count only when they carry the CV's own file name (<Name>_CV…), so a job ad saved as a PDF travels.
 export const isBuiltOutput = (rel: string, cvPrefix = "Kirill_Kohan_CV") =>
   rel.startsWith("cv/tailored/") &&
-  (new RegExp(`/${cvPrefix}[^/]*\\.(docx|pdf)$`).test(rel) || /\/(pdf-check\.md|selection\.json)$|\/(preview|markets)\//.test(rel));
+  (new RegExp(`/${cvPrefix}[^/]*\\.(docx|pdf)$`).test(rel) || /\/[^/]*_Cover_Letter[^/]*\.(docx|pdf)$/.test(rel) ||
+    /\/(pdf-check\.md|cover-letter-check\.md|selection\.json)$|\/(preview|markets)\//.test(rel)); // the cover letter is rebuilt from cover-letter.md
 
 function walk(abs: string): string[] {
   if (!existsSync(abs)) return [];
   if (statSync(abs).isFile()) return [abs];
   return readdirSync(abs).flatMap((f) => walk(join(abs, f)));
 }
+
+export const DEFAULT_PASSWORD_ENV = "CV_BACKUP_PASSWORD";
 
 export function encrypt(data: Buffer, password: string): Buffer {
   const salt = randomBytes(16), iv = randomBytes(12);
@@ -124,7 +127,7 @@ export function restoreSteps(privateName: string): string {
     "     cd CV",
     "     git remote remove origin      # origin points at the bundle file",
     "     npm ci",
-    `3. npm run restore -- ../${privateName}${privateName.endsWith(".enc") ? "   (set the backup password variable first)" : ""}`,
+    `3. npm run restore -- ../${privateName}${privateName.endsWith(".enc") ? `   (set ${DEFAULT_PASSWORD_ENV} to the backup password first)` : ""}`,
     "4. cp framework.local.example.yaml framework.local.yaml, then set this laptop's repo paths and backup folder",
     "   (the old laptop's settings are in framework.local.previous.yaml).",
     "5. npm run doctor, fix what it reports, then npm run build:all, npm run build:portfolio and npm run status.",
@@ -184,9 +187,11 @@ export async function restore(archive: string, opts: { password?: string; force?
     }
   }
   if (encrypted) {
+    // On a new laptop framework.local.yaml doesn't exist yet (you create it after restoring): CV_BACKUP_PASSWORD always works.
     const local = loadLocalConfig() ?? {};
-    const pw = opts.password ?? (local.backup_password_env ? process.env[local.backup_password_env] : undefined);
-    if (!pw) throw new Error(`the backup is encrypted: set ${local.backup_password_env ?? "the password environment variable"} (see backup_password_env in framework.local.yaml)`);
+    const names = [...new Set([local.backup_password_env, DEFAULT_PASSWORD_ENV].filter(Boolean) as string[])];
+    const pw = opts.password ?? names.map((n) => process.env[n]).find(Boolean);
+    if (!pw) throw new Error(`the backup is encrypted: set ${names.join(" or ")} to its password`);
     data = decrypt(data, pw);
   }
   const zip = await JSZip.loadAsync(data);

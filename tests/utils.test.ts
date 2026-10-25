@@ -7,8 +7,8 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import JSZip from "jszip";
 import { run, slow, tempRepo } from "./helpers.ts";
-import { decrypt, encrypt } from "../scripts/backup.ts";
-import { areaOf, matcher } from "../scripts/git-digest.ts";
+import { decrypt, encrypt, isBuiltOutput } from "../scripts/backup.ts";
+import { areaOf, digest, matcher } from "../scripts/git-digest.ts";
 
 test("doctor --no-export reports Node, dependencies, settings and exporters", () => {
   const dir = tempRepo();
@@ -63,6 +63,25 @@ test("backup and restore: encrypted, newer local files kept as conflicts, nothin
   void env;
 });
 
+test("an encrypted backup restores on a new laptop before framework.local.yaml exists, with CV_BACKUP_PASSWORD", () => {
+  const dir = tempRepo();
+  writeFileSync(join(dir, "facts/applications.yaml"), "- company: Acme\n");
+  writeFileSync(join(dir, "framework.local.yaml"), `backup_dir: ${join(dir, "bk")}\nbackup_password_env: MY_OWN_PW\n`);
+  process.env.MY_OWN_PW = "s3cret";
+  try { assert.equal(run("backup.ts", dir).code, 0); } finally { delete process.env.MY_OWN_PW; }
+  const archive = join(dir, "bk", readdirSync(join(dir, "bk"))[0]);
+  const fresh = tempRepo(); // no framework.local.yaml: the documented order restores first
+  const none = run("backup.ts", fresh, ["--restore", archive]);
+  assert.equal(none.code, 1);
+  assert.match(none.out, /set CV_BACKUP_PASSWORD to its password/);
+  process.env.CV_BACKUP_PASSWORD = "s3cret";
+  try {
+    const r = run("backup.ts", fresh, ["--restore", archive]);
+    assert.equal(r.code, 0, r.out);
+  } finally { delete process.env.CV_BACKUP_PASSWORD; }
+  assert.equal(readFileSync(join(fresh, "facts/applications.yaml"), "utf8"), "- company: Acme\n");
+});
+
 test("git-digest: identities, areas, co-authored and possibly-yours commits", () => {
   assert.equal(areaOf("apps/login/src/a.ts"), "apps/login");
   assert.equal(areaOf("docs/a.md"), "docs");
@@ -89,6 +108,25 @@ test("git-digest: identities, areas, co-authored and possibly-yours commits", ()
   assert.match(d, /\| apps\/login \| 2 \|/);
   assert.match(d, /Co-authored-by[\s\S]*Someone Else: Add shell/);
   assert.match(d, /Possibly yours[\s\S]*Merged PR 42: telemetry by Kyrylo Kohan/);
+  // A stash isn't a commit of yours; a merge you made is listed apart, not counted.
+  writeFileSync(join(repo, "apps/login/a.ts"), "changed");
+  g(["-c", "user.name=Kyrylo Kohan", "-c", "user.email=k@work.com", "stash", "-q"]);
+  g(["checkout", "-q", "-b", "feature"]);
+  commit("Someone Else", "s@work.com", "apps/shell/e.ts", "Add menu");
+  g(["checkout", "-q", "-"]);
+  g(["-c", "user.name=Kyrylo Kohan", "-c", "user.email=k@work.com", "merge", "-q", "--no-ff", "-m", "Merge branch feature", "feature"]);
+  assert.equal(run("git-digest.ts", dir, ["myrepo", "--path", repo, "--run", "t"]).code, 0);
+  const d2 = readFileSync(join(dir, ".cv-runs/t/git-digest.md"), "utf8");
+  assert.match(d2, /Your commits: 2 of 5 non-merge commits/);
+  assert.match(d2, /Your merges: 1 /);
+  assert.match(d2, /## Your merges\n\n- \d{4}-\d{2}-\d{2} [0-9a-f]+: Merge branch feature/);
+  // A commit reachable only from a tag counts; with no identities nothing is "possibly yours".
+  g(["checkout", "-q", "--detach"]);
+  commit("Kyrylo Kohan", "k@work.com", "apps/login/f.ts", "Add release notes");
+  g(["tag", "v1"]);
+  g(["checkout", "-q", "-"]);
+  assert.match(digest("myrepo", repo, ["Kyrylo Kohan"]), /Your commits: 3 of 6 non-merge commits/);
+  assert.match(digest("myrepo", repo, []), /## Possibly yours[^#]*None found\./);
 });
 
 test("index creates and updates the registry block in AGENTS.md", () => {
@@ -121,6 +159,9 @@ test("log-application records a sent CV with a quoted hash, market and optional 
   writeFileSync(join(dir, "cv/Kirill_Kohan_CV.pdf"), "%PDF-1.4 fake");
   assert.equal(run("log-application.ts", dir, ["--company", "Beta", "--pdf", "cv/Kirill_Kohan_CV.pdf"]).code, 0);
   assert.match(readFileSync(join(dir, "facts/applications.yaml"), "utf8"), /company: Beta[\s\S]*market: worldwide/);
+  const bad = run("log-application.ts", dir, ["--company", "Gamma", "--pdf", "cv/Kirill_Kohan_CV.pdf", "--status", "ghosted"]);
+  assert.equal(bad.code, 1);
+  assert.match(bad.out, /--status must be one of applied, interview, offer, rejected, withdrawn/);
 });
 
 test("backup leaves out built files of tailored CVs (they are recreated)", async () => {
@@ -211,4 +252,10 @@ test("test copies leave out your personal files: job-specific CVs, sent PDFs and
   assert.ok(existsSync(join(dir, "cv/Kirill_Kohan_CV.md")) && existsSync(join(dir, "facts/decisions.yaml")));
   for (const f of ["cv/tailored", "cv/sent", "facts/applications.yaml"]) assert.ok(!existsSync(join(dir, f)), `${f} was copied`);
   rmSync(src, { recursive: true, force: true });
+});
+
+test("backups leave out a job folder's built files, CV and cover letter alike, and keep its sources", () => {
+  for (const p of ["cv/tailored/acme/Kirill_Kohan_CV.pdf", "cv/tailored/acme/Kirill_Kohan_Cover_Letter.docx", "cv/tailored/acme/Kirill_Kohan_Cover_Letter_UA.pdf",
+    "cv/tailored/acme/cover-letter-check.md", "cv/tailored/acme/pdf-check.md", "cv/tailored/acme/preview/cover-letter/page-1.png", "cv/tailored/acme/selection.json"]) assert.ok(isBuiltOutput(p), p);
+  for (const p of ["cv/tailored/acme/cv.md", "cv/tailored/acme/cover-letter.md", "cv/tailored/acme/job-description.md", "cv/tailored/acme/why.md", "cv/sent/2026-10-20-acme.pdf"]) assert.ok(!isBuiltOutput(p), p);
 });

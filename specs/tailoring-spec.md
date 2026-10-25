@@ -50,7 +50,7 @@ max_pages: 3                       # optional; overrides checks.max_pages for th
 max_words: 1800                    # optional; overrides checks.max_words (used by lint)
 ```
 
-`validate` checks every tag against the config list, `skills_order` categories, `include_sections`, the template, bullet limits, pins per entry and the ids in `overrides` and `entry_max_bullets`. A job-specific CV records its profile and an optional `headline` in `jd-tags.yaml` (section 2); `refresh`, `lint`, `build` and `pdf-check` read them from there.
+`validate` checks every tag against the config list, `skills_order` categories, `include_sections`, the template, bullet limits, pins per entry and the ids in `overrides` and `entry_max_bullets`. A job-specific CV records its profile, an optional `headline` and optional `overrides` (on top of the profile's) in `jd-tags.yaml` (section 2); `refresh`, `lint`, `build` and `pdf-check` read them from there.
 
 ## 2. Steps
 
@@ -67,7 +67,7 @@ max_words: 1800                    # optional; overrides checks.max_words (used 
    ```
 2. **Selection (script).** `npm run select -- <cv-dir> [--profile <id>] [--tags jd-tags.yaml]` (the profile may also come from `jd-tags.yaml` `profile`) scores every contribution and fact by its tags (2 × emphasize, 1 × summary focus, −2 × de-emphasize, 3 × job-ad required, 1 × job-ad nice-to-have; pinned bullets first in the order the profile's `overrides` list them, ties keep the summary's order), applies limits (the profile's `entry_max_bullets`, then `max_bullets_per_entry`, else the entry's `cv_max_bullets`, the same order lint uses) and overrides, and writes `selection.json`: which bullets each entry gets, in which order. **The agent doesn't change the selection.** If it disagrees, it says so in the gap report, and the user changes the profile or `jd-tags.yaml`.
 3. **Wording (agent).** For each selected bullet:
-   - If the master CV has a bullet with the same source id, start from its wording (including the user's manual edits) and only shorten or re-emphasize it. Re-emphasizing may bring in a detail from the **same** source (for example where an app was published), never one from another source.
+   - If the master CV has a bullet with the same source id, start from its wording (including the user's manual edits) and only shorten or re-emphasize it. Re-emphasizing may bring in a detail from the **same** source (for example where an app was published), never one from another source. The master bullet's other ids of the same entry (a contribution it merges, e.g. `#4.5` with `#4.1`) may stay with that wording; `agent-context tailor` doesn't count them as a changed selection.
    - Otherwise write it fresh from the source, following `cv-spec.md`.
    - Keep its `src` comment.
    - **Master bullets with several sources:** keep the parts backed by selected sources, and the parts backed by a confirmed fact about the same work (its number, scope or ownership, e.g. `syspro-team-size` with `#4.1`, `syspro-tech-stack-ownership` with `#4.3`) or by one of the entry's `cv_emphasis` points. Drop a part backed only by an unrelated, unselected source, unless the same claim is already elsewhere in the CV. Cite exactly the sources the remaining text uses. When a source that a master bullet merges is itself selected as a separate bullet in this CV (for example a pinned fact), it gets its own bullet and is left out of the merged one: no claim appears twice.
@@ -104,7 +104,7 @@ entry_max_bullets:
   syspro-saas-erp: 7                             # per-entry limit instead of max_bullets_per_entry
 ```
 
-- **Stack lines** (`<id>#5`) don't count toward the bullet limits. `selection.json` lists an entry's `stack` for the current job (ongoing and counting as experience, the rule `lint` uses) and for any entry whose Stack line is pinned; only those entries get one. A profile's `drop` on `<id>#5` removes the line even for the current job (lint then doesn't warn).
+- **Stack lines** (`<id>#5`) don't count toward the bullet limits. `selection.json` lists an entry's `stack` for the current job (ongoing and counting as experience, the rule `lint` uses) and for any entry whose Stack line is pinned; only those entries get one. A profile's `drop` on `<id>#5` removes the line even for the current job (lint then doesn't warn); so does a job ad's, in `jd-tags.yaml` `overrides`, which apply on top of the profile's for that CV in `select` and `lint` alike.
 - **`also`** lists further sources the same bullet cites (`selection.json` gives the bullet `src: "<id>#4.6, <id>#4.15"`); a contribution named in `also` isn't selected again on its own. `validate` checks that each one resolves. Use it with `text` when the merged wording matters.
 - **`entry_max_bullets`** sets a different limit for one entry (e.g. more bullets for the current job in one profile).
 - Pinned bullets come first in the order `overrides` lists them, and an entry can't have more pins than its limit (`validate` checks it).

@@ -11,7 +11,7 @@ import { allTargets } from "./build.ts";
 import { entryHashes, entryTextHashes, hashSources, readState, sha } from "./lib/buildstate.ts";
 import { profileIdForFile } from "./lib/cvmd.ts";
 import { masterCvPath } from "./lib/paths.ts";
-import { isMain, loadConfig, rootPath } from "./lib/repo.ts";
+import { isMain, loadConfig, rootPath, unconfirmedFields } from "./lib/repo.ts";
 import { parseArgs } from "./refresh.ts";
 import { portfolioProjects, portfolioStatus } from "./portfolio.ts";
 
@@ -117,7 +117,16 @@ if (isMain(import.meta.url)) {
   const warnings = applicationWarnings(args.ack as string | undefined);
   if (args.ack && !readApplications().some((x) => (x.company ?? "").toLowerCase() === String(args.ack).toLowerCase())) console.log(`status: no application to "${args.ack}" in facts/applications.yaml; nothing acknowledged`);
   for (const w of warnings) console.log(`SENT   ${w}`);
-  for (const w of releaseWarnings()) console.log(`SHARED ${w}`);
+  const shared = releaseWarnings();
+  for (const w of shared) console.log(`SHARED ${w}`);
+  // Front-matter values still to confirm (work-summary-spec 3): the harvester or advisor asks about them.
+  const cfg = loadConfig();
+  let confirms = 0;
+  for (const f of readdirSync(rootPath(cfg.paths.summaries)).filter((x) => x.endsWith(".md")).sort()) {
+    const open = unconfirmedFields(readFileSync(rootPath(cfg.paths.summaries, f), "utf8"));
+    if (open.length) confirms++;
+    if (open.length) console.log(`CONFIRM ${cfg.paths.summaries}/${f}: ${open.join(", ")} (# TODO … confirm; /improve or /add-experience asks)`);
+  }
   // The public portfolio (plan 9e P3): only once a project is opted in or the file exists.
   const ps = portfolioStatus();
   const portfolioTodo: string[] = [];
@@ -142,6 +151,7 @@ if (isMain(import.meta.url)) {
   else if (todo.length > tailored.length) console.log(`\nstatus: ${todo.length - tailored.length} CV(s) to rebuild: run npm run build:all (or npm run build -- <file>)`);
   else if (todo.length) console.log(`\nstatus: ${todo.length} job-specific CV(s) to rebuild:`);
   else if (portfolioTodo.length) console.log("\nstatus: CVs are up to date; the portfolio needs work (above)");
+  else if (warnings.length || shared.length || confirms) console.log(`\nstatus: CVs and portfolio are up to date; ${warnings.length + shared.length + confirms} warning(s) above (SENT, SHARED, CONFIRM)`);
   else console.log("\nstatus: everything is up to date");
   // build:all skips job-specific CVs: name them.
   for (const t of tailored) console.log(`        job-specific CV: /tailor to rewrite it if entries are listed, then npm run build -- ${t}`);

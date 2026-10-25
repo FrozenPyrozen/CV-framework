@@ -73,3 +73,17 @@ test("harvest-prompt refuses to carry another summary's confidential term, excep
   assert.match(r.out, /confidential names.*"Zebracorn Suite" \(velas-wallet\)/);
   assert.equal(run("harvest-prompt.ts", dir, ["--merge", "velas-wallet", "--out", out]).code, 0);
 });
+
+test("harvest-prompt --merge allows a term the extended summary also lists; import-summary finds portfolio images", () => {
+  const dir = tempRepo();
+  const out = join(dir, "prompt.md");
+  const sec9 = (t: string) => t.replace("## 9. Confidentiality notes\n", "## 9. Confidentiality notes\n\n- term: Zebracorn Suite\n");
+  for (const id of ["velas-wallet", "omo-systems-smart-home"]) writeFileSync(join(dir, `summaries/${id}.md`), sec9(readFileSync(join(dir, `summaries/${id}.md`), "utf8")));
+  const r = run("harvest-prompt.ts", dir, ["--merge", "velas-wallet", "--out", out]);
+  assert.equal(r.code, 0, r.out); // the term is in velas-wallet's prompt and shared with omo-systems-smart-home
+  // A summary that links portfolio/assets images passes the check (the check copies the repo with them).
+  const s = sample(dir, "syspro-saas-erp");
+  const c = run("import-summary.ts", dir, [s]);
+  assert.equal(c.code, 0, c.out);
+  assert.doesNotMatch(c.out, /no such file|doesn't exist|not found/i);
+});

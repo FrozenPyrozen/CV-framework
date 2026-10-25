@@ -83,6 +83,11 @@ test("build --no-pdf renders the Word file with the CV template; a folder withou
   const b = run("cover-letter.ts", dir, ["build", DIR, "--no-pdf"]);
   assert.equal(b.code, 0, b.out);
   assert.ok(existsSync(join(dir, DIR, "Kirill_Kohan_Cover_Letter.docx")), b.out);
+  // Another market: its header, and the market's file suffix in the name (spec 1).
+  run("cover-letter.ts", dir, ["refresh", DIR, "--market", "ukraine"]);
+  const ua = run("cover-letter.ts", dir, ["build", DIR, "--market", "ukraine", "--no-pdf"]);
+  assert.equal(ua.code, 0, ua.out);
+  assert.ok(existsSync(join(dir, DIR, "Kirill_Kohan_Cover_Letter_UA.docx")), ua.out);
   const none = run("cover-letter.ts", dir, ["check", "cv/tailored/nothing-here"]);
   assert.equal(none.code, 2);
   assert.match(none.out.trim(), /^cover-letter: cv\/tailored\/nothing-here\/cv\.md not found: run \/tailor --jd/);
@@ -120,4 +125,18 @@ test("sentences that hand the ad back fail; an over-long sentence and no short o
   const r = run("cover-letter.ts", dir, ["check", DIR]).out;
   assert.match(r, /"your ad asks" reads as machine-written/);
   assert.match(r, /a \d+-word sentence \("I built core modules/);
+});
+
+test("check: a hidden client in any case, a ticket id, a forbidden character and an unknown word are errors", () => {
+  const dir = jobRepo();
+  run("cover-letter.ts", dir, ["refresh", DIR]);
+  writeBody(dir, [good[0], "I shipped a Jira plugin for velocity ai and closed VEL-123 in a week. <!-- src: designai-jira-plugin#4.1 -->",
+    "I led the map team of 8 engineers \u2014 for General Motors. <!-- src: general-motors-navigation#4.1 -->",
+    "I enjoy zorblefluxing large codebases. I work remotely from Kyiv. <!-- src: profile -->"]);
+  const r = run("cover-letter.ts", dir, ["check", DIR]);
+  assert.equal(r.code, 1, r.out);
+  assert.match(r.out, /confidential term "Velocity AI"/i);
+  assert.match(r.out, /ticket id with prefix "VEL-"/);
+  assert.match(r.out, /forbidden character "\u2014"/);
+  assert.match(r.out, /unknown word "zorblefluxing"/i);
 });

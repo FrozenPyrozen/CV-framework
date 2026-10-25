@@ -117,7 +117,7 @@ The body may start with one optional `# Title` line, then always has these nine 
 
 A section with nothing known yet contains `TODO (needs user input)`. **Never invent content to fill a section.**
 
-A required front-matter field with a fixed form (`engagement` and `cv_section` take a value from a list, `period` a date range) can't hold that text: it gets the most likely value with a `# TODO (needs user input): confirm` comment on the same line, and the summary stays `show_in_cv: false` until the user confirms it. The harvester or advisor asks about every such comment, and `validate` accepts the file meanwhile.
+A required front-matter field with a fixed form (`engagement` and `cv_section` take a value from a list, `period` a date range) can't hold that text: it gets the most likely value with a `# TODO (needs user input): confirm` comment on the same line, and the summary stays `show_in_cv: false` until the user confirms it. The harvester or advisor asks about every such comment, and `validate` accepts the file meanwhile: it warns while such a summary still has `show_in_cv` other than false, and `npm run status` lists every value still to confirm (`CONFIRM` lines).
 
 ### 3.1 Confidentiality notes format
 
@@ -198,5 +198,5 @@ When a repo can't be cloned to the laptop that holds this framework (for example
 4. **Import (here):** `npm run import-summary -- <file>` checks the file with the same rules as `validate` (schema, nine sections, numbering, tags, `repos` names only) plus the secret scan, without touching `summaries/`. With `--apply`, a new summary goes to `summaries/<id>.md`; for an existing id it goes to `.cv-runs/import/<id>.md`, and the harvester merges it by section 7 (`/import-summary`). Unknown tags are reported as proposals for the user to approve (they enter the tag list only through approval).
 5. **Then** the usual flow: `/compose`, `/variants`, `build:all`, `/review`.
 
-Rules: the prompt is generated, never edited by hand, so it always matches this spec and the tag list; it never carries another summary's confidentiality terms or hidden client names (`harvest-prompt` refuses, so this spec's examples stay made up); a portable summary is never trusted without `import-summary`; a portable merge follows section 7 exactly (existing numbers, user edits, `cv_*` fields and section 9 are kept).
+Rules: the prompt is generated, never edited by hand, so it always matches this spec and the tag list; it never carries another summary's confidentiality terms or hidden client names (`harvest-prompt` refuses, so this spec's examples stay made up), except, with `--merge`, a term the extended summary's own section 9 also lists (it is already known where the prompt goes); a portable summary is never trusted without `import-summary`; a portable merge follows section 7 exactly (existing numbers, user edits, `cv_*` fields and section 9 are kept).
 

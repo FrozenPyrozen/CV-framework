@@ -78,6 +78,9 @@ test("tailor: the role profile, the selection, master wording and only the selec
   assert.match(b, /^### 5\. Gap report[^\n]*\n[\s\S]*^## Strong evidence$[\s\S]*^## Selection disagreements$/m);
   assert.doesNotMatch(b, /^### 6\. Output/m);
   assert.match(b, /Entries in scope: [^\n]*velas-wallet \(selection changed\)/);
+  // Not changed: navigation-statistics keeps #4.5, which the master merges into its #4.1 bullet, and cites #5 on a
+  // bullet that isn't a Stack line.
+  assert.doesNotMatch(b, /Entries in scope: [^\n]*navigation-statistics/);
   assert.match(b, /Role profile \(`profiles\/react\.yaml`\)/);
   assert.match(b, /### Master CV wording \(`cv\/Kirill_Kohan_CV\.md` lines/);
   const contribs = [...b.matchAll(/^#### (velas-wallet#4\.\d+) /gm)].map((m) => m[1]).sort();
@@ -122,6 +125,8 @@ test("cover-letter, portfolio and advisor bundles: their Read first sections and
   assert.match(pb, /^#### navigation-poc#4\.1 /m);
   assert.match(pb, /- \*\*portfolio-poc-names-public\*\*/);
   assert.match(pb, /Other pages \(leave as they are\): syspro-saas-erp/);
+  assert.match(pb, /### Published portfolio text\n`sources\/text\/portfolio-2025-09\.md` \(`doc:portfolio-2025-09`\)/); // the newest imported portfolio
+  assert.match(cb, /also blocks every other summary's terms/);
   const bad = run("agent-context.ts", dir, ["portfolio", "--entry", "nope"]);
   assert.equal(bad.code, 2);
   assert.match(bad.out, /unknown portfolio page "nope"/);
@@ -134,6 +139,10 @@ test("cover-letter, portfolio and advisor bundles: their Read first sections and
   const ab = bundle(dir, a.out);
   assert.match(ab, /### `specs\/cv-spec\.md` \(Rules at a glance\)[\s\S]*### `specs\/work-summary-spec\.md` \(Rules at a glance\)/);
   assert.match(ab, /^## Open items \(`docs\/open-items\.md`\)$/m);
+  assert.match(ab, /^## Front-matter values to confirm[^\n]*\n\nNone\.$/m);
+  edit(dir, "summaries/velas-wallet.md", /^engagement: (.+)$/m, "engagement: $1  # TODO (needs user input): confirm");
+  const a2 = bundle(dir, run("agent-context.ts", dir, ["advisor", "reports/run"]).out);
+  assert.match(a2, /^- summaries\/velas-wallet\.md: `engagement: full-time` \(show_in_cv: true\)$/m);
   assert.match(ab, /^## Findings: `reports\/run\/hr\.md` \(pass, 8\)[\s\S]*\| hr-1 \| low \|[\s\S]*\| fact-check-1 \| medium \|/m); // ids with a hyphen too
   assert.match(ab, /^- \*\*keep-length\*\*: /m);
 });

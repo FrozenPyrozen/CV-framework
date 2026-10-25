@@ -9,7 +9,7 @@ import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { parse as parseYaml } from "yaml";
 import { basename, join, resolve as resolvePath } from "node:path";
 import {
-  isMain, PUBLIC_YES, SUMMARY_SECTIONS, loadConfig, loadConfirmed, loadDecisions, loadLocalConfig, loadMarkets, loadProfile, loadSkills, loadSummaries, readYaml, rootPath,
+  isMain, PUBLIC_YES, SUMMARY_SECTIONS, loadConfig, unconfirmedFields, loadConfirmed, loadDecisions, loadLocalConfig, loadMarkets, loadProfile, loadSkills, loadSummaries, readYaml, rootPath,
 } from "./lib/repo.ts";
 import { writeDigests } from "./digest.ts";
 import { DOC_REF, sourcesDir } from "./lib/sources.ts";
@@ -64,6 +64,9 @@ export function validateRepo(): Issue[] {
   check("decisions.schema.json", decisions, "facts/decisions.yaml");
   const decisionIds = (decisions?.decisions ?? []).map((d: any) => d.id);
   if (new Set(decisionIds).size !== decisionIds.length) err("facts/decisions.yaml", "duplicate decision ids");
+  // The release log (facts-spec 6) is written by npm run release; a hand edit that breaks it would only surface in status.
+  const releases = rootPath(cfg.paths.facts, "releases.yaml");
+  if (existsSync(releases)) check("releases.schema.json", readYaml(releases), "facts/releases.yaml");
 
   // --- summaries ---
   const summaries = loadSummaries(cfg);
@@ -75,6 +78,8 @@ export function validateRepo(): Issue[] {
   for (const s of summaries) {
     check("summary.schema.json", s.frontMatter, s.file);
     claimId(s.id, s.file);
+    const toConfirm = unconfirmedFields(readFileSync(rootPath(s.file), "utf8"));
+    if (toConfirm.length && s.frontMatter.show_in_cv !== false) warn(s.file, `${toConfirm.join(", ")} still to confirm (# TODO … confirm), but show_in_cv isn't false: keep it out of the CV until the user confirms (work-summary-spec 3)`);
     if (s.id !== basename(s.file, ".md")) err(s.file, `id "${s.id}" doesn't match the file name`);
     const titles = s.sections.map((x) => `${x.number}. ${x.title}`);
     const expected = SUMMARY_SECTIONS.map((t, i) => `${i + 1}. ${t}`);
@@ -314,7 +319,8 @@ export function validateRepo(): Issue[] {
       if (seenDocs.has(d.id)) err(srcIndex, `document id "${d.id}" appears more than once`);
       seenDocs.add(d.id);
       if (!d.file || !existsSync(rootPath(d.file))) err(srcIndex, `${d.id}: file ${d.file} is missing`);
-      else if (createHash("sha256").update(readFileSync(rootPath(d.file))).digest("hex") !== d.sha256) err(srcIndex, `${d.id}: ${d.file} changed since it was imported (sha256); import a new version under a new id`);
+      else if (createHash("sha256").update(readFileSync(rootPath(d.file))).digest("hex") !== d.sha256) err(srcIndex, `${d.id}: ${d.file} changed since it was imported (sha256): restore it with git checkout -- ${d.file} (opening it in Pages can re-save it), or import a new version under a new id`);
+      if (d.original_sha256 && d.original_sha256 === d.sha256) err(srcIndex, `${d.id}: original_sha256 is the same as sha256; it keeps the imported file's hash only after a recompression (sources-spec 6)`);
       if (!d.text || !existsSync(rootPath(d.text))) err(srcIndex, `${d.id}: text ${d.text} is missing (npm run import-doc writes it)`);
       if (d.media && !existsSync(rootPath(d.media))) err(srcIndex, `${d.id}: media folder ${d.media} is missing`);
     }

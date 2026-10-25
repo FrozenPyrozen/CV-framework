@@ -35,7 +35,7 @@ export function checkSummary(file: string): ImportResult {
   // The same rules as validate and lint's summary secret scan, run on a temporary copy of the repo.
   const tmp = mkdtempSync(join(tmpdir(), "cv-import-"));
   try {
-    for (const p of ["framework.config.yaml", "facts", "summaries", "schemas", "markets", "specs", "cv", "templates", "profiles", "sources"]) {
+    for (const p of ["framework.config.yaml", "facts", "summaries", "schemas", "markets", "specs", "cv", "templates", "profiles", "sources", "portfolio/assets"]) { // as tests/helpers.ts tempRepo: summaries link portfolio images
       if (existsSync(rootPath(p))) cpSync(rootPath(p), join(tmp, p), { recursive: true, mode: constants.COPYFILE_FICLONE }); // clones on APFS: sources/ is large
     }
     writeFileSync(join(tmp, cfg.paths.summaries, `${id}.md`), text);

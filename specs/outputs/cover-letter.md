@@ -16,7 +16,7 @@ The essentials, each stated in full in the section named.
 ## 1. Inputs and place
 
 - **Folder:** a job-specific CV folder, `cv/tailored/<company-role>/` (git-ignored, `specs/tailoring-spec.md` 6), made by `/tailor --jd` first. Its `job-description.md`, `jd-tags.yaml`, `cv.md` and `gap-report.md` are the inputs, with the summaries and `facts/`.
-- **File:** `cover-letter.md` in that folder; the built files are `<Name>_Cover_Letter.docx`, `.pdf` and `cover-letter-check.md`, with page images in `preview/cover-letter/`.
+- **File:** `cover-letter.md` in that folder; the built files are `<Name>_Cover_Letter<suffix>.docx`, `.pdf` (`<suffix>` is the market's `file_suffix`, e.g. `_UA`; none for the default market) and `cover-letter-check.md`, with page images in `preview/cover-letter/`.
 - **Market:** the tailored CV's market (default market unless `--market`), so the header matches the CV that goes with it.
 
 ## 2. Format

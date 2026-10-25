@@ -1,8 +1,8 @@
 # Facts Spec
 
-Status: v1 · Applies to: `facts/profile.yaml`, `facts/confirmed.yaml`, `facts/skills.yaml`, `facts/decisions.yaml` the optional, git-ignored `facts/applications.yaml` and `facts/releases.yaml`; written by the advisor (`/add-experience`, `/profile`, `/job-change`, `/improve`), `/harvest` (identities, skills), `npm run log-application` and `npm run release`
+Status: v1 · Applies to: `facts/profile.yaml`, `facts/confirmed.yaml`, `facts/skills.yaml`, `facts/decisions.yaml`, the optional, git-ignored `facts/applications.yaml` and the optional `facts/releases.yaml` (in git); written by the advisor (`/add-experience`, `/profile`, `/job-change`, `/improve`), `/harvest` (identities, skills), `npm run log-application` and `npm run release`
 
-The facts files hold what no repo history shows. Their structure is checked by `npm run validate` against `schemas/` (`profile`, `confirmed`, `skills`, `decisions`); this spec gives the meaning and the rules. Every file except the application log carries `schema_version`.
+The facts files hold what no repo history shows. Their structure is checked by `npm run validate` against `schemas/` (`profile`, `confirmed`, `skills`, `decisions`, `releases`); this spec gives the meaning and the rules. Every file except the application log carries `schema_version`.
 
 ## 1. Personal profile (`facts/profile.yaml`)
 
@@ -122,7 +122,7 @@ Records what each recruiter received, so "which CV did I send them?" has an answ
 
 ## 6. Releases (`facts/releases.yaml`, optional)
 
-The CV and portfolio versions you accepted and shared (the PDF behind the portfolio link in the header, the CV you hand out), so "is the shared copy current?" has an answer. `npm run release [--note "<text>"]` adds an entry after a build; it refuses while the master CV or the portfolio is out of date (`npm run status`) or tracked files have uncommitted changes, so the commit names the sources. It's in git: nothing in it is private.
+The CV and portfolio versions you accepted and shared (the PDF behind the portfolio link in the header, the CV you hand out), so "is the shared copy current?" has an answer. `npm run release [--note "<text>"]` adds an entry after a build; it refuses while the master CV or the portfolio is out of date (`npm run status`) or tracked files have uncommitted changes, so the commit names the sources. It's in git: nothing in it is private. `validate` checks it against `schemas/releases.schema.json`.
 
 ```yaml
 schema_version: 1
@@ -138,4 +138,4 @@ releases:                                       # newest last
         exporter: pages
 ```
 
-`npm run status` compares the latest release with the current Markdown: when a released file's text changed, it says to build, share the new PDF and run `npm run release` again. A rebuild with the same text isn't reported (exporters write slightly different PDFs each time). Sources are untouched: a release is a record of an output, never a source (`sources-spec.md` 3).
+`npm run status` compares the latest release with the current Markdown (the whole file, so a change only to `src` comments counts too): when a released file's Markdown changed, it says to build, share the new PDF and run `npm run release` again. A rebuild with the same text isn't reported (exporters write slightly different PDFs each time). Sources are untouched: a release is a record of an output, never a source (`sources-spec.md` 3).

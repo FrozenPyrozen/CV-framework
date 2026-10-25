@@ -3,7 +3,7 @@
 // sources/files/<id>.<ext>, extracts its text to sources/text/<id>.md and adds it to sources/index.yaml. It changes no
 // summary: /import-docs (agents/advisor.md) proposes what the document adds, with the lowest precedence.
 import { createHash } from "node:crypto";
-import { copyFileSync, cpSync, existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { copyFileSync, cpSync, existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync, statSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { basename, extname, join, relative } from "node:path";
 import { stringify } from "yaml";
@@ -21,6 +21,8 @@ export const suggestId = (file: string, date: string) => {
 export async function importDoc(file: string, opts: { date: string; kind?: string; id?: string; title?: string; today?: string }): Promise<SourceDoc> {
   if (!existsSync(file)) throw new Error(`file not found: ${file}`);
   const ext = extname(file).toLowerCase();
+  // Its hash and copy need one file: a document saved as a folder (package) is refused, not half-imported.
+  if (statSync(file).isDirectory()) throw new Error(`${basename(file)} is a folder (a package): in Pages choose File > Advanced > Change File Type > Single File, or export it to PDF, then import that`);
   if (!EXTRACTABLE.includes(ext)) throw new Error(`${basename(file)}: ${ext || "no extension"} can't be read; export it to PDF first (accepted: ${EXTRACTABLE.join(", ")}; .pages needs Pages on macOS)`);
   if (!/^\d{4}(-(0[1-9]|1[0-2]))?$/.test(opts.date ?? "")) throw new Error(`--date must be YYYY-MM or YYYY (when the document was written), got "${opts.date ?? ""}"`);
   const kind = opts.kind ?? (/portfolio/i.test(basename(file)) ? "portfolio" : /\b(cv|resume|résumé)\b|_cv/i.test(basename(file)) ? "cv" : undefined);

@@ -24,6 +24,7 @@
           "original_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
           "recompressed": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" }
         },
+        "dependentRequired": { "original_sha256": ["recompressed"], "recompressed": ["original_sha256"] },
         "additionalProperties": false
       }
     }

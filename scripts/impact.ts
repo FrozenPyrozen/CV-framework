@@ -82,7 +82,9 @@ export function impact(changes: Change[], since = "HEAD"): ImpactFinding[] {
     const name = basename(p, ".md");
     if (!existsSync(rootPath(".claude", "agents", `${name}.md`))) add("error", "I4", `${p} is new but .claude/agents/${name}.md (its Claude wrapper) is missing`);
     if (!workflows.includes(p)) add("error", "I4", `${p} is new but docs/workflows.md names no command that follows it`);
-    if (!plan.includes(p)) add("error", "I4", `${p} is new but docs/plan.md section 5 (agents) doesn't list it`);
+    // Section 5 only (up to the next "## " heading): a mention elsewhere in the plan isn't a row in the agents table.
+    const agentsTable = plan.match(/^## 5\.[^\n]*\n([\s\S]*?)(?=^## )/m)?.[1] ?? "";
+    if (!agentsTable.includes(p)) add("error", "I4", `${p} is new but docs/plan.md section 5 (agents) doesn't list it`);
     if (!/^## Read first$/m.test(read(p))) add("error", "I4", `${p} has no "## Read first" list (AGENTS.md rule 1)`);
   }
   // I5. A new command: docs/workflows.md has its row.

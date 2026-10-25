@@ -5,7 +5,7 @@ description: Talks with the user, one topic at a time, to turn review findings, 
 **Never commits.**
 
 ## Read first
-- The `npm run agent-context -- advisor [<reports dir>]` bundle: it holds the rules for every agent, the spec sections below, the open items, the decisions and facts already recorded, the entries and the reports' findings; read the files themselves only without it
+- The `npm run agent-context -- advisor [<reports dir>]` bundle: it holds the rules for every agent, the spec sections below, the open items, the front-matter values to confirm, the decisions and facts already recorded, the entries and the reports' findings; read the files themselves only without it
 - `AGENTS.md` (rules for every agent) and `docs/open-items.md`
 - `specs/facts-spec.md` 2 and 4 (confirmed facts and decisions: what you write)
 - *Rules at a glance* of `specs/cv-spec.md` and of `specs/work-summary-spec.md`
@@ -41,13 +41,13 @@ After writing, run `npm run validate`, then hand the change list to `agents/comp
 
 ## `/improve [report…]`
 1. Run `npm run agent-context -- advisor <reports dir>` (default: the latest `reports/<run>/`) and read `.cv-runs/agent-context/advisor.md`: the findings, open items, decisions and facts in one file. Open a full report only for a finding's details.
-2. Group findings into topics (e.g. "SYSPRO numbers", "jargon in the first bullets"), high severity first. Skip findings already listed as *Decided*.
+2. Group findings into topics (e.g. "SYSPRO numbers", "jargon in the first bullets"), high severity first. Skip findings already listed as *Decided*. The bundle's *Front-matter values to confirm* (`status`'s `CONFIRM` lines) are a topic of their own, asked first: for each, confirm or correct the value, drop the `# TODO … confirm` comment, and set `show_in_cv` back to true only if the user wants the job in the CV.
 3. Per topic: ask, record the answer as above. Findings the user declines become decisions, so later reviews don't raise them again.
 4. Hand the change list to the composer, then `npm run check` and show the diff. Suggest `/review` again for the rubrics that had high findings.
 
 ## `/add-experience`
 1. Let the user describe the work in their own words (e.g. "technical interviewing, legacy React Native audits, presales").
-2. Ask follow-up questions: which job (an existing entry, or a new `cv_entry` for work without a repo), period, scale, results and numbers (only real ones), technologies.
+2. Ask follow-up questions: which job (an existing entry, or a new `cv_entry` for work without a repo), period, scale, results and numbers (only real ones), technologies. If that job's summary has a value still to confirm (`npm run status`, `CONFIRM`), ask about it here too, as in `/improve` step 2.
 3. Write one fact per CV-worthy claim (with `entry` and `tags`), or a `cv_entry` plus its facts. Propose new tags if needed.
 4. Hand over to the composer to add the bullets.
 
@@ -75,7 +75,7 @@ Fills section 8 (portfolio material) of the summaries and opts projects into the
 1. The user describes a change ("moved to Poland, new phone +48…").
 2. Ask what follows from it: work permit (`work_authorization`), still B2B, new time zone and overlaps, relocation, whether each market file still fits (e.g. a Poland market).
 3. Update `facts/profile.yaml` (and markets if agreed), `npm run validate`, then `/variants` (it ends with `npm run build:all`).
-4. List tailored CVs (`cv/tailored/`, rebuilt with `npm run build -- <cv>`) and CVs already sent with the old details (from `npm run status` and `facts/applications.yaml`).
+4. List tailored CVs (`cv/tailored/`, rebuilt with `npm run build -- <cv>`), CVs already sent with the old details (from `npm run status` and `facts/applications.yaml`), and the shared release (`SHARED` lines of `npm run status`: the PDF behind the header's portfolio link and the CV you hand out need sharing again, then `npm run release`).
 
 ## `/job-change`
 - **Leaving:**
@@ -83,4 +83,4 @@ Fills section 8 (portfolio material) of the summaries and opts projects into the
   2. Set `period.end` in the summary, ask for final results and metrics while the user still remembers them (facts or summary section 7), ask whether the entry stays in its section, and update `team_size_led` if it changed.
   3. Tell the user they can delete the local clones and remove their paths from `framework.local.yaml` once access ends (`doctor` will then show those repos as *info*).
 - **Starting:** create the new job as a `source: user` summary (client, label, role, real employment type, period with `end: present`, location, section, what they'll own). Unknown sections are `TODO (needs user input)`; `/harvest` enriches it later.
-- **Then:** `npm run validate`, the composer, `/variants`, `npm run status`, and list sent CVs that are now outdated.
+- **Then:** `npm run validate`, the composer, `/variants`, `npm run status`, and list sent CVs that are now outdated and the shared release if its text changed (`SHARED` lines).

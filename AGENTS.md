@@ -6,8 +6,8 @@ Entry point for any AI agent working in this repo (Claude Code, Codex, Cursor, G
 
 A local, specification-driven framework that keeps Kirill Kohan's CV current, traceable and ready to send:
 
-- **Sources:** work summaries (`summaries/*.md`, one per job or project), confirmed facts and decisions (`facts/`), role profiles (`profiles/`), markets (`markets/`), templates (`templates/`), `framework.config.yaml`.
-- **Outputs:** the master CV (`cv/<Name>_CV.md`), role variants (`cv/variants/<profile>/cv.md`), job-specific CVs (`cv/tailored/<company-role>/cv.md`), and their Word, PDF and preview files for every market.
+- **Sources:** work summaries (`summaries/*.md`, one per job or project), confirmed facts and decisions (`facts/`), role profiles (`profiles/`), markets (`markets/`), templates (`templates/`), `framework.config.yaml`, and imported old CVs and portfolios (`sources/`, which only fill gaps).
+- **Outputs:** the master CV (`cv/<Name>_CV.md`), role variants (`cv/variants/<profile>/cv.md`), job-specific CVs (`cv/tailored/<company-role>/cv.md`) with their cover letters (`cover-letter.md`), the public portfolio (`portfolio/portfolio.md`), and their Word, PDF and preview files.
 - **Deterministic work is done by scripts** (`npm run …`). **AI agents only write and judge**, following the specs.
 
 The full design is in `docs/plan.md`. The rules are in `specs/`.
@@ -43,11 +43,13 @@ The full design is in `docs/plan.md`. The rules are in `specs/`.
 | `docs/changelog.md` | one row per change to the framework; add a row for every change |
 | `docs/open-items.md` | things the user will add or answer later (not facts yet); the advisor reads and updates it |
 | `docs/acceptance.md` | acceptance checklist, rerun after any spec or agent change (written in build step 10) |
-| `specs/` | rules for CVs, summaries, facts, tailoring, templates, review reports; `specs/rubrics/` for reviewers |
+| `specs/` | rules for CVs, summaries, facts, tailoring, templates, review reports, sources, portability and alignment; `specs/outputs/` for the portfolio and cover letters; `specs/rubrics/` for reviewers |
 | `agents/` | one definition per agent (tool-neutral) |
-| `facts/` | `profile.yaml`, `confirmed.yaml`, `skills.yaml`, `decisions.yaml` (and the git-ignored `applications.yaml`) |
+| `facts/` | `profile.yaml`, `confirmed.yaml`, `skills.yaml`, `decisions.yaml`, `dictionary.txt` (spell check), `releases.yaml` (shared versions, `npm run release`), and the git-ignored `applications.yaml` |
 | `summaries/` | work summaries; `.digests/` generated |
 | `cv/` | CVs; built files and `markets/`, `tailored/`, `sent/` are git-ignored |
+| `portfolio/` | the public portfolio's text (`portfolio.md`) and images (`assets/`); built files are git-ignored |
+| `sources/` | imported documents: originals (`files/`), extracted text and images, `index.yaml` (`specs/sources-spec.md`) |
 | `reports/` | reviewer reports |
 | `.cv-runs/` | per-run working files (git digests, snapshots, run state), git-ignored |
 

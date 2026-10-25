@@ -62,7 +62,7 @@ For each changed area, the auditor opens the spec sections it touches (by the *R
 
 ## 5. Report
 
-The auditor writes `.cv-runs/align/<YYYY-MM-DD-HHmm>.md` (git-ignored) and returns its summary:
+The auditor writes `.cv-runs/align/<YYYY-MM-DD-HHmm>.md` (git-ignored; `<YYYY-MM-DD-HHmm>-<area>.md` when several auditors split one audit by area, so their reports don't collide) and returns its summary:
 
 ```markdown
 # Alignment: <base>..<working tree or ref>

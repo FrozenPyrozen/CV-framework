@@ -1,6 +1,6 @@
 # Portability Spec
 
-Status: v1 · 2026-10-16 · Applies to: moving the framework to another laptop, `npm run backup`, `npm run restore`
+Status: v1 · 2026-10-25 · Applies to: moving the framework to another laptop, `npm run backup`, `npm run restore`
 
 The framework must run on any laptop. This spec defines what moves, how, and what each laptop sets up for itself. The design background is in `docs/plan.md` section 9a.
 
@@ -9,10 +9,10 @@ The framework must run on any laptop. This spec defines what moves, how, and wha
 | Kind | Examples | How it travels |
 |---|---|---|
 | Committed files | summaries, facts, profiles, specs, agents, templates, config, CV Markdown, reports | git: a private remote, or the repo bundle in a full archive (section 3) |
-| Private files, not in git | `cv/tailored/` (job ads, tailored CV Markdown, `jd-tags.yaml`, gap reports; their built files are left out), `cv/sent/`, `facts/applications.yaml` | a backup (section 2), also inside a full archive |
+| Private files, not in git | `cv/tailored/` (job ads, tailored CV and cover-letter Markdown, `jd-tags.yaml`, gap reports; their built files, CV and cover letter alike, are left out), `cv/sent/`, `facts/applications.yaml` | a backup (section 2), also inside a full archive |
 | Open items and pending answers | `docs/open-items.md` | git, like every other committed file. Nothing the framework needs lives only in an AI tool's memory on one laptop |
-| Per-laptop settings | `framework.local.yaml` (repo paths, backup folder, exporter order) | not moved as settings: each laptop writes its own from `framework.local.example.yaml`; a backup carries the old file only for reference (section 4) |
-| Recreated on each laptop | `node_modules/`, built files (`.docx`, `.pdf`, `pdf-check.md`, `preview/`, `markets/`, `cv/.build-state.json`), `selection.json`, `summaries/.digests/`, `.cv-runs/` | never moved: `npm ci`, `npm run validate` and `npm run build:all` recreate them (`selection.json` by `npm run select`, which `/variants` and `/tailor` run) |
+| Per-laptop settings | `framework.local.yaml` (repo paths, backup folder, exporter order), `framework.local.previous.yaml` (written by restore), `.claude/*.local.*` (an AI tool's per-laptop preferences) | not moved as settings: each laptop writes its own from `framework.local.example.yaml`; a backup carries the old file only for reference (section 4) |
+| Recreated on each laptop | `node_modules/`, built files (`.docx`, `.pdf`, `pdf-check.md`, `preview/`, `markets/`, `cv/.build-state.json`; the portfolio's `.docx`, `.pdf`, `.pages`, `pdf-check-<size>.md` and previews; a job folder's built cover-letter files, while `cover-letter.md` travels in the backup), `selection.json`, `summaries/.digests/`, `.cv-runs/` | never moved: `npm ci`, `npm run validate`, `npm run build:all`, `npm run build:portfolio` and `npm run cover-letter -- build <dir>` recreate them; a portable summary waiting in `.cv-runs/import/` is merged before moving (or brought back again) (`selection.json` by `npm run select`, which `/variants` and `/tailor` run) |
 | Archives | `backups/` | never inside another archive |
 
 **Never move `node_modules/`.** It holds native binaries built for one OS and CPU (`@napi-rs/canvas`); `npm ci` installs the right ones from `package-lock.json`.
@@ -42,7 +42,7 @@ Rules:
 ## 4. Restore
 
 `npm run restore -- <archive> [--force]`, run inside the project folder:
-- unpacks a backup (`.zip`, or `.zip.enc` with the same password variable), a full archive (it restores the private backup inside it), or the `private-backup.zip[.enc]` taken out of one;
+- unpacks a backup (`.zip`, or `.zip.enc` with the password in the variable named by `backup_password_env`, or in `CV_BACKUP_PASSWORD`, which works before `framework.local.yaml` exists), a full archive (it restores the private backup inside it), or the `private-backup.zip[.enc]` taken out of one;
 - writes only backup paths, never anything else;
 - never overwrites a local file that is newer; it lists those conflicts, and `--force` overwrites them;
 - **never writes `framework.local.yaml`.** The archived file is saved as `framework.local.previous.yaml` (git-ignored), and restore says so: copy what still applies (backup folder, exporter order) into this laptop's `framework.local.yaml`. Repo paths usually differ per laptop, and repos you no longer have access to are left out (their summaries are the record).
@@ -63,7 +63,7 @@ Rules:
    git remote remove origin            # origin points at the bundle file; drop it
    npm ci
    ```
-3. Restore the private files: `npm run restore -- ../private-backup.zip` (or `.zip.enc`, with the password variable set).
+3. Restore the private files: `npm run restore -- ../private-backup.zip` (or `.zip.enc`, with `CV_BACKUP_PASSWORD` set to its password: `framework.local.yaml` comes in step 4).
 4. `cp framework.local.example.yaml framework.local.yaml`, set this laptop's repo paths and backup folder (see `framework.local.previous.yaml` if a restore created it).
 5. `npm run doctor` and fix what it reports, then `npm run build:all`, `npm run build:portfolio` (the portfolio's check record is local, so it is checked and built again) and `npm run status`.
 6. **Connect a remote** (when you have one): `git remote add origin <private url>` and `git push -u origin --all && git push origin --tags`. Before the first push, check that the history holds nothing you don't want on that server (see section 6).
@@ -76,5 +76,5 @@ Rules:
 
 ## 7. Checks
 
-- `npm run doctor` on the new laptop: Node version, exporters, fonts (by a real test export), repo paths from `framework.local.yaml`.
+- `npm run doctor` on the new laptop: Node version, exporters, fonts (the CV template's by a real test export; the portfolio template's by the system font folders only, and its `pdf-check` fails on a substitute), repo paths from `framework.local.yaml`.
 - `docs/acceptance.md` C1 runs route B on one machine (a fresh folder stands in for the new laptop); route A is the same from step 3 (the restore).

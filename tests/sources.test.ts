@@ -1,10 +1,12 @@
 // Imported documents (specs/sources-spec.md): import-doc and the validate checks for sources and doc:<id>.
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { appendFileSync, existsSync, readFileSync, writeFileSync } from "node:fs";
+import { appendFileSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
 import { createHash } from "node:crypto";
 import { join } from "node:path";
 import { edit, REPO, run, tempRepo } from "./helpers.ts";
+import { pagesWorkCopy } from "../scripts/lib/sources.ts";
 import { parseSummary } from "../scripts/lib/repo.ts";
 
 const OLD_CV = join(REPO, "templates/classic/source.docx");
@@ -34,6 +36,8 @@ test("import-doc refuses the same file twice, unreadable types, a missing date a
   assert.match(run("import-doc.ts", dir, [md, "--kind", "portfolio"]).out, /--date must be YYYY-MM or YYYY/);
   assert.match(run("import-doc.ts", dir, [md, "--date", "2022"]).out, /almost no text/);
   assert.ok(!existsSync(join(dir, "sources/files/portfolio-2022.md")));
+  mkdirSync(join(dir, "pkg.pages/Data"), { recursive: true });
+  assert.match(run("import-doc.ts", dir, [join(dir, "pkg.pages"), "--date", "2020", "--kind", "portfolio"]).out, /pkg\.pages is a folder \(a package\)/);
 });
 
 test("a newer document is listed first; the kind is read from the file name", () => {
@@ -103,5 +107,27 @@ test("a losslessly recompressed original keeps its id; import-doc still refuses 
   assert.match(importCv(dir, ["--id", "other"]).out, /already imported as "cv-2025-10"/);
   edit(dir, "sources/index.yaml", "recompressed: 2026-10-25", "recompressed: October");
   assert.equal(run("validate.ts", dir).code, 1);
+  edit(dir, "sources/index.yaml", "\n    recompressed: October", "");
+  assert.match(run("validate.ts", dir).out, /must have property recompressed when property original_sha256 is present/);
+  edit(dir, "sources/index.yaml", `original_sha256: ${before}`, `original_sha256: ${sha(file)}\n    recompressed: 2026-10-25`);
+  assert.match(run("validate.ts", dir).out, /original_sha256 is the same as sha256/);
   assert.ok(readFileSync(idx, "utf8").includes("original_sha256"));
+});
+
+test("Pages works on a copy of a .pages document (a zip file or a package folder), never on the original", () => {
+  const base = mkdtempSync(join(tmpdir(), "cv-pages-base-"));
+  const src = mkdtempSync(join(tmpdir(), "cv-pages-src-"));
+  try {
+    writeFileSync(join(src, "old.pages"), "zip bytes");
+    const a = pagesWorkCopy(join(src, "old.pages"), base);
+    assert.ok(a.copy.startsWith(base) && a.copy.endsWith(".pages"));
+    assert.equal(readFileSync(a.copy, "utf8"), "zip bytes");
+    mkdirSync(join(src, "pkg.pages/Data"), { recursive: true });
+    writeFileSync(join(src, "pkg.pages/Data/x.png"), "png");
+    const b = pagesWorkCopy(join(src, "pkg.pages"), base);
+    assert.equal(readFileSync(join(b.copy, "Data/x.png"), "utf8"), "png");
+  } finally {
+    rmSync(base, { recursive: true, force: true });
+    rmSync(src, { recursive: true, force: true });
+  }
 });

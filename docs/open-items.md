@@ -13,7 +13,7 @@ Kept in the repo (not in any AI tool's memory) so it travels to every laptop (`s
 | OMO leadership | The CV's "Team Leader, led and mentored a team of about 3 engineers" stays for now; the April 2025 portfolio said "tech lead for a sprint of the frontend team". You'll share more details | `omo-systems-smart-home` 4.5 and section 3 | 2026-10-22 |
 | GM details | The portfolio's description is used for now (phone companion app for owners, map team of 8: 6 React Native, 1 iOS, 1 Android); you'll share more | `general-motors-navigation` | 2026-10-22 |
 | Admasters stack | Which technologies did the Full-Stack Engineer and Team Leader role use (backend too)? Its bullets name none (review 2026-10-23-1705) | `admasters-ecommerce` summary section 5 and its bullets | 2026-10-23 |
-| Other work projects | You'll run the portable harvest prompt (`npm run harvest-prompt`, `.cv-runs/harvest-prompt-2026-10-23.md`) on the other machines and bring the summaries back for `/import-summary` | new `summaries/<id>.md`, then `/compose` and `/variants` | 2026-10-23 |
+| Other work projects | You'll run the portable harvest prompt (generate it with `npm run harvest-prompt`, or `/harvest-prompt --merge <id>` for an existing summary) on the other machines and bring the summaries back for `/import-summary` | new `summaries/<id>.md`, then `/compose` and `/variants` | 2026-10-23 |
 | HERE period and employer | The HERE navigation work (`navigation-statistics`, `navigation-poc`) began as a GM project and continued in the HERE team: who employed you there, and from when to when? The summaries keep provisional commit dates (2024-10 to 2025-02; 2025-07 to 2026-10, which overlaps SYSPRO); the consulting section shows no dates. Also team size and collaborators (TODO in both) | both summaries' `period`, `engagement`, sections 1, 3 and 7 | 2026-10-23 |
 | PoC assisted-driving icons | "Migrated assisted-driving status icons and notifications" (PoC bullet in the react and nodejs variants): migrated to what? (proofreading 2026-10-24) | `navigation-poc` 4.4 | 2026-10-24 |
 | ERP smart-tag fixtures | "ERP smart-tag fixtures and view-management routes" (SYSPRO, nodejs variant): a plain way to say what they are? (proofreading 2026-10-24) | `syspro-saas-erp` 4.11 | 2026-10-24 |
@@ -26,6 +26,17 @@ Kept in the repo (not in any AI tool's memory) so it travels to every laptop (`s
 | Item | Question | Where it goes | Since |
 |---|---|---|---|
 | OMO description | The OMO page repeats video surveillance and motion-sensor scenarios; what did "traffic monitoring" mean for a home? (proofreading-4) | `omo-systems-smart-home` and its portfolio text | 2026-10-23 |
+| First release | You chose to record the current CV and portfolio as the accepted, shared versions: after sharing the PDFs (the Drive file behind the portfolio link), run `npm run release` on a committed tree and commit `facts/releases.yaml` | `facts/releases.yaml` (`specs/facts-spec.md` 6) | 2026-10-25 |
+
+## Framework decisions (from the alignment audits, 2026-10-25)
+
+| Item | Question | Where it goes | Since |
+|---|---|---|---|
+| HERE summaries' employer and period | `navigation-poc` and `navigation-statistics` show in the CV while their employer and period are still open: confirm them, or mark them `# TODO (needs user input): confirm` with `show_in_cv: false` until you do (work-summary-spec 3) | the two summaries' front matter, or a decision | 2026-10-25 |
+| Portfolio phone | The portfolio spec allows the phone on the cover with decision `portfolio-show-phone`, but refresh never writes it: implement it, or drop the exception (specs/outputs/portfolio.md 1 and 4) | the portfolio spec, `scripts/portfolio.ts` | 2026-10-25 |
+| Arial in `classic` | `classic`'s `fonts:` lists Arial, which only its page header uses (and `strip_header_text` empties); the fonts rule says only the fonts the visible text uses: document the header exception, or drop Arial | `specs/templates.md` 2, `templates/classic/style-map.yaml` | 2026-10-25 |
+| Changelog for non-framework files | Should changes to `README.md`, `.gitignore`, `.claude/settings.json`, `.nvmrc`, `tsconfig.json` and `framework.local.example.yaml` also need a changelog row (`npm run impact` I1)? | `specs/alignment-spec.md` 3, `scripts/impact.ts` | 2026-10-25 |
+| Stray CNS file | `sources/media/portfolio-2025-04/.claude/cns-preferences.local.md` (git-ignored) belongs to another project: delete it | delete by hand | 2026-10-25 |
 
 ## Questions from the first review (`reports/2026-10-16-1201/`)
 
