@@ -78,7 +78,7 @@ The structure of the **published portfolio** (`doc:portfolio-2025-09`, the user'
 2. **Pages**, one per opted-in summary or per entry of its `portfolio_projects`, in `portfolio_order` (pages of one summary in their listed order), each starting with `<!-- project: <id> -->`:
    - the title (generated `project-<id>`): the product, the client where it may be named (or "under NDA"), and the main technologies, as on the published portfolio (`portfolio_title` or the page's title); no separate client, role or date line;
    - the agent's **description** (what the product is, who uses it, its features);
-   - the screenshots (generated `media-<id>`, right after the description, in rows): only the section 8 items marked public, without printed captions (the caption is the image's description, its alt text);
+   - the screenshots (generated `media-<id>`, right after the description, in rows): only the section 8 items marked public, without printed captions (the caption is the image's description, its alt text); the same block lists the page's public links (store pages, websites) and a `Demo:` line for a public demo;
    - **Responsibilities** (agent): one or two prose paragraphs, as on the published portfolio;
    - **Technologies and frameworks** (agent): a comma-separated list.
    **No dates or periods anywhere**; the CV carries the dates. **Length:** each page fits one page with its screenshots (up to about 400 words; SYSPRO two pages, decision `syspro-portfolio-two-pages`); `portfolio check` warns above `checks.portfolio_max_project_words`.
@@ -130,7 +130,7 @@ The fonts are macOS system fonts: the PDF is exported through Pages (first in `p
 
 ## 7. Updates
 
-- `npm run status` lists the portfolio: projects to write (placeholders), projects to rewrite (what the project was written from changed: summary sections 1–5 and 7, its public section 8 items, role, label, title or `portfolio_max_items`; recorded by each passing `portfolio check`), generated parts out of date (`profile.yaml` links, `portfolio.cover_links`/`portfolio.name`, images or titles changed: `npm run portfolio -- refresh`), changes not yet checked, and Word, Pages and PDF files older than `portfolio.md` (`npm run build:portfolio`).
+- `npm run status` lists the portfolio: projects to write (placeholders), projects to rewrite (what the project was written from changed: summary sections 1–5 and 7, its public section 8 items, role, label, title or `portfolio_max_items`; recorded by each passing `portfolio check`), generated parts out of date (`profile.yaml` links, `portfolio.cover_links`/`portfolio.name`, images or titles changed, or a project left the portfolio: `npm run portfolio -- refresh`), changes not yet checked, and Word, Pages and PDF files older than `portfolio.md` (`npm run build:portfolio`).
 - A project whose sources changed but whose text still fits: `npm run portfolio -- check --projects-reviewed`.
 - `/portfolio` rewrites only the stale projects and keeps the wording of the rest (`cv-spec.md` 12, same rule).
 - A new project appears only after `show_in_portfolio: true` is set with the user.

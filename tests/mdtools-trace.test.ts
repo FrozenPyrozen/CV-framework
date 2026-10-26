@@ -144,3 +144,33 @@ test("round 2 audit: abbreviations don't split sentences; empty summary; unknown
   assert.equal(s.code, 2);
   assert.match(s.out, /unknown tag\(s\) in jd-tags\.yaml: react-nativ/);
 });
+
+test("trace fails on unsourced text inside an entry: a paragraph, a second ### line, text after a source comment", () => {
+  const dir = refreshed();
+  writeFileSync(join(dir, "cv/stray.md"), [
+    "# **EXPERIENCE**", "",
+    "<!-- entry: velas-wallet -->", "## **Technical Leader**", "", "### **Velas | Remote**", "",
+    "* Good bullet. <!-- src: velas-wallet#4.2 -->", "",
+    "Also grew revenue tenfold.", "",
+    "### **Shipped to 2M users**", "",
+    "* Another bullet. <!-- src: velas-wallet#4.1 --> And won an award.", "",
+    "<!-- a comment alone is fine -->", "",
+    "<!-- a note that", "spans two lines -->", "",
+    "<!-- * Old bullet. <!-- src: velas-wallet#4.3 --> -->", "",
+  ].join("\n"));
+  const r = run("trace.ts", dir, ["cv/stray.md"]);
+  assert.equal(r.code, 1, r.out);
+  assert.match(r.out, /text inside an entry that isn't a bullet, without a source: "Also grew revenue tenfold\."/);
+  assert.match(r.out, /a second ### line in the entry, without a source: "Shipped to 2M users"/);
+  assert.match(r.out, /text after the bullet's source comment, without a source: "And won an award\."/);
+  assert.match(r.out, /3 unsourced or unresolved claim\(s\)/);
+});
+
+test("reattach-src refuses the portfolio: it works on CVs only", () => {
+  const dir = refreshed();
+  mkdirSync(join(dir, "portfolio"), { recursive: true });
+  writeFileSync(join(dir, "portfolio/portfolio.md"), "# My Portfolio\n\nSome text. <!-- src: velas-wallet#4.1 -->\n");
+  const r = run("reattach-src.ts", dir, ["portfolio/portfolio.md", "--save"]);
+  assert.equal(r.code, 2);
+  assert.match(r.out, /is in portfolio\/; it works on CVs only/);
+});

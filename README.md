@@ -9,7 +9,7 @@ Kirill Kohan's CV, kept current by a local, specification-driven framework. Work
 | Master CV | `cv/Kirill_Kohan_CV.md` | `.docx`, `.pdf`, `pdf-check.md`, `preview/` |
 | Role variants (react, react-native, fullstack-react-node, nodejs) | `cv/variants/<profile>/cv.md` + `gap-report.md` | the same, named `Kirill_Kohan_CV_<Profile>.pdf` |
 | Ukraine versions of each (no phone, availability, time zones or "(Contract)"; the master's headline without "(Frontend and Mobile)") | generated | `markets/ukraine/…_UA.pdf` |
-| CVs for one job ad (`/tailor --jd`) | `cv/tailored/<company-role>/` (git-ignored) | `Kirill_Kohan_CV.pdf` in that folder |
+| CVs for one job ad (`/tailor --jd`; not part of `build:all`, built by name with `npm run build -- <file>`) | `cv/tailored/<company-role>/` (git-ignored) | `Kirill_Kohan_CV.pdf` in that folder |
 
 The design is in `docs/plan.md`, the rules in `specs/`, and the entry point for AI agents in `AGENTS.md`.
 

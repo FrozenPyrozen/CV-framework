@@ -1,7 +1,7 @@
 // npm run review-context: one bundle per CV and rubric for the reviewer (agents/reviewer.md step 1).
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { cpSync, existsSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { parse } from "yaml";
 import { run, tempRepo } from "./helpers.ts";
@@ -64,4 +64,19 @@ test("a variant's bundle names its per-CV report by the profile id", () => {
   const r = run("review-context.ts", dir, ["cv/variants/react/cv.md", "layout"]);
   assert.equal(r.code, 0, r.out);
   assert.match(bundle(dir, r.out), /`reports\/<run>\/layout-react\.md` when the run reviews several CVs/);
+});
+
+test("the layout bundle uses the template the CV was built with, not the default", () => {
+  const dir = tempRepo();
+  cpSync(join(dir, "templates/classic"), join(dir, "templates/alt"), { recursive: true });
+  const state = join(dir, "cv/.build-state.json");
+  const s = existsSync(state) ? JSON.parse(readFileSync(state, "utf8")) : {};
+  s["cv/variants/react/cv.md"] = { ...(s["cv/variants/react/cv.md"] ?? { built_at: "", md_sha: "", sources: {}, outputs: {} }), template: "alt" };
+  writeFileSync(state, JSON.stringify(s));
+  const r = run("review-context.ts", dir, ["cv/variants/react/cv.md", "layout"]);
+  assert.equal(r.code, 0, r.out);
+  assert.match(bundle(dir, r.out), /^## Template `alt`$[\s\S]*templates\/alt\/reference-preview\.png/m);
+  const ua = run("review-context.ts", dir, ["cv/variants/react/cv.md", "layout", "--market", "ukraine"]); // the market version: its base CV's record
+  assert.equal(ua.code, 0, ua.out);
+  assert.match(bundle(dir, ua.out), /^## Template `alt`$/m);
 });

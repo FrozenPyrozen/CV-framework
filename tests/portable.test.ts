@@ -18,6 +18,8 @@ test("harvest-prompt holds the spec, tags and identities, but no other summaries
   assert.doesNotMatch(p, /### 4\.1 /);
   // Git commands: branches and remotes only (no stash entries), identities as a shell array.
   assert.doesNotMatch(p, /git (log|shortlog)[^\n]*--all/);
+  assert.match(p, /git log --branches --remotes --tags --no-merges/); // tags too, as git-digest
+  assert.doesNotMatch(p, /--tags --tags/);
   assert.match(p, /^ME=\(--author="[^"]+"/m);
   assert.match(p, /--no-merges "\$\{ME\[@\]\}"/);
 });

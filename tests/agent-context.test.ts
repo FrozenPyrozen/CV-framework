@@ -127,6 +127,9 @@ test("cover-letter, portfolio and advisor bundles: their Read first sections and
   assert.match(pb, /Other pages \(leave as they are\): syspro-saas-erp/);
   assert.match(pb, /### Published portfolio text\n`sources\/text\/portfolio-2025-09\.md` \(`doc:portfolio-2025-09`\)/); // the newest imported portfolio
   assert.match(cb, /also blocks every other summary's terms/);
+  // A summary id with several pages stands for all of them (/portfolio <summary-id>).
+  const multi = bundle(dir, run("agent-context.ts", dir, ["portfolio", "--entry", "itjet-fintech"]).out);
+  assert.match(multi, /Pages in scope: itjet-fintech\/[\w-]+, itjet-fintech\/[\w-]+/);
   const bad = run("agent-context.ts", dir, ["portfolio", "--entry", "nope"]);
   assert.equal(bad.code, 2);
   assert.match(bad.out, /unknown portfolio page "nope"/);

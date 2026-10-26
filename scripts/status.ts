@@ -132,7 +132,7 @@ if (isMain(import.meta.url)) {
   const portfolioTodo: string[] = [];
   if (!ps.exists && portfolioProjects().length) portfolioTodo.push(`not created yet: npm run portfolio -- refresh, then /portfolio (${ps.notInFile.join(", ")})`);
   if (ps.exists) {
-    if (ps.generatedStale && !ps.notInFile.length) portfolioTodo.push("generated parts are out of date (profile, skills, images or titles changed): npm run portfolio -- refresh");
+    if (ps.generatedStale && !ps.notInFile.length) portfolioTodo.push("generated parts are out of date (the cover, project titles, public images or links changed, or a project left the portfolio): npm run portfolio -- refresh");
     if (ps.notInFile.length) portfolioTodo.push(`projects not in the file yet: ${ps.notInFile.join(", ")} (npm run portfolio -- refresh)`);
     if (ps.toWrite.length) portfolioTodo.push(`projects to write: ${ps.toWrite.join(", ")} (/portfolio)`);
     if (ps.toRewrite.length) portfolioTodo.push(`projects to rewrite (their summaries changed): ${ps.toRewrite.join(", ")} (/portfolio)`);

@@ -72,7 +72,7 @@ export function harvestPrompt(opts: { merge?: string; today?: string } = {}): st
     "",
     "## Read the history with plain git (instead of my framework's git-digest)",
     "",
-    "Use `--branches --remotes --tags --tags`, not `--all`: `--all` counts stash entries as commits. **My commit count** is the non-merge count below (`shortlog` includes merges). An identity that only has merges still counts as mine. Lockfiles are left out of line counts.",
+    "Use `--branches --remotes --tags`, not `--all`: `--all` counts stash entries as commits. **My commit count** is the non-merge count below (`shortlog` includes merges). An identity that only has merges still counts as mine. Lockfiles are left out of line counts.",
     "",
     "```bash",
     "git shortlog -sne --branches --remotes --tags              # all authors: confirm which are me",

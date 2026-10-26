@@ -47,7 +47,7 @@ Kirill Kohan
 
 - **Generated:** the header block (`refresh`, the same lines as the CV header for that market and headline) and, when the file is created, the date line, a neutral greeting ("Dear Hiring Team,"), the closing and the name. The agent personalizes the greeting from the job ad (the company, or a person it names) and may change the date; the header is never edited by hand.
 - **Body:** 3 or 4 paragraphs, no headings, no bullets. Markdown as in `specs/cv-spec.md` 9 (bold sparingly, no tables or links other than the header's).
-- **Closing:** "Sincerely," (or "Best regards,") and the name, without sources.
+- **Closing:** "Sincerely," (or "Best regards,", "Kind regards,", "Regards,": the ones `check` recognizes) and the name, without sources.
 
 ## 3. Sources
 

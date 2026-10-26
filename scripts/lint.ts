@@ -2,7 +2,7 @@
 // Mechanical checks from specs/cv-spec.md: supported Markdown, forbidden characters, filler words, length,
 // bold balance, generated parts up to date (header, entry lines, education, skills, languages), calculated
 // values, the confidentiality blocklist and the secret scan.
-// Without a file: lints the master CV, its market versions, every variant, and scans summary bodies.
+// Without a file: lints the master CV, every variant and every tailored CV with their market versions, and scans summary bodies.
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join, relative, resolve } from "node:path";
 import { type Context, entriesForSection, loadContext, parseCv, sectionIdForHeading, stripComments } from "./lib/cvmd.ts";

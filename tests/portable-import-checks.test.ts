@@ -10,6 +10,7 @@ const broken: [string, (t: string) => string, RegExp][] = [
   ["a local path", (t) => t.replace("## 5.", "See /Users/me/work/app for details.\n\n## 5."), /local path/],
   ["a missing section", (t) => t.replace("## 8. Portfolio material", "## 8. Portfolio"), /sections must be exactly/],
   ["an unknown tag", (t) => t.replace(/^Tags: /m, "Tags: not-a-real-tag, "), /not-a-real-tag/],
+  ["a secret", (t) => t.replace("## 5.", "The deploy used the key ghp_1A2b3C4d5E6f7G8h9I0jK1L2m3N4o5P6q7R8 for the registry.\n\n## 5."), /secret/i],
   ["a repo URL", (t) => t.replace(/^source: cv$/m, "source: git").replace(/^harvested_at: .*$/m, "harvested_at: 2026-10-01").replace(/^repos: \[\]$/m, "repos:\n  - { name: \"https://dev.azure.com/org/repo\" }"), /repo name only/],
 ];
 

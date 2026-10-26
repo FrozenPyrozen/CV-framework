@@ -1,6 +1,10 @@
 // npm run test:changed: which test files a change can affect (selection only; the run is node --test).
 import { test } from "node:test";
 import assert from "node:assert/strict";
+import { spawnSync } from "node:child_process";
+import { readdirSync } from "node:fs";
+import { join } from "node:path";
+import { REPO } from "./helpers.ts";
 import { selectTests } from "../scripts/test-changed.ts";
 
 const M = (path: string) => ({ status: "M" as const, path });
@@ -31,4 +35,12 @@ test("shared code, config and CV content select every test; an unrelated change 
   const none = selectTests([M(".gitignore")]);
   assert.equal(none.all, false);
   assert.deepEqual(none.files, []);
+});
+
+test("--all lists every test file (npm run test:fast)", () => {
+  const r = spawnSync(process.execPath, ["--import", "tsx", join(REPO, "scripts/test-changed.ts"), "--all", "--list"], { cwd: REPO, encoding: "utf8" });
+  assert.equal(r.status, 0, r.stderr);
+  const n = readdirSync(join(REPO, "tests")).filter((f) => f.endsWith(".test.ts")).length;
+  assert.match(r.stdout, new RegExp(`test:changed: all tests \\(--all\\)`));
+  assert.ok(n > 0, String(n));
 });

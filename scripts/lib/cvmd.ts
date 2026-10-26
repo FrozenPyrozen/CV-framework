@@ -225,7 +225,9 @@ export function wrapBlock(name: string, content: string): string {
 // ---------- reading a CV ----------
 
 export interface Bullet { line: number; text: string; src: string[] }
-export interface ParsedEntry { id?: string; titleLine: number; title: string; detail: string; bullets: Bullet[] }
+// stray: text inside an entry that no source can cover (a paragraph between bullets, a second ### line, text after a
+// bullet's source comment); trace fails on it (specs/cv-spec.md 6).
+export interface ParsedEntry { id?: string; titleLine: number; title: string; detail: string; bullets: Bullet[]; stray: { line: number; text: string; why: string }[] }
 export interface ParsedSection { line: number; heading: string; entries: ParsedEntry[]; paragraphs: { line: number; text: string }[] }
 
 export const SRC_RE = /<!--\s*src:\s*([^>]*?)\s*-->/;
@@ -239,8 +241,19 @@ export function parseCv(text: string) {
   let pendingEntryId: string | undefined;
   let section: ParsedSection | null = null;
   let entry: ParsedEntry | null = null;
+  let inComment = false; // inside an HTML comment that spans lines (cv-spec 9 allows comments anywhere)
 
-  lines.forEach((raw, i) => {
+  lines.forEach((line, i) => {
+    let raw = line;
+    if (inComment) {
+      if (!raw.includes("-->")) return;
+      inComment = false;
+      raw = raw.slice(raw.indexOf("-->") + 3);
+      if (!raw.trim()) return;
+    }
+    // A comment that opens on this line and doesn't close here hides the rest of the line and the next lines.
+    const cStart = raw.lastIndexOf("<!--");
+    if (cStart >= 0 && raw.indexOf("-->", cStart) < 0) { inComment = true; raw = raw.slice(0, cStart); if (!raw.trim()) return; }
     const gs = raw.match(/^<!-- generated:([\w-]+) -->$/);
     const ge = raw.match(/^<!-- \/generated:([\w-]+) -->$/);
     if (gs) { open = { name: gs[1], start: i }; return; }
@@ -251,15 +264,24 @@ export function parseCv(text: string) {
     const h1 = raw.match(/^# \*\*(.+)\*\*\s*$/);
     if (h1) { section = { line: i, heading: h1[1], entries: [], paragraphs: [] }; sections.push(section); entry = null; return; }
     const h2 = raw.match(/^## \*\*(.+)\*\*\s*$/);
-    if (h2 && section) { entry = { id: pendingEntryId, titleLine: i, title: h2[1], detail: "", bullets: [] }; pendingEntryId = undefined; section.entries.push(entry); return; }
+    if (h2 && section) { entry = { id: pendingEntryId, titleLine: i, title: h2[1], detail: "", bullets: [], stray: [] }; pendingEntryId = undefined; section.entries.push(entry); return; }
     const h3 = raw.match(/^### \*\*(.+)\*\*\s*$/);
-    if (h3 && entry) { entry.detail = h3[1]; return; }
+    if (h3 && entry) {
+      if (entry.detail) entry.stray.push({ line: i, text: h3[1], why: "a second ### line in the entry" });
+      else entry.detail = h3[1];
+      return;
+    }
     const b = raw.match(/^\* (.*)$/);
     if (b && entry) {
       const m = b[1].match(SRC_RE);
       entry.bullets.push({ line: i, text: stripComments(b[1]).trim(), src: m ? m[1].split(",").map((x) => x.trim()).filter(Boolean) : [] });
+      const after = b[1].slice(b[1].lastIndexOf("-->") + 3).trim();
+      if (m && after) entry.stray.push({ line: i, text: after, why: "text after the bullet's source comment" });
       return;
     }
+    // A leftover "-->" (a commented-out bullet that kept its src comment: <!-- * Old. <!-- src: x --> -->) isn't text.
+    const visibleText = stripComments(raw).replace(/-->/g, "").trim();
+    if (raw.trim() && entry && visibleText) { entry.stray.push({ line: i, text: visibleText, why: "text inside an entry that isn't a bullet" }); return; }
     if (raw.trim() && section && !entry && !raw.startsWith("<!--")) section.paragraphs.push({ line: i, text: raw });
   });
   return { lines, sections, blocks };

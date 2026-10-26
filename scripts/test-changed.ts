@@ -1,8 +1,9 @@
-// npm run test:changed [--since <ref>] [--list]
+// npm run test:changed [--since <ref>] [--list] [--all]
 // Runs only the test files a change can affect (with CV_FAST=1, as test:fast): changed test files, the tests of a
 // changed script and of every script that imports it (directly or not), the doc and agent tests for doc, spec and
 // agent changes plus the tests of the scripts that read spec or agent files at run time, and every test when shared
 // code, config, schemas, templates or CV content changed (most tests copy the real repo). `verify --fast` uses it while iterating; `verify` runs every test before handing back.
+// --all: every test with CV_FAST=1 (`npm run test:fast`; set here, not in the shell, so it works on Windows too).
 import { spawnSync } from "node:child_process";
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { basename, join } from "node:path";
@@ -55,7 +56,9 @@ export function selectTests(changes: Change[]): { all: boolean; files: string[];
 if (isMain(import.meta.url)) {
   const { args } = parseArgs(process.argv.slice(2));
   const since = typeof args.since === "string" ? args.since : "HEAD";
-  const sel = selectTests(changedFiles(since));
+  const sel = args.all
+    ? { all: true, files: readdirSync(rootPath("tests")).filter((f) => f.endsWith(".test.ts")).sort().map((t) => `tests/${t}`), why: "--all" }
+    : selectTests(changedFiles(since));
   console.log(`test:changed: ${sel.all ? "all tests" : `${sel.files.length} test file(s)`} (${sel.why})${sel.files.length && !sel.all ? `: ${sel.files.map((f) => basename(f, ".test.ts")).join(", ")}` : ""}`);
   if (args.list || !sel.files.length) process.exit(0);
   const r = spawnSync(process.execPath, ["--import", "tsx", "--test", "--test-reporter=dot", ...sel.files], { cwd: rootPath(), env: { ...process.env, CV_FAST: "1" }, stdio: "inherit" });

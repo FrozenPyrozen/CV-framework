@@ -1,8 +1,9 @@
 // npm run trace [file] [--warn-only]
 // Every bullet and every summary-paragraph sentence must end with <!-- src: id[, id] --> pointing to a
 // summary contribution (id#4.N), a summary section (id#N) or a confirmed fact id (specs/cv-spec.md 6).
-// Generated blocks, entry lines and section intro lines are exempt.
-// --warn-only: report but exit 0 (used by `build` for the master CV, docs/scripts.md).
+// Generated blocks, entry lines and section intro lines are exempt. Other text inside an entry (a paragraph, a second
+// ### line, text after a bullet's src comment) is unsourced by definition.
+// --warn-only: report but exit 0. (`build` calls traceCv itself and treats the master CV's errors as warnings, docs/scripts.md.)
 import { splitSentences } from "./lib/text.ts";
 import { readFileSync } from "node:fs";
 import { relative, resolve } from "node:path";
@@ -90,6 +91,7 @@ export function traceCv(file: string, idx = buildSourceIndex()): Finding[] {
         if (!b.src.length) add("error", `bullet without a source: "${b.text.slice(0, 70)}"`, b.line);
         else checkIds(b.src, b.line, e.id);
       }
+      for (const x of e.stray) add("error", `${x.why}, without a source: "${x.text.slice(0, 70)}"`, x.line);
     }
   }
   void lines;

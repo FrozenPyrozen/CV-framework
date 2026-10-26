@@ -9,6 +9,8 @@ import { basename, dirname, join, relative } from "node:path";
 import { stringify } from "yaml";
 import { calculate, isMasterFile, parseCv, profileIdForFile } from "./lib/cvmd.ts";
 import { masterCvPath, marketCvPath } from "./lib/paths.ts";
+import { readState } from "./lib/buildstate.ts";
+import { templateFor } from "./render.ts";
 import {
   type Market, cliPath, isMain, loadConfig, loadConfirmed, loadDecisions, loadEntries, loadMarkets, loadProfile,
   loadSummaries, readYaml, rootPath,
@@ -277,7 +279,10 @@ export function reviewContext(opts: Options): { file: string; text: string } {
     section("Build checks and previews", buildFiles(dirname(file)), rubric === "ats" || rubric === "hr" ? "\nRun `npm run status` first: if the CV is stale, review the Markdown and say so." : "");
   }
   if (rubric === "layout") {
-    const tpl = portfolio ? "portfolio-classic" : cfg.default_template;
+    // The template the CV was built with (its build record), else the one it would be built with (--template, profile, config).
+    // Build records are keyed by the base CV, so a market version (…/markets/<id>/…) looks up its base CV's record.
+    const base = folder === dirname(masterCvPath()) ? masterCvPath() : join(folder, "cv.md");
+    const tpl = portfolio ? "portfolio-classic" : readState()[rel(base)]?.template ?? templateFor(base);
     const tdir = rootPath(cfg.paths.templates, tpl);
     const sm = join(tdir, "style-map.yaml");
     section(`Template \`${tpl}\``,

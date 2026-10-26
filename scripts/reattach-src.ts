@@ -7,7 +7,7 @@
 import { splitSentences } from "./lib/text.ts";
 import { execFileSync } from "node:child_process";
 import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { dirname, join, relative } from "node:path";
+import { dirname, join, relative, sep } from "node:path";
 import { SRC_RE, parseCv, stripComments } from "./lib/cvmd.ts";
 import { cliPath, isMain, loadConfig, rootPath } from "./lib/repo.ts";
 import { parseArgs } from "./refresh.ts";
@@ -87,6 +87,9 @@ if (isMain(import.meta.url)) {
   const { args, positional } = parseArgs(process.argv.slice(2));
   if (!positional[0]) { console.error("usage: npm run reattach-src -- <file> [--save | --from <old-file>]"); process.exit(2); }
   const file = cliPath(positional[0]);
+  // It matches CV bullets and summary sentences: on the portfolio's prose it would silently do nothing.
+  const pdir = rootPath(loadConfig().paths.portfolio);
+  if (file === pdir || file.startsWith(pdir + sep)) { console.error(`reattach-src: ${positional[0]} is in ${loadConfig().paths.portfolio}/; it works on CVs only`); process.exit(2); }
   const rel = relative(rootPath(), file);
   const snapshot = join(rootPath(loadConfig().paths.runs), "snapshots", rel);
   if (args.save) {

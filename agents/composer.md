@@ -36,7 +36,7 @@ Open other sections only when a step points there: `specs/cv-spec.md` 2.3 (entry
 5. **Write bullets, one entry at a time.**
    - **Shape:** action, then technology, then outcome; a past-tense verb first; one achievement per bullet; at most `checks.max_bullet_words` words (`lint` warns).
    - **Numbers:** only from the source, never rounded up. A number whose only source is an imported document (`doc:<id>` in section 7) is used only once it says "confirmed by user" (`specs/sources-spec.md` 4).
-   - **Bold:** key technologies and terms.
+   - **Bold:** key technologies and terms, unless `display.bullet_bold_keywords` is `false` (`specs/cv-spec.md` 3).
    - **Acronyms:** spelled out once with the acronym (e.g. "OpenID Connect (OIDC)").
    - **Emphasis first:** the points in `cv_emphasis` go into the first bullets of their entry. For SYSPRO this means architecture-governed SDD, not AI-generated code (decision `sdd-not-vibe-coding`).
    - **Stack lines:** the current job ends with a `* Stack: **…**` line, sourced from the summary's section 5 (`<id>#5`). An older job keeps a Stack line it already has, updated when section 5 changes; don't add new ones to older jobs unless the user asks for that job's technologies to show in the CV (record it as a decision, e.g. `orion-stack-line`).
